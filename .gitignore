@@ -1,0 +1,21 @@
+# Editor temporary files
+*~
+*.swp
+*.swo
+
+# Operating-system clutter
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Local secrets (keep safe example configuration tracked)
+.env
+.env.*
+!.env.example
+.aws/
+secrets.local.*
+
+# Logs
+*.log
+logs/
