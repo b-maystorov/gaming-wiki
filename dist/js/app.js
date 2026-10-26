@@ -1,4 +1,5 @@
 import { heroes, sources } from './heroes.js';
+import { games } from './games.js';
 
 const main = document.querySelector('main');
 const sections = ['overview', 'builds', 'teams', 'trinkets'];
@@ -19,8 +20,14 @@ function requirementLabel(requirements) {
 }
 
 function renderImage(image, className = '') {
-  return `<figure class="artwork ${className}">
-    <img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" width="${image.width || 320}" height="${image.height || 320}">
+  const animationClass = image.animated ? ' animated-image' : '';
+  const reducedMotionAlternative = image.animated
+    ? `<span class="motion-alternative" role="img" aria-label="${escapeHtml(image.reducedMotionLabel)}">Animation paused for reduced motion</span>`
+    : '';
+  const artworkClass = image.animated ? ' animated-artwork' : '';
+  return `<figure class="artwork ${className}${artworkClass}">
+    <img class="image-content${animationClass}" src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" width="${image.width || 320}" height="${image.height || 320}">
+    ${reducedMotionAlternative}
     ${image.placeholder ? '<figcaption>Placeholder · Not game art</figcaption>' : ''}
   </figure>`;
 }
@@ -57,29 +64,86 @@ function renderHome() {
 }
 
 function renderGameLanding() {
+  const game = games['darkest-dungeon'];
   const guideCount = heroes.filter(hero => hero.guide).length;
-  const teamCount = heroes.reduce((count, hero) => count + (hero.guide?.teams.length || 0), 0);
-  const trinketCount = heroes.reduce((count, hero) => count + (hero.guide?.trinkets.length || 0), 0);
-  const entries = [
-    { path: 'heroes', title: 'Heroes', description: `${guideCount} guide available. Explore Highwayman’s role, positions, and builds.` },
-    { path: 'teams', title: 'Team Compositions', description: `${teamCount} example parties with formations, opening priorities, and limitations.` },
-    { path: 'trinkets', title: 'Trinkets', description: `${trinketCount} recommendations with benefits, penalties, and accessible alternatives.` }
-  ];
-  return `<section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">Original game / Campaign</p>
-    <h1 id="page-title" tabindex="-1">Darkest Dungeon</h1><p class="lede">Plan your party and equipment. All current content uses the base game.</p></section>
-    <section aria-label="Explore Darkest Dungeon" class="landing-grid">${entries.map(entry => `<a class="navigation-card" href="#game/darkest-dungeon/${entry.path}"><h2>${entry.title}</h2><p>${entry.description}</p><span class="card-action">Browse ${entry.title.toLowerCase()} <span aria-hidden="true">→</span></span></a>`).join('')}</section>`;
+  const teams = getTeams();
+  const categoryCards = game.categories.filter(category => category.id !== 'overview')
+    .map(category => category.comingSoon
+      ? `<article class="navigation-card coming-soon"><span class="status-label">Coming soon</span><h3>${escapeHtml(category.label)}</h3><p>Entries are not available yet.</p></article>`
+      : `<a class="navigation-card" href="#game/darkest-dungeon/${category.view}"><span class="status-label">Available</span><h3>${escapeHtml(category.label)}</h3><p>${escapeHtml(category.description)}</p><span class="card-action">Browse ${escapeHtml(category.label)} <span aria-hidden="true">→</span></span></a>`).join('');
+  return `<section class="game-welcome" aria-labelledby="page-title"><div><p class="eyebrow">Original game / Campaign</p>
+    <h1 id="page-title" tabindex="-1">Darkest Dungeon</h1><p class="lede">Campaign guides, party plans, and equipment notes. Current entries cover the base game.</p></div>
+    <span class="welcome-mark" aria-hidden="true">DD I</span></section>
+    <section class="game-search" aria-labelledby="search-title"><label for="game-search-input" id="search-title">Search this guide</label>
+      <input id="game-search-input" type="search" autocomplete="off" placeholder="Hero, build, composition, or trinket">
+      <p id="game-search-status" class="search-status" aria-live="polite">Search current guides, teams, builds, and trinkets.</p><div id="game-search-results" class="search-results"></div></section>
+    <section aria-labelledby="begin-heading"><div class="section-heading"><h2 id="begin-heading">Where to begin</h2><span>Browse available guides or see what is planned</span></div>
+      <div class="landing-grid">${categoryCards}</div></section>
+    <section aria-labelledby="featured-teams-heading"><div class="section-heading"><h2 id="featured-teams-heading">Featured Team Compositions</h2><a href="#game/darkest-dungeon/teams">All compositions →</a></div>
+      <p class="section-intro">${teams.length} editorial example parties · no tier rating or dungeon suitability has been assigned.</p>
+      <div class="team-list">${teams.map(renderTeamCard).join('')}</div></section>
+    <section aria-labelledby="featured-heroes-heading"><div class="section-heading"><h2 id="featured-heroes-heading">Hero Guides</h2><a href="#game/darkest-dungeon/heroes">All heroes →</a></div>
+      <div class="featured-hero-list">${heroes.filter(hero => hero.guide).map(hero => `<a class="featured-hero panel" href="#hero/${escapeHtml(hero.id)}/overview">${renderTeamPortrait(hero.name)}<span><strong>${escapeHtml(hero.name)}</strong><small>${escapeHtml(hero.role)}</small></span><span class="card-action">Read guide →</span></a>`).join('')}</div></section>`;
+}
+
+function getTeams() {
+  return heroes.flatMap(hero => hero.guide ? hero.guide.teams.map(team => ({ ...team, hero })) : []);
+}
+
+function getTrinkets() {
+  return heroes.flatMap(hero => hero.guide ? hero.guide.trinkets.map(trinket => ({ ...trinket, hero })) : []);
+}
+
+function renderSearchResults(query) {
+  const normalizedQuery = query.trim().toLowerCase();
+  const results = [];
+  if (!normalizedQuery) return { status: 'Search current guides, teams, builds, and trinkets.', markup: '' };
+  heroes.filter(hero => hero.guide).forEach(hero => {
+    if (`${hero.name} ${hero.role} ${hero.summary}`.toLowerCase().includes(normalizedQuery)) {
+      results.push({ title: hero.name, kind: 'Hero guide', href: `#hero/${hero.id}/overview` });
+    }
+    hero.guide.builds.forEach(build => {
+      if (`${build.name} ${build.label} ${build.description}`.toLowerCase().includes(normalizedQuery)) {
+        results.push({ title: build.name, kind: `${hero.name} build`, href: `#hero/${hero.id}/builds` });
+      }
+    });
+    hero.guide.trinkets.forEach(trinket => {
+      if (`${trinket.name} ${trinket.use}`.toLowerCase().includes(normalizedQuery)) {
+        results.push({ title: trinket.name, kind: 'Trinket recommendation', href: '#game/darkest-dungeon/trinkets' });
+      }
+    });
+  });
+  getTeams().forEach(team => {
+    if (`${team.name} ${team.build} ${team.synergy} ${team.members.join(' ')}`.toLowerCase().includes(normalizedQuery)) {
+      results.push({ title: team.name, kind: 'Team composition', href: `#game/darkest-dungeon/teams/${team.id}` });
+    }
+  });
+  return {
+    status: results.length ? `${results.length} matching ${results.length === 1 ? 'entry' : 'entries'}.` : 'No matching entries in the current content.',
+    markup: results.map(result => `<a href="${escapeHtml(result.href)}"><span>${escapeHtml(result.kind)}</span><strong>${escapeHtml(result.title)}</strong><span aria-hidden="true">→</span></a>`).join('')
+  };
 }
 
 function renderCollection(kind) {
   const isTeams = kind === 'teams';
   const title = isTeams ? 'Team Compositions' : 'Trinkets';
-  const note = isTeams ? 'Suggested formations, not playtested. Read positions 4–3–2–1 from rear to front.' :
-    'Campaign item values checked against references; the installed patch was not verified. Icons remain placeholders.';
+  const note = isTeams ? 'Editorial formations from the available hero guides. Read positions 4–3–2–1 from rear to front; no tier ratings or location assessments are recorded.' :
+    'Recommendations collected from available hero guides. Item effects are reference-checked; the installed game patch was not verified.';
   const renderer = isTeams ? renderTeam : renderTrinket;
   return `<section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / ${title}</p>
     <h1 id="page-title" tabindex="-1">${title}</h1><p class="lede">${note}</p></section>
-    ${heroes.filter(hero => hero.guide).map(hero => `<section class="collection-group" aria-label="${escapeHtml(hero.name)} recommendations"><div class="section-heading"><h2>From the ${escapeHtml(hero.name)} guide</h2><a href="#hero/${escapeHtml(hero.id)}/overview">View hero guide →</a></div>
-      <div class="${isTeams ? 'team-list' : 'two-columns'}">${hero.guide[kind].map(renderer).join('')}</div></section>`).join('')}`;
+    <section class="collection-group" aria-label="Available ${title.toLowerCase()}"><div class="section-heading"><h2>Current entries</h2><span>Collected from implemented guides</span></div>
+      ${isTeams ? `<div class="composition-search"><label for="team-search-input">Find a composition</label><input id="team-search-input" type="search" autocomplete="off" placeholder="Search names, heroes, or strategy"><p id="team-search-status" class="search-status" aria-live="polite">${getTeams().length} compositions available.</p></div>` : ''}
+      <div class="${isTeams ? 'team-list' : 'two-columns'}">${(isTeams ? getTeams() : getTrinkets()).map(entry => isTeams ? renderTeamCard(entry) : renderer(entry)).join('')}</div></section>`;
+}
+
+function renderTeamDetail(team) {
+  return `<a class="back-link" href="#game/darkest-dungeon/teams">← All team compositions</a>
+    <section class="page-intro composition-detail" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / Team composition · ${requirementLabel(team.requirements)}</p>
+      <h1 id="page-title" tabindex="-1">${escapeHtml(team.name)}</h1><p class="lede">${escapeHtml(team.build)} · Editorial example, not playtested.</p></section>
+    ${renderTeam(team)}
+    <p class="composition-meta"><strong>Tier:</strong> No rating assigned <span aria-hidden="true">·</span> <strong>Dungeon suitability:</strong> Not assessed</p>
+    <p class="composition-meta">Prepared from the <a href="#hero/${escapeHtml(team.hero.id)}/overview">${escapeHtml(team.hero.name)} guide</a>. Other hero guides are not yet available.</p>`;
 }
 
 function renderGallery() {
@@ -125,13 +189,39 @@ function renderTeamPortrait(name) {
   return `<div class="portrait-unavailable" role="img" aria-label="${escapeHtml(name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(initials)}</span><small>Portrait unavailable</small></div>`;
 }
 
+function renderHeroName(name) {
+  const hero = heroes.find(entry => entry.name === name && entry.guide);
+  return hero
+    ? `<a href="#hero/${escapeHtml(hero.id)}/overview">${escapeHtml(name)}</a>`
+    : `<span class="unlinked-hero-name">${escapeHtml(name)}</span>`;
+}
+
+function renderPartyMembers(team) {
+  return `<ol class="party" aria-label="Starting formation, positions 4 through 1">${team.members.map((name, index) => `<li><span>Position ${4 - index}</span>${renderTeamPortrait(name)}<strong>${renderHeroName(name)}</strong></li>`).join('')}</ol>`;
+}
+
+function renderTeamCard(team) {
+  const searchText = `${team.name} ${team.build} ${team.members.join(' ')} ${team.synergy}`;
+  return `<article class="panel composition-overview-card" data-composition-card data-search-text="${escapeHtml(searchText.toLowerCase())}">
+    <p class="eyebrow">${requirementLabel(team.requirements)} · Editorial example</p>
+    <h3><a href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">${escapeHtml(team.name)}</a></h3>
+    <p class="formation-label">Starting formation · Rear → front</p>${renderPartyMembers(team)}
+    <div class="composition-strategy"><h4>Main strategy</h4><p>${escapeHtml(team.synergy)}</p></div>
+    <a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full strategy <span aria-hidden="true">→</span></a>
+  </article>`;
+}
+
 function renderTeam(team) {
-  return `<article class="panel team-card"><p class="eyebrow">${requirementLabel(team.requirements)} / ${escapeHtml(team.build)}</p>
+  const recommendedBuild = team.hero?.guide.builds.find(build => build.name === team.build);
+  return `<article class="panel team-card"><div class="team-card-header"><p class="eyebrow">${requirementLabel(team.requirements)} / ${escapeHtml(team.build)}</p>
+    <span class="editorial-label">Editorial example · No tier rating</span></div>
     <h3>${escapeHtml(team.name)}</h3><p class="formation-label">Starting formation · Rear → front</p>
-    <ol class="party">${team.members.map((name, index) => `<li><span>Position ${4 - index}</span>${renderTeamPortrait(name)}<strong>${escapeHtml(name)}</strong></li>`).join('')}</ol>
-    <h4>Why it fits</h4><p>${escapeHtml(team.synergy)}</p>
-    <h4>Opening priorities</h4>${renderList(team.priorities, true)}
-    <h4>Limitations</h4><p>${escapeHtml(team.limitation)}</p></article>`;
+    ${renderPartyMembers(team)}
+    <div class="composition-summary"><div><h4>Strategy and synergy</h4><p>${escapeHtml(team.synergy)}</p>
+      ${recommendedBuild ? `<h4>${escapeHtml(team.hero.name)} skill set</h4>${renderList(recommendedBuild.skills.map(skill => skill.name))}` : ''}</div>
+    <div><h4>Opening priorities</h4>${renderList(team.priorities, true)}</div>
+    <div><h4>Strengths</h4>${renderList(team.strengths || [])}<h4>Weaknesses and limitations</h4><p>${escapeHtml(team.limitation)}</p></div></div>
+    <p class="composition-meta"><strong>Dungeon suitability:</strong> Not assessed · <strong>Requirements:</strong> ${requirementLabel(team.requirements)}</p></article>`;
 }
 
 function renderTrinket(trinket) {
@@ -158,10 +248,30 @@ function renderGuide(hero) {
     <section class="guide-section" aria-labelledby="builds"><div class="section-heading"><h2 id="builds" tabindex="-1">Builds</h2><span>02 / Choose your approach</span></div>
       <p class="section-intro">Suggested builds · Not playtested. Four skills each; rank lists show your position → enemy targets.</p><div class="two-columns">${guide.builds.map(renderBuild).join('')}</div></section>
     <section class="guide-section" aria-labelledby="teams"><div class="section-heading"><h2 id="teams" tabindex="-1">Teams</h2><span>03 / Company for the road</span></div>
-      <p class="section-intro">Parties for ${escapeHtml(hero.name)} · Suggested, not playtested. Read 4–3–2–1 from rear to front; adapt to actual turn order.</p><div class="team-list">${guide.teams.map(renderTeam).join('')}</div></section>
+      <p class="section-intro">Parties for ${escapeHtml(hero.name)} · Suggested, not playtested. Read 4–3–2–1 from rear to front; adapt to actual turn order.</p><div class="team-list">${guide.teams.map(team => renderTeamCard({ ...team, hero })).join('')}</div></section>
     <section class="guide-section" aria-labelledby="trinkets"><div class="section-heading"><h2 id="trinkets" tabindex="-1">Trinkets</h2><span>04 / Equip with intent</span></div>
-      <p class="section-intro">Picks for ${escapeHtml(hero.name)} · Reference values; installed patch not checked. Availability is not guaranteed. Icons remain labeled placeholders.</p><div class="two-columns">${guide.trinkets.map(renderTrinket).join('')}</div></section>
-    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(guide.verification)}</p><p>Campaign only; no DLC or mods required. Game-art redistribution permission is unverified, so portraits and icons remain placeholders.</p><ul>${guide.sourceIds.map(id => `<li><a href="${escapeHtml(sources[id].url)}">${escapeHtml(sources[id].title)} ↗</a></li>`).join('')}</ul><p>Image research and provenance: <code>docs/content-sources.md</code> in the source repository.</p></details>`;
+      <p class="section-intro">Picks for ${escapeHtml(hero.name)} · Reference values; installed patch not checked. Availability is not guaranteed. The two supplied game icons have unverified provenance; the other two remain labeled placeholders.</p><div class="two-columns">${guide.trinkets.map(renderTrinket).join('')}</div></section>
+    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(guide.verification)}</p><p>Campaign only; no DLC or mods required. Supplied character and item artwork has unverified original sources and reuse terms. See <code>docs/content-sources.md</code>.</p><ul>${guide.sourceIds.map(id => `<li><a href="${escapeHtml(sources[id].url)}">${escapeHtml(sources[id].title)} ↗</a></li>`).join('')}</ul><p>Image research and provenance: <code>docs/content-sources.md</code> in the source repository.</p></details>`;
+}
+
+function activeCategoryId(route) {
+  if (route.hero) return 'heroes';
+  if (route.view === 'team-detail') return 'teams';
+  return ({ game: 'overview', heroes: 'heroes', teams: 'teams', trinkets: 'trinkets' })[route.view] || '';
+}
+
+function renderGameSidebar(route) {
+  const game = games['darkest-dungeon'];
+  const currentCategory = activeCategoryId(route);
+  const entries = game.categories.map(category => {
+    const current = category.id === currentCategory;
+    if (category.comingSoon) return `<li><span class="sidebar-coming-soon"><span class="sidebar-icon" aria-hidden="true">${escapeHtml(category.icon)}</span><span>${escapeHtml(category.label)}<small>Coming soon</small></span></span></li>`;
+    const href = `#game/${game.id}${category.id === 'overview' ? '' : `/${category.view}`}`;
+    return `<li><a href="${href}"${current ? ' aria-current="page"' : ''}><span class="sidebar-icon" aria-hidden="true">${escapeHtml(category.icon)}</span><span>${escapeHtml(category.label)}</span></a></li>`;
+  }).join('');
+  return `<aside class="game-sidebar" aria-label="${escapeHtml(game.name)} sections" data-game-theme="${escapeHtml(game.theme)}">
+    <button class="sidebar-toggle" type="button" aria-expanded="false" aria-controls="game-sidebar-links">Browse Darkest Dungeon</button>
+    <nav id="game-sidebar-links" class="game-sidebar-links" aria-label="Darkest Dungeon categories"><ul>${entries}</ul></nav></aside>`;
 }
 
 function readRoute(hash) {
@@ -173,6 +283,10 @@ function readRoute(hash) {
   if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts.length <= 3) {
     const view = parts[2] || 'game';
     if (['game', 'heroes', 'teams', 'trinkets'].includes(view)) return { view, game: true };
+  }
+  if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts[2] === 'teams' && parts.length === 4) {
+    const team = getTeams().find(entry => entry.id === parts[3]);
+    if (team) return { view: 'team-detail', team, game: true };
   }
   if (parts[0] === 'hero' && parts.length <= 3) {
     const hero = heroes.find(entry => entry.id === parts[1] && entry.guide);
@@ -189,6 +303,9 @@ function renderBreadcrumbs(route) {
   if (route.view === 'hero') {
     crumbs.push({ label: 'Heroes', href: '#game/darkest-dungeon/heroes' });
     crumbs.push({ label: route.hero.name });
+  } else if (route.view === 'team-detail') {
+    crumbs.push({ label: 'Team Compositions', href: '#game/darkest-dungeon/teams' });
+    crumbs.push({ label: route.team.name });
   } else if (route.view !== 'game') {
     crumbs.push({ label: pageTitles[route.view] });
   }
@@ -197,25 +314,21 @@ function renderBreadcrumbs(route) {
   ).join('')}</ol></nav>`;
 }
 
-const pageTitles = { home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', teams: 'Team Compositions', trinkets: 'Trinkets', missing: 'Page not found' };
+const pageTitles = { home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', teams: 'Team Compositions', 'team-detail': 'Team composition', trinkets: 'Trinkets', missing: 'Page not found' };
 
 function renderPage(route) {
   const views = { home: renderHome, game: renderGameLanding, heroes: renderGallery,
     teams: () => renderCollection('teams'), trinkets: () => renderCollection('trinkets') };
-  const content = route.hero ? renderGuide(route.hero) : views[route.view] ? views[route.view]() :
+  const content = route.hero ? renderGuide(route.hero) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
     '<section class="empty-state"><h1 id="page-title" tabindex="-1">Page not found</h1><p>This page is not available.</p><a href="#home">Return home</a></section>';
-  return renderBreadcrumbs(route) + content;
+  const page = renderBreadcrumbs(route) + content;
+  if (!route.game) return page;
+  return `<div class="game-layout" data-game-theme="${escapeHtml(games['darkest-dungeon'].theme)}">${renderGameSidebar(route)}<div class="game-content">${page}</div></div>`;
 }
 
 function updateNavigation(route) {
-  document.querySelector('.game-nav').hidden = !route.game;
   document.querySelectorAll('[data-site-page]').forEach(link => {
     const active = link.dataset.sitePage === (route.game ? 'game' : route.view);
-    if (active) link.setAttribute('aria-current', 'location');
-    else link.removeAttribute('aria-current');
-  });
-  document.querySelectorAll('[data-game-section]').forEach(link => {
-    const active = link.dataset.gameSection === (route.hero ? 'heroes' : route.view);
     if (active) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   });
@@ -227,13 +340,13 @@ function updateNavigation(route) {
 
 function showRoute() {
   const route = readRoute(location.hash);
-  const viewKey = route.hero ? `hero/${route.hero.id}` : route.view;
+  const viewKey = route.hero ? `hero/${route.hero.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
   const changed = viewKey !== currentView;
   if (changed) {
     main.innerHTML = renderPage(route);
     currentView = viewKey;
   }
-  document.title = route.hero ? `${route.hero.name} · Gaming Wiki` :
+  document.title = route.hero ? `${route.hero.name} · Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Gaming Wiki` :
     route.view === 'home' ? 'Gaming Wiki' : `${pageTitles[route.view]} · Gaming Wiki`;
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
@@ -252,6 +365,11 @@ document.querySelector('.skip-link').addEventListener('click', event => {
 
 window.addEventListener('hashchange', showRoute);
 document.addEventListener('click', event => {
+  const sidebarToggle = event.target.closest('.sidebar-toggle');
+  if (sidebarToggle) {
+    sidebarToggle.setAttribute('aria-expanded', sidebarToggle.getAttribute('aria-expanded') !== 'true' ? 'true' : 'false');
+    return;
+  }
   if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   const link = event.target.closest('a');
   const hash = link?.getAttribute('href');
@@ -260,5 +378,27 @@ document.addEventListener('click', event => {
     event.preventDefault();
     showRoute();
   }
+});
+
+document.addEventListener('input', event => {
+  if (event.target.id === 'team-search-input') {
+    const query = event.target.value.trim().toLowerCase();
+    const cards = [...document.querySelectorAll('[data-composition-card]')];
+    let visibleCount = 0;
+    cards.forEach(card => {
+      const matches = card.dataset.searchText.includes(query);
+      card.hidden = !matches;
+      if (matches) visibleCount += 1;
+    });
+    const status = document.getElementById('team-search-status');
+    status.textContent = query
+      ? `${visibleCount} matching ${visibleCount === 1 ? 'composition' : 'compositions'}.`
+      : `${visibleCount} compositions available.`;
+    return;
+  }
+  if (event.target.id !== 'game-search-input') return;
+  const results = renderSearchResults(event.target.value);
+  document.getElementById('game-search-status').textContent = results.status;
+  document.getElementById('game-search-results').innerHTML = results.markup;
 });
 showRoute();

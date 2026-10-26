@@ -1,5 +1,24 @@
 # Validation log
 
+## Highwayman image integration
+
+- Verified the three original files with Pillow: GIF 175 × 301 px, 31 frames,
+  palette transparency; Focus Ring PNG 36 × 72 px RGBA; Gunslinger's Buckle
+  PNG 36 × 72 px RGBA. Opened all three and visually confirmed their identity.
+- Confirmed organized local paths exist and image decoders can load them. Existing
+  data descriptors now point at those paths; remaining two item icons continue
+  to use their labeled placeholders.
+- Confirmed the reduced-motion markup pairs the animated image with an accessible
+  text alternative, with CSS to hide the GIF and show the alternative under the
+  media preference. CSS source was inspected; browser media-query rendering
+  could not be exercised here.
+- Original download URLs and reuse terms were not supplied with the images and
+  remain explicitly unverified in `content-sources.md`.
+- Browser image loading, mobile rendering, keyboard and screen-reader behavior
+  remain limited by the previously recorded browser startup and loopback socket
+  errors. File decoding, paths, data references, and responsive CSS source were
+  checked locally.
+
 ## Home, game navigation, and charcoal theme — 2026-10-26
 
 ### Passed checks
@@ -109,3 +128,84 @@ git push origin main
 ```
 
 No deployment is part of this workflow.
+
+## Darkest Dungeon sidebar, landing, and composition milestone
+
+### Checks completed
+
+- Ran the current application renderers and route parser in the installed
+  JavaScriptCore library with a minimal DOM stub. This exercised the root,
+  game overview, hero gallery, global Teams/Trinkets, Highwayman guide, and both
+  composition detail routes.
+- Confirmed all rendered internal links resolve to a supported route, sidebar
+  active states follow the selected category, the legacy `#heroes` alias still
+  resolves, and the Highwayman Overview/Builds/Teams/Trinkets tabs remain active.
+- Confirmed each team detail route renders the requested four positions and its
+  corresponding composition; navigating directly between the two team routes
+  updates the content and title. Tier and location information is explicitly
+  unassigned/unassessed.
+- Exercised the sidebar disclosure state and search renderer. Search results
+  are generated from existing hero, build, team, and trinket records; the
+  no-match state is present. Coming soon sidebar entries are non-interactive.
+- Parsed the HTML shell and every representative rendered view. Checked unique
+  IDs, matching `aria-labelledby` targets, nonempty image alt text, no inline
+  styles/event handlers, valid local image paths, and decoded raster/SVG files.
+- Checked CSS brace balance, mobile breakpoints at 680px and 440px, the
+  collapsible-menu selector, game-scoped accent tokens, and existing reduced-
+  motion rules. Reviewed party-card grid fallbacks and compact sidebar layout
+  in the stylesheet. Existing local images still decode; no image data changed.
+- Calculated contrast from the current CSS color tokens: main text/background
+  16.22:1, muted text/panel 9.05:1, white text/crimson button 7.35:1, and
+  accent text/accent surface 7.78:1. The faded Coming soon label was 4.80:1.
+  These are token calculations, not a rendered-page contrast audit.
+- `git diff --check` passed.
+
+### Verification limits
+
+No browser executable or browser automation tool is available in this
+environment. The existing preview/browser restrictions are recorded above and
+were not retried. Responsive layout, real keyboard focus/activation, native
+browser Back/Forward, rendered color contrast, console errors, and screen-reader
+output therefore remain unverified in a browser. JavaScriptCore route tests and
+CSS source inspection do not replace those checks. No preview server was
+started or changed, and the site was not deployed.
+
+### Manual review when browser access is available
+
+Open the existing local preview at `http://127.0.0.1:8001`. Check the sidebar
+on Overview, Heroes, Teams, Trinkets, and Highwayman sections; at mobile width,
+open and close “Browse Darkest Dungeon” with keyboard and touch. Search for
+Highwayman, “Gunslinger’s Buckle”, and an unknown word. Open each team detail,
+then use browser Back/Forward and breadcrumbs. Inspect at 320px, 375px, 768px,
+desktop, and 200% zoom; check for horizontal overflow, image placeholders,
+visible focus, and contrast. No commit, push, or deployment was performed for
+this milestone.
+
+## Team composition browsing milestone
+
+### Checks completed
+
+- Read `AGENTS.md`, inspected the current team data, list cards, route parser,
+  detail renderer, CSS, and reviewed the reference composition page. The
+  reference page is accessible; its community tier ratings were not imported.
+- Exercised the global composition list, featured cards, Highwayman guide team
+  section, and each composition detail route in the JavaScriptCore DOM harness.
+  Overview cards show the party formation and main strategy without the detail
+  sections. Detail views retain strategy, opening priorities, build skills,
+  strengths, and limitations.
+- Confirmed composition cards and their title/action links resolve to the
+  matching detail routes, breadcrumbs return to Team Compositions, and member
+  names only link when a guide exists. Other party portraits remain labeled
+  unavailable placeholders. Existing image paths decode locally.
+- Exercised search against existing names, hero members, and strategy text,
+  including the no-results state. Confirmed filtering does not create content.
+- `git diff --check` passed. No dependencies were added.
+
+### Verification limits
+
+No browser binary or browser automation tool is available here. Native
+Back/Forward behavior, keyboard operation in a real browser, and rendered
+mobile layout could not be exercised. Hash-route transitions and focus targets
+were checked with the DOM harness; mobile breakpoints and focus styles were
+inspected in CSS. These checks do not replace a browser review. No commit, push,
+or deployment was performed.

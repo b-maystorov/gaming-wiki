@@ -1,5 +1,60 @@
 # Content sources and image origins
 
+## Earlier image-source audit before local assets were supplied — 2026-10-26
+
+The approved website was inspected at commit `73c8925`. At that audit, the
+three local game-image files described below had not yet been added. Its source
+and network findings are retained as historical notes; the files were later
+supplied in the working tree with provenance still unknown.
+
+**Current download-path failure:** a direct Python HTTPS request to
+`https://www.darkestdungeon.com/contact/` failed before an HTTP response:
+
+```text
+URLError: <urlopen error [Errno -3] Temporary failure in name resolution>
+```
+
+This recorded the name-resolution failure in the local download path for that
+request, not a server refusal or a failed image decode. No binary asset was
+retrieved during that audit. The separate web-search tool had previously returned indexed text;
+that does not establish that this environment can download an image to disk.
+
+**Earlier source-access failures:** wiki.gg page requests returned HTTP 403 and
+the legacy Highwayman page returned HTTP 402. These were source-page requests,
+not downloads from verified image-file URLs. The official Marketing Kit response
+exposed no usable file inventory or reuse terms. Direct image URLs remain
+unverified; no image download should be described as successful or corrupt.
+
+**Separate reuse uncertainty:** the documented official policy and wiki notice
+did not establish applicable permission for public-repository redistribution.
+That is distinct from the network errors and is not a claim that every fan-wiki
+use is forbidden. Supplying a file should include its original source and any
+applicable attribution/reuse terms.
+
+### Five requested files at that audit (three later supplied)
+
+That audit proposed the following DD1 filenames. Three assets were later
+supplied at different original filenames; those files are organized under
+`dist/assets/images/darkest-dungeon/`. The two item icons still requested are
+Reckless Charm and Damage Stone:
+
+| Image | Known candidate source page | Destination filename in that directory |
+| --- | --- | --- |
+| Highwayman portrait | [Highwayman](https://darkestdungeon.wiki.gg/wiki/Highwayman_(Darkest_Dungeon)) | `highwayman.png` (supplied as `highwayman-idle.gif`) |
+| Focus Ring icon | [Campaign trinkets](https://darkestdungeon.wiki.gg/wiki/Trinkets) | `focus-ring.png` |
+| Gunslinger's Buckle icon | [Highwayman trinkets](https://darkestdungeon.wiki.gg/wiki/Highwayman_(Darkest_Dungeon)#Trinkets) | `gunslingers-buckle.png` |
+| Reckless Charm icon | [Campaign trinkets](https://darkestdungeon.wiki.gg/wiki/Trinkets) | `reckless-charm.png` |
+| Damage Stone icon | [Campaign trinkets](https://darkestdungeon.wiki.gg/wiki/Trinkets) | `damage-stone.png` |
+
+At the time of that audit, placing files alone did not change the page. The
+three later-supplied files are integrated in the image-integration record at the
+end of this document. The two remaining item images still require an appropriate
+source and reuse terms before integration. Browser rendering remains unavailable;
+earlier browser socket failures are separate from the DNS failure above.
+
+
+## Original content research — 2026-10-26
+
 Reviewed on 2026-10-26. Scope: **Darkest Dungeon 1 single-player campaign**,
 unmodded. No Darkest Dungeon II or Butcher's Circus skill values are used.
 All included heroes, selected skills, and recommended trinkets are base-game
@@ -49,25 +104,23 @@ effects from the campaign tables; ACC is a flat accuracy modifier, not a percent
 
 ## Images and permission
 
-Reviewed [Red Hook's contact / Fan Creation Usage Policy page](https://www.darkestdungeon.com/contact/).
-It discusses fan creations but was not treated as explicit permission to
-redistribute extracted game art in a public source repository. No game artwork
-was downloaded, hotlinked, or copied. Permission for that use remains
-**unverified**, so this milestone uses clearly labeled placeholders. Replace
-these only after recording a suitable origin and permission.
+At the initial placeholder milestone, [Red Hook's contact / Fan Creation Usage Policy page](https://www.darkestdungeon.com/contact/)
+was reviewed. It was not treated as explicit permission to redistribute extracted
+game art in a public source repository. The original download and reuse status
+for each later-supplied image remains **unverified**, as recorded below.
 
-All six SVG files below were authored directly for this project on 2026-10-26,
-with simple original vector geometry, no external image inputs, and no embedded
-game assets. The five content placeholders are labeled in visible captions and
-image alternative text. These are symbols, not accurate depictions of the items.
+The six SVGs below were authored for the initial placeholder milestone on
+2026-10-26, with original vector geometry and no embedded game assets. The
+portrait and two item SVGs now remain only as unused fallbacks; Reckless Charm
+and Damage Stone still display their labeled placeholders.
 
-| Local file under `dist/assets/images/` | Origin / purpose |
+| Legacy local file under `dist/assets/images/` | Initial placeholder purpose |
 | --- | --- |
-| `hero-placeholder.svg` | Original generic hooded silhouette; Highwayman portrait stand-in. |
-| `ring-placeholder.svg` | Original ring symbol; Focus Ring stand-in. |
-| `buckle-placeholder.svg` | Original buckle symbol; Gunslinger's Buckle stand-in. |
-| `charm-placeholder.svg` | Original pendant symbol; Reckless Charm stand-in. |
-| `stone-placeholder.svg` | Original faceted-stone symbol; Damage Stone stand-in. |
+| `hero-placeholder.svg` | Original generic hooded silhouette; no longer used for the Highwayman portrait. |
+| `ring-placeholder.svg` | Original ring symbol; now-unused Focus Ring fallback. |
+| `buckle-placeholder.svg` | Original buckle symbol; now-unused Gunslinger's Buckle fallback. |
+| `charm-placeholder.svg` | Original pendant symbol; current Reckless Charm placeholder. |
+| `stone-placeholder.svg` | Original faceted-stone symbol; current Damage Stone placeholder. |
 | `ledger-mark.svg` | Original four-point decorative mark; site favicon, not a game image. |
 
 No game asset license is claimed. Darkest Dungeon and its characters belong to
@@ -148,28 +201,46 @@ Sources remain [Red Hook's policy and press entry](https://www.darkestdungeon.co
 and the candidate DD1 pages listed above. No guessed image URL, DD2 asset,
 hotlink, HTML error response saved as an image, or imitation artwork was added.
 
-Once appropriately reusable **Darkest Dungeon 1** images are available, put them
-at these exact paths (create `dist/assets/images/darkest-dungeon/` first):
+The two remaining **Darkest Dungeon 1** item images can use these paths under
+`dist/assets/images/darkest-dungeon/`:
 
-| Required image | Local destination | Data field to update |
+| Remaining image | Local destination | Data field to update |
 | --- | --- | --- |
-| Highwayman artwork / portrait | `dist/assets/images/darkest-dungeon/highwayman.png` | Shared `portrait` object in `heroes.js` |
-| Focus Ring in-game icon | `dist/assets/images/darkest-dungeon/focus-ring.png` | Focus Ring `image` object |
-| Gunslinger's Buckle in-game icon | `dist/assets/images/darkest-dungeon/gunslingers-buckle.png` | Gunslinger's Buckle `image` object |
 | Reckless Charm in-game icon | `dist/assets/images/darkest-dungeon/reckless-charm.png` | Reckless Charm `image` object |
 | Damage Stone in-game icon | `dist/assets/images/darkest-dungeon/damage-stone.png` | Damage Stone `image` object |
 
-Those files do not exist yet; the live page continues referencing valid SVG
-placeholders. Merely placing files in that directory will not change the page.
-For each asset, record the original direct URL, rights holder/attribution, reuse
-terms, and actual dimensions here. Decode it with an image viewer/library to
-confirm it is an image, not just an HTTP success or a `.png` filename, then compare
-it visually to the correct DD1 hero/item reference. Set its `src` relative to
-`dist/` (for example `assets/images/darkest-dungeon/focus-ring.png`), intrinsic
-`width`/`height`, meaningful `alt`, and `placeholder: false` in `heroes.js`.
-Use the original icon resolution rather than an enlarged thumbnail. Remove
-placeholder-only explanatory copy when genuine assets have replaced it.
+The page still uses labeled SVG placeholders for these two items. Before
+integrating a supplied file, record its original URL, rights holder/attribution,
+reuse terms, and actual dimensions. Decode and visually confirm it is the correct
+DD1 icon, then update the matching `image` object in `heroes.js`. Keep its natural
+dimensions and meaningful alt text. Do not infer the source or permissions for
+the already-integrated files from the candidate pages listed here.
 
 Vestal, Plague Doctor, Crusader, and Hellion team portraits also remain missing
 from the earlier request, shown as labeled text placeholders. They are separate
-from the five priority images above and do not expand the hero roster.
+from the five requested Highwayman/trinket assets and do not expand the hero roster.
+
+
+## Image integration milestone
+
+The following existing working-tree files were validated and organized locally:
+
+| Organized file under `dist/assets/images/darkest-dungeon/` | Validated type and dimensions | Visual check | Original source / reuse status |
+| --- | --- | --- | --- |
+| `highwayman-idle.gif` | GIF, 175 × 301 px, 31 frames, palette transparency | Highwayman holding pistol and knife | Original URL, creator attribution, and reuse permission unverified |
+| `focus-ring.png` | PNG, RGBA, 36 × 72 px | Focus Ring icon | Original URL, creator attribution, and reuse permission unverified |
+| `gunslingers-buckle.png` | PNG, RGBA, 36 × 72 px | Gunslinger's Buckle icon | Original URL, creator attribution, and reuse permission unverified |
+
+The input files were named `Hwm_idle.gif`, `focus-ring.png`, and
+`gunslinger-buckle.png` under `dist/assets/images/`. They were moved into the
+Darkest Dungeon subdirectory and renamed consistently. Their original download
+URLs and applicable license terms were not included with the files and could not
+be verified; nearby wiki article pages in the earlier candidate-source table are
+not asserted to be their actual origins. No attribution or reuse permission is
+invented here. The remaining Focus Ring/Gunslinger's Buckle placeholder SVGs are
+kept as unused fallbacks, while Reckless Charm and Damage Stone still display
+labeled placeholders.
+
+The Highwayman GIF is used for his guide portrait and party member portrait. When
+`prefers-reduced-motion: reduce` is active, the GIF is hidden and an accessible
+text alternative is displayed. No static copy or replacement artwork was created.

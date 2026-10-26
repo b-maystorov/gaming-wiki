@@ -1,9 +1,9 @@
 # Gaming Wiki
 
 A personal gaming wiki with public source code and a locally hosted website.
-The first milestone covers Darkest Dungeon 1: a hero gallery and a reusable
-guide populated with Highwayman, including positions, builds, team compositions,
-and illustrated trinket recommendations.
+The current Darkest Dungeon 1 content includes a hero gallery, a reusable
+Highwayman guide, team compositions, and trinket recommendations. Shared page
+components and game configuration are designed to support more games over time.
 
 ## Local preview
 
@@ -32,21 +32,27 @@ dist/                       The entire locally served website
   index.html                 Semantic page shell, navigation, module entry point
   css/styles.css             Charcoal/crimson palette and responsive layout
   js/heroes.js               Hero, build, party, trinket, and source data
-  js/app.js                  Shared gallery/guide rendering and hash navigation
+  js/games.js                Per-game theme key and category/navigation config
+  js/app.js                  Shared views, collections, search, and hash router
   assets/images/
-    hero-placeholder.svg     Labeled original portrait stand-in
-    ring-placeholder.svg     Labeled original Focus Ring stand-in
-    buckle-placeholder.svg   Labeled original Gunslinger's Buckle stand-in
-    charm-placeholder.svg    Labeled original Reckless Charm stand-in
-    stone-placeholder.svg    Labeled original Damage Stone stand-in
-    ledger-mark.svg          Original decorative site favicon
+    darkest-dungeon/
+      highwayman-idle.gif       Highwayman portrait (31-frame idle animation)
+      focus-ring.png            Focus Ring icon (36 × 72)
+      gunslingers-buckle.png    Gunslinger's Buckle icon (36 × 72)
+    hero-placeholder.svg      Portrait fallback for other heroes
+    charm-placeholder.svg     Reckless Charm fallback
+    stone-placeholder.svg     Damage Stone fallback
+    ledger-mark.svg           Original decorative site favicon
 ```
 
 ## How it works
 
-`index.html` loads `app.js` as an ES module. It imports `heroes` and `sources`
-from `heroes.js`, then renders the gallery or the same reusable guide template
-for the requested hero. Content strings are HTML-escaped before rendering.
+`index.html` loads `app.js` as an ES module. The shared renderer imports hero
+and source data from `heroes.js`, plus category labels, icons, routes, and a
+theme key from `games.js`. The same guide template serves each hero; the game
+configuration supplies its sidebar without adding game-specific markup to the
+global header. Team composition records provide a reusable summary and detail
+view. Content strings are HTML-escaped before rendering.
 
 | Route | View |
 | --- | --- |
@@ -54,6 +60,8 @@ for the requested hero. Content strings are HTML-escaped before rendering.
 | `#game/darkest-dungeon` | Darkest Dungeon landing page |
 | `#game/darkest-dungeon/heroes` | Hero gallery |
 | `#game/darkest-dungeon/teams` | All current team compositions |
+| `#game/darkest-dungeon/teams/steady-expedition` | A steady expedition details |
+| `#game/darkest-dungeon/teams/rotating-middle` | A rotating middle details |
 | `#game/darkest-dungeon/trinkets` | All current trinket recommendations |
 | `#hero/highwayman/overview` | Highwayman guide |
 | `#hero/highwayman/builds`, `/teams`, `/trinkets` | Hero-specific sections |
@@ -97,32 +105,45 @@ Heroes, Team Compositions, and Trinkets. Darkest Dungeon II, WoW: Forever, and
 League of Legends are non-interactive Coming soon cards; no empty pages exist.
 The Darkest Dungeon menu is visible only within that game's views. Hero pages
 keep Overview, Builds, Teams, and Trinkets navigation separately from the menu.
+The category sidebar is built from `games.js`: available routes link to existing
+views, while Bosses, Enemies, Curios, Locations, and Quests are labeled Coming
+soon and are not interactive. Its mobile menu is a keyboard-operable disclosure.
+The Darkest Dungeon landing search indexes only current hero, build, team, and
+trinket records. Team collections and featured cards lead to individual details;
+no tier or location assessment is shown as a fact where the project has none.
 
 The charcoal palette uses named custom properties in `styles.css`: background,
 panel, text, muted text, borders, accent fill/text/surface/hover, image background,
-and focus ring. Change those variables for a future game's theme. Paragraphs
-remain neutral, with crimson reserved for navigation and restrained highlights.
+and focus ring. `games.js` selects a theme key per game; its scoped CSS rule sets
+the game accent tokens. Add a theme configuration and matching scoped CSS tokens
+for another game's colors. Paragraphs remain neutral, with crimson reserved for
+Darkest Dungeon navigation and restrained highlights.
 The short transitions and entry fade are disabled for reduced-motion preferences.
 
-Real game images remain blocked by the documented source-access and reuse
-uncertainties; no new replacement art was generated. The five existing labeled
-SVG placeholders and favicon were only recolored. Trinket images remain capped
-at 72px and preserve their proportions. See the exact requested image filenames
-and integration steps in `docs/content-sources.md`.
+The Highwayman idle animation, Focus Ring icon, and Gunslinger's Buckle icon now
+use existing local image files. Their original source and reuse permission remain
+unverified and are recorded as such. Reckless Charm and Damage Stone still use
+their labeled placeholders. The animated portrait switches to a text alternative
+when reduced motion is preferred. Small item icons preserve their 36 × 72 size.
 
 ## Completed and remaining
 
-Completed: a game-selection home page, Darkest Dungeon landing page, independent
-Teams/Trinkets collections, breadcrumbs, one-hero gallery, reusable guide, and
-Overview/Builds/Teams/Trinkets
+Completed: a game-selection home page, Darkest Dungeon landing page with indexed
+search, responsive category sidebar, Coming soon categories, independent
+Teams/Trinkets collections, detailed routes for both current compositions,
+breadcrumbs, one-hero gallery, reusable guide, and Overview/Builds/Teams/Trinkets
 navigation, preferred and alternative positions, two four-skill builds, two
-explained party formations, and four trinket recommendations with numerical
+explained party formations with positions, portraits where locally available,
+skills, strategies, strengths, limitations, and opening priorities, and four
+trinket recommendations with numerical
 effects, drawbacks, and accessible alternatives. The layout includes mobile
 breakpoints, visible focus indicators, a skip link, and labeled illustrations.
 
-Remaining placeholders: Highwayman artwork and all four trinket pictures are
-original SVG stand-ins, **not game artwork**. Vestal, Plague Doctor, Highwayman,
-Crusader, and Hellion portraits in the existing teams are labeled unavailable.
+Remaining image placeholders: Reckless Charm and Damage Stone icons use labeled
+SVGs. Vestal, Plague Doctor, Crusader, and Hellion party portraits are labeled
+unavailable. Highwayman, Focus Ring, and Gunslinger's Buckle source attribution
+and reuse conditions remain unverified. Team tiers and dungeon suitability are
+not assessed. Bosses, Enemies, Curios, Locations, and Quests remain unavailable.
 Mechanics and item values were checked against published references; no installed-game or patch-specific
 verification was available. Tactical advice is editorial, not playtested.
 Browser-level visual, keyboard, and runtime checks remain unperformed because
