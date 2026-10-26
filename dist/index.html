@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A personal gaming wiki. Choose a game to explore heroes, team compositions, and equipment.">
+  <title>Gaming Wiki</title>
+  <link rel="icon" href="assets/images/ledger-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">✦</span> Gaming Wiki</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="#home" data-site-page="home">Home</a>
+      <a href="#game/darkest-dungeon" data-site-page="game">Darkest Dungeon</a>
+    </nav>
+    <nav class="game-nav" aria-label="Darkest Dungeon navigation" hidden>
+      <a href="#game/darkest-dungeon" data-game-section="game">Game overview</a>
+      <a href="#game/darkest-dungeon/heroes" data-game-section="heroes">Heroes</a>
+      <a href="#game/darkest-dungeon/teams" data-game-section="teams">Team Compositions</a>
+      <a href="#game/darkest-dungeon/trinkets" data-game-section="trinkets">Trinkets</a>
+    </nav>
+  </header>
+  <main id="main-content" tabindex="-1">
+    <noscript><h1>JavaScript is required</h1><p>This local guide uses JavaScript to load its hero data. Enable it and reload the page.</p></noscript>
+  </main>
+  <footer class="site-footer"><span>A personal field guide · Local website, public source</span><span>Unofficial fan project. Darkest Dungeon belongs to Red Hook Studios.</span></footer>
+</body>
+</html>
