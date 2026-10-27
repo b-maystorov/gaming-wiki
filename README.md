@@ -132,3 +132,19 @@ are indexed. Builds and trinkets open their existing sections; preview games are
 labeled in development. Empty input lists all indexed content. The native HTML
 `dialog` makes background content inactive while open. Styling lives in
 `dist/css/command-center.css`; no server or external search service is used.
+
+
+## Darkest Dungeon hero gallery
+
+The Heroes route displays the requested original 17-class roster: 15 base-game
+classes, Flagellant (The Crimson Court), and Shieldbreaker (The Shieldbreaker).
+The Musketeer variant and later additions are outside this gallery milestone.
+Search class names or capability tags, combine search with the role selector,
+and use Clear filters to reset. Only Highwayman currently links to a full guide.
+
+`heroes.js` holds role tags, requirements, guide availability and `galleryArt`.
+`hero-gallery.js` renders and filters the cards; `hero-gallery.css` scopes their
+layout to the gallery. All gallery portraits currently use labeled original
+monograms. Future portrait entries require `permission: 'permitted'`, a local
+`src`, and documented source/reuse terms before display. Failed images retain the
+monogram fallback. Existing guide portraits and gameplay content are unchanged.

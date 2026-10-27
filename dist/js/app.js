@@ -1,6 +1,7 @@
 import { heroes, sources } from './heroes.js';
 import { games, portalGames } from './games.js';
 import { initializeCommandCenter } from './command-center.js';
+import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 
 const main = document.querySelector('main');
 const sections = ['overview', 'builds', 'teams', 'trinkets'];
@@ -208,30 +209,7 @@ function renderTeamDetail(team) {
 }
 
 function renderGallery() {
-  return `<section class="gallery-intro" aria-labelledby="page-title">
-    <p class="eyebrow">Darkest Dungeon / Campaign guides</p>
-    <h1 id="page-title" tabindex="-1">Heroes</h1>
-    <p class="lede">Find your hero’s role, build a party, and choose the right trinkets.</p>
-    <div class="intro-rule"><span>Campaign guides</span><span>${heroes.filter(hero => hero.guide).length} guide available</span></div>
-  </section>
-  <section aria-labelledby="gallery-heading">
-    <div class="section-heading"><h2 id="gallery-heading">Available guides</h2><span>Base game · No DLC or mods required</span></div>
-    <div class="hero-gallery">${heroes.map(hero => {
-      const tag = hero.guide ? 'a' : 'article';
-      const destination = hero.guide ? ` href="#hero/${escapeHtml(hero.id)}/overview"` : '';
-      return `<${tag}${destination} class="hero-card">
-        ${renderImage(hero.portrait, 'gallery-portrait')}
-        <div class="hero-card-copy"><p class="eyebrow">${requirementLabel(hero.requirements)}</p>
-          <h3>${escapeHtml(hero.name)}</h3><p class="role">${escapeHtml(hero.role)}</p>
-          <p>${escapeHtml(hero.summary)}</p>
-          <p class="card-positions">Preferred positions <strong>${hero.preferredPositions.join(' · ')}</strong><span>1 = front</span></p>
-          ${hero.guide ? `<ul class="card-strengths">${hero.guide.strengths.map(strength => `<li>${escapeHtml(strength)}</li>`).join('')}</ul>` : ''}
-          <span class="card-action">${hero.guide ? 'Read the guide <span aria-hidden="true">↗</span>' : 'Guide not yet available'}</span>
-        </div>
-      </${tag}>`;
-    }).join('')}</div>
-    <p class="scope-note">Currently available: Highwayman, two builds, two parties, and four trinket options.</p>
-  </section>`;
+  return renderHeroGallery(heroes);
 }
 
 function renderBuild(build, index) {
@@ -489,6 +467,8 @@ document.addEventListener('input', event => {
   document.getElementById('game-search-status').textContent = results.status;
   document.getElementById('game-search-results').innerHTML = results.markup;
 });
+initializeHeroGallery(main, heroes);
+
 // Reuse the router, including its same-route focus/scroll behavior.
 const commandCenter = initializeCommandCenter({
   navigate(href) {

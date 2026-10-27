@@ -286,3 +286,60 @@ The existing BM crest is reused in the portal header and footer. Scene refinemen
 add original CSS ruins and steps, frozen ridges and fortress lights, an arcane
 platform, and an eclipse over an ash road. These are decorative abstractions,
 not official game locations or copied artwork. No external assets were added.
+
+## DD I original hero gallery (2026-10-27)
+
+Scope matches the 17 entries in the requested [Hintbook gallery](https://darkestdungeon.hintbook.co/heroes/):
+15 base-game classes plus Flagellant and Shieldbreaker. This is an explicitly
+bounded historical roster, not a claim about the current total of all playable
+classes. Musketeer and later DLC additions are outside this milestone. The
+reference informed the portrait/name/role/DLC hierarchy only; no images, prose,
+markup or stylesheet were copied.
+
+Role tags are editorial capability labels checked against the indexed
+[DD I Getting Started class descriptions](https://darkestdungeon.wiki.gg/wiki/Getting_Started)
+and [DD I hero overview](https://darkestdungeon.wiki.gg/wiki/Heroes_%28Darkest_Dungeon%29).
+Direct wiki.gg overview access returned HTTP 403; indexed text was readable.
+No installed game build or balance values were verified. Tags do not imply
+optimal builds, mandatory party roles, or equal healing strength. Self-sustain
+means self-healing/defensive recovery rather than ally healing.
+
+| Class | Gallery capabilities |
+| --- | --- |
+| Abomination | Damage, Stun, Blight |
+| Antiquarian | Support, Debuff |
+| Arbalest | Damage, Healing, Mark |
+| Bounty Hunter | Damage, Stun, Mark |
+| Crusader | Damage, Stress relief |
+| Grave Robber | Damage, Blight |
+| Hellion | Damage, Bleed, Stun |
+| Highwayman | Damage, Riposte |
+| Houndmaster | Support, Guard, Stun |
+| Jester | Stress relief, Support, Bleed |
+| Leper | Damage, Self-sustain |
+| Man-at-Arms | Guard, Support, Riposte |
+| Occultist | Healing, Debuff, Mark |
+| Plague Doctor | Blight, Stun, Healing |
+| Vestal | Healing, Stun |
+| Flagellant | Bleed, Healing |
+| Shieldbreaker | Damage, Armor piercing, Guard break |
+
+Flagellant's DLC requirement was cross-checked with the class overview and
+[The Crimson Court's Steam listing](https://store.steampowered.com/app/580100/Darkest_Dungeon_The_Crimson_Court/).
+Shieldbreaker's requirement and capability tags were checked against
+[The Shieldbreaker's official Steam description](https://store.steampowered.com/app/702540/Darkest_Dungeon_The_Shieldbreaker/).
+All entries require the base game; neither DLC is a mod, and no mods are required.
+
+Artwork audit: the only local class image is the previously supplied 175 × 301
+Highwayman GIF, whose original source and reuse terms remain unverified. It is
+not reused in the new gallery; its approved existing guide/team usage is intact.
+The two small item icons are not portraits. No portraits for the other 16 classes
+are available locally with verified reuse permission. No remote images were
+requested or copied. Every gallery card therefore uses an original typographic
+class monogram and CSS frame, visibly labeled as a placeholder, not game art.
+
+`galleryArt.src` is null for all 17 entries. Highwayman's gallery permission
+status is `unverified`; the remaining classes are `missing`. Only an explicitly
+`permitted` future portrait is rendered. Record its original URL, attribution,
+reuse terms and native dimensions here first. Failed loads reveal the monogram;
+animated portraits also reveal it under reduced motion.
