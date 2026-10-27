@@ -7,20 +7,27 @@
   <title>Gaming Wiki</title>
   <link rel="icon" href="assets/images/ledger-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/portal.css">
   <script type="module" src="js/app.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">✦</span> Gaming Wiki</a>
+    <a class="brand" href="#home"><span class="portal-header-brand"><img src="assets/images/bm-mark.svg" width="38" height="38" alt=""><span>BM <span class="brand-detail">Gaming Wiki</span></span></span></a>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="#home" data-site-page="home">Home</a>
+      <a href="#home/games" data-site-page="universes">Universes</a>
       <a href="#game/darkest-dungeon" data-site-page="game">Darkest Dungeon</a>
     </nav>
+    <span class="header-status"><span aria-hidden="true"></span>1 active wiki</span>
   </header>
   <main id="main-content" tabindex="-1">
     <noscript><h1>JavaScript is required</h1><p>This local guide uses JavaScript to load its hero data. Enable it and reload the page.</p></noscript>
   </main>
-  <footer class="site-footer"><span>A personal field guide · Local website, public source</span><span>Unofficial fan project. Darkest Dungeon belongs to Red Hook Studios.</span></footer>
+  <footer class="site-footer">
+    <div class="portal-footer-brand"><img src="assets/images/bm-mark.svg" width="44" height="44" alt=""><div><strong>BM Gaming Wiki</strong><p>A personal field guide. A world of possibilities.</p></div></div>
+    <nav class="footer-links" aria-label="Footer navigation"><strong>Find your way</strong><a href="#home">Home</a><a href="#home/games">All universes</a><a href="#game/darkest-dungeon/heroes">Darkest Dungeon guides</a></nav>
+    <div class="portal-footer-note"><p>Made for the journey.</p><p>Unofficial fan project. All games belong to their respective owners.</p><span>Local website · Public source</span></div>
+  </footer>
 </body>
 </html>

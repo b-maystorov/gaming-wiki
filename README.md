@@ -12,7 +12,8 @@ The first game I'm working on is **Darkest Dungeon 1**.
 
 So far, I've added:
 
-- A homepage where visitors can choose a game
+- A BM Gaming Wiki homepage with four themed game previews
+- Development preview pages for World of Warcraft, League of Legends, and Darkest Dungeon II; their categories are planned, not available guides
 - A Darkest Dungeon section with its own navigation and theme
 - A Highwayman guide with builds, strengths, weaknesses, and trinket recommendations
 - Team compositions with party positions and strategy explanations
@@ -63,7 +64,8 @@ gaming-wiki/
 ├── dist/
 │   ├── index.html
 │   ├── css/
-│   │   └── styles.css
+│   │   ├── styles.css
+│   │   └── portal.css
 │   ├── js/
 │   │   ├── app.js
 │   │   ├── games.js
@@ -103,3 +105,15 @@ The project is also an opportunity for me to practice frontend development, proj
 This is an unofficial fan project and is not affiliated with Red Hook Studios or any other game developer.
 
 Darkest Dungeon and its associated characters and artwork belong to their respective rights holders. Artwork sources and reuse permissions are tracked in `docs/content-sources.md`.
+
+## Game universe previews
+
+The global homepage uses `dist/css/portal.css`; approved Darkest Dungeon styles
+remain in `styles.css`. `portalGames` in `dist/js/games.js` configures each scene,
+its availability, entry link, and planned categories. Future games share one
+preview template and have no gameplay guides yet.
+
+Preview routes: `#game/world-of-warcraft`, `#game/league-of-legends`, and
+`#game/darkest-dungeon-2`. `#home/games` returns directly to the game selector.
+Mouse hover, keyboard focus, or touch/click selects a universe; the entry link
+opens its page. All scene art is original CSS geometry, with no remote images.

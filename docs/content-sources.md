@@ -244,3 +244,45 @@ labeled placeholders.
 The Highwayman GIF is used for his guide portrait and party member portrait. When
 `prefers-reduced-motion: reduce` is active, the GIF is hidden and an accessible
 text alternative is displayed. No static copy or replacement artwork was created.
+
+## Global portal visual milestone (2026-10-27)
+
+The homepage uses original CSS geometry and gradients in `dist/css/styles.css`:
+compass rings, a gothic gateway, an orbital seal, a crystal, and an ember horizon.
+These are abstract decorative placeholders, not official game artwork or logos.
+The homepage labels the scenery accordingly. No remote images, fonts, generated
+bitmap artwork, or new third-party assets were imported. The existing original
+four-point site mark remains the favicon and branding motif.
+
+The available 175 × 301 Highwayman GIF and 36 × 72 item icons are unsuitable for
+large backgrounds and have unverified reuse terms; they were not reused on the
+portal. Their existing internal-page uses and provenance records remain unchanged.
+
+## BM branding and interactive showcase (2026-10-27)
+
+`dist/assets/images/bm-mark.svg` is an original geometric BM crest authored for
+this project, using vector paths with no embedded fonts or third-party artwork.
+It appears in the homepage hero and can be reused at smaller sizes for future
+header/favicon work. The existing shared header and favicon remain unchanged.
+
+The homepage showcase now uses a crimson gateway with torch glows, an icy
+blue/gold citadel silhouette, a blue-purple crystal with gold orbital rings,
+and an ember horizon with a receding road. All are original abstract CSS
+scenery, not official locations, logos, or promotional artwork. No remote assets
+or game sprites are used in the showcase; existing provenance notes still apply.
+
+## Game universe previews and scene layout (2026-10-27)
+
+Portal styling now lives in `dist/css/portal.css`. Scene geometry is placed in a
+separate visible environment layer, with text scrims limited to the reading area.
+The same original CSS scenery is reused on the three future-game preview pages.
+The BM shield remains original vector artwork, now displayed more prominently.
+No new third-party imagery or gameplay facts were introduced. Preview categories
+are development plans only, not available guides or promises of a release date.
+
+## Portal polish (2026-10-27)
+
+The existing BM crest is reused in the portal header and footer. Scene refinements
+add original CSS ruins and steps, frozen ridges and fortress lights, an arcane
+platform, and an eclipse over an ash road. These are decorative abstractions,
+not official game locations or copied artwork. No external assets were added.

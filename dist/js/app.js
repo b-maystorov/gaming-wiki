@@ -1,9 +1,10 @@
 import { heroes, sources } from './heroes.js';
-import { games } from './games.js';
+import { games, portalGames } from './games.js';
 
 const main = document.querySelector('main');
 const sections = ['overview', 'builds', 'teams', 'trinkets'];
 let currentView = '';
+let selectedPortalGame = 0;
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, character => ({
@@ -50,17 +51,76 @@ function renderList(items, ordered = false) {
 }
 
 function renderHome() {
-  return `<section class="page-intro" aria-labelledby="page-title">
-    <p class="eyebrow">Personal guides / Better-prepared adventures</p>
-    <h1 id="page-title" tabindex="-1">Gaming Wiki</h1>
-    <p class="lede">Practical guides for the games you play.</p>
-  </section>
-  <section aria-labelledby="games-heading"><div class="section-heading"><h2 id="games-heading">Choose your game</h2></div>
-    <div class="game-grid">
-      <a class="navigation-card available-game" href="#game/darkest-dungeon"><span class="status-label">Available</span><h3>Darkest Dungeon</h3><p>Hero guides, team compositions, and trinkets for the original campaign.</p><span class="card-action">Explore game <span aria-hidden="true">→</span></span></a>
-      ${['Darkest Dungeon II', 'WoW: Forever', 'League of Legends'].map(name => `<article class="navigation-card coming-soon"><span class="status-label">Coming soon</span><h3>${name}</h3><p>Guides are not available yet.</p></article>`).join('')}
+  return `<div class="portal">
+    <section class="portal-hero" aria-labelledby="page-title">
+      <div class="portal-compass" aria-hidden="true"><span>✦</span></div>
+      <div class="portal-hero-copy">
+        <div class="portal-identity"><img src="assets/images/bm-mark.svg" width="112" height="112" alt=""><div><p class="portal-brand-name">BM Gaming Wiki</p><p class="portal-kicker">Your adventure, understood</p></div></div>
+        <h1 id="page-title" tabindex="-1">Every game has a story.<br> <em>Master yours.</em></h1>
+        <p class="portal-intro">Find your way with game guides, hero builds, team compositions, equipment, and strategy help. Start with Darkest Dungeon. More worlds await.</p>
+        <button class="portal-explore" type="button" data-explore-games>Explore Games <span aria-hidden="true">↓</span></button>
+      </div>
+      <div class="portal-hero-foot"><span>A personal field guide for the journey</span><span aria-hidden="true">01 — Choose your world</span></div>
+    </section>
+    <section class="portal-library" aria-labelledby="games-heading">
+      <div class="portal-library-heading"><div><p class="portal-kicker">The game library</p><h2 id="games-heading" tabindex="-1">Choose your world.</h2></div><p>Four universes. Choose your next adventure.</p></div>
+      <div class="portal-selectors" role="group" aria-label="Preview a game">${portalGames.map((game, index) => `
+        <button type="button" class="portal-selector" data-preview-game="${index}" data-portal-theme="${game.theme}" aria-pressed="${index === selectedPortalGame}" aria-controls="game-showcase">
+          <span class="portal-selector-number" aria-hidden="true">0${index + 1}</span><strong>${escapeHtml(game.name)}</strong><small>${game.available ? 'Guides available' : 'Wiki in development'}</small>
+        </button>`).join('')}</div>
+      <div id="game-showcase" class="portal-showcase" data-active-game="${selectedPortalGame}">${renderPortalShowcase(portalGames[selectedPortalGame])}</div>
+      <p class="portal-preview-status visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p class="portal-art-note">Original abstract scenery · No official game artwork</p>
+    </section>
+  </div>`;
+}
+
+function renderPortalShowcase(game) {
+  return `<article class="portal-scene" data-portal-theme="${escapeHtml(game.theme)}" aria-labelledby="showcase-title">
+    ${renderPortalScenery(game)}
+    <div class="portal-panel-top"><span>World preview</span><span class="portal-status">${game.available ? 'Guides available' : 'Wiki in development'}</span></div>
+    <div class="portal-panel-copy"><p class="portal-kicker">${escapeHtml(game.label)}</p><h3 id="showcase-title">${escapeHtml(game.name)}</h3>
+      <p class="portal-description">${escapeHtml(game.description)}</p>
+      <a class="portal-panel-action" href="${escapeHtml(game.href)}">${escapeHtml(game.action)} <span aria-hidden="true">↗</span></a>
     </div>
-  </section>`;
+  </article>`;
+}
+
+function renderPortalScenery(game) {
+  return `<div class="portal-environment" data-scenery="${escapeHtml(game.motif)}" aria-hidden="true"><div class="scene-distance"></div><div class="portal-scenery ${escapeHtml(game.motif)}"><span></span></div><div class="scene-ground"></div></div>`;
+}
+
+function renderGamePreview(game) {
+  return `<div class="portal"><section class="portal-preview" data-portal-theme="${escapeHtml(game.theme)}">
+    <a class="portal-return" href="#home/games">← All game universes</a>
+    <div class="portal-scene portal-preview-scene">
+      ${renderPortalScenery(game)}
+      <div class="portal-panel-top"><span>BM Gaming Wiki / World preview</span><span class="portal-status">Wiki in development</span></div>
+      <div class="portal-panel-copy"><p class="portal-kicker">${escapeHtml(game.label)}</p>
+        <h1 id="page-title" tabindex="-1">${escapeHtml(game.name)}</h1>
+        <p class="portal-description">${escapeHtml(game.description)}</p>
+        <p class="portal-development-note">This wiki is in development. Guides and gameplay content are not available yet.</p>
+      </div>
+    </div>
+    <section class="portal-roadmap" aria-labelledby="upcoming-heading"><p class="portal-kicker">On the horizon</p><h2 id="upcoming-heading">The future field guide</h2>
+      <p>Planned categories, ready to grow as the wiki develops.</p>
+      <div class="portal-category-grid">${game.categories.map((category, index) => `<article class="portal-category"><span aria-hidden="true">0${index + 1}</span><h3>${escapeHtml(category)}</h3><p>Planned · No guides yet</p></article>`).join('')}</div>
+    </section>
+  </section></div>`;
+}
+
+function selectPortalGame(button) {
+  const showcase = document.getElementById('game-showcase');
+  const index = Number(button.dataset.previewGame);
+  if (!showcase || !portalGames[index] || showcase.dataset.activeGame === String(index)) return;
+  // Keep the selectors mounted so keyboard focus survives each preview change.
+  selectedPortalGame = index;
+  showcase.innerHTML = renderPortalShowcase(portalGames[index]);
+  showcase.dataset.activeGame = String(index);
+  document.querySelectorAll('[data-preview-game]').forEach(selector => {
+    selector.setAttribute('aria-pressed', String(selector === button));
+  });
+  document.querySelector('.portal-preview-status').textContent = `${portalGames[index].name}: ${portalGames[index].available ? 'guides available' : 'wiki in development; preview available'}.`;
 }
 
 function renderGameLanding() {
@@ -276,10 +336,12 @@ function renderGameSidebar(route) {
 
 function readRoute(hash) {
   const path = hash.replace(/^#/, '');
-  if (!path || path === 'home') return { view: 'home' };
+  if (!path || path === 'home' || path === 'home/games') return { view: 'home', library: path === 'home/games' };
   // Preserve existing bookmarks without rewriting history entries.
   if (path === 'heroes') return { view: 'heroes', game: true };
   const parts = path.split('/');
+  const preview = portalGames.find(game => !game.available && game.id === parts[1]);
+  if (parts[0] === 'game' && parts.length === 2 && preview) return { view: 'preview', preview };
   if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts.length <= 3) {
     const view = parts[2] || 'game';
     if (['game', 'heroes', 'teams', 'trinkets'].includes(view)) return { view, game: true };
@@ -317,6 +379,7 @@ function renderBreadcrumbs(route) {
 const pageTitles = { home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', teams: 'Team Compositions', 'team-detail': 'Team composition', trinkets: 'Trinkets', missing: 'Page not found' };
 
 function renderPage(route) {
+  if (route.preview) return renderGamePreview(route.preview);
   const views = { home: renderHome, game: renderGameLanding, heroes: renderGallery,
     teams: () => renderCollection('teams'), trinkets: () => renderCollection('trinkets') };
   const content = route.hero ? renderGuide(route.hero) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
@@ -327,8 +390,9 @@ function renderPage(route) {
 }
 
 function updateNavigation(route) {
+  const activePage = route.game ? 'game' : route.preview || route.library ? 'universes' : route.view;
   document.querySelectorAll('[data-site-page]').forEach(link => {
-    const active = link.dataset.sitePage === (route.game ? 'game' : route.view);
+    const active = link.dataset.sitePage === activePage;
     if (active) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   });
@@ -340,20 +404,22 @@ function updateNavigation(route) {
 
 function showRoute() {
   const route = readRoute(location.hash);
-  const viewKey = route.hero ? `hero/${route.hero.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
+  if (route.preview) selectedPortalGame = portalGames.indexOf(route.preview);
+  document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview');
+  const viewKey = route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
   const changed = viewKey !== currentView;
   if (changed) {
     main.innerHTML = renderPage(route);
     currentView = viewKey;
   }
-  document.title = route.hero ? `${route.hero.name} · Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Gaming Wiki` :
-    route.view === 'home' ? 'Gaming Wiki' : `${pageTitles[route.view]} · Gaming Wiki`;
+  document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Gaming Wiki` :
+    route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view]} · Gaming Wiki`;
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
   const sectionTarget = route.hero && (!changed || route.section !== 'overview');
-  const target = document.getElementById(sectionTarget ? route.section : 'page-title');
+  const target = document.getElementById(route.library ? 'games-heading' : sectionTarget ? route.section : 'page-title');
   target.focus({ preventScroll: true });
-  if (sectionTarget) target.scrollIntoView({ block: 'start' });
+  if (sectionTarget || route.library) target.scrollIntoView({ block: 'start' });
   else window.scrollTo(0, 0);
 }
 
@@ -364,7 +430,27 @@ document.querySelector('.skip-link').addEventListener('click', event => {
 });
 
 window.addEventListener('hashchange', showRoute);
+// Native buttons provide Tab, Enter, Space, and touch selection; mouse hover previews too.
+document.addEventListener('pointerover', event => {
+  const button = event.target.closest('[data-preview-game]');
+  if (button && event.pointerType === 'mouse') selectPortalGame(button);
+});
+document.addEventListener('focusin', event => {
+  const button = event.target.closest('[data-preview-game]');
+  if (button) selectPortalGame(button);
+});
 document.addEventListener('click', event => {
+  const previewButton = event.target.closest('[data-preview-game]');
+  if (previewButton) {
+    selectPortalGame(previewButton);
+    return;
+  }
+  if (event.target.closest('[data-explore-games]')) {
+    const heading = document.getElementById('games-heading');
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    return;
+  }
   const sidebarToggle = event.target.closest('.sidebar-toggle');
   if (sidebarToggle) {
     sidebarToggle.setAttribute('aria-expanded', sidebarToggle.getAttribute('aria-expanded') !== 'true' ? 'true' : 'false');
