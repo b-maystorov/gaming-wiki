@@ -1,5 +1,6 @@
 import { games, portalGames } from './games.js';
 import { heroes } from './heroes.js';
+import { heroAbilities } from './hero-abilities.js';
 
 function normalizeSearch(value) {
   return value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -31,6 +32,14 @@ export function createSearchIndex() {
       entries.push({ title: trinket.name, type: 'Trinket', icon: '◇', detail: `${hero.name} · Opens Trinkets`,
         href: `#game/${game.id}/trinkets`,
         keywords: `${context} equipment item ${trinket.rarity} ${trinket.use} ${trinket.effects.join(' ')}` });
+    }
+  }
+  for (const hero of heroes) {
+    const abilityEntry = heroAbilities[hero.id];
+    if (!abilityEntry) continue;
+    for (const [name, from, targets, damage, accuracy, crit, effect] of abilityEntry.skills) {
+      entries.push({ title: name, type: `${hero.name} combat skill`, icon: '✦', detail: `${hero.name} · Opens Combat skills`,
+        href: `#hero/${hero.id}/abilities`, keywords: `${game.name} ${hero.name} ${from} ${targets} ${damage} ${accuracy} ${crit} ${effect}` });
     }
   }
   // Future guides may recommend the same item or party; show each destination/title once.

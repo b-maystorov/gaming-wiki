@@ -127,9 +127,10 @@ Escape to close. Tab cycles the input and close button. Closing returns focus to
 the opener; choosing a result lets the existing router focus the destination.
 
 `dist/js/command-center.js` derives its index from `games.js` and `heroes.js`.
-Only real games/previews and implemented hero guides, builds, teams, and trinkets
-are indexed. Builds and trinkets open their existing sections; preview games are
-labeled in development. Empty input lists all indexed content. The native HTML
+Only real games/previews and implemented hero guides, builds, teams, trinkets,
+and combat skills are indexed. Build, trinket, and skill results open their
+existing sections; preview games are labeled in development. Empty input lists
+all indexed content. The native HTML
 `dialog` makes background content inactive while open. Styling lives in
 `dist/css/command-center.css`; no server or external search service is used.
 
@@ -140,11 +141,16 @@ The Heroes route displays the requested original 17-class roster: 15 base-game
 classes, Flagellant (The Crimson Court), and Shieldbreaker (The Shieldbreaker).
 The Musketeer variant and later additions are outside this gallery milestone.
 Search class names or capability tags, combine search with the role selector,
-and use Clear filters to reset. Only Highwayman currently links to a full guide.
+and use Clear filters to reset. Cards open each class's combat-skill reference;
+only Highwayman currently links to a full strategy guide.
 
 `heroes.js` holds role tags, requirements, guide availability and `galleryArt`.
 `hero-gallery.js` renders and filters the cards; `hero-gallery.css` scopes their
-layout to the gallery. All gallery portraits currently use labeled original
-monograms. Future portrait entries require `permission: 'permitted'`, a local
-`src`, and documented source/reuse terms before display. Failed images retain the
-monogram fallback. Existing guide portraits and gameplay content are unchanged.
+layout to the gallery. User-supplied portraits are used with source and reuse
+terms unverified. Failed images retain the monogram fallback. Existing guide
+portraits and gameplay content are unchanged.
+
+Combat skill reference routes use `#hero/<id>/abilities`. Their level-one values
+are snapshots from an older reference guide and were not checked against the
+installed game patch. Full build, team, equipment, and strategy content remains
+available only for Highwayman.

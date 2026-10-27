@@ -343,3 +343,86 @@ status is `unverified`; the remaining classes are `missing`. Only an explicitly
 `permitted` future portrait is rendered. Record its original URL, attribution,
 reuse terms and native dimensions here first. Failed loads reveal the monogram;
 animated portraits also reveal it under reduced motion.
+
+
+## User-supplied 17-class sheet integration (2026-10-27)
+
+The user supplied `dist/assets/images/darkest-dungeon/dd1-character-contact-sheet.png`
+(1448 × 1086 px), a 6/6/5 grid in alphabetical class order. The original sheet
+is retained. The 17 gallery crops below were cut along its visible panel dividers;
+no character was redrawn, generated, or taken from the reference site.
+
+| Class | Local crop |
+| --- | --- |
+| Abomination | `abomination-portrait.png` |
+| Antiquarian | `antiquarian-portrait.png` |
+| Arbalest | `arbalest-portrait.png` |
+| Bounty Hunter | `bounty-hunter-portrait.png` |
+| Crusader | `crusader-portrait.png` |
+| Grave Robber | `grave-robber-portrait.png` |
+| Hellion | `hellion-portrait.png` |
+| Highwayman | `highwayman-portrait.png` |
+| Houndmaster | `houndmaster-portrait.png` |
+| Jester | `jester-portrait.png` |
+| Leper | `leper-portrait.png` |
+| Man-at-Arms | `man-at-arms-portrait.png` |
+| Occultist | `occultist-portrait.png` |
+| Plague Doctor | `plague-doctor-portrait.png` |
+| Vestal | `vestal-portrait.png` |
+| Flagellant | `flagellant-portrait.png` |
+| Shieldbreaker | `shieldbreaker-portrait.png` |
+
+The sheet is an illustrative, game-inspired set, not verified official in-game
+portraits. It was supplied by the user for this gallery, but its original creator,
+license, and public redistribution terms were not provided. The images are
+identified as user-provided illustrations with unverified source in their alt
+text/captions and metadata. No official artwork or license is claimed. The
+Highwayman GIF remains separately sourced with unverified provenance and is not
+replaced in his approved guide or team cards.
+
+This integration supersedes the prior gallery-audit statement that all 17
+`galleryArt.src` values were empty. They now reference the local crops and use
+`permission: 'user-provided'` to distinguish them from independently verified
+licensed portraits. If public redistribution permission is later clarified, the
+metadata and this record should be updated to reflect the documented terms.
+
+## Combat skills reference milestone — 2026-10-27
+
+The user supplied `dist/assets/images/darkest-dungeon/Eingefügtes Bild.png`,
+a 1920 × 1080 screenshot of the Shieldbreaker combat-skills page on
+[Hintbook](https://darkestdungeon.hintbook.co/heroes/shieldbreaker/). It was
+used only as a visual and information-structure reference: compact skill cards,
+position/rank indicators, combat values, and a short effect block. The screenshot
+is not included in the rendered site, and no Hintbook text or artwork has been
+extracted as a display asset. Its original source and reuse permission are not
+otherwise established by the supplied file.
+
+Combat skill names, rank access, rank targets, and the level-one reference
+values in `dist/js/hero-abilities.js` were transcribed into concise summaries
+from the [GameFAQs Darkest Dungeon strategy guide](https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/),
+with per-class source links stored beside each hero's ability list. That guide
+was last updated in 2018. Values are presented as a level-one snapshot; skill
+upgrades change numerical values, and this project did not verify them against
+an installed game or a current 2026 patch. The new pages cover combat skills
+only. Camping skills, equipment, builds, and strategy remain out of scope unless
+already present in the existing Highwayman guide.
+
+This milestone follows the gallery's existing 17-class scope. Classes added by
+later DLC are not silently mixed into this roster; they need separate source
+review and game-version validation.
+
+## Heroes gallery visual references — 2026-10-27
+
+The user supplied three 1920 × 1080 screenshots of the Heroes gallery at
+[Hintbook](https://darkestdungeon.hintbook.co/heroes/):
+
+| Local reference screenshot | Use |
+| --- | --- |
+| `dist/assets/images/darkest-dungeon/Bildschirmfoto vom 2026-10-27 13-23-31.png` | Card grid, artwork area, DLC label placement, and palette |
+| `dist/assets/images/darkest-dungeon/Bildschirmfoto vom 2026-10-27 13-23-39.png` | Character artwork sizing, centered names, and role chips |
+| `dist/assets/images/darkest-dungeon/Bildschirmfoto vom 2026-10-27 13-23-44.png` | Lower roster cards and DLC treatments |
+
+These files are screenshots used as visual references, not character image
+assets. They are not embedded or copied into the page. The gallery continues to
+use the previously supplied local character images listed above; their original
+creator, source, license, and public reuse terms remain unverified.

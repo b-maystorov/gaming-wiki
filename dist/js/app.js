@@ -2,9 +2,10 @@ import { heroes, sources } from './heroes.js';
 import { games, portalGames } from './games.js';
 import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
+import { heroAbilities, abilityReference } from './hero-abilities.js';
 
 const main = document.querySelector('main');
-const sections = ['overview', 'builds', 'teams', 'trinkets'];
+const sections = ['overview', 'abilities', 'builds', 'teams', 'trinkets'];
 let currentView = '';
 let selectedPortalGame = 0;
 
@@ -221,6 +222,76 @@ function renderBuild(build, index) {
     <p class="inset-note">${escapeHtml(build.trinkets)}</p></article>`;
 }
 
+function parseSkillRanks(value) {
+  return (String(value).match(/[1-4]/g) || []).map(Number);
+}
+
+function resolveSkillTarget(targets, details) {
+  if (details?.target) return details.target;
+  const normalized = String(targets).toLowerCase();
+  if (normalized === 'self') return { side: 'self', mode: 'self' };
+  if (normalized.includes('all ally') || normalized.includes('all party')) return { side: 'ally', mode: 'all' };
+  if (/one ally|any ally/.test(normalized)) return { side: 'ally', mode: 'choose-one' };
+  if (normalized.includes('ally') || normalized.includes('party')) return { side: 'ally', mode: 'unclassified' };
+  return { side: 'enemy', mode: /\+/.test(targets) ? 'simultaneous' : 'choose-one' };
+}
+
+function renderPositionDiagram(value, label, orientation, options = {}) {
+  const ranks = orientation === 'hero' ? [4, 3, 2, 1] : [1, 2, 3, 4];
+  const active = new Set(parseSkillRanks(value));
+  const direction = orientation === 'hero' ? 'Rear to front' : 'Front to rear';
+  const order = ranks.map(rank => `<span class="position-rank${active.has(rank) ? ' is-active' : ''}" aria-label="Rank ${rank}${active.has(rank) ? ', available' : ', unavailable'}"><span>${rank}</span></span>`).join('');
+  const modeText = options.mode === 'simultaneous' ? 'All highlighted ranks at once' : 'Choose one highlighted rank';
+  return `<div class="ability-rank-group position-group"><span class="position-label">${escapeHtml(label)}</span><span class="position-direction">${direction}</span><div class="position-diagram ${orientation}-positions" role="img" aria-label="${escapeHtml(label)}: ${ranks.map(rank => `rank ${rank} ${active.has(rank) ? 'available' : 'unavailable'}`).join(', ')}">${order}</div><span class="position-mode">${escapeHtml(modeText)}</span></div>`;
+}
+
+function renderAbilityTarget(targets, target) {
+  if (target.side === 'self') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">Self-target</span><div class="special-target" aria-label="Targets the Crusader">SELF</div><span class="position-mode">Affects the Crusader</span></div>`;
+  if (target.side === 'none') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">No rank target</span><div class="special-target">—</div><span class="position-mode">${escapeHtml(targets)}</span></div>`;
+  if (target.mode === 'unclassified') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">Target scope unavailable</span><div class="special-target">${escapeHtml(targets)}</div><span class="position-mode">Rank details are not classified yet</span></div>`;
+  if (!parseSkillRanks(targets).length) return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">No rank diagram</span><div class="special-target">${escapeHtml(targets)}</div><span class="position-mode">Target rank details unavailable</span></div>`;
+  const label = target.side === 'ally' ? (target.mode === 'all' ? 'Allies affected' : 'Choose an ally') : 'Enemy ranks';
+  const rankValue = target.side === 'ally' ? '4,3,2,1' : targets;
+  const mode = target.mode === 'all' ? 'simultaneous' : target.mode;
+  return renderPositionDiagram(rankValue, label, target.side === 'ally' ? 'hero' : 'enemy', { mode });
+}
+
+function renderAbilityCard(skill, index, entry) {
+  const [name, from, targets, damage, accuracy, crit, effect] = skill;
+  const details = entry.skillDetails?.[name];
+  const target = resolveSkillTarget(targets, details);
+  const isAttack = target.side === 'enemy';
+  const statValue = (value, attackStat) => value === '—' ? (isAttack && attackStat ? 'Unavailable' : 'Not applicable') : value;
+  const effects = effect.split(';').map(item => item.trim()).filter(Boolean).concat(details?.extraEffects || []);
+  return `<article class="ability-card"><header class="ability-card-heading"><span>${escapeHtml(details?.type || 'Combat skill')} · ${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(name)}</h3></header>
+    ${details?.description ? `<p class="ability-description">${escapeHtml(details.description)}</p>` : ''}
+    <div class="ability-ranks">${renderPositionDiagram(from, 'Use from', 'hero')}${renderAbilityTarget(targets, target)}</div>
+    <dl class="ability-values"><div><dt>DMG modifier</dt><dd>${escapeHtml(statValue(damage, true))}</dd></div><div><dt>ACC</dt><dd>${escapeHtml(statValue(accuracy, true))}</dd></div><div><dt>CRIT modifier</dt><dd>${escapeHtml(statValue(crit, true))}</dd></div></dl>
+    <div class="ability-effect"><strong>Effects</strong><ul>${effects.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></div>
+    ${details?.tacticalNote ? `<p class="ability-tip"><strong>When to use it <span>(tactical suggestion)</span></strong>${escapeHtml(details.tacticalNote)}</p>` : ''}</article>`;
+}
+
+function renderAbilities(hero) {
+  const entry = heroAbilities[hero.id];
+  if (!entry) return '';
+  return `<section class="guide-section ability-section" aria-labelledby="abilities"><div class="section-heading"><h2 id="abilities" tabindex="-1">Combat skills</h2><span>${entry.skills.length} abilities / Skill level 1</span></div>
+    <p class="section-intro">Hero ranks read rear to front (4 → 1); enemy ranks read front to rear (1 → 4). Bright ranks are valid. A simultaneous label means every highlighted rank is hit. ${escapeHtml(abilityReference.note)}</p>
+    <div class="ability-legend" aria-label="Position diagram legend"><span><i class="legend-rank active" aria-hidden="true"></i> Valid position</span><span><i class="legend-rank" aria-hidden="true"></i> Unavailable</span><span>ACC = base accuracy · CRIT = critical-hit modifier · PROT = protection from direct damage</span></div>
+    <div class="ability-grid">${entry.skills.map((skill, index) => renderAbilityCard(skill, index, entry)).join('')}</div>
+    <details class="ability-glossary"><summary>Combat terms</summary><p><strong>DMG modifier</strong> changes the skill’s base damage. <strong>ACC</strong> is base accuracy before enemy Dodge. <strong>CRIT modifier</strong> changes the skill’s critical-hit chance. <strong>PROT</strong> reduces direct damage; it does not reduce damage over time. A successful <strong>Stun</strong> makes an enemy lose its next turn.</p></details>
+    <p class="ability-source">Values: <a href="${escapeHtml(entry.source)}" target="_blank" rel="noreferrer">Combat skill table ↗</a>${entry.detailsSource ? ` · Descriptions and mechanics: <a href="${escapeHtml(entry.detailsSource)}" target="_blank" rel="noreferrer">Crusader reference ↗</a>` : ''}${entry.strategySource ? ` · Tactical suggestions: <a href="${escapeHtml(entry.strategySource)}" target="_blank" rel="noreferrer">Strategy reference ↗</a>` : ''}</p></section>`;
+}
+
+function renderAbilityPage(hero) {
+  return `<a class="back-link" href="#game/darkest-dungeon/heroes">← All heroes</a>
+    <header class="guide-header ability-guide-header"><div><p class="eyebrow">Darkest Dungeon I / ${requirementLabel(hero.requirements)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(hero.name)}</h1>
+      <p class="role">${escapeHtml(hero.roleTags.join(' · '))}</p><p class="lede">Combat skill reference. Full strategy, builds, teams, and equipment recommendations are still in development.</p>
+      <p class="card-positions">Hero positions are listed <strong>4 · 3 · 2 · 1</strong><span>4 = rear · 1 = front</span></p></div>${hero.portrait ? renderImage(hero.portrait, 'guide-portrait') : '<div class="ability-hero-mark" aria-hidden="true">' + escapeHtml(hero.galleryArt.monogram) + '</div>'}</header>
+    <nav class="guide-nav" aria-label="Hero reference sections"><a href="#game/darkest-dungeon/heroes"><span aria-hidden="true">←</span> All heroes</a></nav>
+    ${renderAbilities(hero)}
+    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(abilityReference.note)}</p><p>Values are a level-one snapshot. This reference does not claim the installed game version was tested.</p><p><a href="${escapeHtml(heroAbilities[hero.id].source)}" target="_blank" rel="noreferrer">Open source table ↗</a></p><p>The supplied image was used only as a layout reference and is not displayed here.</p></details>`;
+}
+
 function renderTeamPortrait(name) {
   const portrait = heroes.find(hero => hero.name === name)?.portrait;
   if (portrait && !portrait.placeholder) return renderImage(portrait, 'team-portrait');
@@ -279,16 +350,17 @@ function renderGuide(hero) {
       <h1 id="page-title" tabindex="-1">${escapeHtml(hero.name)}</h1><p class="epithet">${escapeHtml(hero.epithet)}</p>
       <p class="role">${escapeHtml(hero.role)}</p><p class="lede">${escapeHtml(hero.summary)}</p>
       <p class="card-positions">Preferred positions <strong>${hero.preferredPositions.join(' · ')}</strong><span>1 = front</span></p></div>${renderImage(hero.portrait, 'guide-portrait')}</header>
-    <nav class="guide-nav" aria-label="Guide sections">${sections.map((section, index) => `<a href="#hero/${escapeHtml(hero.id)}/${section}" data-section="${section}"><span aria-hidden="true">0${index + 1}</span> ${section[0].toUpperCase() + section.slice(1)}</a>`).join('')}</nav>
+      <nav class="guide-nav" aria-label="Guide sections">${sections.map((section, index) => `<a href="#hero/${escapeHtml(hero.id)}/${section}" data-section="${section}"><span aria-hidden="true">0${index + 1}</span> ${section === 'abilities' ? 'Combat skills' : section[0].toUpperCase() + section.slice(1)}</a>`).join('')}</nav>
     <section class="guide-section" aria-labelledby="overview"><div class="section-heading"><h2 id="overview" tabindex="-1">Overview</h2><span>01 / Know your role</span></div>
       <div class="two-columns"><article class="panel"><h3>Strengths</h3>${renderList(guide.strengths)}</article><article class="panel"><h3>Weaknesses</h3>${renderList(guide.weaknesses)}</article></div>
       <div class="position-panel"><h3>Where to stand</h3>${renderPositions(hero)}<p>${escapeHtml(guide.positions)}</p></div>
     </section>
-    <section class="guide-section" aria-labelledby="builds"><div class="section-heading"><h2 id="builds" tabindex="-1">Builds</h2><span>02 / Choose your approach</span></div>
+    ${renderAbilities(hero)}
+    <section class="guide-section" aria-labelledby="builds"><div class="section-heading"><h2 id="builds" tabindex="-1">Builds</h2><span>03 / Choose your approach</span></div>
       <p class="section-intro">Suggested builds · Not playtested. Four skills each; rank lists show your position → enemy targets.</p><div class="two-columns">${guide.builds.map(renderBuild).join('')}</div></section>
-    <section class="guide-section" aria-labelledby="teams"><div class="section-heading"><h2 id="teams" tabindex="-1">Teams</h2><span>03 / Company for the road</span></div>
+    <section class="guide-section" aria-labelledby="teams"><div class="section-heading"><h2 id="teams" tabindex="-1">Teams</h2><span>04 / Company for the road</span></div>
       <p class="section-intro">Parties for ${escapeHtml(hero.name)} · Suggested, not playtested. Read 4–3–2–1 from rear to front; adapt to actual turn order.</p><div class="team-list">${guide.teams.map(team => renderTeamCard({ ...team, hero })).join('')}</div></section>
-    <section class="guide-section" aria-labelledby="trinkets"><div class="section-heading"><h2 id="trinkets" tabindex="-1">Trinkets</h2><span>04 / Equip with intent</span></div>
+    <section class="guide-section" aria-labelledby="trinkets"><div class="section-heading"><h2 id="trinkets" tabindex="-1">Trinkets</h2><span>05 / Equip with intent</span></div>
       <p class="section-intro">Picks for ${escapeHtml(hero.name)} · Reference values; installed patch not checked. Availability is not guaranteed. The two supplied game icons have unverified provenance; the other two remain labeled placeholders.</p><div class="two-columns">${guide.trinkets.map(renderTrinket).join('')}</div></section>
     <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(guide.verification)}</p><p>Campaign only; no DLC or mods required. Supplied character and item artwork has unverified original sources and reuse terms. See <code>docs/content-sources.md</code>.</p><ul>${guide.sourceIds.map(id => `<li><a href="${escapeHtml(sources[id].url)}">${escapeHtml(sources[id].title)} ↗</a></li>`).join('')}</ul><p>Image research and provenance: <code>docs/content-sources.md</code> in the source repository.</p></details>`;
 }
@@ -330,9 +402,9 @@ function readRoute(hash) {
     if (team) return { view: 'team-detail', team, game: true };
   }
   if (parts[0] === 'hero' && parts.length <= 3) {
-    const hero = heroes.find(entry => entry.id === parts[1] && entry.guide);
+    const hero = heroes.find(entry => entry.id === parts[1] && (entry.guide || heroAbilities[entry.id]));
     const section = parts[2] || 'overview';
-    if (hero && sections.includes(section)) return { view: 'hero', hero, section, game: true };
+    if (hero && (hero.guide ? sections.includes(section) : section === 'abilities')) return { view: 'hero', hero, section, game: true };
   }
   return { view: 'missing' };
 }
@@ -361,7 +433,7 @@ function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
   const views = { home: renderHome, game: renderGameLanding, heroes: renderGallery,
     teams: () => renderCollection('teams'), trinkets: () => renderCollection('trinkets') };
-  const content = route.hero ? renderGuide(route.hero) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
+  const content = route.hero ? (route.hero.guide ? renderGuide(route.hero) : renderAbilityPage(route.hero)) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
     '<section class="empty-state"><h1 id="page-title" tabindex="-1">Page not found</h1><p>This page is not available.</p><a href="#home">Return home</a></section>';
   const page = renderBreadcrumbs(route) + content;
   if (!route.game) return page;

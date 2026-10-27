@@ -1,3 +1,5 @@
+import { heroAbilities } from './hero-abilities.js';
+
 function escapeGalleryText(value) {
   return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 }
@@ -13,24 +15,28 @@ export function matchesHero(hero, query, role) {
 
 function renderClassArtwork(hero) {
   const art = hero.galleryArt;
+  const dlc = hero.requirements.dlc;
   // Permission is explicit: an existing file or source URL alone does not grant reuse.
-  const usable = art.permission === 'permitted' && art.src;
+  const usable = ['permitted', 'user-provided'].includes(art.permission) && art.src;
   return `<figure class="class-art${usable ? ' has-image' : ''}${art.animated ? ' animated-class-art' : ''}">
     <div class="class-monogram" aria-hidden="true"><span>${escapeGalleryText(art.monogram)}</span><small>${escapeGalleryText(hero.name)}</small></div>
-    ${usable ? `<img src="${escapeGalleryText(art.src)}" alt="${escapeGalleryText(hero.name)} portrait" loading="lazy">` : ''}
-    <figcaption><span class="class-placeholder-label">Class monogram · Portrait unavailable</span>${usable ? `<span class="class-image-credit">${escapeGalleryText(art.credit || 'Game portrait')}</span>` : ''}</figcaption>
+    ${usable ? `<img src="${escapeGalleryText(art.src)}" alt="${escapeGalleryText(art.alt || `${hero.name} portrait`)}" loading="lazy">` : ''}
+    ${dlc.length ? `<span class="class-art-dlc" data-dlc="${dlc.some(name => name.includes('Crimson Court')) ? 'crimson-court' : 'shieldbreaker'}" aria-label="Downloadable content required: ${dlc.map(escapeGalleryText).join(', ')}"><span aria-hidden="true">•</span> ${dlc.map(name => escapeGalleryText(name.replace(/^The /, ''))).join(' · ')}</span>` : ''}
+    <figcaption><span class="class-placeholder-label">Class monogram · Illustration unavailable</span>${usable ? `<span class="class-image-credit">${escapeGalleryText(art.credit || 'Image source unverified')}</span>` : ''}</figcaption>
   </figure>`;
 }
 
 function renderClassCard(hero) {
-  const tag = hero.guide ? 'a' : 'article';
-  const dlc = hero.requirements.dlc;
-  return `<${tag} class="class-card${hero.guide ? ' class-guide-available' : ''}" data-hero-id="${escapeGalleryText(hero.id)}"${hero.guide ? ` href="#hero/${escapeGalleryText(hero.id)}/overview"` : ''}>
+  const hasAbilityPage = Boolean(heroAbilities[hero.id]);
+  const navigable = hero.guide || hasAbilityPage;
+  const tag = navigable ? 'a' : 'article';
+  const destination = hero.guide ? `#hero/${hero.id}/overview` : `#hero/${hero.id}/abilities`;
+  const availabilityClass = hero.guide ? ' class-guide-available' : hasAbilityPage ? ' class-skills-available' : '';
+  return `<${tag} class="class-card${availabilityClass}" data-hero-id="${escapeGalleryText(hero.id)}"${navigable ? ` href="${escapeGalleryText(destination)}"` : ''}>
     ${renderClassArtwork(hero)}
-    <div class="class-card-copy"><p class="class-requirement${dlc.length ? ' class-dlc' : ''}">${dlc.length ? `DLC · ${dlc.map(escapeGalleryText).join(' · ')}` : 'Base game'}</p>
-      <h3>${escapeGalleryText(hero.name)}</h3>
+    <div class="class-card-copy"><h3>${escapeGalleryText(hero.name)}</h3>
       <ul class="class-role-tags" aria-label="Combat capabilities">${hero.roleTags.map(role => `<li>${escapeGalleryText(role)}</li>`).join('')}</ul>
-      <p class="class-guide-status">${hero.guide ? `Read ${escapeGalleryText(hero.name)} guide <span aria-hidden="true">↗</span>` : 'Guide in development'}</p>
+      <p class="class-guide-status">${hero.guide ? `Read ${escapeGalleryText(hero.name)} guide <span aria-hidden="true">↗</span>` : hasAbilityPage ? `View combat skills · Full guide in development <span aria-hidden="true">↗</span>` : 'Guide in development'}</p>
     </div>
   </${tag}>`;
 }
@@ -53,7 +59,7 @@ export function renderHeroGallery(heroes) {
     </section>
     <details class="class-scope"><summary>Roster scope, roles & artwork</summary>
       <p>This gallery covers the original 15 base-game classes plus Flagellant (The Crimson Court) and Shieldbreaker (The Shieldbreaker). The Musketeer variant and later additions are outside this 17-class milestone.</p>
-      <p>Role tags summarize combat capabilities, not strength ratings or complete builds. Healing may be secondary; self-healing is labeled Self-sustain. Only Highwayman has a guide. Portraits remain labeled monograms until reuse permission is verified.</p>
+      <p>Role tags summarize combat capabilities, not strength ratings or complete builds. All 17 classes have a combat-skill reference; only Highwayman has a full strategy guide. User-supplied portrait sources and public reuse terms remain unverified.</p>
       <p>References: <a href="https://darkestdungeon.wiki.gg/wiki/Getting_Started">Class roles</a> · <a href="https://store.steampowered.com/app/580100/Darkest_Dungeon_The_Crimson_Court/">The Crimson Court</a> · <a href="https://store.steampowered.com/app/702540/Darkest_Dungeon_The_Shieldbreaker/">The Shieldbreaker</a>. Source and artwork records: <code>docs/content-sources.md</code>.</p>
     </details>
   </div>`;

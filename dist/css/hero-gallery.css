@@ -11,30 +11,34 @@
 .class-filters button:hover { background: #56303b; }
 .class-filters :is(input, select, button):focus-visible { outline: 2px solid #ffd0bd; outline-offset: 3px; }
 .class-results-status { margin-block: .8rem 1.1rem; font-size: .75rem; color: #c4b4ad; }
-.class-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.class-card { min-width: 0; display: flex; flex-direction: column; border: 1px solid #594047; background: linear-gradient(150deg, #241a20, #151318); text-decoration: none; color: #f3eee6; transition: border-color 180ms, box-shadow 180ms; }
-.class-card:hover { border-color: #ad7077; box-shadow: 0 8px 24px #0004; color: #f3eee6; }
-.class-guide-available { border-color: #a75a65; }
-.class-guide-available:focus-visible { outline: 3px solid #ffd2b5; outline-offset: 4px; box-shadow: 0 0 28px #a6344033; color: #f3eee6; }
-.class-art { position: relative; isolation: isolate; height: 250px; margin: 0; border-bottom: 1px solid #594047; overflow: hidden; background: radial-gradient(ellipse at 50% 25%, #853b444d, transparent 70%), linear-gradient(135deg, #241b22, #0d0e12); }
-.class-art::before { content: ''; position: absolute; inset: 18px 22px 35px; border: 1px solid #ac787733; border-radius: 45% 45% 0 0; }
-.class-monogram { position: absolute; inset: 25px 15px 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .75rem; }
-.class-monogram > span { display: grid; place-items: center; width: 112px; height: 112px; border-block: 1px solid #c08c7455; color: #d4ad9c; font: 3.6rem Georgia, serif; letter-spacing: -.06em; text-shadow: 0 8px 20px #000; }
+.class-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+.class-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #56383e; border-radius: 4px; background: linear-gradient(155deg, #21191b, #151214); text-decoration: none; color: var(--text); transition: border-color 180ms, box-shadow 180ms, background-color 180ms; }
+.class-card:hover { border-color: var(--accent-hover); background: #24181b; box-shadow: 0 10px 28px #0006, inset 0 0 24px #8e263322; color: var(--text); }
+.class-card:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; box-shadow: 0 0 26px #a7314033; color: var(--text); }
+.class-guide-available { border-color: var(--accent-fill); }
+.class-skills-available { border-color: #56383e; }
+.class-skills-available .class-guide-status { color: var(--accent-text); }
+.class-art { position: relative; isolation: isolate; height: 320px; flex: 0 0 auto; margin: 0; overflow: hidden; border-bottom: 1px solid #56383e; background: radial-gradient(ellipse at 50% 45%, #8e263333, transparent 68%), linear-gradient(180deg, #21191b, #181416); }
+.class-art::before { content: none; }
+.class-monogram { position: absolute; inset: 18px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .75rem; }
+.class-monogram > span { display: grid; place-items: center; width: 112px; height: 112px; border-block: 1px solid #a84c5755; color: #e0b2aa; font: 3.6rem Georgia, serif; letter-spacing: -.06em; text-shadow: 0 8px 20px #000; }
 .class-monogram small { text-transform: uppercase; text-align: center; letter-spacing: .16em; font-size: .6rem; color: #be9f96; }
-.class-art figcaption { position: absolute; bottom: 0; inset-inline: 0; padding: .5rem; text-align: center; font-size: .58rem; color: #c8b0a9; background: #110f15ba; }
-.class-art img { position: relative; display: block; width: 100%; height: 220px; object-fit: contain; padding: 1rem; }
+.class-art figcaption { position: absolute; z-index: 2; bottom: 0; inset-inline: 0; padding: .45rem; text-align: center; font-size: .58rem; color: #c8bba8; background: #110f15ba; }
+.class-art-dlc { position: absolute; z-index: 3; top: .7rem; right: .7rem; display: inline-flex; align-items: center; gap: .25rem; max-width: calc(100% - 1.4rem); padding: .28rem .5rem; border: 1px solid #a3444c; border-radius: 2px; background: #351f23ed; color: #f0a5aa; font-size: .57rem; font-weight: 600; letter-spacing: .1em; line-height: 1.25; text-transform: uppercase; }
+.class-art-dlc[data-dlc="crimson-court"] { border-color: #b64e59; background: #421e25ed; color: #ffb6b5; }
+.class-art img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; padding: .6rem .75rem 0; background: transparent; }
 .class-art.has-image .class-monogram, .class-art.has-image .class-placeholder-label { display: none; }
+.class-art.has-image figcaption { display: none; }
 .class-art.image-failed img, .class-art.image-failed .class-image-credit { display: none; }
 .class-art.image-failed .class-monogram { display: flex; }
 .class-art.image-failed .class-placeholder-label { display: inline; }
-.class-card-copy { flex: 1; display: flex; flex-direction: column; padding: 1.15rem; }
-.class-requirement { font-size: .62rem; letter-spacing: .07em; text-transform: uppercase; color: #c6afa4; min-height: 2.9em; }
-.class-requirement.class-dlc { color: #efb18f; }
-.class-card h3 { margin: .3rem 0 .85rem; font-size: clamp(1.35rem, 2vw, 1.65rem); line-height: 1.2; }
-.class-role-tags { display: flex; flex-wrap: wrap; gap: .35rem; padding: 0; margin: 0 0 1.2rem; list-style: none; }
-.class-role-tags li { margin: 0; padding: .2rem .45rem; border: 1px solid #66444c; border-radius: 2px; background: #38252e; font-size: .65rem; color: #e9cdc3; }
-.class-guide-status { display: flex; justify-content: space-between; gap: .5rem; margin-top: auto; padding-top: .8rem; border-top: 1px solid #594047; font-size: .7rem; color: #c4b4ad; }
-.class-guide-available .class-guide-status { color: #ffc1b3; }
+.class-art.image-failed figcaption { display: block; }
+.class-card-copy { flex: 1; display: flex; flex-direction: column; align-items: center; padding: .75rem .8rem .85rem; text-align: center; }
+.class-card h3 { margin: .1rem 0 .65rem; color: #e9dec9; font: small-caps 600 clamp(1.1rem, 1.55vw, 1.38rem)/1.25 Georgia, 'Times New Roman', serif; letter-spacing: .045em; }
+.class-role-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem; padding: 0; margin: 0 0 .2rem; list-style: none; }
+.class-role-tags li { margin: 0; padding: .18rem .48rem; border: 1px solid #634046; border-radius: 2px; background: var(--accent-surface); color: #e5c5c5; font: .58rem Georgia, 'Times New Roman', serif; letter-spacing: .09em; text-transform: uppercase; }
+.class-guide-status { display: flex; justify-content: center; align-items: center; gap: .35rem; width: 100%; margin-top: .6rem; padding-top: .5rem; border-top: 1px solid #56383e; color: var(--muted); font-size: .62rem; line-height: 1.4; }
+.class-guide-available .class-guide-status { color: var(--accent-text); }
 .class-empty { border: 1px dashed #8f5c66; background: #241a20; padding: 2rem; text-align: center; }
 .class-empty p { color: #d2beb4; margin-top: .6rem; }
 .class-scope { margin-top: 1.8rem; color: #c4b4ad; font-size: .8rem; }
@@ -46,8 +50,7 @@
   .class-filters { grid-template-columns: minmax(0, 1fr) auto; }
   .class-filters > div:first-child { grid-column: 1 / -1; }
   .class-card h3 { font-size: 1.7rem; }
-  .class-art { height: 280px; }
-  .class-art img { height: 250px; }
+  .class-art { height: 300px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .class-card { transition: none; }

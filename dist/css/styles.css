@@ -354,3 +354,51 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
   .composition-overview-card .party > li > span { font-size: .57rem; letter-spacing: 0; }
   .search-results a { flex-wrap: wrap; }
 }
+
+/* Shared skill-card presentation; individual hero data supplies only verified annotations. */
+.ability-section { margin-top: 2rem; }
+.ability-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.ability-card { position: relative; min-width: 0; overflow: hidden; padding: 1.15rem; border: 1px solid #653b39; background: radial-gradient(ellipse at 8% 0, #743b3828, transparent 53%), linear-gradient(145deg, #211b1b, #141316 76%); box-shadow: inset 0 0 0 1px #09090a, 0 10px 28px #0004; transition: border-color 160ms ease, box-shadow 160ms ease; }
+.ability-card:hover { border-color: #a65349; box-shadow: inset 0 0 0 1px #09090a, 0 12px 30px #0006, 0 0 20px #9f39351a; }
+.ability-card::before { position: absolute; content: ''; inset: 7px; border: 1px solid #a35a4933; pointer-events: none; }
+.ability-card-heading, .ability-description, .ability-ranks, .ability-values, .ability-effect, .ability-tip { position: relative; }
+.ability-card-heading { display: flex; flex-direction: column; gap: .24rem; padding: .1rem .2rem .72rem; border-bottom: 1px solid #80433d66; }
+.ability-card-heading > span { color: #df9b78; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; }
+.ability-card-heading h3 { margin: 0; color: #f6e8d9; font-family: Georgia, 'Times New Roman', serif; font-size: 1.32rem; letter-spacing: .015em; }
+.ability-description { margin: .72rem .2rem .2rem; color: #e5d8ce; font-size: .9rem; line-height: 1.5; }
+.ability-ranks { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; padding: .85rem .2rem; border-bottom: 1px solid #543735; }
+.ability-rank-group { margin: 0; min-width: 0; }
+.position-label, .ability-values dt { display: block; color: #cbb9ac; font-size: .67rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.position-direction, .position-mode { display: block; margin-top: .16rem; color: #a99a91; font-size: .68rem; }
+.position-diagram { display: grid; grid-template-columns: repeat(4, minmax(1.5rem, 2.1rem)); gap: .27rem; margin-top: .5rem; }
+.position-rank { display: grid; min-height: 2.05rem; place-items: center; border: 1px solid #504647; background: linear-gradient(180deg, #292526, #181719); color: #958b87; }
+.position-rank span { display: grid; width: 1.25rem; height: 1.25rem; place-items: center; border: 1px solid #55484a; border-radius: 50%; font-size: .74rem; font-weight: 700; }
+.position-rank.is-active { border-color: #b34d45; background: linear-gradient(180deg, #632c2b, #321b1d); color: #fff1e8; box-shadow: inset 0 0 13px #b9433444; }
+.position-rank.is-active span { border-color: #e48a70; }
+.special-target { display: grid; width: max-content; min-width: 3rem; min-height: 2.05rem; place-items: center; margin-top: .5rem; padding-inline: .45rem; border: 1px solid #b34d45; background: #4a2427; color: #ffe3d4; font-size: .72rem; font-weight: 800; letter-spacing: .08em; }
+.ability-values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .45rem; margin: 0; padding: .78rem .2rem; }
+.ability-values > div { min-width: 0; padding-right: .4rem; border-right: 1px solid #543735; }
+.ability-values > div:last-child { border-right: 0; }
+.ability-values dd { margin: .25rem 0 0; color: #f4e7db; font-size: .86rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ability-effect { margin: 0; padding: .6rem .7rem; border-left: 2px solid #b34d45; background: #100f1199; color: #e3d7cd; font-size: .8rem; line-height: 1.5; }
+.ability-effect > strong { color: #f0c6aa; }
+.ability-effect ul { display: grid; gap: .23rem; margin: .35rem 0 0; padding-left: 1.1rem; }
+.ability-tip { display: grid; gap: .22rem; margin: .65rem 0 0; padding: .65rem .7rem; border: 1px solid #70503988; background: #2b211b88; color: #dbcec2; font-size: .78rem; line-height: 1.5; }
+.ability-tip strong { color: #edc799; }
+.ability-tip strong span { color: #aa998c; font-size: .68rem; font-weight: 400; }
+.ability-legend { display: flex; flex-wrap: wrap; gap: .55rem 1.2rem; margin: .75rem 0 1rem; color: #bfb0a7; font-size: .72rem; }
+.ability-legend > span { display: inline-flex; align-items: center; gap: .35rem; }
+.legend-rank { display: inline-block; width: .82rem; height: .82rem; border: 1px solid #625657; background: #211f20; }
+.legend-rank.active { border-color: #b34d45; background: #71322f; }
+.ability-glossary { margin-top: .8rem; padding: .75rem 1rem; border: 1px solid #493333; background: #171416; color: #cfc1b7; font-size: .8rem; line-height: 1.6; }
+.ability-glossary summary { color: #e8c5ad; cursor: pointer; font-weight: 700; }
+.ability-glossary summary:focus-visible { outline: 2px solid #e47b65; outline-offset: 3px; }
+.ability-glossary p { margin: .65rem 0 0; }
+.ability-glossary strong { color: #f2dfcf; }
+.ability-source { margin-top: .9rem; color: #b8a69a; font-size: .72rem; }
+.ability-hero-mark { display: grid; width: min(190px, 38vw); aspect-ratio: 1; place-items: center; flex: 0 0 auto; border: 1px solid #78594d; outline: 1px solid #78594d55; outline-offset: 6px; background: radial-gradient(circle, #552b2d, #141215 70%); color: #e6c9ad; font: 4rem Georgia, serif; }
+.ability-guide-header { align-items: center; }
+.ability-guide-header .role { color: #e0b78d; }
+@media (max-width: 700px) { .ability-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .ability-card { padding: 1rem; } .ability-ranks { gap: .55rem; } .position-diagram { grid-template-columns: repeat(4, minmax(1.4rem, 1fr)); gap: .18rem; } .ability-values { gap: .25rem; } .ability-values dd { font-size: .78rem; } }
+@media (prefers-reduced-motion: reduce) { .ability-card { transition: none; } }
