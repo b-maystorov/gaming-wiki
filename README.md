@@ -117,3 +117,18 @@ Preview routes: `#game/world-of-warcraft`, `#game/league-of-legends`, and
 `#game/darkest-dungeon-2`. `#home/games` returns directly to the game selector.
 Mouse hover, keyboard focus, or touch/click selects a universe; the entry link
 opens its page. All scene art is original CSS geometry, with no remote images.
+
+
+## Global Command Center
+
+The header search button or `/` (outside editable fields) opens a local command
+palette on any page. Type to filter, use ↑/↓ to select, Enter to navigate, and
+Escape to close. Tab cycles the input and close button. Closing returns focus to
+the opener; choosing a result lets the existing router focus the destination.
+
+`dist/js/command-center.js` derives its index from `games.js` and `heroes.js`.
+Only real games/previews and implemented hero guides, builds, teams, and trinkets
+are indexed. Builds and trinkets open their existing sections; preview games are
+labeled in development. Empty input lists all indexed content. The native HTML
+`dialog` makes background content inactive while open. Styling lives in
+`dist/css/command-center.css`; no server or external search service is used.

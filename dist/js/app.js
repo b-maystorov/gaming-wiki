@@ -1,5 +1,6 @@
 import { heroes, sources } from './heroes.js';
 import { games, portalGames } from './games.js';
+import { initializeCommandCenter } from './command-center.js';
 
 const main = document.querySelector('main');
 const sections = ['overview', 'builds', 'teams', 'trinkets'];
@@ -403,6 +404,7 @@ function updateNavigation(route) {
 }
 
 function showRoute() {
+  commandCenter.close({ restoreFocus: false });
   const route = readRoute(location.hash);
   if (route.preview) selectedPortalGame = portalGames.indexOf(route.preview);
   document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview');
@@ -486,5 +488,12 @@ document.addEventListener('input', event => {
   const results = renderSearchResults(event.target.value);
   document.getElementById('game-search-status').textContent = results.status;
   document.getElementById('game-search-results').innerHTML = results.markup;
+});
+// Reuse the router, including its same-route focus/scroll behavior.
+const commandCenter = initializeCommandCenter({
+  navigate(href) {
+    if (location.hash === href) showRoute();
+    else location.hash = href;
+  }
 });
 showRoute();
