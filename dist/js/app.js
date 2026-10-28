@@ -275,21 +275,21 @@ function renderAbilities(hero) {
   const entry = heroAbilities[hero.id];
   if (!entry) return '';
   return `<section class="guide-section ability-section" aria-labelledby="abilities"><div class="section-heading"><h2 id="abilities" tabindex="-1">Combat skills</h2><span>${entry.skills.length} abilities / Skill level 1</span></div>
-    <p class="section-intro">Hero ranks read rear to front (4 → 1); enemy ranks read front to rear (1 → 4). Bright ranks are valid. A simultaneous label means every highlighted rank is hit. ${escapeHtml(abilityReference.note)}</p>
-    <div class="ability-legend" aria-label="Position diagram legend"><span><i class="legend-rank active" aria-hidden="true"></i> Valid position</span><span><i class="legend-rank" aria-hidden="true"></i> Unavailable</span><span>ACC = base accuracy · CRIT = critical-hit modifier · PROT = protection from direct damage</span></div>
+    <p class="section-intro">Compare each skill’s positions, targets, values, and effects. Figures shown are for skill level 1.</p>
     <div class="ability-grid">${entry.skills.map((skill, index) => renderAbilityCard(skill, index, entry)).join('')}</div>
-    <details class="ability-glossary"><summary>Combat terms</summary><p><strong>DMG modifier</strong> changes the skill’s base damage. <strong>ACC</strong> is base accuracy before enemy Dodge. <strong>CRIT modifier</strong> changes the skill’s critical-hit chance. <strong>PROT</strong> reduces direct damage; it does not reduce damage over time. A successful <strong>Stun</strong> makes an enemy lose its next turn.</p></details>
+    <details class="ability-glossary"><summary>How to read combat skills</summary><p>Hero positions run from rear to front (<strong>4 → 1</strong>); enemy positions run from front to rear (<strong>1 → 4</strong>). Crimson ranks are valid positions and muted ranks are unavailable. Enemy skills let you choose one highlighted rank unless marked as hitting all highlighted ranks at once. Ally-target skills show party ranks; <strong>SELF</strong> means the Crusader is the target.</p><p><strong>DMG modifier</strong> changes base damage. <strong>ACC</strong> is base accuracy before enemy Dodge. <strong>CRIT modifier</strong> changes critical-hit chance. <strong>PROT</strong> reduces direct damage, not damage over time. A successful <strong>Stun</strong> makes an enemy lose its next turn.</p><p>${escapeHtml(abilityReference.note)}</p></details>
     <p class="ability-source">Values: <a href="${escapeHtml(entry.source)}" target="_blank" rel="noreferrer">Combat skill table ↗</a>${entry.detailsSource ? ` · Descriptions and mechanics: <a href="${escapeHtml(entry.detailsSource)}" target="_blank" rel="noreferrer">Crusader reference ↗</a>` : ''}${entry.strategySource ? ` · Tactical suggestions: <a href="${escapeHtml(entry.strategySource)}" target="_blank" rel="noreferrer">Strategy reference ↗</a>` : ''}</p></section>`;
 }
 
 function renderAbilityPage(hero) {
+  const portrait = hero.portrait || (hero.galleryArt?.src ? { ...hero.galleryArt, width: 236, height: 356 } : null);
   return `<a class="back-link" href="#game/darkest-dungeon/heroes">← All heroes</a>
     <header class="guide-header ability-guide-header"><div><p class="eyebrow">Darkest Dungeon I / ${requirementLabel(hero.requirements)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(hero.name)}</h1>
       <p class="role">${escapeHtml(hero.roleTags.join(' · '))}</p><p class="lede">Combat skill reference. Full strategy, builds, teams, and equipment recommendations are still in development.</p>
-      <p class="card-positions">Hero positions are listed <strong>4 · 3 · 2 · 1</strong><span>4 = rear · 1 = front</span></p></div>${hero.portrait ? renderImage(hero.portrait, 'guide-portrait') : '<div class="ability-hero-mark" aria-hidden="true">' + escapeHtml(hero.galleryArt.monogram) + '</div>'}</header>
+      <p class="card-positions">Hero positions are listed <strong>4 · 3 · 2 · 1</strong><span>4 = rear · 1 = front</span></p></div>${portrait ? renderImage(portrait, 'guide-portrait') : '<div class="ability-hero-mark" aria-hidden="true">' + escapeHtml(hero.galleryArt.monogram) + '</div>'}</header>
     <nav class="guide-nav" aria-label="Hero reference sections"><a href="#game/darkest-dungeon/heroes"><span aria-hidden="true">←</span> All heroes</a></nav>
     ${renderAbilities(hero)}
-    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(abilityReference.note)}</p><p>Values are a level-one snapshot. This reference does not claim the installed game version was tested.</p><p><a href="${escapeHtml(heroAbilities[hero.id].source)}" target="_blank" rel="noreferrer">Open source table ↗</a></p><p>The supplied image was used only as a layout reference and is not displayed here.</p></details>`;
+    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(abilityReference.note)}</p><p>Values are a level-one snapshot. This reference does not claim the installed game version was tested.</p><p><a href="${escapeHtml(heroAbilities[hero.id].source)}" target="_blank" rel="noreferrer">Open source table ↗</a></p></details>`;
 }
 
 function renderTeamPortrait(name) {
