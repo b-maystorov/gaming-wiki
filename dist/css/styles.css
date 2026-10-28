@@ -383,6 +383,7 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 .ability-effect { margin: 0; padding: .6rem .7rem; border-left: 2px solid #b34d45; background: #100f1199; color: #e3d7cd; font-size: .8rem; line-height: 1.5; }
 .ability-effect > strong { color: #f0c6aa; }
 .ability-effect ul { display: grid; gap: .23rem; margin: .35rem 0 0; padding-left: 1.1rem; }
+.ability-effect > p { margin: .35rem 0 0; }
 .ability-tip { display: grid; gap: .22rem; margin: .65rem 0 0; padding: .65rem .7rem; border: 1px solid #70503988; background: #2b211b88; color: #dbcec2; font-size: .78rem; line-height: 1.5; }
 .ability-tip strong { color: #edc799; }
 .ability-tip strong span { color: #aa998c; font-size: .68rem; font-weight: 400; }

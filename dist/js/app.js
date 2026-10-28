@@ -245,8 +245,8 @@ function renderPositionDiagram(value, label, orientation, options = {}) {
   return `<div class="ability-rank-group position-group"><span class="position-label">${escapeHtml(label)}</span><span class="position-direction">${direction}</span><div class="position-diagram ${orientation}-positions" role="img" aria-label="${escapeHtml(label)}: ${ranks.map(rank => `rank ${rank} ${active.has(rank) ? 'available' : 'unavailable'}`).join(', ')}">${order}</div><span class="position-mode">${escapeHtml(modeText)}</span></div>`;
 }
 
-function renderAbilityTarget(targets, target) {
-  if (target.side === 'self') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">Self-target</span><div class="special-target" aria-label="Targets the Crusader">SELF</div><span class="position-mode">Affects the Crusader</span></div>`;
+function renderAbilityTarget(targets, target, heroName) {
+  if (target.side === 'self') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">Self-target</span><div class="special-target" aria-label="Targets the ${escapeHtml(heroName)}">SELF</div><span class="position-mode">Affects the ${escapeHtml(heroName)}</span></div>`;
   if (target.side === 'none') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">No rank target</span><div class="special-target">—</div><span class="position-mode">${escapeHtml(targets)}</span></div>`;
   if (target.mode === 'unclassified') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">Target scope unavailable</span><div class="special-target">${escapeHtml(targets)}</div><span class="position-mode">Rank details are not classified yet</span></div>`;
   if (!parseSkillRanks(targets).length) return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">No rank diagram</span><div class="special-target">${escapeHtml(targets)}</div><span class="position-mode">Target rank details unavailable</span></div>`;
@@ -256,7 +256,7 @@ function renderAbilityTarget(targets, target) {
   return renderPositionDiagram(rankValue, label, target.side === 'ally' ? 'hero' : 'enemy', { mode });
 }
 
-function renderAbilityCard(skill, index, entry) {
+function renderAbilityCard(skill, index, entry, heroName) {
   const [name, from, targets, damage, accuracy, crit, effect] = skill;
   const details = entry.skillDetails?.[name];
   const target = resolveSkillTarget(targets, details);
@@ -265,9 +265,9 @@ function renderAbilityCard(skill, index, entry) {
   const effects = effect.split(';').map(item => item.trim()).filter(Boolean).concat(details?.extraEffects || []);
   return `<article class="ability-card"><header class="ability-card-heading"><span>${escapeHtml(details?.type || 'Combat skill')} · ${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(name)}</h3></header>
     ${details?.description ? `<p class="ability-description">${escapeHtml(details.description)}</p>` : ''}
-    <div class="ability-ranks">${renderPositionDiagram(from, 'Use from', 'hero')}${renderAbilityTarget(targets, target)}</div>
+    <div class="ability-ranks">${renderPositionDiagram(from, 'Use from', 'hero')}${renderAbilityTarget(targets, target, heroName)}</div>
     <dl class="ability-values"><div><dt>DMG modifier</dt><dd>${escapeHtml(statValue(damage, true))}</dd></div><div><dt>ACC</dt><dd>${escapeHtml(statValue(accuracy, true))}</dd></div><div><dt>CRIT modifier</dt><dd>${escapeHtml(statValue(crit, true))}</dd></div></dl>
-    <div class="ability-effect"><strong>Effects</strong><ul>${effects.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></div>
+    <div class="ability-effect"><strong>Effects</strong>${effects.length ? `<ul>${effects.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : '<p>No additional effect listed.</p>'}</div>
     ${details?.tacticalNote ? `<p class="ability-tip"><strong>When to use it <span>(tactical suggestion)</span></strong>${escapeHtml(details.tacticalNote)}</p>` : ''}</article>`;
 }
 
@@ -276,9 +276,9 @@ function renderAbilities(hero) {
   if (!entry) return '';
   return `<section class="guide-section ability-section" aria-labelledby="abilities"><div class="section-heading"><h2 id="abilities" tabindex="-1">Combat skills</h2><span>${entry.skills.length} abilities / Skill level 1</span></div>
     <p class="section-intro">Compare each skill’s positions, targets, values, and effects. Figures shown are for skill level 1.</p>
-    <div class="ability-grid">${entry.skills.map((skill, index) => renderAbilityCard(skill, index, entry)).join('')}</div>
-    <details class="ability-glossary"><summary>How to read combat skills</summary><p>Hero positions run from rear to front (<strong>4 → 1</strong>); enemy positions run from front to rear (<strong>1 → 4</strong>). Crimson ranks are valid positions and muted ranks are unavailable. Enemy skills let you choose one highlighted rank unless marked as hitting all highlighted ranks at once. Ally-target skills show party ranks; <strong>SELF</strong> means the Crusader is the target.</p><p><strong>DMG modifier</strong> changes base damage. <strong>ACC</strong> is base accuracy before enemy Dodge. <strong>CRIT modifier</strong> changes critical-hit chance. <strong>PROT</strong> reduces direct damage, not damage over time. A successful <strong>Stun</strong> makes an enemy lose its next turn.</p><p>${escapeHtml(abilityReference.note)}</p></details>
-    <p class="ability-source">Values: <a href="${escapeHtml(entry.source)}" target="_blank" rel="noreferrer">Combat skill table ↗</a>${entry.detailsSource ? ` · Descriptions and mechanics: <a href="${escapeHtml(entry.detailsSource)}" target="_blank" rel="noreferrer">Crusader reference ↗</a>` : ''}${entry.strategySource ? ` · Tactical suggestions: <a href="${escapeHtml(entry.strategySource)}" target="_blank" rel="noreferrer">Strategy reference ↗</a>` : ''}</p></section>`;
+    <div class="ability-grid">${entry.skills.map((skill, index) => renderAbilityCard(skill, index, entry, hero.name)).join('')}</div>
+    <details class="ability-glossary"><summary>How to read combat skills</summary><p>Hero positions run from rear to front (<strong>4 → 1</strong>); enemy positions run from front to rear (<strong>1 → 4</strong>). Crimson ranks are valid positions and muted ranks are unavailable. Enemy skills let you choose one highlighted rank unless marked as hitting all highlighted ranks at once. Ally-target skills show party ranks; <strong>SELF</strong> means the hero is the target.</p><p>Movement labels describe the hero or enemy changing ranks: <strong>forward/back</strong> moves the hero, while <strong>knockback</strong> moves the target enemy. These are separate from the targeting diagram.</p><p><strong>DMG modifier</strong> changes base damage. <strong>ACC</strong> is base accuracy before enemy Dodge. <strong>CRIT modifier</strong> changes critical-hit chance. <strong>PROT</strong> reduces direct damage, not damage over time. <strong>SPD</strong> means Speed. A successful <strong>Stun</strong> makes an enemy lose its next turn. <strong>Bleed</strong> deals damage over multiple rounds; Bleed resistance affects its chance to land. <strong>Riposte</strong> lets the hero counter eligible attacks directed at them; Stun disables it.</p><p>${escapeHtml(entry.note || abilityReference.note)}</p></details>
+    <p class="ability-source">Values: <a href="${escapeHtml(entry.source)}" target="_blank" rel="noreferrer">Combat skill table ↗</a>${entry.detailsSource ? ` · Descriptions and mechanics: <a href="${escapeHtml(entry.detailsSource)}" target="_blank" rel="noreferrer">Crusader reference ↗</a>` : ''}${entry.strategySource ? ` · Tactical suggestions: <a href="${escapeHtml(entry.strategySource)}" target="_blank" rel="noreferrer">Strategy reference ↗</a>` : ''}${entry.mechanicsSource ? ` · Riposte mechanics: <a href="${escapeHtml(entry.mechanicsSource)}" target="_blank" rel="noreferrer">Riposte reference ↗</a>` : ''}</p></section>`;
 }
 
 function renderAbilityPage(hero) {

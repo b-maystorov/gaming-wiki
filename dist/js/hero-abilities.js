@@ -124,14 +124,66 @@ export const heroAbilities = {
     ['Adrenaline Rush', '4,3,2,1', 'Self', '—', '—', '—', 'Heal 1; cure blight/bleed; +5 accuracy and +20% damage.'],
     ['Bleed Out', '1', '1', '+20%', '85', '7.5%', 'Bleed 3/round for 3 rounds; self −20% damage and −3 speed.']
   ]},
-  highwayman: { source: 'https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/highwayman', skills: [
-    ['Wicked Slice', '3,2,1', '1,2', '+0%', '85', '5%', 'Melee attack.'],
-    ['Pistol Shot', '4,3,2', '2,3,4', '-25%', '85', '5%', '+25% damage vs marked.'],
-    ['Point Blank Shot', '1', '1', '+50%', '95', '5%', 'Move back 1; knockback 1.'],
-    ['Grapeshot Blast', '3,2', '1 + 2 + 3', '-50%', '80', '—', 'Attack the three front enemy ranks.'],
-    ['Tracking Shot', '4,3,2,1', '2,3,4', '-100%', '90', '—', 'Remove stealth; self gains damage and crit; once per battle.'],
-    ["Duelist’s Advance", '4,3,2', '1,2,3', '—', '85', '5%', 'Move forward 1 and activate Riposte.'],
-    ['Open Vein', '3,2,1', '1,2', '-15%', '85', '5%', 'Bleed 2/round for 3 rounds; −20% bleed resist.']
+  highwayman: {
+    source: 'https://darkestdungeon.wiki.gg/wiki/Highwayman_%28Darkest_Dungeon%29',
+    strategySource: 'https://darkestdungeon.wiki.gg/wiki/Highwayman/Strategy',
+    mechanicsSource: 'https://darkestdungeon.wiki.gg/wiki/Riposte',
+    note: 'Highwayman combat values are the official Darkest Dungeon I campaign skill-level-1 values. They exclude Darkest Dungeon II and Butcher’s Circus changes. No DLC or mods are required for these seven combat skills.',
+    skillDetails: {
+      'Wicked Slice': {
+        type: 'Melee attack',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A close-range blade attack against either of the two front enemy ranks.',
+        tacticalNote: 'Use when the Highwayman is in the front half of the party and wants to focus one enemy.'
+      },
+      'Pistol Shot': {
+        type: 'Ranged attack',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A pistol attack that reaches the enemy back line and deals extra damage to a marked target.',
+        tacticalNote: 'Use to reach a priority enemy in ranks 2–4, especially if an ally has marked it.'
+      },
+      'Point Blank Shot': {
+        type: 'Ranged attack · Movement',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A powerful shot at the front enemy. The Highwayman moves back one rank, and the target may be knocked back one rank.',
+        tacticalNote: 'Use only from the front rank. It can reposition the Highwayman, but its narrow reach makes it situational.',
+        extraEffects: ['Enemy knockback is 100% base chance at skill level 1.']
+      },
+      'Grapeshot Blast': {
+        type: 'Ranged attack · Multi-target',
+        target: { side: 'enemy', mode: 'simultaneous' },
+        description: 'A spread of shots that hits enemy ranks 1, 2, and 3 at the same time.',
+        tacticalNote: 'Use when several front enemies can be weakened together; focus one target when a kill is more valuable.',
+        extraEffects: ['Targets receive +4% chance to be critically hit for 3 rounds (100% base chance).']
+      },
+      'Tracking Shot': {
+        type: 'Ranged attack · Self buff',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A low-damage shot that can bypass and remove an enemy’s Stealth, while improving the Highwayman for the rest of the battle.',
+        tacticalNote: 'Use against a stealthed or evasive priority target when the lasting self-buff is worth spending a turn.',
+      },
+      "Duelist’s Advance": {
+        type: 'Melee attack · Movement · Riposte',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A forward lunge that hits an enemy in ranks 1–3 and moves the Highwayman forward one rank.',
+        tacticalNote: 'Use before enemies act when possible, so the Highwayman has a chance to counter their attacks with Riposte.',
+        extraEffects: ['Riposte counters an eligible damaging attack aimed at the Highwayman, even if it misses; Stun disables Riposte.']
+      },
+      'Open Vein': {
+        type: 'Melee attack · Bleed',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A blade attack against the two front enemy ranks that inflicts Bleed and weakens Bleed resistance and speed.',
+        tacticalNote: 'Use against enemies that can be bled, especially when their Protection makes direct damage less effective.',
+      }
+    },
+    skills: [
+    ['Wicked Slice', '3,2,1', '1,2', '+15%', '85', '5%', ''],
+    ['Pistol Shot', '4,3,2', '2,3,4', '-15%', '85', '7.5%', '+25% damage vs marked.'],
+    ['Point Blank Shot', '1', '1', '+50%', '95', '5%', 'Knockback 1 (100% base); move back 1.'],
+    ['Grapeshot Blast', '3,2', '1 + 2 + 3', '-50%', '75', '-9%', 'Attack all three front enemy ranks.'],
+    ['Tracking Shot', '4,3,2,1', '2,3,4', '-80%', '95', '0%', 'Bypass/remove Stealth; self +6 ACC, +4% CRIT, +12% DMG for 1 battle; once per battle.'],
+    ["Duelist’s Advance", '4,3,2', '1,2,3', '-20%', '90', '5%', 'Move forward 1; activate Riposte for 3 rounds (Riposte −40% DMG at skill level 1).'],
+    ['Open Vein', '3,2,1', '1,2', '-15%', '95', '0%', 'Bleed 2 damage/round for 3 rounds; −20% Bleed resist and −1 SPD for 3 rounds (100% base chance).']
   ]},
   houndmaster: { source: 'https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/houndmaster', skills: [
     ["Hound’s Rush", '4,3,2', '1,2,3,4', '+0%', '85', '-3%', 'Bleed 1/round for 3 rounds; +15% damage vs beasts and +60% vs marked.'],
