@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bm-gaming-wiki.local/schema/game-content-v1.json",
+  "title": "BM Gaming Wiki game content pack",
+  "type": "object",
+  "required": ["schemaVersion", "game", "sources", "heroes", "combatSkills", "campingSkills", "equipmentProgressions", "trinkets", "bosses", "enemies", "teamCompositions", "strategyRecommendations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "game": { "$ref": "#/$defs/game" },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "heroes": { "type": "array", "items": { "$ref": "#/$defs/hero" } },
+    "combatSkills": { "type": "array", "items": { "$ref": "#/$defs/combatSkill" } },
+    "campingSkills": { "type": "array", "items": { "$ref": "#/$defs/campingSkill" } },
+    "equipmentProgressions": { "type": "array", "items": { "$ref": "#/$defs/equipmentProgression" } },
+    "trinkets": { "type": "array", "items": { "$ref": "#/$defs/trinket" } },
+    "bosses": { "type": "array", "items": { "$ref": "#/$defs/encounter" } },
+    "enemies": { "type": "array", "items": { "$ref": "#/$defs/encounter" } },
+    "teamCompositions": { "type": "array", "items": { "$ref": "#/$defs/teamComposition" } },
+    "strategyRecommendations": { "type": "array", "items": { "$ref": "#/$defs/recommendation" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 3, "pattern": "^[a-z0-9][a-z0-9:-]*$" },
+    "verification": {
+      "type": "object",
+      "required": ["status", "sourceIds"],
+      "allOf": [{ "if": { "properties": { "status": { "enum": ["verified", "reference-checked"] } }, "required": ["status"] }, "then": { "properties": { "sourceIds": { "minItems": 1 } } } }],
+      "properties": {
+        "status": { "enum": ["verified", "reference-checked", "unverified", "missing", "unavailable", "not-applicable", "not-recorded"] },
+        "sourceIds": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true }
+      }
+    },
+    "game": {
+      "type": "object", "required": ["id", "name", "versionContext"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "name": { "type": "string", "minLength": 1 }, "mechanics": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "versionContext": { "type": "object", "required": ["id", "verifiedAgainstInstalledBuild"], "properties": {
+          "id": { "$ref": "#/$defs/id" }, "mode": { "type": "string" }, "platform": { "type": ["string", "null"] },
+          "patch": { "type": ["string", "null"] }, "verifiedAgainstInstalledBuild": { "type": "boolean" }, "notes": { "type": "string" }
+        }, "additionalProperties": true }
+      }
+    },
+    "source": {
+      "type": "object", "required": ["id", "title", "url", "kind", "verificationStatus"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "type": "string" }, "url": { "type": "string", "format": "uri" }, "kind": { "type": "string" }, "verificationStatus": { "enum": ["verified", "reference-checked", "unverified", "unavailable"] } }
+    },
+    "requirement": {
+      "type": "object", "required": ["baseGame", "dlc", "mods"],
+      "properties": { "baseGame": { "type": "boolean" }, "dlc": { "type": "array", "items": { "type": "string" } }, "mods": { "type": "array", "items": { "type": "string" } } }
+    },
+    "measuredValue": {
+      "type": "object", "required": ["value", "unit", "verification"],
+      "properties": { "value": { "type": ["number", "null"] }, "unit": { "type": "string" }, "sign": { "enum": ["always", "negative-only", "none"] }, "verification": { "$ref": "#/$defs/verification" } }
+    },
+    "hero": {
+      "type": "object", "required": ["id", "routeId", "name", "requirements", "roleTags", "baseStats", "verification"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "routeId": { "$ref": "#/$defs/id" }, "name": { "type": "string" },
+        "requirements": { "$ref": "#/$defs/requirement" }, "roleTags": { "type": "array", "items": { "type": "string" } },
+        "preferredPositions": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 }, "uniqueItems": true },
+        "alternativePositions": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 }, "uniqueItems": true },
+        "baseStats": { "type": "object", "required": ["status", "verification", "values"], "properties": { "status": { "type": "string" }, "verification": { "$ref": "#/$defs/verification" }, "values": { "type": "object", "properties": { "health": { "$ref": "#/$defs/measuredValue" }, "dodge": { "$ref": "#/$defs/measuredValue" }, "speed": { "$ref": "#/$defs/measuredValue" }, "resistances": { "type": "object", "additionalProperties": { "$ref": "#/$defs/measuredValue" } } }, "additionalProperties": { "$ref": "#/$defs/measuredValue" } } } },
+        "artwork": { "type": "object" }, "overview": { "type": "object" }, "verification": { "$ref": "#/$defs/verification" }
+      }
+    },
+    "combatSkill": {
+      "type": "object", "required": ["id", "heroId", "name", "level1", "progression", "editorial"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "heroId": { "$ref": "#/$defs/id" }, "name": { "type": "string" }, "category": { "type": "string" },
+        "rankRules": { "type": "object", "required": ["heroPositions", "target"], "properties": {
+          "heroPositions": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 }, "minItems": 1, "uniqueItems": true },
+          "target": { "type": "object", "required": ["side", "mode", "ranks"], "properties": {
+            "side": { "enum": ["enemy", "ally", "self", "none"] }, "mode": { "enum": ["choose-one", "simultaneous", "all", "self", "none"] },
+            "ranks": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 }, "uniqueItems": true }
+          } }
+        } },
+        "movement": { "type": "object" },
+        "level1": { "type": "object", "required": ["damageModifier", "accuracy", "criticalModifier", "effects", "verification"], "properties": {
+          "damageModifier": { "$ref": "#/$defs/measuredValue" }, "accuracy": { "$ref": "#/$defs/measuredValue" }, "criticalModifier": { "$ref": "#/$defs/measuredValue" },
+          "effects": { "type": "array", "items": { "type": "object", "required": ["text", "kind", "verification"], "properties": { "text": { "type": "string" }, "kind": { "type": "string" }, "verification": { "$ref": "#/$defs/verification" } } } },
+          "verification": { "$ref": "#/$defs/verification" }
+        } },
+        "progression": { "type": "object", "required": ["status", "levels"], "properties": { "status": { "enum": ["complete", "partial", "not-recorded"] }, "levels": { "type": "array", "items": { "type": "object", "required": ["level", "damageModifier", "accuracy", "criticalModifier", "effects", "verification"], "properties": { "level": { "type": "integer", "minimum": 1, "maximum": 5 }, "damageModifier": { "$ref": "#/$defs/measuredValue" }, "accuracy": { "$ref": "#/$defs/measuredValue" }, "criticalModifier": { "$ref": "#/$defs/measuredValue" }, "effects": { "type": "array" }, "verification": { "$ref": "#/$defs/verification" } } } } } },
+        "editorial": { "type": "object", "required": ["description", "whenToUse"], "properties": { "description": { "type": "string" }, "whenToUse": { "type": "string" } } }
+      }
+    },
+    "campingSkill": { "type": "object", "required": ["id", "heroId", "name", "effects", "requirements", "verification"], "properties": { "id": { "$ref": "#/$defs/id" }, "heroId": { "$ref": "#/$defs/id" }, "name": { "type": "string" }, "effects": { "type": "array" }, "requirements": { "$ref": "#/$defs/requirement" }, "verification": { "$ref": "#/$defs/verification" } } },
+    "equipmentProgression": { "type": "object", "required": ["id", "heroId", "levels", "requirements", "verification"], "properties": { "id": { "$ref": "#/$defs/id" }, "heroId": { "$ref": "#/$defs/id" }, "levels": { "type": "array", "items": { "type": "object", "required": ["level", "values"], "properties": { "level": { "type": "integer", "minimum": 1, "maximum": 5 }, "values": { "type": "object" } } } }, "requirements": { "$ref": "#/$defs/requirement" }, "verification": { "$ref": "#/$defs/verification" } } },
+    "trinket": { "type": "object", "required": ["id", "name", "rarity", "requirements", "effects", "verification"], "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "type": "string" }, "rarity": { "type": "string" }, "requirements": { "$ref": "#/$defs/requirement" }, "effects": { "type": "array" }, "heroIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }, "assetPath": { "type": ["string", "null"] }, "verification": { "$ref": "#/$defs/verification" } } },
+    "encounter": { "type": "object", "required": ["id", "name", "requirements", "verification"], "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "type": "string" }, "requirements": { "$ref": "#/$defs/requirement" }, "verification": { "$ref": "#/$defs/verification" } } },
+    "teamComposition": { "type": "object", "required": ["id", "name", "heroIds", "requirements", "verification"], "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "type": "string" }, "heroIds": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1 }, "requirements": { "$ref": "#/$defs/requirement" }, "verification": { "$ref": "#/$defs/verification" } } },
+    "recommendation": { "type": "object", "required": ["id", "heroId", "kind", "text", "sourceIds", "editorial"], "properties": { "id": { "$ref": "#/$defs/id" }, "heroId": { "$ref": "#/$defs/id" }, "kind": { "enum": ["boss-matchup", "strategy", "build", "team", "trinket"] }, "text": { "type": "string" }, "bossId": { "type": ["string", "null"] }, "trinketIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }, "sourceIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }, "editorial": { "type": "boolean" } } }
+  }
+}

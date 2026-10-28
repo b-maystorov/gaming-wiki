@@ -3,6 +3,21 @@ import { games, portalGames } from './games.js';
 import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
+import { loadStructuredHeroData } from './content-adapter.js';
+
+try {
+  await loadStructuredHeroData({ heroes, heroAbilities });
+} catch (error) {
+  // Keep the rest of the site navigable if its required static data file is missing.
+  console.error('Could not load the structured Crusader guide:', error);
+  const crusader = heroes.find(hero => hero.id === 'crusader');
+  if (crusader) Object.assign(crusader, {
+    roleTags: ['Content unavailable'], requirements: { baseGame: true, dlc: [], mods: [] },
+    galleryArt: { src: '', alt: 'Crusader portrait unavailable', monogram: 'CR', credit: '', permission: 'unavailable' },
+    summary: 'Crusader guide data could not be loaded.'
+  });
+  heroAbilities.crusader = { skills: [], loadError: true };
+}
 
 const main = document.querySelector('main');
 // `builds` remains the route alias for the long-form strategy section.
@@ -292,6 +307,7 @@ function renderAbilityCard(skill, index, entry, heroName) {
 function renderAbilities(hero) {
   const entry = heroAbilities[hero.id];
   if (!entry) return '';
+  if (entry.loadError) return '<section class="guide-section" aria-labelledby="abilities"><h2 id="abilities" tabindex="-1">Combat abilities</h2><p class="guide-data-note">The Crusader data file could not be loaded. Check that the static data file is present in the published site.</p></section>';
   const legacyNote = !hero.guide && !hero.overview
     ? '<p class="guide-data-note">Existing level-one community reference; details have not been independently verified for this guide.</p>'
     : '';

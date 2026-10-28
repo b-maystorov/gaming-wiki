@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "game": {
+    "id": "darkest-dungeon-1",
+    "name": "Darkest Dungeon I",
+    "mechanics": ["ranked-combat", "camping"],
+    "versionContext": {
+      "id": "darkest-dungeon-1:campaign:skill-level-1-reference",
+      "mode": "single-player campaign",
+      "platform": null,
+      "patch": null,
+      "verifiedAgainstInstalledBuild": false,
+      "notes": "Campaign skill-level-1 reference snapshot retained from the existing guide. No installed build or patch was available for comparison. Darkest Dungeon II and Butcher's Circus values are out of scope."
+    }
+  },
+  "sources": [
+    {
+      "id": "dd1-crusader-gamefaqs",
+      "title": "Crusader campaign skill reference",
+      "url": "https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/crusader",
+      "kind": "community-reference",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "dd1-crusader-wiki",
+      "title": "Crusader campaign skills",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Crusader_(Darkest_Dungeon)",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "dd1-crusader-strategy",
+      "title": "Crusader strategy reference",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Crusader_(Darkest_Dungeon)/Strategy",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    }
+  ],
+  "heroes": [
+    {
+      "id": "darkest-dungeon-1:crusader",
+      "routeId": "crusader",
+      "name": "Crusader",
+      "requirements": { "baseGame": true, "dlc": [], "mods": [] },
+      "roleTags": ["Damage", "Stress relief"],
+      "role": "Frontline damage · Stun · Recovery",
+      "summary": "A durable frontline fighter who can strike, stun, protect himself, and provide small health and stress recovery.",
+      "preferredPositions": [1, 2],
+      "alternativePositions": [3],
+      "overview": {
+        "positions": "Ranks 1 and 2 keep Smite and Stunning Blow available. Rank 3 is a situational alternative for Holy Lance, which advances the Crusader when used.",
+        "strengths": [
+          "Durable frontline fighter with strong melee damage.",
+          "Can stun front enemies and deal bonus damage to Unholy foes.",
+          "Offers small party health, stress, and torch recovery."
+        ],
+        "weaknesses": [
+          "Very low base Speed means many enemies and allies may act first.",
+          "Most direct attacks are limited to the front; Holy Lance is needed to reach back ranks."
+        ],
+        "beginnerAdvice": "Start in rank 1 or 2 and use Smite or Stunning Blow against a front threat. If the party is shuffled, Holy Lance can reach deeper enemies and move him forward."
+      },
+      "baseStats": {
+        "status": "not-recorded",
+        "verification": { "status": "missing", "sourceIds": [] },
+        "values": {
+          "health": { "value": null, "unit": "hp", "verification": { "status": "missing", "sourceIds": [] } },
+          "dodge": { "value": null, "unit": "points", "verification": { "status": "missing", "sourceIds": [] } },
+          "speed": { "value": null, "unit": "points", "verification": { "status": "missing", "sourceIds": [] } },
+          "resistances": {
+            "stun": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
+            "blight": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
+            "bleed": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
+            "debuff": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
+            "move": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
+            "trap": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } }
+          }
+        }
+      },
+      "artwork": {
+        "gallery": {
+          "path": "assets/images/darkest-dungeon/crusader-portrait.png",
+          "alt": "User-provided Darkest Dungeon-style illustration identified as Crusader",
+          "monogram": "CR",
+          "credit": "User-provided image · original source unverified",
+          "reuseStatus": "user-provided-unverified"
+        }
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": ["dd1-crusader-wiki", "dd1-crusader-strategy"]
+      }
+    }
+  ],
+  "combatSkills": [
+    {
+      "id": "darkest-dungeon-1:crusader:smite",
+      "heroId": "darkest-dungeon-1:crusader",
+      "name": "Smite",
+      "category": "Melee attack",
+      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "choose-one", "ranks": [1, 2] } },
+      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
+      "level1": {
+        "damageModifier": { "value": 0, "unit": "percent", "sign": "always", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "accuracy": { "value": 85, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "criticalModifier": { "value": 0, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "effects": [{ "text": "+15% damage vs unholy.", "kind": "damage-bonus", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } }],
+        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      },
+      "progression": { "status": "not-recorded", "levels": [] },
+      "editorial": {
+        "description": "A direct frontline strike that deals bonus damage to Unholy enemies.",
+        "whenToUse": "Use against a priority enemy in rank 1 or 2, especially if it is Unholy."
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:crusader:zealous-accusation",
+      "heroId": "darkest-dungeon-1:crusader",
+      "name": "Zealous Accusation",
+      "category": "Ranged attack",
+      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "simultaneous", "ranks": [1, 2] } },
+      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
+      "level1": {
+        "damageModifier": { "value": -40, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "accuracy": { "value": 85, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "unavailable", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "effects": [{ "text": "Attack both front enemy ranks.", "kind": "targeting", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }],
+        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      },
+      "progression": { "status": "not-recorded", "levels": [] },
+      "editorial": {
+        "description": "A ranged attack that hits both front enemy ranks at the same time.",
+        "whenToUse": "Use when both front ranks are worth damaging. This splits damage, so focus fire may be better when removing one enemy would prevent its next action."
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:crusader:stunning-blow",
+      "heroId": "darkest-dungeon-1:crusader",
+      "name": "Stunning Blow",
+      "category": "Melee attack · Stun",
+      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "choose-one", "ranks": [1, 2] } },
+      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
+      "level1": {
+        "damageModifier": { "value": -50, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "accuracy": { "value": 90, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "unavailable", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "effects": [{ "text": "Stun.", "kind": "status", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }],
+        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      },
+      "progression": { "status": "not-recorded", "levels": [] },
+      "editorial": {
+        "description": "A frontline strike that can stun one enemy, making it lose its next turn if the stun succeeds.",
+        "whenToUse": "Use to delay a dangerous front enemy. Stun resistance can prevent the effect."
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:crusader:bulwark-of-faith",
+      "heroId": "darkest-dungeon-1:crusader",
+      "name": "Bulwark of Faith",
+      "category": "Self buff · Defense",
+      "rankRules": { "heroPositions": [2, 1], "target": { "side": "self", "mode": "self", "ranks": [] } },
+      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
+      "level1": {
+        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "accuracy": { "value": null, "unit": "points", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "effects": [
+          { "text": "+20% PROT", "kind": "buff", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+          { "text": "mark self", "kind": "mark", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+          { "text": "torch +24.", "kind": "torch", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+          { "text": "The PROT bonus and self-mark last 1 battle.", "kind": "duration", "presentationGroup": "detail", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } },
+          { "text": "Limited to 1 use per battle.", "kind": "limitation", "presentationGroup": "detail", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }
+        ],
+        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      },
+      "progression": { "status": "not-recorded", "levels": [] },
+      "editorial": {
+        "description": "Hardens the Crusader and marks him, drawing attacks toward him for a short time.",
+        "whenToUse": "Use when the Crusader can take the incoming hits and you want to protect a more vulnerable ally."
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:crusader:battle-heal",
+      "heroId": "darkest-dungeon-1:crusader",
+      "name": "Battle Heal",
+      "category": "Ally heal",
+      "rankRules": { "heroPositions": [4, 3, 2, 1], "target": { "side": "ally", "mode": "choose-one", "ranks": [4, 3, 2, 1] } },
+      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
+      "level1": {
+        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "accuracy": { "value": null, "unit": "points", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "effects": [{ "text": "Heal 2–3.", "kind": "heal", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } }],
+        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      },
+      "progression": { "status": "not-recorded", "levels": [] },
+      "editorial": {
+        "description": "Restores a small amount of health to one ally in any party position.",
+        "whenToUse": "Use to stabilize a wounded ally when the Crusader does not need to attack."
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:crusader:holy-lance",
+      "heroId": "darkest-dungeon-1:crusader",
+      "name": "Holy Lance",
+      "category": "Melee attack · Movement",
+      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "choose-one", "ranks": [2, 3, 4] } },
+      "movement": { "status": "reference-checked", "actor": "hero", "direction": "forward", "ranks": 1, "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } },
+      "level1": {
+        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "unavailable", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "accuracy": { "value": 85, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "criticalModifier": { "value": 7.5, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+        "effects": [
+          { "text": "+15% damage vs unholy", "kind": "damage-bonus", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+          { "text": "move forward 1.", "kind": "movement", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }
+        ],
+        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      },
+      "progression": { "status": "not-recorded", "levels": [] },
+      "editorial": {
+        "description": "A lunging strike that reaches the enemy back ranks and moves the Crusader forward.",
+        "whenToUse": "Use after the Crusader has been pushed back, or when the enemy back line is the priority. Check the party formation after he advances."
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:crusader:inspiring-cry",
+      "heroId": "darkest-dungeon-1:crusader",
+      "name": "Inspiring Cry",
+      "category": "Party support · Heal and stress relief",
+      "rankRules": { "heroPositions": [4, 3, 2, 1], "target": { "side": "ally", "mode": "all", "ranks": [4, 3, 2, 1] } },
+      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
+      "level1": {
+        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "accuracy": { "value": null, "unit": "points", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
+        "effects": [
+          { "text": "Heal 1", "kind": "heal", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+          { "text": "heal 5 stress", "kind": "stress-heal", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
+          { "text": "torch +5.", "kind": "torch", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } }
+        ],
+        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      },
+      "progression": { "status": "not-recorded", "levels": [] },
+      "editorial": {
+        "description": "Gives every party member a small heal and reduces stress, while raising the torchlight.",
+        "whenToUse": "Use when the party needs a little recovery or the torchlight needs a boost."
+      }
+    }
+  ],
+  "campingSkills": [],
+  "equipmentProgressions": [],
+  "trinkets": [],
+  "bosses": [],
+  "enemies": [],
+  "teamCompositions": [],
+  "strategyRecommendations": []
+}

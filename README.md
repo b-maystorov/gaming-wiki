@@ -70,9 +70,11 @@ gaming-wiki/
 │   │   ├── app.js
 │   │   ├── games.js
 │   │   └── heroes.js
+│   ├── data/games/       # Canonical static JSON content packs
 │   └── assets/
 │       └── images/
 ├── docs/
+├── tools/check_content.py
 ├── AGENTS.md
 └── README.md
 ```
@@ -154,3 +156,17 @@ Combat skill reference routes use `#hero/<id>/abilities`. Their level-one values
 are snapshots from an older reference guide and were not checked against the
 installed game patch. Full build, team, equipment, and strategy content remains
 available only for Highwayman.
+
+## Structured game content
+
+New structured records live in `dist/data/games/` as version-controlled JSON,
+served directly by the static site. Crusader is the first migrated hero;
+existing pages for other heroes continue using their current JavaScript data.
+The shared schema and migration notes are in
+[`docs/content-architecture.md`](docs/content-architecture.md).
+
+Check the data locally, without network access or extra packages:
+
+```bash
+python3 tools/check_content.py
+```

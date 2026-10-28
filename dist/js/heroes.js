@@ -145,17 +145,8 @@ export const heroes = [
   { id: "bounty-hunter", name: "Bounty Hunter", roleTags: ["Damage", "Stun", "Mark"],
     requirements: baseGame, guide: null,
     galleryArt: { src: 'assets/images/darkest-dungeon/bounty-hunter-portrait.png', permission: 'user-provided', monogram: 'BH', alt: 'User-provided Darkest Dungeon-style illustration identified as Bounty Hunter', credit: 'User-provided image · original source unverified' } },
-  { id: "crusader", name: "Crusader", roleTags: ["Damage", "Stress relief"],
-    role: 'Frontline damage · Stun · Recovery',
-    summary: 'A durable frontline fighter who can strike, stun, protect himself, and provide small health and stress recovery.',
-    preferredPositions: [1, 2], alternativePositions: [3], requirements: baseGame, guide: null,
-    overview: {
-      positions: 'Ranks 1 and 2 keep Smite and Stunning Blow available. Rank 3 is a situational alternative for Holy Lance, which advances the Crusader when used.',
-      strengths: ['Durable frontline fighter with strong melee damage.', 'Can stun front enemies and deal bonus damage to Unholy foes.', 'Offers small party health, stress, and torch recovery.'],
-      weaknesses: ['Very low base Speed means many enemies and allies may act first.', 'Most direct attacks are limited to the front; Holy Lance is needed to reach back ranks.'],
-      beginnerAdvice: 'Start in rank 1 or 2 and use Smite or Stunning Blow against a front threat. If the party is shuffled, Holy Lance can reach deeper enemies and move him forward.'
-    },
-    galleryArt: { src: 'assets/images/darkest-dungeon/crusader-portrait.png', permission: 'user-provided', monogram: 'CR', alt: 'User-provided Darkest Dungeon-style illustration identified as Crusader', credit: 'User-provided image · original source unverified' } },
+  // Crusader's guide and portrait are loaded from the structured static record.
+  { id: "crusader", name: "Crusader", guide: null },
   { id: "grave-robber", name: "Grave Robber", roleTags: ["Damage", "Blight"],
     requirements: baseGame, guide: null,
     galleryArt: { src: 'assets/images/darkest-dungeon/grave-robber-portrait.png', permission: 'user-provided', monogram: 'GR', alt: 'User-provided Darkest Dungeon-style illustration identified as Grave Robber', credit: 'User-provided image · original source unverified' } },

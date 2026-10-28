@@ -39,64 +39,6 @@ export const heroAbilities = {
     ['Finish Him', '3,2,1', '1,2,3', '—', '85', '5%', '+25% damage vs stunned.'],
     ['Caltrops', '4,3,2', '3,4', '-95%', '90', '5%', 'Bleed 2/round for 3 rounds; target takes +10% damage and −4 speed.']
   ]},
-  crusader: {
-    source: 'https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/crusader',
-    detailsSource: 'https://darkestdungeon.wiki.gg/wiki/Crusader_(Darkest_Dungeon)',
-    strategySource: 'https://darkestdungeon.wiki.gg/wiki/Crusader_(Darkest_Dungeon)/Strategy',
-    skillDetails: {
-      'Smite': {
-        type: 'Melee attack',
-        target: { side: 'enemy', mode: 'choose-one' },
-        description: 'A direct frontline strike that deals bonus damage to Unholy enemies.',
-        tacticalNote: 'Use against a priority enemy in rank 1 or 2, especially if it is Unholy.'
-      },
-      'Zealous Accusation': {
-        type: 'Ranged attack',
-        target: { side: 'enemy', mode: 'simultaneous' },
-        description: 'A ranged attack that hits both front enemy ranks at the same time.',
-        tacticalNote: 'Use when both front ranks are worth damaging. This splits damage, so focus fire may be better when removing one enemy would prevent its next action.'
-      },
-      'Stunning Blow': {
-        type: 'Melee attack · Stun',
-        target: { side: 'enemy', mode: 'choose-one' },
-        description: 'A frontline strike that can stun one enemy, making it lose its next turn if the stun succeeds.',
-        tacticalNote: 'Use to delay a dangerous front enemy. Stun resistance can prevent the effect.'
-      },
-      'Bulwark of Faith': {
-        type: 'Self buff · Defense',
-        target: { side: 'self', mode: 'self' },
-        description: 'Hardens the Crusader and marks him, drawing attacks toward him for a short time.',
-        tacticalNote: 'Use when the Crusader can take the incoming hits and you want to protect a more vulnerable ally.',
-        extraEffects: ['The PROT bonus and self-mark last 1 battle.', 'Limited to 1 use per battle.']
-      },
-      'Battle Heal': {
-        type: 'Ally heal',
-        target: { side: 'ally', mode: 'choose-one' },
-        description: 'Restores a small amount of health to one ally in any party position.',
-        tacticalNote: 'Use to stabilize a wounded ally when the Crusader does not need to attack.'
-      },
-      'Holy Lance': {
-        type: 'Melee attack · Movement',
-        target: { side: 'enemy', mode: 'choose-one' },
-        description: 'A lunging strike that reaches the enemy back ranks and moves the Crusader forward.',
-        tacticalNote: 'Use after the Crusader has been pushed back, or when the enemy back line is the priority. Check the party formation after he advances.'
-      },
-      'Inspiring Cry': {
-        type: 'Party support · Heal and stress relief',
-        target: { side: 'ally', mode: 'all' },
-        description: 'Gives every party member a small heal and reduces stress, while raising the torchlight.',
-        tacticalNote: 'Use when the party needs a little recovery or the torchlight needs a boost.'
-      }
-    },
-    skills: [
-    ['Smite', '2,1', '1,2', '+0%', '85', '0%', '+15% damage vs unholy.'],
-    ['Zealous Accusation', '2,1', '1 + 2', '-40%', '85', '—', 'Attack both front enemy ranks.'],
-    ['Stunning Blow', '2,1', '1,2', '-50%', '90', '—', 'Stun.'],
-    ['Bulwark of Faith', '2,1', 'Self', '—', '—', '—', '+20% PROT; mark self; torch +24.'],
-    ['Battle Heal', '4,3,2,1', 'One ally', '—', '—', '—', 'Heal 2–3.'],
-    ['Holy Lance', '2,1', '2,3,4', '—', '85', '7.5%', '+15% damage vs unholy; move forward 1.'],
-    ['Inspiring Cry', '4,3,2,1', 'All allies', '—', '—', '—', 'Heal 1; heal 5 stress; torch +5.']
-  ]},
   flagellant: { source: 'https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/flagellant', skills: [
     ['Punish', '2,1', '1,2', '0%', '95', '6%', 'Bleed 4/round for 3 rounds; −20% bleed resist.'],
     ['Rain of Sorrows', '2,1', '3 + 4', '-67%', '95', '2%', 'Bleed 3/round for 3 rounds; −20% bleed resist.'],

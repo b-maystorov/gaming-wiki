@@ -1,5 +1,28 @@
 # Validation log
 
+## Structured content pilot — 2026-10-28
+
+- `python3 tools/check_content.py` passed offline: required fields, namespaced
+  unique IDs, references, rank/target constraints, progression shape, explicit
+  DLC/mod fields, local image paths, and missing-versus-verified values.
+- Fault-injection checks confirmed rejection of a duplicate ID, dangling hero
+  reference, null value marked verified, rank 5, and a missing image.
+- The pack and schema both parsed as JSON. The installed `jsonschema` package
+  validated the Crusader pack against `docs/game-content.schema.json`.
+- Compared the seven migrated skills with the pre-migration `HEAD` data:
+  skill names, hero positions, target ranks/modes, level-one DMG/ACC/CRIT
+  formatting, and rendered effect strings matched. No values were added.
+- Reviewed the adapter's app initialization order, gallery/render dependencies,
+  static asset URL, route IDs, and fallback behavior. No other hero record,
+  composition, trinket, or theme was migrated.
+- `git diff --check` passed. No packages or network access were needed.
+
+The existing preview at `http://127.0.0.1:8001` refused the connection, and no
+browser or JavaScript runtime is available in this environment. The server was
+not started, stopped, or replaced. Browser rendering, route interaction,
+browser Back/Forward, console errors, and actual fetch/adapter execution remain
+unverified. The static files and references were checked locally.
+
 ## Highwayman image integration
 
 - Verified the three original files with Pillow: GIF 175 × 301 px, 31 frames,

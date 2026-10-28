@@ -386,6 +386,12 @@ This integration supersedes the prior gallery-audit statement that all 17
 licensed portraits. If public redistribution permission is later clarified, the
 metadata and this record should be updated to reflect the documented terms.
 
+The migrated Crusader hero record points to
+`dist/assets/images/darkest-dungeon/crusader-portrait.png`, the user-supplied
+crop listed above. The structured record preserves the local path and
+`reuseStatus: user-provided-unverified`; the automated check confirms only that
+the path exists, not that public redistribution is permitted.
+
 ## Combat skills reference milestone — 2026-10-27
 
 The user supplied `dist/assets/images/darkest-dungeon/Eingefügtes Bild.png`,
