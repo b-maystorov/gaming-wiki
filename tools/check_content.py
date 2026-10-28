@@ -4,6 +4,7 @@
 import json
 import re
 import sys
+import csv
 from pathlib import Path
 
 
@@ -60,13 +61,89 @@ def check_local_assets(value, path="$", key=None):
         for index, nested in enumerate(value):
             check_local_assets(nested, f"{path}[{index}]", key)
     elif isinstance(value, str) and key in {"path", "assetPath", "src"} and value.startswith("assets/"):
-        require((ROOT / "dist" / value).is_file(), f"{path}: missing local asset {value}")
+        asset = ROOT / "dist" / value
+        require(asset.is_file(), f"{path}: missing local asset {value}")
+        check_image_file(asset, path)
+
+
+def check_image_file(asset, context):
+    """Check image signatures so a path cannot silently point at an HTML/file mismatch."""
+    extension = asset.suffix.lower()
+    header = asset.read_bytes()[:16]
+    signatures = {
+        ".png": header.startswith(b"\x89PNG\r\n\x1a\n"),
+        ".gif": header.startswith((b"GIF87a", b"GIF89a")),
+        ".jpg": header.startswith(b"\xff\xd8\xff"),
+        ".jpeg": header.startswith(b"\xff\xd8\xff"),
+        ".webp": len(header) >= 12 and header[:4] == b"RIFF" and header[8:12] == b"WEBP",
+    }
+    if extension == ".svg":
+        content = asset.read_text(encoding="utf-8").lstrip("\ufeff \t\r\n")
+        valid = bool(re.match(r"(?:<\?xml[^>]*>\s*)?(?:<!--.*?-->\s*)*<svg(?:\s|>)", content, re.S))
+    else:
+        valid = signatures.get(extension, False)
+    require(valid, f"{context}: file extension does not match a supported image format ({asset.name})")
+
+
+def check_artwork_inventory(pack):
+    inventory_path = ROOT / "docs/artwork-inventory.csv"
+    with inventory_path.open(encoding="utf-8", newline="") as inventory_file:
+        rows = list(csv.DictReader(inventory_file))
+    required = {"entity_id", "name", "category", "current_image_path", "desired_image_type",
+                "asset_status", "candidate_source", "license_or_permission_status"}
+    require(rows and required <= set(rows[0]), "artwork inventory is missing required columns or records")
+    ids = [row["entity_id"] for row in rows]
+    require(len(ids) == len(set(ids)), "artwork inventory contains duplicate entity IDs")
+    require(all(row["candidate_source"] and row["license_or_permission_status"] for row in rows),
+            "artwork inventory needs a candidate source and rights status for every record")
+    for row in rows:
+        path = row["current_image_path"]
+        if path.startswith("assets/"):
+            asset = ROOT / "dist" / path
+            require(asset.is_file(), f"artwork inventory {row['entity_id']}: missing asset {path}")
+            check_image_file(asset, f"artwork inventory {row['entity_id']}")
+
+    expected_records = {}
+    for collection in ("bosses", "enemies", "trinkets", "items", "curios", "locations", "quests"):
+        for record in pack[collection]:
+            expected_records[record["id"]] = (record["name"], record.get("assetPath") or "")
+    for record in pack["heroes"]:
+        gallery = record.get("artwork", {}).get("gallery", {})
+        expected_records[f"darkest-dungeon-1:hero:{record['routeId']}"] = (
+            record["name"], gallery.get("path", ""))
+    # Legacy heroes remain authoritative for the rest of the gallery roster.
+    heroes_js = (ROOT / "dist/js/heroes.js").read_text(encoding="utf-8")
+    hero_registry = heroes_js.split("export const heroes = [", 1)[1].split("\n];", 1)[0]
+    for block in re.findall(r"(?ms)^  \{(.*?)(?=^  \{|\Z)", hero_registry):
+        hero_id = re.search(r"\bid:\s*['\"]([^'\"]+)['\"]", block)
+        hero_name = re.search(r"\bname:\s*['\"]([^'\"]+)['\"]", block)
+        hero_art = re.search(r"galleryArt:\s*\{[^\n]*?src:\s*['\"]([^'\"]+)", block)
+        if hero_id:
+            expected_records.setdefault(
+                f"darkest-dungeon-1:hero:{hero_id.group(1)}",
+                (hero_name.group(1) if hero_name else "", hero_art.group(1) if hero_art else ""))
+    expected_records.update({
+        "darkest-dungeon-1:composition:steady-expedition": ("A steady expedition", "Reuses member hero portraits in dist/js/heroes.js"),
+        "darkest-dungeon-1:composition:rotating-middle": ("A rotating middle", "Reuses member hero portraits in dist/js/heroes.js"),
+        "darkest-dungeon-1:hero:highwayman:guide-portrait": (
+            "Highwayman guide portrait", "assets/images/darkest-dungeon/highwayman-idle.gif"),
+    })
+    actual = set(ids)
+    expected = set(expected_records)
+    require(expected == actual,
+            f"artwork inventory entity mismatch (missing={sorted(expected - actual)}, extra={sorted(actual - expected)})")
+    by_id = {record["entity_id"]: record for record in rows}
+    for record_id, (name, current_path) in expected_records.items():
+        row = by_id[record_id]
+        require(row["name"] == name, f"artwork inventory {record_id}: name does not match canonical data")
+        require(row["current_image_path"] == current_path,
+                f"artwork inventory {record_id}: image path does not match canonical data")
 
 
 def check_pack(pack):
     required_arrays = (
         "sources", "heroes", "combatSkills", "campingSkills", "equipmentProgressions",
-        "trinkets", "bosses", "enemies", "teamCompositions", "strategyRecommendations",
+        "trinkets", "trinketSets", "bosses", "enemies", "items", "curios", "locations", "quests", "teamCompositions", "strategyRecommendations",
         "dlcs", "regions", "bossCategories",
     )
     require(pack.get("schemaVersion") == 1, "schemaVersion must be 1")
@@ -90,7 +167,7 @@ def check_pack(pack):
         require(source["verificationStatus"] in {"verified", "reference-checked", "unverified", "unavailable"},
                 f"source {source['id']}: invalid verificationStatus")
 
-    for collection in ("heroes", "combatSkills", "campingSkills", "equipmentProgressions", "trinkets", "bosses", "enemies", "teamCompositions", "strategyRecommendations", "dlcs", "regions", "bossCategories"):
+    for collection in ("heroes", "combatSkills", "campingSkills", "equipmentProgressions", "trinkets", "trinketSets", "bosses", "enemies", "items", "curios", "locations", "quests", "teamCompositions", "strategyRecommendations", "dlcs", "regions", "bossCategories"):
         for record in pack[collection]:
             register(record.get("id"), collection)
             require(record["id"].startswith(pack["game"]["id"] + ":"),
@@ -102,6 +179,10 @@ def check_pack(pack):
         "trinkets": ("name", "rarity", "requirements", "effects", "verification"),
         "bosses": ("routeId", "name", "categoryIds", "regionIds", "requirements", "versionContextId", "guideStatus", "summary", "summaryVerification", "verification"),
         "enemies": ("name", "requirements", "verification"),
+        "items": ("routeId", "name", "category", "purpose", "usage", "limitations", "requirements", "relatedCurioIds", "verification"),
+        "curios": ("routeId", "name", "regionIds", "whereFound", "requirements", "interactions", "verification"),
+        "locations": ("routeId", "name", "regionId", "requirements", "summary", "enemyIds", "bossIds", "curioIds", "verification"),
+        "quests": ("routeId", "name", "category", "summary", "regionIds", "verification"),
         "teamCompositions": ("name", "heroIds", "requirements", "verification"),
         "strategyRecommendations": ("heroId", "kind", "text", "sourceIds", "editorial"),
     }
@@ -112,6 +193,9 @@ def check_pack(pack):
 
     source_ids = {record["id"] for record in pack["sources"]}
     hero_ids = {record["id"] for record in pack["heroes"]}
+    legacy_heroes = (ROOT / "dist/js/heroes.js").read_text(encoding="utf-8")
+    hero_registry = legacy_heroes.split("export const heroes = [", 1)[1].split("\n];", 1)[0]
+    hero_route_ids = set(re.findall(r"\bid:\s*['\"]([^'\"]+)['\"]", hero_registry))
     trinket_ids = {record["id"] for record in pack["trinkets"]}
     boss_ids = {record["id"] for record in pack["bosses"]}
     dlc_ids = {record["id"] for record in pack["dlcs"]}
@@ -193,13 +277,71 @@ def check_pack(pack):
                     f"{record_type} {record['id']}: DLC and mod requirements must be separate")
     for trinket in pack["trinkets"]:
         requirements = trinket.get("requirements", {})
+        require(ID_PATTERN.fullmatch(trinket["routeId"]), f"trinket {trinket['id']}: invalid routeId")
         require(isinstance(requirements.get("dlc"), list) and isinstance(requirements.get("mods"), list),
                 f"trinket {trinket['id']}: DLC and mod requirements must be separate")
+        require(requirements.get("baseGame") is not None and all(dlc_id in dlc_ids for dlc_id in requirements["dlc"]), f"trinket {trinket['id']}: malformed or unknown DLC requirement")
         for hero_id in trinket.get("heroIds", []):
             require(hero_id in hero_ids, f"trinket {trinket['id']}: unknown hero {hero_id}")
+        for route_id in trinket.get("heroRouteIds", []):
+            require(route_id in hero_route_ids, f"trinket {trinket['id']}: unknown hero route {route_id}")
+        for effect in trinket["effects"]:
+            require(effect.get("polarity") in {"positive", "negative"}, f"trinket {trinket['id']}: effect polarity must be positive or negative")
+        require(all(region_id in region_ids for region_id in trinket.get("regionIds", [])), f"trinket {trinket['id']}: unknown origin region")
+        if trinket.get("bossId"):
+            require(trinket["bossId"] in boss_ids, f"trinket {trinket['id']}: unknown associated boss")
         path = trinket.get("assetPath")
         if path:
             require(path.startswith("assets/") and (ROOT / "dist" / path).is_file(), f"trinket {trinket['id']}: missing asset {path}")
+    trinket_set_ids = {entry["id"] for entry in pack["trinketSets"]}
+    for trinket_set in pack["trinketSets"]:
+        require(trinket_set["heroRouteId"] in hero_route_ids, f"trinket set {trinket_set['id']}: unknown hero route")
+        require(all(dlc_id in dlc_ids for dlc_id in trinket_set["requirements"].get("dlc", [])), f"trinket set {trinket_set['id']}: unknown DLC")
+    for trinket in pack["trinkets"]:
+        if trinket.get("setId"):
+            require(trinket["setId"] in trinket_set_ids, f"trinket {trinket['id']}: unknown set relationship")
+    trinket_routes = {record["routeId"] for record in pack["trinkets"]}
+    recommendation_routes = set(re.findall(r"routeId:\s*['\"]([^'\"]+)['\"]", legacy_heroes))
+    require(recommendation_routes <= trinket_routes, f"hero trinket recommendations have unresolved item route IDs: {sorted(recommendation_routes - trinket_routes)}")
+    boss_names = {boss["name"].casefold() for boss in pack["bosses"]}
+    enemy_routes = set()
+    enemy_ids = {record["id"] for record in pack["enemies"]}
+    curio_ids = {record["id"] for record in pack["curios"]}
+    item_ids = {record["id"] for record in pack["items"]}
+    for enemy in pack["enemies"]:
+        require(enemy["name"].casefold() not in boss_names, f"enemy {enemy['id']}: boss duplicated as regular enemy")
+        require(enemy["routeId"] not in enemy_routes and ID_PATTERN.fullmatch(enemy["routeId"]), f"enemy {enemy['id']}: routeId must be valid and unique")
+        enemy_routes.add(enemy["routeId"])
+        require(enemy["encounterClass"] in {"regular", "miniboss"}, f"enemy {enemy['id']}: invalid encounterClass")
+        require(enemy["requirements"].get("baseGame") is not None and isinstance(enemy["requirements"].get("dlc"), list) and isinstance(enemy["requirements"].get("mods"), list), f"enemy {enemy['id']}: malformed requirements")
+        require(all(region in region_ids for region in enemy.get("regionIds", [])), f"enemy {enemy['id']}: unknown region")
+        require(all(dlc in dlc_ids for dlc in enemy["requirements"]["dlc"]), f"enemy {enemy['id']}: unknown DLC")
+        require(enemy["verification"].get("status") in {"verified", "reference-checked", "partial", "unverified"}, f"enemy {enemy['id']}: invalid verification status")
+    item_routes = set()
+    for item in pack["items"]:
+        require(ID_PATTERN.fullmatch(item["routeId"]) and item["routeId"] not in item_routes, f"item {item['id']}: invalid or duplicate routeId")
+        item_routes.add(item["routeId"])
+        require(all(curio_id in curio_ids for curio_id in item["relatedCurioIds"]), f"item {item['id']}: unknown related curio")
+        for dlc_id in item["requirements"].get("dlc", []): require(dlc_id in dlc_ids, f"item {item['id']}: unknown DLC {dlc_id}")
+    for curio in pack["curios"]:
+        require(ID_PATTERN.fullmatch(curio["routeId"]), f"curio {curio['id']}: invalid routeId")
+        require(all(region_id in region_ids for region_id in curio["regionIds"]), f"curio {curio['id']}: unknown region")
+        require(all(dlc_id in dlc_ids for dlc_id in curio["requirements"].get("dlc", [])), f"curio {curio['id']}: unknown DLC")
+        for interaction in curio["interactions"]:
+            if interaction.get("itemId") is not None: require(interaction["itemId"] in item_ids, f"curio {curio['id']}: unknown provision/item relationship")
+    for location in pack["locations"]:
+        require(location["regionId"] in region_ids, f"location {location['id']}: unknown region")
+        require(all(record_id in enemy_ids for record_id in location["enemyIds"]), f"location {location['id']}: unknown enemy")
+        require(all(record_id in boss_ids for record_id in location["bossIds"]), f"location {location['id']}: unknown boss")
+        require(all(record_id in curio_ids for record_id in location["curioIds"]), f"location {location['id']}: unknown curio")
+    for collection in ("trinkets", "curios", "locations", "quests"):
+        route_ids = [record["routeId"] for record in pack[collection]]
+        require(all(ID_PATTERN.fullmatch(route_id) for route_id in route_ids), f"{collection}: invalid route ID")
+        require(len(route_ids) == len(set(route_ids)), f"{collection}: duplicate route ID")
+    for quest in pack["quests"]:
+        require(ID_PATTERN.fullmatch(quest["routeId"]), f"quest {quest['id']}: invalid routeId")
+        require(all(region_id in region_ids for region_id in quest["regionIds"]), f"quest {quest['id']}: unknown region")
+        for dlc_id in quest.get("requirements", {}).get("dlc", []): require(dlc_id in dlc_ids, f"quest {quest['id']}: unknown DLC")
     for composition in pack["teamCompositions"]:
         for hero_id in composition.get("heroIds", []):
             require(hero_id in hero_ids, f"composition {composition['id']}: unknown hero {hero_id}")
@@ -214,9 +356,6 @@ def check_pack(pack):
         require(isinstance(recommendation.get("editorial"), bool), f"recommendation {recommendation['id']}: mark factual/editorial status")
 
     boss_route_ids = set()
-    legacy_heroes = (ROOT / "dist/js/heroes.js").read_text(encoding="utf-8")
-    hero_registry = legacy_heroes.split("export const heroes = [", 1)[1].split("\n];", 1)[0]
-    hero_route_ids = set(re.findall(r"\bid:\s*['\"]([^'\"]+)['\"]", hero_registry))
     composition_ids = {composition["id"] for composition in pack["teamCompositions"]}
     for boss in pack["bosses"]:
         route_id = boss["routeId"]
@@ -244,9 +383,21 @@ def check_pack(pack):
     app_js = (ROOT / "dist/js/app.js").read_text(encoding="utf-8")
     require("parts[2] === 'bosses'" in app_js and "renderBossCollection" in app_js, "Bosses collection route is not wired in app.js")
     require("initializeCommandCenter" in app_js and "bosses: structuredGameContent" in app_js, "Bosses are not included in global search")
+    for view in ("enemies", "trinkets", "items", "curios", "locations", "quests"):
+        require(f"view: '{view}'" in (ROOT / "dist/js/games.js").read_text(encoding="utf-8"), f"{view} sidebar route is missing")
+        require(f"{view}: () => renderEncyclopediaCollection('{view}')" in app_js, f"{view} collection renderer route is missing")
+    require("const trinkets = getTrinkets().filter" in app_js, "Hero trinket recommendations do not resolve canonical item records")
+    require("content: structuredGameContent" in app_js and "content?.trinkets.find" in (ROOT / "dist/js/command-center.js").read_text(encoding="utf-8"), "Global search is not using canonical trinket data")
 
     walk_verification(pack, source_ids=source_ids)
     check_local_assets(pack)
+    # Check the legacy roster's referenced portraits until those records migrate.
+    legacy_assets = re.findall(r"(?:src|path):\s*['\"](assets/[^'\"]+)['\"]", legacy_heroes)
+    for asset_path in set(legacy_assets):
+        asset = ROOT / "dist" / asset_path
+        require(asset.is_file(), f"heroes.js: missing local artwork {asset_path}")
+        check_image_file(asset, "heroes.js")
+    check_artwork_inventory(pack)
     # IDs and references should stay resolvable when imported into a relational store.
 
 
@@ -260,7 +411,9 @@ def main():
         return 1
     print(f"Content check passed: {len(pack['heroes'])} hero, {len(pack['combatSkills'])} combat skills, "
           f"{len(pack['bosses'])} bosses ({sum(b['guideStatus'] == 'available' for b in pack['bosses'])} detailed), "
-          f"{len(pack['sources'])} sources; optional sections are explicitly empty until documented.")
+          f"{len(pack['enemies'])} enemies, {len(pack['trinkets'])} trinkets, {len(pack['items'])} items, "
+          f"{len(pack['curios'])} curios, {len(pack['locations'])} locations, {len(pack['quests'])} quests, "
+          f"{len(pack['sources'])} sources.")
     return 0
 
 

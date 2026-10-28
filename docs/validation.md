@@ -232,3 +232,13 @@ mobile layout could not be exercised. Hash-route transitions and focus targets
 were checked with the DOM harness; mobile breakpoints and focus styles were
 inspected in CSS. These checks do not replace a browser review. No commit, push,
 or deployment was performed.
+
+## DD1 field encyclopedia expansion — 2026-10-28
+
+- `python3 tools/check_content.py` passed offline. It checked unique IDs and route IDs, boss/enemy separation, source references, DLC/region requirements, trinket set and boss links, item-curio links, location rosters, static route registration, verification states, and local asset paths.
+- JSON syntax checks passed for the content pack and schema. A targeted comparison confirmed the four previously displayed Highwayman trinket effect/penalty sets match their new canonical records exactly. `git diff --check` passed.
+- A semantic comparison against the branch base confirmed the existing game context, Crusader hero/skill values, bosses, regions, team compositions, and strategy recommendation arrays are unchanged.
+- The expanded data pack contains 66 enemies, 23 trinkets, 15 items/provisions, 16 curios, 7 locations, and 12 quest/expedition records. The rendered interfaces are wired to the current hash router and global search through static source checks.
+- Local image references are validated. New enemy, item, curio, and trinket records use CSS monogram placeholders where no permitted art was established. Existing supplied trinket icons retain their paths; their reuse terms remain unverified.
+- `http://127.0.0.1:8001` refused the connection. No second server was started. Node.js and a browser automation/runtime are unavailable, so rendered layout, live JavaScript execution, in-browser filtering, keyboard interaction, responsive breakpoints, Back/Forward, and console/network errors could not be exercised.
+- No commit, push, or deployment was performed. Untracked `experiments/` and `react-preview-dist/` content was left untouched.
