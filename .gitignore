@@ -19,3 +19,6 @@ secrets.local.*
 # Logs
 *.log
 logs/
+
+# Isolated React/Vite pilot output; production remains in dist/.
+/react-preview-dist/

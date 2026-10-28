@@ -16,12 +16,13 @@ So far, I've added:
 - Development preview pages for World of Warcraft, League of Legends, and Darkest Dungeon II; their categories are planned, not available guides
 - A Darkest Dungeon section with its own navigation and theme
 - A Highwayman guide with builds, strengths, weaknesses, and trinket recommendations
+- A sourced boss index with four detailed encounter guides
 - Team compositions with party positions and strategy explanations
 - Search functionality for existing guides and compositions
 - Original game sprites and item icons where available
 - A responsive layout for desktop and mobile
 
-The website is still in development. Some sections, such as Bosses, Enemies, Curios, and Locations, will be added later.
+The website is still in development. Most boss guides and sections such as Enemies, Curios, and Locations remain incomplete.
 
 ## Technologies
 
@@ -32,7 +33,7 @@ The project currently uses:
 - JavaScript (ES Modules)
 - Git & GitHub
 
-No frameworks, databases, or external dependencies are required.
+The authoritative public site remains plain HTML, CSS, and JavaScript, with no runtime framework or backend.
 
 I decided to keep the project lightweight and use plain HTML, CSS, and JavaScript for now.
 
@@ -170,3 +171,33 @@ Check the data locally, without network access or extra packages:
 ```bash
 python3 tools/check_content.py
 ```
+
+## React + TypeScript development pilot
+
+The production website is still the vanilla implementation in `dist/`; the
+React prototype is isolated under `experiments/react-pilot/` and is not used by
+public routes. The Bosses preview imports the existing JSON boss records and
+Darkest Dungeon styles rather than maintaining a second content list.
+
+Run the original website using the Python command above on port 8001. For the
+prototype, use Node.js 20.19+ or 22.12+ and npm:
+
+```bash
+cd experiments/react-pilot
+npm install
+npm run dev
+```
+
+Vite binds to `127.0.0.1:5174`; BossCard links open their real boss routes on
+the existing port 8001 site. To type-check and build the prototype, run:
+
+```bash
+npm run typecheck
+npm run build
+```
+
+The build goes to the separate root folder `react-preview-dist/`. It does not
+replace or clean `dist/`. The React pilot currently covers the boss collection
+only; the vanilla site remains authoritative for every public page, route, and
+gameplay record. Search, global routing, hero guides, team pages and the other
+collections have not yet migrated.

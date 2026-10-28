@@ -1,0 +1,15 @@
+body { min-height: 100vh; background: #101012; }
+.react-bosses { width: min(1280px, calc(100% - 40px)); margin: 0 auto; padding: clamp(1.5rem, 5vw, 4rem) 0; }
+.react-bosses > h1 { margin-bottom: .8rem; }
+.react-bosses > .lede { margin-bottom: 2rem; }
+.react-boss-filters { display: grid; grid-template-columns: minmax(230px, 1.5fr) minmax(210px, 1fr); gap: 1rem; margin-bottom: .7rem; padding: 1.1rem; border: 1px solid var(--line); background: linear-gradient(115deg, #20191a, #171719 60%, #1d1918); }
+.react-boss-filters > div { display: grid; gap: .35rem; }
+.react-boss-filters label { color: var(--text-secondary); font-size: .78rem; }
+.react-boss-filters input, .react-boss-filters select { width: 100%; min-height: 2.8rem; padding: .65rem .8rem; border: 1px solid #554447; border-radius: 3px; background: #111113; color: var(--text); font: inherit; }
+.react-boss-filters input:focus-visible, .react-boss-filters select:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-color: var(--accent-text); }
+.react-boss-count { margin: 0 0 1rem; color: var(--muted); font-size: .8rem; }
+.react-boss-empty { color: var(--muted); }
+.boss-artwork.has-local-artwork { background: #151315; }
+.boss-local-artwork { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.boss-artwork[data-boss-theme="region-quests"] { --boss-glow: #88613d; }
+@media (max-width: 620px) { .react-boss-filters { grid-template-columns: 1fr; } .react-bosses { width: min(100% - 24px, 540px); } }
