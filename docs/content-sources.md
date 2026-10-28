@@ -417,6 +417,39 @@ This milestone follows the gallery's existing 17-class scope. Classes added by
 later DLC are not silently mixed into this roster; they need separate source
 review and game-version validation.
 
+## Darkest Dungeon I boss index and initial guides — 2026-10-28
+
+The boss roster, broad grouping and DLC context were checked against the
+[Darkest Dungeon wiki.gg boss index](https://darkestdungeon.wiki.gg/wiki/Bosses_%28Darkest_Dungeon%29)
+and the [Hintbook boss index](https://darkestdungeon.hintbook.co/bosses/).
+The lists differ: the wiki.gg listing includes Garden Guardian while Hintbook
+lists one fewer boss. The index uses the wiki.gg roster and records the
+Garden Guardian as a Courtyard encounter. Classification for wandering and
+event entries is represented separately from region-based encounters where
+appropriate. The 2026 Fire's Edge DLC was not covered by these references and
+is not included in the current index.
+
+Detailed factual descriptions, variants, resistances and selected attacks for
+the first four guides were cross-checked against the corresponding wiki.gg and
+Hintbook pages:
+
+- [Necromancer — wiki.gg](https://darkestdungeon.wiki.gg/wiki/Necromancer_Apprentice) · [Hintbook](https://darkestdungeon.hintbook.co/bosses/necromancer/)
+- [Swine Prince — wiki.gg](https://darkestdungeon.wiki.gg/wiki/Swine_Prince) · [Hintbook](https://darkestdungeon.hintbook.co/bosses/swine-prince/)
+- [Hag — wiki.gg](https://darkestdungeon.wiki.gg/wiki/Wizened_Hag) · [Hintbook](https://darkestdungeon.hintbook.co/bosses/hag/)
+- [Siren — wiki.gg](https://darkestdungeon.wiki.gg/wiki/Siren) · [Hintbook](https://darkestdungeon.hintbook.co/bosses/siren/)
+
+The wiki.gg pages identify factual game values and mechanics; Hintbook was used
+as a secondary cross-check and information-structure reference. All summaries
+and mechanics text in the data pack are original paraphrases, not copied
+article text. Tactical considerations are marked as editorial and should not
+be mistaken for game rules. These values were not tested against an installed
+game build.
+
+No local boss portrait assets were available. Boss gallery and detail art areas
+are generated from original CSS gradients and silhouettes, so no boss game
+artwork is embedded or claimed as licensed. These placeholders have no external
+image source or reuse dependency.
+
 ## Heroes gallery visual references — 2026-10-27
 
 The user supplied three 1920 × 1080 screenshots of the Heroes gallery at

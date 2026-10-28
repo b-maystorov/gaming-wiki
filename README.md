@@ -90,7 +90,7 @@ My next goals are:
 - Complete the Highwayman guide with combat skills, camping skills, and equipment progression
 - Add more Darkest Dungeon heroes and their builds
 - Expand team compositions and trinket recommendations
-- Create guides for bosses, enemies, and dungeon locations
+- Expand the Darkest Dungeon boss encyclopedia beyond its initial four sourced guides
 - Continue improving the search and navigation
 - Eventually support other games with their own themes and content
 

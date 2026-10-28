@@ -3,10 +3,11 @@ import { games, portalGames } from './games.js';
 import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
-import { loadStructuredHeroData } from './content-adapter.js';
+import { loadStructuredGameContent } from './content-adapter.js';
 
+let structuredGameContent = null;
 try {
-  await loadStructuredHeroData({ heroes, heroAbilities });
+  structuredGameContent = await loadStructuredGameContent({ heroes, heroAbilities });
 } catch (error) {
   // Keep the rest of the site navigable if its required static data file is missing.
   console.error('Could not load the structured Crusader guide:', error);
@@ -34,7 +35,10 @@ function escapeHtml(value) {
 function requirementLabel(requirements) {
   const labels = [];
   if (requirements.baseGame) labels.push('Base game');
-  labels.push(...requirements.dlc.map(name => `DLC: ${name}`));
+  labels.push(...requirements.dlc.map(name => {
+    const record = structuredGameContent?.dlcs.find(dlc => dlc.id === name);
+    return `DLC: ${record?.name || name}`;
+  }));
   labels.push(...requirements.mods.map(name => `Mod: ${name}`));
   return labels.map(escapeHtml).join(' · ');
 }
@@ -211,6 +215,9 @@ function renderSearchResults(query) {
       results.push({ title: team.name, kind: 'Team composition', href: `#game/darkest-dungeon/teams/${team.id}` });
     }
   });
+  structuredGameContent?.bosses.filter(boss => `${boss.name} ${(boss.aliases || []).join(' ')} ${boss.summary} ${boss.regionLabel}`.toLowerCase().includes(normalizedQuery)).forEach(boss => {
+    results.push({ title: boss.name, kind: boss.guideStatus === 'available' ? 'Boss guide' : 'Boss · In development', href: `#game/darkest-dungeon/bosses/${boss.routeId}` });
+  });
   return {
     status: results.length ? `${results.length} matching ${results.length === 1 ? 'entry' : 'entries'}.` : 'No matching entries in the current content.',
     markup: results.map(result => `<a href="${escapeHtml(result.href)}"><span>${escapeHtml(result.kind)}</span><strong>${escapeHtml(result.title)}</strong><span aria-hidden="true">→</span></a>`).join('')
@@ -228,6 +235,146 @@ function renderCollection(kind) {
     <section class="collection-group" aria-label="Available ${title.toLowerCase()}"><div class="section-heading"><h2>Current entries</h2><span>Collected from implemented guides</span></div>
       ${isTeams ? `<div class="composition-search"><label for="team-search-input">Find a composition</label><input id="team-search-input" type="search" autocomplete="off" placeholder="Search names, heroes, or strategy"><p id="team-search-status" class="search-status" aria-live="polite">${getTeams().length} compositions available.</p></div>` : ''}
       <div class="${isTeams ? 'team-list' : 'two-columns'}">${(isTeams ? getTeams() : getTrinkets()).map(entry => isTeams ? renderTeamCard(entry) : renderer(entry)).join('')}</div></section>`;
+}
+
+function bossCategoryName(categoryId) {
+  return structuredGameContent.bossCategories.find(category => category.id === categoryId)?.name || 'Other encounters';
+}
+
+function bossSources(boss) {
+  const ids = new Set([...(boss.verification?.sourceIds || []), ...(boss.summaryVerification?.sourceIds || []), ...(boss.guideVerification?.sourceIds || [])]);
+  for (const field of ['mechanics', 'attacks', 'tacticalConsiderations']) {
+    for (const item of boss[field] || []) item.verification?.sourceIds?.forEach(id => ids.add(id));
+  }
+  for (const variant of boss.variants || []) {
+    variant.verification?.sourceIds?.forEach(id => ids.add(id));
+    for (const value of Object.values(variant.stats || {})) {
+      if (value?.verification) value.verification.sourceIds.forEach(id => ids.add(id));
+      else for (const nested of Object.values(value || {})) nested?.verification?.sourceIds?.forEach(id => ids.add(id));
+    }
+  }
+  return [...ids].map(id => structuredGameContent.sources.find(source => source.id === id)).filter(Boolean);
+}
+
+function renderBossCard(boss) {
+  const categories = boss.categoryIds.map(bossCategoryName).join(' · ');
+  const status = boss.guideStatus === 'available' ? 'Guide available' : 'Guide in development';
+  const theme = boss.categoryIds[0]?.split(':').at(-1) || 'ruins';
+  const regionIds = boss.regionIds.join(' ');
+  const searchable = `${boss.name} ${(boss.aliases || []).join(' ')} ${boss.summary} ${boss.regionLabel} ${categories} ${requirementLabel(boss.requirements)}`.toLowerCase();
+  return `<a class="boss-card" data-boss-card data-region-ids="${escapeHtml(regionIds)}" data-search-text="${escapeHtml(searchable)}" href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">
+    <span class="boss-artwork" data-boss-theme="${escapeHtml(theme)}" role="img" aria-label="Atmospheric placeholder for ${escapeHtml(boss.name)}; no local portrait available"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}</span><small>Encounter dossier</small></span>
+    <span class="boss-card-copy"><span class="boss-card-meta"><span>${escapeHtml(boss.regionLabel)}</span><span>${escapeHtml(requirementLabel(boss.requirements))}</span></span>
+      <strong>${escapeHtml(boss.name)}</strong>${boss.aliases?.length ? `<span class="boss-card-alias">Also listed as ${escapeHtml(boss.aliases.join(', '))}</span>` : ''}
+      <span class="boss-card-summary">${escapeHtml(boss.summary)}</span>
+      <span class="boss-card-footer"><span class="boss-status ${boss.guideStatus === 'available' ? 'is-available' : ''}">${status}</span><span aria-hidden="true">Read entry →</span></span></span>
+  </a>`;
+}
+
+function renderBossCollection() {
+  if (!structuredGameContent) return `<section class="page-intro"><h1 id="page-title" tabindex="-1">Bosses</h1><p class="lede">Boss records could not be loaded. Check the static game data file.</p></section>`;
+  const groups = [...structuredGameContent.bossCategories].sort((a, b) => a.order - b.order).map(category => {
+    const categoryBosses = structuredGameContent.bosses.filter(boss => boss.categoryIds[0] === category.id);
+    if (!categoryBosses.length) return '';
+    const cards = categoryBosses.map(renderBossCard).join('');
+    const isSpoilerGroup = category.id.endsWith(':darkest-dungeon');
+    return isSpoilerGroup
+      ? `<details class="boss-group boss-spoiler-group" data-boss-group><summary><span>${escapeHtml(category.name)}</span><small>${categoryBosses.length} entries · open to reveal</small></summary><div class="boss-card-grid">${cards}</div></details>`
+      : `<section class="boss-group" data-boss-group aria-labelledby="boss-group-${escapeHtml(category.id.split(':').at(-1))}"><div class="section-heading"><h2 id="boss-group-${escapeHtml(category.id.split(':').at(-1))}">${escapeHtml(category.name)}</h2><span>${categoryBosses.length} entries</span></div><div class="boss-card-grid">${cards}</div></section>`;
+  }).join('');
+  const regions = structuredGameContent.regions.map(region => `<option value="${escapeHtml(region.id)}">${escapeHtml(region.name)}</option>`).join('');
+  return `<section class="page-intro boss-page-intro" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / Encounter index</p><h1 id="page-title" tabindex="-1">Bosses</h1><p class="lede">A sourced index of dungeon, wandering, event, and expansion encounters. Four entries currently have detailed mechanics guides; other pages remain clearly in development.</p></section>
+    <section class="boss-index-controls" aria-label="Find a boss"><div><label for="boss-search-input">Search encounters</label><input id="boss-search-input" type="search" autocomplete="off" placeholder="Boss name, region, or alias"></div><div><label for="boss-region-filter">Filter by region</label><select id="boss-region-filter"><option value="all">All regions and events</option>${regions}</select></div><p id="boss-search-status" class="search-status" role="status" aria-live="polite">${structuredGameContent.bosses.length} boss entries.</p></section>
+    <div class="boss-groups">${groups}</div><p id="boss-empty-state" class="panel boss-empty-state" hidden>No boss entries match these filters. Try another name or region.</p>`;
+}
+
+function formatBossValue(measure) {
+  if (!measure || measure.value === null || measure.value === undefined) return 'Not recorded';
+  return `${measure.value}${measure.unit === 'percent' ? '%' : ''}`;
+}
+
+function renderBossVariants(boss) {
+  if (!boss.variants?.length) return '<p class="guide-development-note">Difficulty values and variants have not been verified for this entry.</p>';
+  const metrics = [
+    ['health', 'HP'], ['dodge', 'Dodge'], ['protection', 'PROT'], ['speed', 'Speed'],
+    ['stun', 'Stun RES'], ['blight', 'Blight RES'], ['bleed', 'Bleed RES'], ['debuff', 'Debuff RES'], ['move', 'Move RES']
+  ];
+    return `<details class="boss-variants"><summary>Show difficulty statistics and resistances</summary><div class="table-scroll"><table><caption>${escapeHtml(boss.name)} · sourced campaign variants</caption><thead><tr><th scope="col">Stat</th>${boss.variants.map(variant => `<th scope="col">${escapeHtml(variant.tier)}<small>${escapeHtml(variant.name)}</small></th>`).join('')}</tr></thead><tbody>${metrics.map(([key,label]) => `<tr><th scope="row">${label}</th>${boss.variants.map(variant => {
+    const resistanceKeys = ['stun', 'blight', 'bleed', 'debuff', 'move'];
+    const measure = resistanceKeys.includes(key) ? variant.stats.resistances[key] : variant.stats[key];
+    return `<td>${escapeHtml(formatBossValue(measure))}</td>`;
+  }).join('')}</tr>`).join('')}</tbody></table></div><p class="guide-data-note">Reference values shown as published; actual status-effect success also depends on the attacker’s chance and the game’s resistance calculation.</p></details>`;
+}
+
+function renderBossFactList(items, className = '') {
+  if (!items?.length) return '<p class="guide-development-note">No verified details are recorded yet.</p>';
+  return `<div class="boss-fact-list ${className}">${items.map(item => `<article class="panel"><h3>${escapeHtml(item.name || item.title || (item.kind === 'editorial' ? 'Tactical consideration' : 'Encounter detail'))}</h3><p>${escapeHtml(item.text)}</p>${item.kind === 'editorial' ? '<span class="editorial-label">Editorial consideration</span>' : ''}</article>`).join('')}</div>`;
+}
+
+function renderRelatedBossHeroes(boss) {
+  const related = (boss.relatedHeroRouteIds || []).map(id => heroes.find(hero => hero.id === id)).filter(Boolean);
+  if (!related.length) return '<p class="guide-development-note">No related hero guides have been documented for this boss.</p>';
+  return `<ul class="boss-related-links">${related.map(hero => `<li><a href="#hero/${escapeHtml(hero.id)}/${hero.guide ? 'overview' : 'abilities'}">${escapeHtml(hero.name)} <span aria-hidden="true">→</span></a></li>`).join('')}</ul><p class="guide-data-note">These links provide hero background only; they are not a boss ranking or guaranteed counter list.</p>`;
+}
+
+function renderRelatedBossTeams(boss) {
+  const teams = getTeams().filter(team => (boss.relatedCompositionIds || []).includes(team.id));
+  return teams.length ? `<div class="team-list">${teams.map(renderTeamCard).join('')}</div>` : `<p class="guide-development-note">No boss-specific team compositions are documented yet. <a href="#game/darkest-dungeon/teams">Browse existing compositions</a> (not assessed for this encounter).</p>`;
+}
+
+function renderBossSources(boss) {
+  const sources = bossSources(boss);
+  return sources.length ? `<ul class="boss-source-list">${sources.map(source => `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a><small>${escapeHtml(source.verificationStatus)}</small></li>`).join('')}</ul>` : '<p>Source references have not yet been recorded.</p>';
+}
+
+function renderBossSequence(boss) {
+  const roster = structuredGameContent.bosses;
+  const index = roster.findIndex(entry => entry.id === boss.id);
+  const previous = roster[(index - 1 + roster.length) % roster.length];
+  const next = roster[(index + 1) % roster.length];
+  const name = entry => entry.spoilerSensitive && !boss.spoilerSensitive ? 'Spoiler-sensitive encounter' : entry.name;
+  return `<nav class="boss-sequence" aria-label="Browse boss entries"><a href="#game/darkest-dungeon/bosses/${escapeHtml(previous.routeId)}"><span>← Previous</span><strong>${escapeHtml(name(previous))}</strong></a><a href="#game/darkest-dungeon/bosses">All bosses</a><a href="#game/darkest-dungeon/bosses/${escapeHtml(next.routeId)}"><span>Next →</span><strong>${escapeHtml(name(next))}</strong></a></nav>`;
+}
+
+function renderBossDetail(boss) {
+  const available = boss.guideStatus === 'available';
+  const regionNames = boss.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean);
+  const detail = available ? `<section class="boss-detail-section" aria-labelledby="boss-mechanics-heading"><div class="section-heading"><h2 id="boss-mechanics-heading">Verified mechanics</h2><span>Reference-checked facts</span></div>${renderBossFactList(boss.mechanics)}</section>
+    <section class="boss-detail-section" aria-labelledby="boss-difficulty-heading"><div class="section-heading"><h2 id="boss-difficulty-heading">Difficulty, variants & resistances</h2><span>Published campaign values</span></div>${renderBossVariants(boss)}</section>
+    <section class="boss-detail-section" aria-labelledby="boss-attacks-heading"><div class="section-heading"><h2 id="boss-attacks-heading">Important attacks</h2><span>Selected encounter moves</span></div>${renderBossFactList(boss.attacks, 'boss-attack-list')}</section>
+    <section class="boss-detail-section" aria-labelledby="boss-tactics-heading"><div class="section-heading"><h2 id="boss-tactics-heading">Tactical considerations</h2><span>Editorial · source-informed</span></div>${renderBossFactList(boss.tacticalConsiderations, 'boss-tactics-list')}</section>`
+    : `<section class="boss-detail-section"><div class="section-heading"><h2>Encounter guide</h2><span>In development</span></div><p class="panel guide-development-note">This entry currently records the boss identity, category, location, and requirements. Mechanics, variants, attacks, resistances, and tactics have not yet been researched for this guide.</p></section>`;
+  const dlcLabel = requirementLabel(boss.requirements);
+  const titleCategory = boss.categoryIds.map(bossCategoryName).join(' · ');
+  return `<a class="back-link" href="#game/darkest-dungeon/bosses">← All bosses</a>
+    <header class="boss-detail-hero"><div class="boss-detail-copy"><p class="eyebrow">${escapeHtml(titleCategory)} · ${escapeHtml(dlcLabel)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(boss.name)}</h1>${boss.aliases?.length ? `<p class="boss-aliases">Also known as ${escapeHtml(boss.aliases.join(', '))}</p>` : ''}<p class="lede">${escapeHtml(boss.summary)}</p><span class="boss-status ${available ? 'is-available' : ''}">${available ? 'Detailed guide available' : 'Guide in development'}</span></div><div class="boss-artwork boss-detail-art" data-boss-theme="${escapeHtml(boss.categoryIds[0]?.split(':').at(-1) || 'ruins')}" role="img" aria-label="Atmospheric placeholder for ${escapeHtml(boss.name)}; no local portrait available"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}</span><small>No local portrait · CSS artwork placeholder</small></div></header>
+    <section class="boss-detail-section" aria-labelledby="boss-context-heading"><div class="section-heading"><h2 id="boss-context-heading">Region & encounter context</h2><span>${escapeHtml(boss.regionLabel)}</span></div><div class="boss-context-grid"><article class="panel"><h3>Encounter location</h3><p>${regionNames.length ? escapeHtml(regionNames.join(' · ')) : escapeHtml(boss.regionLabel)}</p></article><article class="panel"><h3>Requirements</h3><p>${escapeHtml(dlcLabel)}</p></article><article class="panel"><h3>Version and source status</h3><p>Campaign reference · not tested against an installed patch</p></article></div></section>
+    ${detail}
+    <section class="boss-detail-section" aria-labelledby="boss-heroes-heading"><div class="section-heading"><h2 id="boss-heroes-heading">Related hero guides</h2><span>Links for further reading</span></div>${renderRelatedBossHeroes(boss)}</section>
+    <section class="boss-detail-section" aria-labelledby="boss-teams-heading"><div class="section-heading"><h2 id="boss-teams-heading">Related team compositions</h2><span>Boss-specific relationship only</span></div>${renderRelatedBossTeams(boss)}</section>
+    <section class="boss-detail-section" aria-labelledby="boss-sources-heading"><div class="section-heading"><h2 id="boss-sources-heading">Sources & verification</h2><span>${boss.verification.status}</span></div><p class="guide-data-note">${available ? 'Mechanics and listed values were compared with the linked references. The installed game patch was not tested.' : 'Only the boss listing and encounter grouping are reference-checked; detailed content remains unverified and is not presented as fact.'}</p>${renderBossSources(boss)}</section>
+    ${renderBossSequence(boss)}`;
+}
+
+function filterBossCollection() {
+  const query = document.getElementById('boss-search-input')?.value.trim().toLowerCase() || '';
+  const regionId = document.getElementById('boss-region-filter')?.value || 'all';
+  const cards = [...document.querySelectorAll('[data-boss-card]')];
+  let visible = 0;
+  for (const card of cards) {
+    const matches = card.dataset.searchText.includes(query) && (regionId === 'all' || card.dataset.regionIds.split(' ').includes(regionId));
+    card.hidden = !matches;
+    if (matches) visible += 1;
+  }
+  document.querySelectorAll('[data-boss-group]').forEach(group => {
+    const count = group.querySelectorAll('[data-boss-card]:not([hidden])').length;
+    group.hidden = count === 0;
+    if (group.matches('details.boss-spoiler-group') && query && count) group.open = true;
+  });
+  const status = document.getElementById('boss-search-status');
+  const empty = document.getElementById('boss-empty-state');
+  if (status) status.textContent = `${visible} matching ${visible === 1 ? 'boss entry' : 'boss entries'}.`;
+  if (empty) empty.hidden = visible > 0;
 }
 
 function renderTeamDetail(team) {
@@ -486,8 +633,9 @@ function renderTrinket(trinket) {
 
 function activeCategoryId(route) {
   if (route.hero) return 'heroes';
+  if (route.boss) return 'bosses';
   if (route.view === 'team-detail') return 'teams';
-  return ({ game: 'overview', heroes: 'heroes', teams: 'teams', trinkets: 'trinkets' })[route.view] || '';
+  return ({ game: 'overview', heroes: 'heroes', bosses: 'bosses', teams: 'teams', trinkets: 'trinkets' })[route.view] || '';
 }
 
 function renderGameSidebar(route) {
@@ -514,7 +662,11 @@ function readRoute(hash) {
   if (parts[0] === 'game' && parts.length === 2 && preview) return { view: 'preview', preview };
   if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts.length <= 3) {
     const view = parts[2] || 'game';
-    if (['game', 'heroes', 'teams', 'trinkets'].includes(view)) return { view, game: true };
+    if (['game', 'heroes', 'bosses', 'teams', 'trinkets'].includes(view)) return { view, game: true };
+  }
+  if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts[2] === 'bosses' && parts.length === 4) {
+    const boss = structuredGameContent?.bosses.find(entry => entry.routeId === parts[3]);
+    if (boss) return { view: 'boss-detail', boss, game: true };
   }
   if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts[2] === 'teams' && parts.length === 4) {
     const team = getTeams().find(entry => entry.id === parts[3]);
@@ -538,6 +690,9 @@ function renderBreadcrumbs(route) {
   } else if (route.view === 'team-detail') {
     crumbs.push({ label: 'Team Compositions', href: '#game/darkest-dungeon/teams' });
     crumbs.push({ label: route.team.name });
+  } else if (route.view === 'boss-detail') {
+    crumbs.push({ label: 'Bosses', href: '#game/darkest-dungeon/bosses' });
+    crumbs.push({ label: route.boss.name });
   } else if (route.view !== 'game') {
     crumbs.push({ label: pageTitles[route.view] });
   }
@@ -546,13 +701,13 @@ function renderBreadcrumbs(route) {
   ).join('')}</ol></nav>`;
 }
 
-const pageTitles = { home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', teams: 'Team Compositions', 'team-detail': 'Team composition', trinkets: 'Trinkets', missing: 'Page not found' };
+const pageTitles = { home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', bosses: 'Bosses', 'boss-detail': 'Boss guide', teams: 'Team Compositions', 'team-detail': 'Team composition', trinkets: 'Trinkets', missing: 'Page not found' };
 
 function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
   const views = { home: renderHome, game: renderGameLanding, heroes: renderGallery,
-    teams: () => renderCollection('teams'), trinkets: () => renderCollection('trinkets') };
-  const content = route.hero ? renderHeroPage(route.hero) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
+    bosses: renderBossCollection, teams: () => renderCollection('teams'), trinkets: () => renderCollection('trinkets') };
+  const content = route.hero ? renderHeroPage(route.hero) : route.boss ? renderBossDetail(route.boss) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
     '<section class="empty-state"><h1 id="page-title" tabindex="-1">Page not found</h1><p>This page is not available.</p><a href="#home">Return home</a></section>';
   const page = renderBreadcrumbs(route) + content;
   if (!route.game) return page;
@@ -577,13 +732,13 @@ function showRoute() {
   const route = readRoute(location.hash);
   if (route.preview) selectedPortalGame = portalGames.indexOf(route.preview);
   document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview');
-  const viewKey = route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
+  const viewKey = route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
   const changed = viewKey !== currentView;
   if (changed) {
     main.innerHTML = renderPage(route);
     currentView = viewKey;
   }
-  document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Gaming Wiki` :
+  document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Gaming Wiki` :
     route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view]} · Gaming Wiki`;
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
@@ -638,6 +793,10 @@ document.addEventListener('click', event => {
 });
 
 document.addEventListener('input', event => {
+  if (event.target.id === 'boss-search-input') {
+    filterBossCollection();
+    return;
+  }
   if (event.target.id === 'team-search-input') {
     const query = event.target.value.trim().toLowerCase();
     const cards = [...document.querySelectorAll('[data-composition-card]')];
@@ -658,10 +817,14 @@ document.addEventListener('input', event => {
   document.getElementById('game-search-status').textContent = results.status;
   document.getElementById('game-search-results').innerHTML = results.markup;
 });
+document.addEventListener('change', event => {
+  if (event.target.id === 'boss-region-filter') filterBossCollection();
+});
 initializeHeroGallery(main, heroes);
 
 // Reuse the router, including its same-route focus/scroll behavior.
 const commandCenter = initializeCommandCenter({
+  bosses: structuredGameContent?.bosses || [],
   navigate(href) {
     if (location.hash === href) showRoute();
     else location.hash = href;

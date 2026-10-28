@@ -1,5 +1,5 @@
 // Bridges normalized static records to the existing hero page renderer.
-export async function loadStructuredHeroData({ heroes, heroAbilities }) {
+export async function loadStructuredGameContent({ heroes, heroAbilities }) {
   const dataUrl = new URL('../data/games/darkest-dungeon-1.json', import.meta.url);
   const response = await fetch(dataUrl);
   if (!response.ok) throw new Error(`Structured game data request failed (${response.status}).`);
@@ -27,6 +27,7 @@ export async function loadStructuredHeroData({ heroes, heroAbilities }) {
   });
 
   heroAbilities.crusader = toLegacyAbilityEntry(pack, hero);
+  return pack;
 }
 
 function toLegacyAbilityEntry(pack, hero) {

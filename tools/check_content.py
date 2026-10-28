@@ -67,6 +67,7 @@ def check_pack(pack):
     required_arrays = (
         "sources", "heroes", "combatSkills", "campingSkills", "equipmentProgressions",
         "trinkets", "bosses", "enemies", "teamCompositions", "strategyRecommendations",
+        "dlcs", "regions", "bossCategories",
     )
     require(pack.get("schemaVersion") == 1, "schemaVersion must be 1")
     require(isinstance(pack.get("game", {}).get("versionContext"), dict), "game.versionContext is required")
@@ -89,7 +90,7 @@ def check_pack(pack):
         require(source["verificationStatus"] in {"verified", "reference-checked", "unverified", "unavailable"},
                 f"source {source['id']}: invalid verificationStatus")
 
-    for collection in ("heroes", "combatSkills", "campingSkills", "equipmentProgressions", "trinkets", "bosses", "enemies", "teamCompositions", "strategyRecommendations"):
+    for collection in ("heroes", "combatSkills", "campingSkills", "equipmentProgressions", "trinkets", "bosses", "enemies", "teamCompositions", "strategyRecommendations", "dlcs", "regions", "bossCategories"):
         for record in pack[collection]:
             register(record.get("id"), collection)
             require(record["id"].startswith(pack["game"]["id"] + ":"),
@@ -99,7 +100,7 @@ def check_pack(pack):
         "campingSkills": ("heroId", "name", "effects", "requirements", "verification"),
         "equipmentProgressions": ("heroId", "levels", "requirements", "verification"),
         "trinkets": ("name", "rarity", "requirements", "effects", "verification"),
-        "bosses": ("name", "requirements", "verification"),
+        "bosses": ("routeId", "name", "categoryIds", "regionIds", "requirements", "versionContextId", "guideStatus", "summary", "summaryVerification", "verification"),
         "enemies": ("name", "requirements", "verification"),
         "teamCompositions": ("name", "heroIds", "requirements", "verification"),
         "strategyRecommendations": ("heroId", "kind", "text", "sourceIds", "editorial"),
@@ -113,6 +114,24 @@ def check_pack(pack):
     hero_ids = {record["id"] for record in pack["heroes"]}
     trinket_ids = {record["id"] for record in pack["trinkets"]}
     boss_ids = {record["id"] for record in pack["bosses"]}
+    dlc_ids = {record["id"] for record in pack["dlcs"]}
+    region_ids = {record["id"] for record in pack["regions"]}
+    category_ids = {record["id"] for record in pack["bossCategories"]}
+    version_context_id = pack["game"]["versionContext"]["id"]
+    for dlc in pack["dlcs"]:
+        require(dlc.get("name") and isinstance(dlc.get("sourceIds"), list), f"DLC {dlc['id']}: name and sourceIds are required")
+        for source_id in dlc["sourceIds"]:
+            require(source_id in source_ids, f"DLC {dlc['id']}: unknown source {source_id!r}")
+    for region in pack["regions"]:
+        require(region.get("name") and isinstance(region.get("sourceIds"), list), f"region {region['id']}: name and sourceIds are required")
+        requirements = region.get("requirements", {})
+        require(isinstance(requirements.get("dlc"), list) and isinstance(requirements.get("mods"), list), f"region {region['id']}: DLC and mod requirements must be separate")
+        for dlc_id in requirements.get("dlc", []):
+            require(dlc_id in dlc_ids, f"region {region['id']}: unknown DLC {dlc_id!r}")
+        for source_id in region["sourceIds"]:
+            require(source_id in source_ids, f"region {region['id']}: unknown source {source_id!r}")
+    for category in pack["bossCategories"]:
+        require(category.get("name") and isinstance(category.get("order"), int), f"boss category {category['id']}: name and order are required")
     route_ids = set()
     for hero in pack["heroes"]:
         for key in ("routeId", "name", "requirements", "roleTags", "baseStats", "verification"):
@@ -194,6 +213,38 @@ def check_pack(pack):
             require(source_id in source_ids, f"recommendation {recommendation['id']}: unknown source {source_id}")
         require(isinstance(recommendation.get("editorial"), bool), f"recommendation {recommendation['id']}: mark factual/editorial status")
 
+    boss_route_ids = set()
+    legacy_heroes = (ROOT / "dist/js/heroes.js").read_text(encoding="utf-8")
+    hero_registry = legacy_heroes.split("export const heroes = [", 1)[1].split("\n];", 1)[0]
+    hero_route_ids = set(re.findall(r"\bid:\s*['\"]([^'\"]+)['\"]", hero_registry))
+    composition_ids = {composition["id"] for composition in pack["teamCompositions"]}
+    for boss in pack["bosses"]:
+        route_id = boss["routeId"]
+        require(ID_PATTERN.fullmatch(route_id) and route_id not in boss_route_ids, f"boss {boss['id']}: routeId must be valid and unique")
+        boss_route_ids.add(route_id)
+        require(boss["versionContextId"] == version_context_id, f"boss {boss['id']}: unknown game version context")
+        require(boss["guideStatus"] in {"available", "in-development"}, f"boss {boss['id']}: invalid guide status")
+        requirements = boss["requirements"]
+        require(requirements.get("baseGame") is not None and isinstance(requirements.get("dlc"), list) and isinstance(requirements.get("mods"), list), f"boss {boss['id']}: malformed requirements")
+        for dlc_id in requirements["dlc"]:
+            require(dlc_id in dlc_ids, f"boss {boss['id']}: unknown DLC {dlc_id!r}")
+        require(bool(boss["categoryIds"]) and all(category_id in category_ids for category_id in boss["categoryIds"]), f"boss {boss['id']}: unknown or missing category")
+        require(all(region_id in region_ids for region_id in boss["regionIds"]), f"boss {boss['id']}: unknown region reference")
+        for hero_route_id in boss.get("relatedHeroRouteIds", []):
+            require(hero_route_id in hero_route_ids, f"boss {boss['id']}: unknown hero route {hero_route_id!r}")
+        for composition_id in boss.get("relatedCompositionIds", []):
+            require(composition_id in composition_ids, f"boss {boss['id']}: unknown composition {composition_id!r}")
+        if boss["guideStatus"] == "available":
+            require(bool(boss.get("guideVerification")), f"boss {boss['id']}: available guide requires guideVerification")
+            require(all(isinstance(boss.get(field), list) and boss[field] for field in ("mechanics", "variants", "attacks", "tacticalConsiderations")), f"boss {boss['id']}: available guide is missing detail sections")
+        else:
+            require(not any(boss.get(field) for field in ("mechanics", "variants", "attacks", "tacticalConsiderations")), f"boss {boss['id']}: in-development entry must not expose unverified guide content")
+
+    # Hero routes are retained in the legacy JS registry until those records migrate.
+    app_js = (ROOT / "dist/js/app.js").read_text(encoding="utf-8")
+    require("parts[2] === 'bosses'" in app_js and "renderBossCollection" in app_js, "Bosses collection route is not wired in app.js")
+    require("initializeCommandCenter" in app_js and "bosses: structuredGameContent" in app_js, "Bosses are not included in global search")
+
     walk_verification(pack, source_ids=source_ids)
     check_local_assets(pack)
     # IDs and references should stay resolvable when imported into a relational store.
@@ -208,6 +259,7 @@ def main():
         print(f"Content check failed: {error}", file=sys.stderr)
         return 1
     print(f"Content check passed: {len(pack['heroes'])} hero, {len(pack['combatSkills'])} combat skills, "
+          f"{len(pack['bosses'])} bosses ({sum(b['guideStatus'] == 'available' for b in pack['bosses'])} detailed), "
           f"{len(pack['sources'])} sources; optional sections are explicitly empty until documented.")
     return 0
 

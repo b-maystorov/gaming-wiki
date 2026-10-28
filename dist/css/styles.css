@@ -436,3 +436,92 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 @media (max-width: 700px) { .ability-grid { columns: 1; } }
 @media (max-width: 420px) { .ability-card { padding: 1rem; } .ability-ranks { gap: .55rem; } .position-diagram { grid-template-columns: repeat(4, minmax(1.4rem, 1fr)); gap: .18rem; } .ability-values { gap: .25rem; } .ability-values dd { font-size: .78rem; } }
 @media (prefers-reduced-motion: reduce) { .ability-card { transition: none; } }
+
+/* Boss index and encounter dossiers share the existing DD1 charcoal/crimson palette. */
+.boss-page-intro { padding-bottom: 1.2rem; }
+.boss-index-controls { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(190px, 1fr) auto; align-items: end; gap: 1rem; padding: 1.1rem; border: 1px solid var(--line); background: linear-gradient(115deg, #20191a, #171719 60%, #1d1918); }
+.boss-index-controls > div { display: grid; gap: .35rem; }
+.boss-index-controls label { color: var(--text-secondary); font-size: .75rem; }
+.boss-index-controls input, .boss-index-controls select { width: 100%; min-height: 2.8rem; padding: .65rem .8rem; border: 1px solid #554447; border-radius: 3px; background: #111113; color: var(--text); font: inherit; }
+.boss-index-controls input:focus-visible, .boss-index-controls select:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-color: var(--accent-text); }
+.boss-index-controls .search-status { margin: 0; padding-bottom: .65rem; color: var(--muted); font-size: .75rem; white-space: nowrap; }
+.boss-groups { display: grid; gap: 1.8rem; margin-top: 1.5rem; }
+.boss-group { min-width: 0; }
+.boss-group .section-heading { margin-top: 0; padding-bottom: .55rem; border-bottom: 1px solid #423538; }
+.boss-group .section-heading h2 { font-size: 1.55rem; }
+.boss-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.boss-card { display: grid; grid-template-columns: minmax(95px, 30%) minmax(0, 1fr); min-height: 190px; overflow: hidden; border: 1px solid #40373a; background: linear-gradient(135deg, #211b1d, #171719 66%); color: var(--text); text-decoration: none; transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.boss-card:hover, .boss-card:focus-visible { border-color: #a34a50; color: var(--text); box-shadow: 0 10px 28px #0008, 0 0 22px #972d3620; transform: translateY(-3px); }
+.boss-card:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+.boss-artwork { --boss-glow: #8d3540; position: relative; display: grid; min-height: 160px; place-items: center; overflow: hidden; border-right: 1px solid #514044; isolation: isolate; background: radial-gradient(ellipse at 50% 75%, color-mix(in srgb, var(--boss-glow) 36%, transparent), transparent 58%), linear-gradient(160deg, #282124, #100f12 68%); }
+.boss-artwork::before, .boss-artwork::after { position: absolute; z-index: -1; content: ""; pointer-events: none; }
+.boss-artwork::before { inset: 12% 15% 0; opacity: .65; background: linear-gradient(135deg, transparent 35%, #09090b 36% 53%, transparent 54%), linear-gradient(45deg, transparent 42%, #0b0a0d 43% 62%, transparent 63%); clip-path: polygon(0 100%, 14% 53%, 28% 71%, 48% 15%, 65% 62%, 80% 34%, 100% 100%); }
+.boss-artwork::after { width: 42%; aspect-ratio: 1; border-radius: 50%; background: var(--boss-glow); filter: blur(28px); opacity: .28; transform: translateY(25%); }
+.boss-artwork > span { color: #f2e3d5; font: 2.5rem Georgia, serif; letter-spacing: .08em; text-shadow: 0 2px 16px #000; }
+.boss-artwork small { position: absolute; inset: auto .35rem .45rem; color: #c7b9b1; font-size: .58rem; text-align: center; text-shadow: 0 1px 5px #000; }
+.boss-artwork[data-boss-theme="warrens"] { --boss-glow: #8c5039; }
+.boss-artwork[data-boss-theme="weald"] { --boss-glow: #64734a; }
+.boss-artwork[data-boss-theme="cove"] { --boss-glow: #38717b; }
+.boss-artwork[data-boss-theme="wandering"] { --boss-glow: #755c9a; }
+.boss-artwork[data-boss-theme="events"] { --boss-glow: #9a6e36; }
+.boss-artwork[data-boss-theme="courtyard"] { --boss-glow: #853144; }
+.boss-artwork[data-boss-theme="farmstead"] { --boss-glow: #a68c3d; }
+.boss-artwork[data-boss-theme="darkest-dungeon"] { --boss-glow: #b53f37; }
+.boss-card-copy { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; padding: .85rem; }
+.boss-card-meta { display: flex; width: 100%; justify-content: space-between; gap: .35rem; color: #c7aaa7; font-size: .62rem; line-height: 1.35; }
+.boss-card-meta > span:last-child { text-align: right; }
+.boss-card-copy > strong { margin-top: .4rem; font: 1.25rem/1.2 Georgia, serif; }
+.boss-card-alias { color: var(--muted); font-size: .68rem; }
+.boss-card-summary { display: -webkit-box; overflow: hidden; margin-top: .45rem; color: var(--muted); font-size: .75rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.boss-card-footer { display: flex; width: 100%; justify-content: space-between; align-items: end; gap: .35rem; margin-top: auto; padding-top: .65rem; color: var(--accent-text); font-size: .64rem; }
+.boss-status { display: inline-block; padding: .18rem .4rem; border: 1px solid #746149; color: #dbc297; font-size: .65rem; letter-spacing: .02em; }
+.boss-status.is-available { border-color: #81414a; background: #391d23; color: #f0a5aa; }
+.boss-spoiler-group { border: 1px solid #49373a; background: #171416; }
+.boss-spoiler-group > summary { padding: 1rem 1.2rem; color: var(--text); cursor: pointer; font: 1.35rem Georgia, serif; }
+.boss-spoiler-group > summary small { margin-left: .6rem; color: var(--muted); font: .72rem system-ui, sans-serif; }
+.boss-spoiler-group[open] .boss-card-grid { padding: 0 1rem 1rem; }
+.boss-empty-state { margin-top: 1rem; color: var(--muted); }
+.boss-empty-state[hidden], [data-boss-card][hidden], [data-boss-group][hidden] { display: none; }
+.boss-detail-hero { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(250px, .8fr); gap: 2rem; align-items: center; margin: 1rem 0 2.2rem; padding: clamp(1.3rem, 4vw, 2.8rem); border: 1px solid #533c40; background: radial-gradient(ellipse at 80% 48%, #792b3633, transparent 43%), linear-gradient(125deg, #21191c, #111114 65%); }
+.boss-detail-copy h1 { font-size: clamp(2.5rem, 6vw, 4.3rem); }
+.boss-detail-copy .eyebrow { margin-bottom: .65rem; }
+.boss-detail-copy .lede { max-width: 56ch; }
+.boss-detail-copy .boss-status { margin-top: 1rem; }
+.boss-detail-art { min-height: 280px; border: 1px solid #65474c; }
+.boss-detail-art > span { font-size: clamp(4rem, 10vw, 7rem); }
+.boss-detail-art small { font-size: .72rem; }
+.boss-aliases { margin-top: .35rem; color: var(--muted); font-size: .82rem; }
+.boss-detail-section { padding: 1.4rem 0; border-top: 1px solid #393235; scroll-margin-top: 1rem; }
+.boss-detail-section > .section-heading { margin-top: 0; }
+.boss-context-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+.boss-context-grid .panel { padding: 1rem; }
+.boss-context-grid h3, .boss-fact-list h3 { font: 1.1rem Georgia, serif; }
+.boss-context-grid p, .boss-fact-list p { margin-top: .4rem; color: var(--muted); font-size: .86rem; }
+.boss-fact-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.boss-fact-list .panel { padding: 1rem; }
+.boss-attack-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.boss-variants { padding: 1rem; border: 1px solid #493b3d; background: #191719; }
+.boss-variants > summary { color: var(--text-secondary); cursor: pointer; }
+.boss-variants table { min-width: 640px; margin-top: .8rem; font-size: .78rem; }
+.boss-variants th, .boss-variants td { padding: .55rem; border: 1px solid #42383a; text-align: left; }
+.boss-variants th small { display: block; color: var(--muted); font-weight: 400; }
+.boss-variants .guide-data-note { margin-bottom: 0; }
+.editorial-label { display: inline-block; margin-top: .65rem; color: #e3bd8c; font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; }
+.boss-related-links { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0; list-style: none; }
+.boss-related-links li { margin: 0; }
+.boss-related-links a { display: inline-flex; gap: .6rem; padding: .55rem .8rem; border: 1px solid #483a3c; background: #191719; color: var(--text-secondary); text-decoration: none; }
+.boss-related-links a:hover, .boss-related-links a:focus-visible { border-color: var(--accent-text); color: var(--accent-text); }
+.boss-source-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .5rem; padding: 0; list-style: none; }
+.boss-source-list li { display: flex; justify-content: space-between; gap: .5rem; margin: 0; padding: .55rem .7rem; border: 1px solid #393235; color: var(--muted); font-size: .75rem; }
+.boss-source-list small { white-space: nowrap; }
+.boss-sequence { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin: 1.5rem 0; padding: 1rem 0; border-block: 1px solid var(--line); }
+.boss-sequence a { display: grid; gap: .15rem; color: var(--text-secondary); text-decoration: none; }
+.boss-sequence a:first-child { text-align: left; }
+.boss-sequence a:last-child { text-align: right; }
+.boss-sequence a span { color: var(--muted); font-size: .68rem; }
+.boss-sequence a strong { font: 1rem Georgia, serif; }
+.boss-sequence a:hover strong, .boss-sequence a:focus-visible strong { color: var(--accent-text); }
+@media (max-width: 980px) { .boss-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .boss-card { min-height: 185px; } }
+@media (max-width: 700px) { .boss-index-controls { grid-template-columns: 1fr 1fr; } .boss-index-controls .search-status { grid-column: 1 / -1; padding: 0; } .boss-detail-hero { grid-template-columns: 1fr; } .boss-detail-art { min-height: 190px; } .boss-context-grid { grid-template-columns: 1fr; } .boss-attack-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .boss-index-controls, .boss-card-grid, .boss-fact-list, .boss-attack-list { grid-template-columns: 1fr; } .boss-card { grid-template-columns: 105px minmax(0, 1fr); min-height: 170px; } .boss-artwork { min-height: 170px; } .boss-card-copy { padding: .75rem; } .boss-card-copy > strong { font-size: 1.15rem; } .boss-card-footer { align-items: flex-start; flex-direction: column; } .boss-sequence { grid-template-columns: 1fr 1fr; } .boss-sequence > a:nth-child(2) { grid-column: 1 / -1; grid-row: 1; justify-self: center; } .boss-sequence a:last-child { grid-column: 2; grid-row: 2; } }
+@media (prefers-reduced-motion: reduce) { .boss-card { transition: none; } .boss-card:hover, .boss-card:focus-visible { transform: none; } }

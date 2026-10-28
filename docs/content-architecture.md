@@ -133,3 +133,36 @@ represent hero/trinket, composition/member and record/source relationships.
 Foreign keys preserve current IDs; verification status and version context
 remain explicit columns/relations. JSON remains easy to export for the static
 site, so a database migration is optional rather than a prerequisite.
+
+## Darkest Dungeon boss index
+
+Boss records live in the existing `dist/data/games/darkest-dungeon-1.json`
+pack under `bosses`; this is the single source of truth for the collection,
+detail pages, and global search. Stable boss IDs are namespaced by game, while
+`routeId` is the readable URL segment. `categoryIds` control the index groups,
+`regionIds` point to the pack's `regions`, and DLC requirements refer to stable
+IDs in `dlcs`. `versionContextId` records the campaign context for each entry.
+
+`guideStatus` is either `available` or `in-development`. Only available guides
+include mechanics, variants, attacks, tactical considerations, and
+`guideVerification`; each factual item carries its own verification/source
+references. Tactical considerations are explicitly editorial. Related heroes
+use the current hero route IDs. Related compositions use canonical IDs and are
+left empty unless the matchup has actually been documented. A summary in an
+in-development record only identifies and locates the encounter; it is not a
+claim that the detailed guide is verified.
+
+The current pack includes 26 encounters from the cited Darkest Dungeon boss
+index, grouped into the base regions, wandering and event encounters, Courtyard,
+Farmstead, and spoiler-sensitive Darkest Dungeon encounters. The official wiki
+listing includes Garden Guardian while Hintbook's index currently lists one
+fewer entry; the Garden Guardian is retained with the wiki.gg reference. The
+2026 Fire's Edge DLC is outside the scope of these references and has not been
+assessed. No boss portrait files were present, so pages use original CSS-only
+atmospheric placeholders; these are presentation and are not game artwork.
+
+Use the offline command above to check boss IDs, route IDs, category/region/DLC
+and version-context references, related hero/composition IDs, local paths,
+verification states, and source integrity. The browser routes resolve only
+bosses in this pack, so an in-development record has a real identity page while
+clearly withholding unresearched guide content.

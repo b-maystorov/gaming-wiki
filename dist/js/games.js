@@ -26,7 +26,7 @@ export const games = {
     categories: [
       { id: 'overview', label: 'Overview', icon: '⌂', view: 'game', description: 'Start with featured guides and compositions.' },
       { id: 'heroes', label: 'Heroes', icon: '♟', view: 'heroes', description: 'Browse hero guides and positions.' },
-      { id: 'bosses', label: 'Bosses', icon: '♜', comingSoon: true },
+      { id: 'bosses', label: 'Bosses', icon: '♜', view: 'bosses', description: 'Browse the boss index and encounter guides.' },
       { id: 'enemies', label: 'Enemies', icon: '⚔', comingSoon: true },
       { id: 'trinkets', label: 'Trinkets', icon: '◇', view: 'trinkets', description: 'Browse currently documented items.' },
       { id: 'curios', label: 'Curios', icon: '▤', comingSoon: true },

@@ -5,12 +5,12 @@
     "name": "Darkest Dungeon I",
     "mechanics": ["ranked-combat", "camping"],
     "versionContext": {
-      "id": "darkest-dungeon-1:campaign:skill-level-1-reference",
+      "id": "darkest-dungeon-1:campaign:reference-context",
       "mode": "single-player campaign",
       "platform": null,
       "patch": null,
       "verifiedAgainstInstalledBuild": false,
-      "notes": "Campaign skill-level-1 reference snapshot retained from the existing guide. No installed build or patch was available for comparison. Darkest Dungeon II and Butcher's Circus values are out of scope."
+      "notes": "Campaign data includes the Crusader skill-level-1 reference snapshot and boss identities and selected mechanics checked against linked sources. No installed build or patch was available for comparison. Darkest Dungeon II and Butcher's Circus are out of scope. Fire's Edge is outside the referenced boss index and has not been assessed."
     }
   },
   "sources": [
@@ -32,6 +32,97 @@
       "id": "dd1-crusader-strategy",
       "title": "Crusader strategy reference",
       "url": "https://darkestdungeon.wiki.gg/wiki/Crusader_(Darkest_Dungeon)/Strategy",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "dd1-boss-index",
+      "title": "Bosses (Darkest Dungeon) · boss roster and encounter groups",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Bosses_(Darkest_Dungeon)",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "hintbook-boss-index",
+      "title": "Darkest Wiki · boss collection index",
+      "url": "https://darkestdungeon.hintbook.co/bosses/",
+      "kind": "community-reference",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-necromancer",
+      "title": "Necromancer campaign encounter",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Necromancer_Apprentice",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "hintbook-necromancer",
+      "title": "Necromancer boss guide",
+      "url": "https://darkestdungeon.hintbook.co/bosses/necromancer/",
+      "kind": "community-reference",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-swine-prince",
+      "title": "Swine Prince campaign encounter",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Swine_Prince",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "hintbook-swine-prince",
+      "title": "Swine Prince boss guide",
+      "url": "https://darkestdungeon.hintbook.co/bosses/swine-prince/",
+      "kind": "community-reference",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-hag",
+      "title": "Hag campaign encounter",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Wizened_Hag",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "hintbook-hag",
+      "title": "Hag boss guide",
+      "url": "https://darkestdungeon.hintbook.co/bosses/hag/",
+      "kind": "community-reference",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-siren",
+      "title": "Siren campaign encounter",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Siren",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "hintbook-siren",
+      "title": "Siren boss guide",
+      "url": "https://darkestdungeon.hintbook.co/bosses/siren/",
+      "kind": "community-reference",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-garden-guardian",
+      "title": "Garden Guardian campaign encounter",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Garden_Guardian",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-thing-stars",
+      "title": "Thing from the Stars encounter and appearance rules",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Thing_from_the_Stars",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-brigand-pounder",
+      "title": "Brigand Pounder campaign encounter",
+      "url": "https://darkestdungeon.wiki.gg/wiki/8_pounder",
       "kind": "community-wiki",
       "verificationStatus": "reference-checked"
     }
@@ -250,8 +341,2913 @@
   "campingSkills": [],
   "equipmentProgressions": [],
   "trinkets": [],
-  "bosses": [],
+  "bosses": [
+    {
+      "id": "darkest-dungeon-1:boss:necromancer",
+      "routeId": "necromancer",
+      "name": "Necromancer",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:ruins"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "regionLabel": "Ruins",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "available",
+      "spoilerSensitive": false,
+      "summary": "An Unholy/Eldritch Ruins boss who retreats as he summons skeletons, steadily changing the enemy formation.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-necromancer",
+          "hintbook-necromancer"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-necromancer",
+          "hintbook-necromancer"
+        ]
+      },
+      "mechanics": [
+        {
+          "text": "The Necromancer starts in the front rank. Attacking moves him back one rank and normally summons a skeleton; a stun or three existing skeletons prevents that summon.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        },
+        {
+          "text": "Skeleton minions summoned by the Necromancer are linked to him and are removed when he is defeated.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        },
+        {
+          "text": "At higher difficulties, summoned Bone Soldiers can begin with Stealth; higher tiers can also summon Bone Defenders that Guard him.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        }
+      ],
+      "variants": [
+        {
+          "tier": "Apprentice",
+          "name": "Necromancer Apprentice",
+          "stats": {
+            "health": {
+              "value": 105,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "speed": {
+              "value": 8,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 75,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "move": {
+                "value": 25,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer"
+            ]
+          }
+        },
+        {
+          "tier": "Veteran",
+          "name": "Necromancer",
+          "stats": {
+            "health": {
+              "value": 158,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 8.75,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "speed": {
+              "value": 9,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 75,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "move": {
+                "value": 25,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer"
+            ]
+          }
+        },
+        {
+          "tier": "Champion",
+          "name": "Necromancer Lord",
+          "stats": {
+            "health": {
+              "value": 215,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 22.5,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "speed": {
+              "value": 10,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-necromancer"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 75,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              },
+              "move": {
+                "value": 25,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-necromancer"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer"
+            ]
+          }
+        }
+      ],
+      "attacks": [
+        {
+          "text": "The Flesh Is Willing attacks the front ranks while summoning a skeleton.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        },
+        {
+          "text": "The Clawing Dead pressures the rear ranks while summoning a skeleton.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        },
+        {
+          "text": "Six Feet Under targets the party with stress pressure and summons a skeleton.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        }
+      ],
+      "tacticalConsiderations": [
+        {
+          "text": "Editorial: plan to reach the rear ranks as he retreats; the source guide describes back-rank pressure as a practical way to shorten the fight.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        },
+        {
+          "text": "Editorial: his listed Bleed and Blight resistance is lower than his Stun resistance, but this does not account for other Ruins enemies or party constraints.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          }
+        }
+      ],
+      "relatedHeroRouteIds": [
+        "crusader",
+        "highwayman",
+        "plague-doctor"
+      ],
+      "relatedCompositionIds": [],
+      "guideVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-necromancer",
+          "hintbook-necromancer"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:swine-prince",
+      "routeId": "swine-prince",
+      "name": "Swine Prince",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:warrens"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "regionLabel": "Warrens",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "available",
+      "spoilerSensitive": false,
+      "summary": "A large Beast boss supported by Wilbur, whose marks set up the Prince’s strongest attacks.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-swine-prince",
+          "hintbook-swine-prince"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-swine-prince",
+          "hintbook-swine-prince"
+        ]
+      },
+      "mechanics": [
+        {
+          "text": "The Swine Prince occupies enemy ranks 1–3; Wilbur stands in rank 4.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "text": "Wilbur marks one or two heroes, and the Prince can answer those marks with focused attacks. With no marks, the Prince uses Wild Flailing instead.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "text": "Damaging Wilbur while the Prince is alive triggers Enraged Destruction against the whole party. Defeating Wilbur first makes the Prince use that attack each round.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        }
+      ],
+      "variants": [
+        {
+          "tier": "Apprentice",
+          "name": "Swine Prince",
+          "stats": {
+            "health": {
+              "value": 132,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "speed": {
+              "value": 0,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 100,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 0,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 0,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "move": {
+                "value": 100,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince"
+            ]
+          }
+        },
+        {
+          "tier": "Veteran",
+          "name": "Swine King",
+          "stats": {
+            "health": {
+              "value": 198,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 8.75,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "speed": {
+              "value": 1,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 120,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "move": {
+                "value": 120,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince"
+            ]
+          }
+        },
+        {
+          "tier": "Champion",
+          "name": "Swine God",
+          "stats": {
+            "health": {
+              "value": 271,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 22.5,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "speed": {
+              "value": 2,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-swine-prince"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 140,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 60,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              },
+              "move": {
+                "value": 140,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-swine-prince"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince"
+            ]
+          }
+        }
+      ],
+      "attacks": [
+        {
+          "text": "End This One and End These Two are Wilbur’s mark skills.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "text": "Obliterate Body and Obliterate Masses target marked heroes.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "text": "Enraged Destruction is the response to damaging Wilbur while the Prince remains alive.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "text": "Bit ’o Squeal can stun the party at higher quest levels.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        }
+      ],
+      "tacticalConsiderations": [
+        {
+          "text": "Editorial: concentrate attacks on the Swine Prince and avoid damaging Wilbur while the Prince is still alive; this follows the source guide’s warning about Enraged Destruction.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "text": "Editorial: be cautious with Riposte because an automatic counter can hit Wilbur and trigger the same retaliation.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          }
+        }
+      ],
+      "relatedHeroRouteIds": [
+        "highwayman"
+      ],
+      "relatedCompositionIds": [],
+      "guideVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-swine-prince",
+          "hintbook-swine-prince"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:hag",
+      "routeId": "hag",
+      "name": "Hag",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:weald"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "regionLabel": "Weald",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "available",
+      "spoilerSensitive": false,
+      "summary": "A Human boss positioned behind a cauldron that captures a party member and forces the rest to adapt.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-hag",
+          "hintbook-hag"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-hag",
+          "hintbook-hag"
+        ]
+      },
+      "mechanics": [
+        {
+          "text": "The Hag occupies ranks 3–4; the cauldron occupies ranks 1–2. Neither can be moved.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        },
+        {
+          "text": "Into the Pot! captures one hero. The captive cannot act and takes damage as turns pass; damaging the filled pot can release them, after which the pot can be used again.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        },
+        {
+          "text": "When the captive reaches Death’s Door, the pot releases them. Defeating the Hag also releases the captive and ends the encounter.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        },
+        {
+          "text": "The Hag has multiple actions per round and uses party attacks and stress effects while a hero is trapped.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        }
+      ],
+      "variants": [
+        {
+          "tier": "Apprentice",
+          "name": "Wizened Hag",
+          "stats": {
+            "health": {
+              "value": 66,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 5,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "speed": {
+              "value": 5,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 100,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 60,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 20,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "move": {
+                "value": 200,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag"
+            ]
+          }
+        },
+        {
+          "tier": "Veteran",
+          "name": "Hag",
+          "stats": {
+            "health": {
+              "value": 99,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 13.75,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "speed": {
+              "value": 6,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 120,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 80,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 60,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "move": {
+                "value": 220,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag"
+            ]
+          }
+        },
+        {
+          "tier": "Champion",
+          "name": "Hag Witch",
+          "stats": {
+            "health": {
+              "value": 135,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 27.5,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "speed": {
+              "value": 7,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-hag"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 145,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 105,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 65,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 85,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              },
+              "move": {
+                "value": 245,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-hag"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag"
+            ]
+          }
+        }
+      ],
+      "attacks": [
+        {
+          "text": "Into the Pot! selects a hero and places them in the cauldron.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        },
+        {
+          "text": "Meat Tenderizer attacks the heroes outside the pot.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        },
+        {
+          "text": "Season to Perfection applies a damage and accuracy debuff; Taste the Stew is used in relation to a trapped hero.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        }
+      ],
+      "tacticalConsiderations": [
+        {
+          "text": "Editorial: bring attacks that can reach ranks 3–4 and expect the active party formation to shift when someone is captured.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        },
+        {
+          "text": "Editorial: the source recommends balancing damage to the Hag with timely recovery for a hero released at critical health; the cauldron’s occupant cannot use skills while trapped.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          }
+        }
+      ],
+      "relatedHeroRouteIds": [
+        "highwayman",
+        "crusader",
+        "plague-doctor"
+      ],
+      "relatedCompositionIds": [],
+      "guideVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-hag",
+          "hintbook-hag"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:siren",
+      "routeId": "siren",
+      "name": "Siren",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:cove"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "regionLabel": "Cove",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "available",
+      "spoilerSensitive": false,
+      "summary": "An Eldritch boss with two actions per round who can charm an equipped hero and turn that hero against the party.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-siren",
+          "hintbook-siren"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-siren",
+          "hintbook-siren"
+        ]
+      },
+      "mechanics": [
+        {
+          "text": "The Siren takes two turns per round.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        },
+        {
+          "text": "Song of Desire can charm one hero. The controlled hero can use equipped combat skills, then returns to the party in rank 4 after the charm ends.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        },
+        {
+          "text": "A charmed hero is placed in a rank adjacent to the Siren and takes stress while controlled; the charm can also target heroes in Stealth.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        },
+        {
+          "text": "The Siren can summon Pelagic enemies and use attacks that apply party-wide Bleed or stress.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        }
+      ],
+      "variants": [
+        {
+          "tier": "Apprentice",
+          "name": "Siren",
+          "stats": {
+            "health": {
+              "value": 119,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 12.5,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "speed": {
+              "value": 5,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 50,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 60,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 40,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "move": {
+                "value": 25,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren"
+            ]
+          }
+        },
+        {
+          "tier": "Veteran",
+          "name": "Alluring Siren",
+          "stats": {
+            "health": {
+              "value": 179,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 21.25,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "speed": {
+              "value": 6,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 75,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 60,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 80,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 60,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "move": {
+                "value": 45,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren"
+            ]
+          }
+        },
+        {
+          "tier": "Champion",
+          "name": "Beguiling Siren",
+          "stats": {
+            "health": {
+              "value": 244,
+              "unit": "hp",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "dodge": {
+              "value": 35,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "protection": {
+              "value": 0,
+              "unit": "percent",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "speed": {
+              "value": 7,
+              "unit": "points",
+              "verification": {
+                "status": "reference-checked",
+                "sourceIds": [
+                  "wiki-siren"
+                ]
+              }
+            },
+            "resistances": {
+              "stun": {
+                "value": 100,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "blight": {
+                "value": 85,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "bleed": {
+                "value": 105,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "debuff": {
+                "value": 85,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              },
+              "move": {
+                "value": 70,
+                "unit": "percent",
+                "verification": {
+                  "status": "reference-checked",
+                  "sourceIds": [
+                    "wiki-siren"
+                  ]
+                }
+              }
+            }
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren"
+            ]
+          }
+        }
+      ],
+      "attacks": [
+        {
+          "text": "Song of Desire is the hero-control ability.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        },
+        {
+          "text": "Pressure Crash targets the party with stress damage.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        },
+        {
+          "text": "Devour applies Bleed; High Tide can summon an aquatic reinforcement.",
+          "kind": "attack",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        }
+      ],
+      "tacticalConsiderations": [
+        {
+          "text": "Editorial: prepare for the party to operate with three heroes while one is charmed, and expect the returning hero to re-enter at the back.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        },
+        {
+          "text": "Editorial: use area attacks carefully while a controlled party member is among the enemies; keep movement options available to restore formation.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          }
+        }
+      ],
+      "relatedHeroRouteIds": [
+        "plague-doctor",
+        "highwayman"
+      ],
+      "relatedCompositionIds": [],
+      "guideVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-siren",
+          "hintbook-siren"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:prophet",
+      "routeId": "prophet",
+      "name": "Prophet",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:ruins"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "regionLabel": "Ruins",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Prophet is listed as a ruins encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:flesh",
+      "routeId": "flesh",
+      "name": "Flesh",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:warrens"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "regionLabel": "Warrens",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Flesh is listed as a warrens encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:brigand-pounder",
+      "routeId": "brigand-pounder",
+      "name": "Brigand Pounder",
+      "aliases": [
+        "Brigand Cannon",
+        "8-Pounder"
+      ],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:region-quests"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "regionLabel": "Region quest · all four core dungeons",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "The Brigand Pounder is the artillery centerpiece of a Brigand quest boss encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-brigand-pounder"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-brigand-pounder"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:drowned-crew",
+      "routeId": "drowned-crew",
+      "name": "Drowned Crew",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:cove"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "regionLabel": "Cove",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Drowned Crew is listed as a cove encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:shambler",
+      "routeId": "shambler",
+      "name": "Shambler",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:wandering"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "regionLabel": "Wandering · core dungeons",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Shambler is listed as a wandering · core dungeons encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:collector",
+      "routeId": "collector",
+      "name": "The Collector",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:wandering"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "regionLabel": "Wandering · core dungeons",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "The Collector is listed as a wandering · core dungeons encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:fanatic",
+      "routeId": "fanatic",
+      "name": "The Fanatic",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:wandering"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "regionLabel": "Wandering · core dungeons",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "The Fanatic is listed as a wandering · core dungeons encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:thing-from-the-stars",
+      "routeId": "thing-from-the-stars",
+      "name": "Thing from the Stars",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:wandering"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove",
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "regionLabel": "Wandering · regions vary",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Thing from the Stars is listed as a wandering · regions vary encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-thing-stars"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-thing-stars"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:brigand-vvulf",
+      "routeId": "brigand-vvulf",
+      "name": "Brigand Vvulf",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:events"
+      ],
+      "regionIds": [],
+      "regionLabel": "Hamlet event",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Brigand Vvulf is listed as a hamlet event encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:shrieker",
+      "routeId": "shrieker",
+      "name": "Shrieker",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:events"
+      ],
+      "regionIds": [],
+      "regionLabel": "Town event",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Shrieker is listed as a town event encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:crocodilian",
+      "routeId": "crocodilian",
+      "name": "Crocodilian",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:courtyard"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "regionLabel": "Courtyard",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Crocodilian is listed as a courtyard encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:baron",
+      "routeId": "baron",
+      "name": "Baron",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:courtyard"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "regionLabel": "Courtyard",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Baron is listed as a courtyard encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:viscount",
+      "routeId": "viscount",
+      "name": "Viscount",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:courtyard"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "regionLabel": "Courtyard",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Viscount is listed as a courtyard encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:countess",
+      "routeId": "countess",
+      "name": "Countess",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:courtyard"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "regionLabel": "Courtyard",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Countess is listed as a courtyard encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:garden-guardian",
+      "routeId": "garden-guardian",
+      "name": "Garden Guardian",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:courtyard"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "regionLabel": "Courtyard",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Garden Guardian is listed as a courtyard encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-garden-guardian"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-garden-guardian"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:miller",
+      "routeId": "miller",
+      "name": "Miller",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:farmstead"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "regionLabel": "Farmstead",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "Miller is listed as a farmstead encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:sleeper",
+      "routeId": "sleeper",
+      "name": "The Sleeper",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:farmstead"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "regionLabel": "Farmstead",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": false,
+      "summary": "The Sleeper is listed as a farmstead encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:shuffling-horror",
+      "routeId": "shuffling-horror",
+      "name": "Shuffling Horror",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:darkest-dungeon"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "regionLabel": "Darkest Dungeon",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": true,
+      "summary": "Shuffling Horror is listed as a darkest dungeon encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:templar-impaler",
+      "routeId": "templar-impaler",
+      "name": "Templar Impaler",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:darkest-dungeon"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "regionLabel": "Darkest Dungeon",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": true,
+      "summary": "Templar Impaler is listed as a darkest dungeon encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:templar-warlord",
+      "routeId": "templar-warlord",
+      "name": "Templar Warlord",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:darkest-dungeon"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "regionLabel": "Darkest Dungeon",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": true,
+      "summary": "Templar Warlord is listed as a darkest dungeon encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:mammoth-cyst",
+      "routeId": "mammoth-cyst",
+      "name": "Mammoth Cyst",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:darkest-dungeon"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "regionLabel": "Darkest Dungeon",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": true,
+      "summary": "Mammoth Cyst is listed as a darkest dungeon encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:boss:heart-of-darkness",
+      "routeId": "heart-of-darkness",
+      "name": "Heart of Darkness",
+      "aliases": [],
+      "categoryIds": [
+        "darkest-dungeon-1:boss-category:darkest-dungeon"
+      ],
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "regionLabel": "Darkest Dungeon",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "versionContextId": "darkest-dungeon-1:campaign:reference-context",
+      "guideStatus": "in-development",
+      "spoilerSensitive": true,
+      "summary": "Heart of Darkness is listed as a darkest dungeon encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summaryVerification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    }
+  ],
   "enemies": [],
   "teamCompositions": [],
   "strategyRecommendations": []
+,
+  "dlcs": [
+    {
+      "id": "darkest-dungeon-1:dlc:crimson-court",
+      "name": "The Crimson Court",
+      "sourceIds": [
+        "dd1-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:dlc:color-of-madness",
+      "name": "The Color of Madness",
+      "sourceIds": [
+        "dd1-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index"
+        ]
+      }
+    }
+  ],
+  "regions": [
+    {
+      "id": "darkest-dungeon-1:region:ruins",
+      "name": "Ruins",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "sourceIds": [
+        "dd1-boss-index",
+        "hintbook-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:region:warrens",
+      "name": "Warrens",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "sourceIds": [
+        "dd1-boss-index",
+        "hintbook-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:region:weald",
+      "name": "Weald",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "sourceIds": [
+        "dd1-boss-index",
+        "hintbook-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:region:cove",
+      "name": "Cove",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "sourceIds": [
+        "dd1-boss-index",
+        "hintbook-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:region:courtyard",
+      "name": "Courtyard",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "sourceIds": [
+        "dd1-boss-index",
+        "hintbook-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:region:farmstead",
+      "name": "Farmstead",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "sourceIds": [
+        "dd1-boss-index",
+        "hintbook-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:region:darkest-dungeon",
+      "name": "Darkest Dungeon",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "sourceIds": [
+        "dd1-boss-index",
+        "hintbook-boss-index"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "dd1-boss-index",
+          "hintbook-boss-index"
+        ]
+      }
+    }
+  ],
+  "bossCategories": [
+    {
+      "id": "darkest-dungeon-1:boss-category:ruins",
+      "name": "Ruins",
+      "order": 1
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:warrens",
+      "name": "Warrens",
+      "order": 2
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:weald",
+      "name": "Weald",
+      "order": 3
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:cove",
+      "name": "Cove",
+      "order": 4
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:region-quests",
+      "name": "Region quest bosses",
+      "order": 5
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:wandering",
+      "name": "Wandering bosses",
+      "order": 6
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:events",
+      "name": "Event bosses",
+      "order": 7
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:courtyard",
+      "name": "Courtyard (DLC)",
+      "order": 8
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:farmstead",
+      "name": "Farmstead (DLC)",
+      "order": 9
+    },
+    {
+      "id": "darkest-dungeon-1:boss-category:darkest-dungeon",
+      "name": "Darkest Dungeon · spoilers",
+      "order": 10
+    }
+  ]
 }

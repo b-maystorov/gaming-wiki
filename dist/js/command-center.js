@@ -7,7 +7,7 @@ function normalizeSearch(value) {
     .replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
-export function createSearchIndex() {
+export function createSearchIndex(bosses = []) {
   const entries = portalGames.map(game => ({
     title: game.name, type: game.available ? 'Game wiki' : 'Game preview', icon: '◈',
     detail: game.available ? 'Guides available' : 'In development · Preview only', href: game.href,
@@ -42,6 +42,18 @@ export function createSearchIndex() {
         href: `#hero/${hero.id}/abilities`, keywords: `${game.name} ${hero.name} ${from} ${targets} ${damage} ${accuracy} ${crit} ${effect}` });
     }
   }
+  for (const boss of bosses) {
+    const categoryNames = boss.categoryIds.map(id => id.split(':').at(-1).replaceAll('-', ' ')).join(' ');
+    const status = boss.guideStatus === 'available' ? 'Guide available' : 'Guide in development';
+    entries.push({
+      title: boss.name,
+      type: boss.guideStatus === 'available' ? 'Boss guide' : 'Boss · In development',
+      icon: '♜',
+      detail: `${boss.regionLabel} · ${status}`,
+      href: `#game/darkest-dungeon/bosses/${boss.routeId}`,
+      keywords: `${boss.name} ${(boss.aliases || []).join(' ')} ${boss.summary} ${boss.regionLabel} ${categoryNames}`
+    });
+  }
   // Future guides may recommend the same item or party; show each destination/title once.
   return entries.filter((entry, index) => entries.findIndex(other => other.title === entry.title && other.href === entry.href) === index)
     .map(entry => ({ ...entry, searchText: normalizeSearch(`${entry.title} ${entry.type} ${entry.detail} ${entry.keywords}`) }));
@@ -60,7 +72,7 @@ export function searchEntries(entries, query) {
   }
 }
 
-export function initializeCommandCenter({ navigate }) {
+export function initializeCommandCenter({ navigate, bosses = [] }) {
   const dialog = document.getElementById('command-center');
   const trigger = document.getElementById('open-command-center');
   const closeButton = document.getElementById('close-command-center');
@@ -68,7 +80,7 @@ export function initializeCommandCenter({ navigate }) {
   const results = document.getElementById('command-results');
   const status = document.getElementById('command-status');
   const empty = document.getElementById('command-empty');
-  const index = createSearchIndex();
+  const index = createSearchIndex(bosses);
   let matches = [];
   let selectedIndex = -1;
   let returnTarget = trigger;
