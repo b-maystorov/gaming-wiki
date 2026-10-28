@@ -19,3 +19,13 @@ secrets.local.*
 # Logs
 *.log
 logs/
+
+# Node.js dependencies
+node_modules/
+
+# Vite generated builds
+react-preview-dist/
+
+# Python temporary files
+__pycache__/
+*.pyc
