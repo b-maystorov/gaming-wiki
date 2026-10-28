@@ -5,7 +5,8 @@ import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 
 const main = document.querySelector('main');
-const sections = ['overview', 'abilities', 'builds', 'teams', 'trinkets'];
+// `builds` remains the route alias for the long-form strategy section.
+const sections = ['overview', 'teams', 'bosses', 'trinkets', 'attributes', 'abilities', 'progression', 'builds'];
 let currentView = '';
 let selectedPortalGame = 0;
 
@@ -23,17 +24,31 @@ function requirementLabel(requirements) {
   return labels.map(escapeHtml).join(' · ');
 }
 
-function renderImage(image, className = '') {
+function renderImage(image, className = '', fallbackMarkup = '') {
   const animationClass = image.animated ? ' animated-image' : '';
   const reducedMotionAlternative = image.animated
     ? `<span class="motion-alternative" role="img" aria-label="${escapeHtml(image.reducedMotionLabel)}">Animation paused for reduced motion</span>`
     : '';
   const artworkClass = image.animated ? ' animated-artwork' : '';
+  const dimensions = image.width && image.height ? `width="${image.width}" height="${image.height}"` : '';
   return `<figure class="artwork ${className}${artworkClass}">
-    <img class="image-content${animationClass}" src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" width="${image.width || 320}" height="${image.height || 320}">
-    ${reducedMotionAlternative}
+    <img class="image-content${animationClass}" src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" ${dimensions}>
+    ${reducedMotionAlternative}${fallbackMarkup}
     ${image.placeholder ? '<figcaption>Placeholder · Not game art</figcaption>' : ''}
   </figure>`;
+}
+
+function renderHeroPortrait(hero) {
+  const portrait = hero.portrait || (hero.galleryArt?.src ? hero.galleryArt : null);
+  return portrait
+    ? renderImage(portrait, 'guide-portrait', `<span class="portrait-unavailable" data-portrait-fallback hidden role="img" aria-label="${escapeHtml(hero.name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(hero.galleryArt?.monogram || hero.name.slice(0, 2).toUpperCase())}</span><small>Portrait unavailable</small></span>`)
+    : `<div class="ability-hero-mark" role="img" aria-label="${escapeHtml(hero.name)} portrait unavailable">${escapeHtml(hero.galleryArt?.monogram || hero.name.slice(0, 2).toUpperCase())}</div>`;
+}
+
+function renderHeroGuideNavigation(hero) {
+  const labels = { overview: 'Overview', teams: 'Teams', bosses: 'Bosses', trinkets: 'Trinkets', attributes: 'Mechanics', abilities: 'Abilities', progression: 'Progression', builds: 'Builds & strategy' };
+  const sectionNumbers = { overview: '02', teams: '03', bosses: '04', trinkets: '05', attributes: '06', abilities: '07', progression: '08', builds: '09' };
+  return `<nav class="guide-nav" aria-label="${escapeHtml(hero.name)} guide sections">${sections.map(section => `<a href="#hero/${escapeHtml(hero.id)}/${section}" data-section="${section}"><span aria-hidden="true">${sectionNumbers[section]}</span>${labels[section]}</a>`).join('')}</nav>`;
 }
 
 function renderPositions(hero) {
@@ -238,10 +253,10 @@ function resolveSkillTarget(targets, details) {
 
 function renderPositionDiagram(value, label, orientation, options = {}) {
   const ranks = orientation === 'hero' ? [4, 3, 2, 1] : [1, 2, 3, 4];
-  const active = new Set(parseSkillRanks(value));
+  const active = new Set(orientation === 'hero' && /^any$/i.test(String(value).trim()) ? ranks : parseSkillRanks(value));
   const direction = orientation === 'hero' ? 'Rear to front' : 'Front to rear';
   const order = ranks.map(rank => `<span class="position-rank${active.has(rank) ? ' is-active' : ''}" aria-label="Rank ${rank}${active.has(rank) ? ', available' : ', unavailable'}"><span>${rank}</span></span>`).join('');
-  const modeText = options.mode === 'simultaneous' ? 'All highlighted ranks at once' : 'Choose one highlighted rank';
+  const modeText = options.mode === 'simultaneous' ? 'All highlighted ranks at once' : options.mode === 'positions' ? 'Valid launch ranks' : 'Choose one highlighted rank';
   return `<div class="ability-rank-group position-group"><span class="position-label">${escapeHtml(label)}</span><span class="position-direction">${direction}</span><div class="position-diagram ${orientation}-positions" role="img" aria-label="${escapeHtml(label)}: ${ranks.map(rank => `rank ${rank} ${active.has(rank) ? 'available' : 'unavailable'}`).join(', ')}">${order}</div><span class="position-mode">${escapeHtml(modeText)}</span></div>`;
 }
 
@@ -249,7 +264,7 @@ function renderAbilityTarget(targets, target, heroName) {
   if (target.side === 'self') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">Self-target</span><div class="special-target" aria-label="Targets the ${escapeHtml(heroName)}">SELF</div><span class="position-mode">Affects the ${escapeHtml(heroName)}</span></div>`;
   if (target.side === 'none') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">No rank target</span><div class="special-target">—</div><span class="position-mode">${escapeHtml(targets)}</span></div>`;
   if (target.mode === 'unclassified') return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">Target scope unavailable</span><div class="special-target">${escapeHtml(targets)}</div><span class="position-mode">Rank details are not classified yet</span></div>`;
-  if (!parseSkillRanks(targets).length) return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">No rank diagram</span><div class="special-target">${escapeHtml(targets)}</div><span class="position-mode">Target rank details unavailable</span></div>`;
+  if (target.side !== 'ally' && !parseSkillRanks(targets).length) return `<div class="ability-rank-group position-group"><span class="position-label">Target</span><span class="position-direction">No rank diagram</span><div class="special-target">${escapeHtml(targets)}</div><span class="position-mode">Target rank details unavailable</span></div>`;
   const label = target.side === 'ally' ? (target.mode === 'all' ? 'Allies affected' : 'Choose an ally') : 'Enemy ranks';
   const rankValue = target.side === 'ally' ? '4,3,2,1' : targets;
   const mode = target.mode === 'all' ? 'simultaneous' : target.mode;
@@ -263,9 +278,12 @@ function renderAbilityCard(skill, index, entry, heroName) {
   const isAttack = target.side === 'enemy';
   const statValue = (value, attackStat) => value === '—' ? (isAttack && attackStat ? 'Unavailable' : 'Not applicable') : value;
   const effects = effect.split(';').map(item => item.trim()).filter(Boolean).concat(details?.extraEffects || []);
-  return `<article class="ability-card"><header class="ability-card-heading"><span>${escapeHtml(details?.type || 'Combat skill')} · ${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(name)}</h3></header>
+  const icon = details?.icon?.approvedLocal && details.icon.src
+    ? `<img class="ability-icon" src="${escapeHtml(details.icon.src)}" alt="">`
+    : '';
+  return `<article class="ability-card"><header class="ability-card-heading">${icon}<div><span>${escapeHtml(details?.type || 'Combat skill')} · ${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(name)}</h3></div></header>
     ${details?.description ? `<p class="ability-description">${escapeHtml(details.description)}</p>` : ''}
-    <div class="ability-ranks">${renderPositionDiagram(from, 'Use from', 'hero')}${renderAbilityTarget(targets, target, heroName)}</div>
+    <div class="ability-ranks">${renderPositionDiagram(from, 'Use from', 'hero', { mode: 'positions' })}${renderAbilityTarget(targets, target, heroName)}</div>
     <dl class="ability-values"><div><dt>DMG modifier</dt><dd>${escapeHtml(statValue(damage, true))}</dd></div><div><dt>ACC</dt><dd>${escapeHtml(statValue(accuracy, true))}</dd></div><div><dt>CRIT modifier</dt><dd>${escapeHtml(statValue(crit, true))}</dd></div></dl>
     <div class="ability-effect"><strong>Effects</strong>${effects.length ? `<ul>${effects.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : '<p>No additional effect listed.</p>'}</div>
     ${details?.tacticalNote ? `<p class="ability-tip"><strong>When to use it <span>(tactical suggestion)</span></strong>${escapeHtml(details.tacticalNote)}</p>` : ''}</article>`;
@@ -274,37 +292,144 @@ function renderAbilityCard(skill, index, entry, heroName) {
 function renderAbilities(hero) {
   const entry = heroAbilities[hero.id];
   if (!entry) return '';
-  return `<section class="guide-section ability-section" aria-labelledby="abilities"><div class="section-heading"><h2 id="abilities" tabindex="-1">Combat skills</h2><span>${entry.skills.length} abilities / Skill level 1</span></div>
-    <p class="section-intro">Compare each skill’s positions, targets, values, and effects. Figures shown are for skill level 1.</p>
+  const legacyNote = !hero.guide && !hero.overview
+    ? '<p class="guide-data-note">Existing level-one community reference; details have not been independently verified for this guide.</p>'
+    : '';
+  return `<section class="guide-section ability-section" aria-labelledby="abilities"><div class="section-heading"><h2 id="abilities" tabindex="-1">Combat abilities</h2><span>07 / ${entry.skills.length} skills · Level 1 reference</span></div>
+    <p class="section-intro">Compare launch positions, targets, values, and effects. Values describe skill level 1; skill progression is recorded separately below.</p>${legacyNote}
     <div class="ability-grid">${entry.skills.map((skill, index) => renderAbilityCard(skill, index, entry, hero.name)).join('')}</div>
-    <details class="ability-glossary"><summary>How to read combat skills</summary><p>Hero positions run from rear to front (<strong>4 → 1</strong>); enemy positions run from front to rear (<strong>1 → 4</strong>). Crimson ranks are valid positions and muted ranks are unavailable. Enemy skills let you choose one highlighted rank unless marked as hitting all highlighted ranks at once. Ally-target skills show party ranks; <strong>SELF</strong> means the hero is the target.</p><p>Movement labels describe the hero or enemy changing ranks: <strong>forward/back</strong> moves the hero, while <strong>knockback</strong> moves the target enemy. These are separate from the targeting diagram.</p><p><strong>DMG modifier</strong> changes base damage. <strong>ACC</strong> is base accuracy before enemy Dodge. <strong>CRIT modifier</strong> changes critical-hit chance. <strong>PROT</strong> reduces direct damage, not damage over time. <strong>SPD</strong> means Speed. A successful <strong>Stun</strong> makes an enemy lose its next turn. <strong>Bleed</strong> deals damage over multiple rounds; Bleed resistance affects its chance to land. <strong>Riposte</strong> lets the hero counter eligible attacks directed at them; Stun disables it.</p><p>${escapeHtml(entry.note || abilityReference.note)}</p></details>
-    <p class="ability-source">Values: <a href="${escapeHtml(entry.source)}" target="_blank" rel="noreferrer">Combat skill table ↗</a>${entry.detailsSource ? ` · Descriptions and mechanics: <a href="${escapeHtml(entry.detailsSource)}" target="_blank" rel="noreferrer">Crusader reference ↗</a>` : ''}${entry.strategySource ? ` · Tactical suggestions: <a href="${escapeHtml(entry.strategySource)}" target="_blank" rel="noreferrer">Strategy reference ↗</a>` : ''}${entry.mechanicsSource ? ` · Riposte mechanics: <a href="${escapeHtml(entry.mechanicsSource)}" target="_blank" rel="noreferrer">Riposte reference ↗</a>` : ''}</p></section>`;
+    <details class="ability-glossary"><summary>How to read combat skills</summary><p>Hero positions run from rear to front (<strong>4 → 1</strong>); enemy positions run from front to rear (<strong>1 → 4</strong>). Crimson ranks are valid positions and muted ranks are unavailable. Enemy skills let you choose one highlighted rank unless marked as hitting all highlighted ranks at once. Ally-target skills show party ranks; <strong>SELF</strong> means the hero is the target.</p><p>Movement labels describe the hero or enemy changing ranks: <strong>forward/back</strong> moves the hero, while <strong>knockback</strong> moves the target enemy. These are separate from the targeting diagram.</p><p><strong>DMG modifier</strong> changes base damage. <strong>ACC</strong> is base accuracy before enemy Dodge. <strong>CRIT modifier</strong> changes critical-hit chance. <strong>PROT</strong> reduces direct damage, not damage over time. <strong>SPD</strong> means Speed. A successful <strong>Stun</strong> makes an enemy lose its next turn. <strong>Bleed</strong> and <strong>Blight</strong> deal damage over multiple rounds. Listed base effect chances are before target resistance, which can reduce the actual chance to apply. <strong>Riposte</strong> lets the hero counter eligible attacks directed at them; Stun disables it.</p><p>${escapeHtml(entry.note || abilityReference.note)}</p></details></section>`;
 }
 
-function renderAbilityPage(hero) {
-  const portrait = hero.portrait || (hero.galleryArt?.src ? { ...hero.galleryArt, width: 236, height: 356 } : null);
+function renderHeroHeader(hero) {
+  const role = hero.role || hero.roleTags.join(' · ');
+  const summary = hero.summary || `Full ${hero.name} guide details are in development. Current class labels and skill references are shown below with their verification status.`;
   return `<a class="back-link" href="#game/darkest-dungeon/heroes">← All heroes</a>
     <header class="guide-header ability-guide-header"><div><p class="eyebrow">Darkest Dungeon I / ${requirementLabel(hero.requirements)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(hero.name)}</h1>
-      <p class="role">${escapeHtml(hero.roleTags.join(' · '))}</p><p class="lede">Combat skill reference. Full strategy, builds, teams, and equipment recommendations are still in development.</p>
-      <p class="card-positions">Hero positions are listed <strong>4 · 3 · 2 · 1</strong><span>4 = rear · 1 = front</span></p></div>${portrait ? renderImage(portrait, 'guide-portrait') : '<div class="ability-hero-mark" aria-hidden="true">' + escapeHtml(hero.galleryArt.monogram) + '</div>'}</header>
-    <nav class="guide-nav" aria-label="Hero reference sections"><a href="#game/darkest-dungeon/heroes"><span aria-hidden="true">←</span> All heroes</a></nav>
+      ${hero.epithet ? `<p class="epithet">${escapeHtml(hero.epithet)}</p>` : ''}<p class="role">${escapeHtml(role)}</p><p class="lede">${escapeHtml(summary)}</p>
+      ${hero.preferredPositions?.length ? `<p class="card-positions">Preferred combat positions <strong>${hero.preferredPositions.join(' · ')}</strong><span>4 = rear · 1 = front</span></p>` : ''}</div>${renderHeroPortrait(hero)}</header>`;
+}
+
+function renderHeroOverview(hero) {
+  const overview = hero.guide || hero.overview || {};
+  const hasOverview = Boolean(overview.strengths?.length || overview.weaknesses?.length);
+  const positioning = hero.preferredPositions?.length
+    ? `<div class="position-panel"><h3>Where to stand</h3>${renderPositions(hero)}<p>${escapeHtml(overview.positions || 'Preferred positions are shown from available guide data.')}</p></div>`
+    : '<p class="guide-data-note">Preferred positions have not yet been verified for this class.</p>';
+  return `<section class="guide-section" aria-labelledby="overview"><div class="section-heading"><h2 id="overview" tabindex="-1">Overview & positioning</h2><span>02 / Class profile</span></div>
+    ${hasOverview ? `<div class="two-columns"><article class="panel"><h3>Strengths</h3>${renderList(overview.strengths || [])}</article><article class="panel"><h3>Weaknesses</h3>${renderList(overview.weaknesses || [])}</article></div>` : `<article class="panel guide-development"><p>Detailed role, strengths, and weaknesses are still being documented. Gallery role tags are broad capability labels, not a complete build recommendation.</p><strong>Current role tags: ${escapeHtml(hero.roleTags.join(' · '))}</strong></article>`}
+    ${positioning}
+    ${overview.beginnerAdvice ? `<aside class="inset-note guide-beginner-advice"><strong>Beginner advice</strong><p>${escapeHtml(overview.beginnerAdvice)}</p></aside>` : ''}
+  </section>`;
+}
+
+function renderGuideDevelopmentSection(id, title, message, linkHref = '', linkLabel = '', number = '', status = 'Guide in development') {
+  return `<section class="guide-section" aria-labelledby="${id}"><div class="section-heading"><h2 id="${id}" tabindex="-1">${title}</h2><span>${number}${number ? ' / ' : ''}${status}</span></div>
+    <article class="panel guide-development"><p>${escapeHtml(message)}</p>${linkHref ? `<a href="${linkHref}">${escapeHtml(linkLabel)} →</a>` : ''}</article></section>`;
+}
+
+function renderHeroTeamSection(hero) {
+  const teams = hero.guide?.teams?.map(team => ({ ...team, hero })) || getTeams().filter(team => team.members.includes(hero.name));
+  if (!teams.length) return renderGuideDevelopmentSection('teams', 'Featured team compositions', `No existing composition containing ${hero.name} is available yet.`, '#game/darkest-dungeon/teams', 'Browse current compositions', '03');
+  return `<section class="guide-section" aria-labelledby="teams"><div class="section-heading"><h2 id="teams" tabindex="-1">Featured team compositions</h2><span>03 / Starting formations</span></div>
+    <p class="section-intro">Existing editorial compositions containing ${escapeHtml(hero.name)}. Starting formations read from position 4 at the rear to position 1 at the front.</p><div class="team-list">${teams.map(renderTeamCard).join('')}</div></section>`;
+}
+
+function renderBossSection(hero) {
+  const recommendations = hero.bossRecommendations || [];
+  if (!recommendations.length) return renderGuideDevelopmentSection('bosses', 'Recommended boss matchups', `Boss recommendations for ${hero.name} have not yet been assessed against documented sources.`, '', '', '04', 'Not yet assessed');
+  return `<section class="guide-section" aria-labelledby="bosses"><div class="section-heading"><h2 id="bosses" tabindex="-1">Recommended boss matchups</h2><span>04 / Source-backed recommendations</span></div>
+    <div class="boss-grid">${recommendations.map(matchup => `<article class="panel boss-card"><p class="eyebrow">${escapeHtml(matchup.assessment || 'Documented matchup')}</p><h3>${escapeHtml(matchup.boss)}</h3><p>${escapeHtml(matchup.reason)}</p>${matchup.source ? `<a href="${escapeHtml(matchup.source)}" target="_blank" rel="noreferrer">Matchup reference ↗</a>` : ''}</article>`).join('')}</div></section>`;
+}
+
+function renderHeroTrinketSection(hero) {
+  const trinkets = hero.guide?.trinkets || [];
+  if (!trinkets.length) return renderGuideDevelopmentSection('trinkets', 'Recommended trinkets', `Class-specific equipment recommendations for ${hero.name} are still in development.`, '#game/darkest-dungeon/trinkets', 'Browse available item records', '05');
+  return `<section class="guide-section" aria-labelledby="trinkets"><div class="section-heading"><h2 id="trinkets" tabindex="-1">Recommended trinkets</h2><span>05 / Equipment notes</span></div>
+    <p class="section-intro">Picks for ${escapeHtml(hero.name)} · Reference values; installed patch not checked. Availability is not guaranteed. The two supplied game icons have unverified provenance; the other two remain labeled placeholders.</p><div class="two-columns">${trinkets.map(renderTrinket).join('')}</div>
+    <p class="section-intro"><a href="#game/darkest-dungeon/trinkets">Browse available item records →</a></p></section>`;
+}
+
+function renderUniqueAttributes(hero) {
+  const attributes = hero.uniqueAttributes || [];
+  if (!attributes.length) return renderGuideDevelopmentSection('attributes', 'Unique attributes & class mechanics', `No class-specific mechanics are documented for ${hero.name} in this guide yet.`, '', '', '06');
+  return `<section class="guide-section" aria-labelledby="attributes"><div class="section-heading"><h2 id="attributes" tabindex="-1">Unique attributes & class mechanics</h2><span>06 / What sets this hero apart</span></div>
+    <div class="mechanic-grid">${attributes.map(attribute => `<article class="panel mechanic-card"><h3>${escapeHtml(attribute.name)}</h3><p>${escapeHtml(attribute.description)}</p>${attribute.source ? `<a href="${escapeHtml(attribute.source)}" target="_blank" rel="noreferrer">Mechanics reference ↗</a>` : ''}</article>`).join('')}</div></section>`;
+}
+
+function renderProgressionSection(hero) {
+  const entry = heroAbilities[hero.id];
+  const progression = entry?.progression || [];
+  const detail = progression.length
+    ? `<div class="table-scroll"><table class="progression-table"><caption>${escapeHtml(hero.name)} combat skill upgrades</caption><thead><tr><th scope="col">Skill</th><th scope="col">Level</th><th scope="col">DMG</th><th scope="col">ACC</th><th scope="col">CRIT</th><th scope="col">Effects</th></tr></thead><tbody>${progression.flatMap(skill => skill.levels.map(level => `<tr><th scope="row">${escapeHtml(skill.name)}</th><td>${escapeHtml(level.level)}</td><td>${escapeHtml(level.damage ?? '—')}</td><td>${escapeHtml(level.accuracy ?? '—')}</td><td>${escapeHtml(level.crit ?? '—')}</td><td>${escapeHtml(level.effects ?? '—')}</td></tr>`)).join('')}</tbody></table></div>`
+    : '<p>Level 2–5 values have not yet been verified. Only the level-one reference above is available.</p>';
+  return `<section class="guide-section" aria-labelledby="progression"><div class="section-heading"><h2 id="progression" tabindex="-1">Skill upgrades & progression</h2><span>08 / Detailed values</span></div><details class="skill-progression"><summary>Show skill levels 1–5</summary>${detail}</details></section>`;
+}
+
+function renderStrategySection(hero) {
+  const builds = hero.guide?.builds || [];
+  const sourceLinks = new Map();
+  const entry = heroAbilities[hero.id];
+  if (entry?.source) sourceLinks.set(entry.source, 'Combat skill reference');
+  if (entry?.detailsSource) sourceLinks.set(entry.detailsSource, 'Ability descriptions and mechanics');
+  if (entry?.strategySource) sourceLinks.set(entry.strategySource, 'Strategy reference');
+  if (entry?.mechanicsSource) sourceLinks.set(entry.mechanicsSource, 'Mechanics reference');
+  hero.guide?.sourceIds?.forEach(id => {
+    const source = sources[id];
+    if (source) sourceLinks.set(source.url, source.title);
+  });
+  const strategy = builds.length
+    ? `<p class="section-intro">Existing four-skill builds are editorial recommendations, not playtested guarantees.</p><div class="two-columns">${builds.map(renderBuild).join('')}</div>`
+    : '<article class="panel guide-development"><p>Class-specific skill builds and strategy notes are still in development.</p></article>';
+  return `<section class="guide-section" aria-labelledby="builds"><div class="section-heading"><h2 id="builds" tabindex="-1">Strategy, limitations & sources</h2><span>09 / Field notes</span></div>
+    ${strategy}${hero.guide?.verification ? `<p class="guide-data-note">${escapeHtml(hero.guide.verification)}</p>` : ''}
+    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(entry?.note || abilityReference.note)}</p><p>Level-one combat values are reference snapshots. The installed game version and patch were not tested.</p>${sourceLinks.size ? `<ul>${[...sourceLinks].map(([url, label]) => `<li><a href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(label)} ↗</a></li>`).join('')}</ul>` : '<p>Sources for expanded guide content are still being collected.</p>'}</details>
+  </section>`;
+}
+
+function renderHeroSequence(hero) {
+  const index = heroes.findIndex(entry => entry.id === hero.id);
+  const previous = heroes[(index - 1 + heroes.length) % heroes.length];
+  const next = heroes[(index + 1) % heroes.length];
+  return `<section class="guide-section hero-sequence-section" aria-labelledby="hero-sequence-title"><div class="section-heading"><h2 id="hero-sequence-title">Previous / Next hero</h2><span>10 / Continue the roster</span></div><nav class="hero-sequence" aria-label="Browse heroes"><a href="#hero/${escapeHtml(previous.id)}/overview"><span>← Previous hero</span><strong>${escapeHtml(previous.name)}</strong></a><a href="#game/darkest-dungeon/heroes">All heroes</a><a href="#hero/${escapeHtml(next.id)}/overview"><span>Next hero →</span><strong>${escapeHtml(next.name)}</strong></a></nav></section>`;
+}
+
+function renderHeroPage(hero) {
+  return `${renderHeroHeader(hero)}${renderHeroGuideNavigation(hero)}
+    ${renderHeroOverview(hero)}
+    ${renderHeroTeamSection(hero)}
+    ${renderBossSection(hero)}
+    ${renderHeroTrinketSection(hero)}
+    ${renderUniqueAttributes(hero)}
     ${renderAbilities(hero)}
-    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(abilityReference.note)}</p><p>Values are a level-one snapshot. This reference does not claim the installed game version was tested.</p><p><a href="${escapeHtml(heroAbilities[hero.id].source)}" target="_blank" rel="noreferrer">Open source table ↗</a></p></details>`;
+    ${renderProgressionSection(hero)}
+    ${renderStrategySection(hero)}
+    ${renderHeroSequence(hero)}`;
 }
 
 function renderTeamPortrait(name) {
-  const portrait = heroes.find(hero => hero.name === name)?.portrait;
+  const hero = heroes.find(entry => entry.name === name);
+  const portrait = hero?.portrait || (hero?.galleryArt?.src ? hero.galleryArt : null);
   if (portrait && !portrait.placeholder) return renderImage(portrait, 'team-portrait');
   const initials = name.split(' ').map(word => word[0]).join('');
   return `<div class="portrait-unavailable" role="img" aria-label="${escapeHtml(name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(initials)}</span><small>Portrait unavailable</small></div>`;
 }
 
 function renderHeroName(name) {
-  const hero = heroes.find(entry => entry.name === name && entry.guide);
+  const hero = heroes.find(entry => entry.name === name && (entry.guide || heroAbilities[entry.id]));
   return hero
-    ? `<a href="#hero/${escapeHtml(hero.id)}/overview">${escapeHtml(name)}</a>`
+    ? `<a href="#hero/${escapeHtml(hero.id)}/${hero.guide ? 'overview' : 'abilities'}">${escapeHtml(name)}</a>`
     : `<span class="unlinked-hero-name">${escapeHtml(name)}</span>`;
 }
+
+// Keep the portrait frame useful if a local image is later moved or removed.
+main.addEventListener('error', event => {
+  if (!event.target.matches('.guide-portrait img')) return;
+  const figure = event.target.closest('.guide-portrait');
+  figure.classList.add('image-failed');
+  const fallback = figure.querySelector('[data-portrait-fallback]');
+  if (fallback) fallback.hidden = false;
+}, true);
 
 function renderPartyMembers(team) {
   return `<ol class="party" aria-label="Starting formation, positions 4 through 1">${team.members.map((name, index) => `<li><span>Position ${4 - index}</span>${renderTeamPortrait(name)}<strong>${renderHeroName(name)}</strong></li>`).join('')}</ol>`;
@@ -341,28 +466,6 @@ function renderTrinket(trinket) {
     <p class="selection-label">${escapeHtml(trinket.use)}</p><dl class="effects"><dt>Benefits</dt><dd class="benefits">${trinket.effects.map(escapeHtml).join('<br>')}</dd><dt>Penalties</dt><dd class="penalties">${trinket.drawbacks.map(escapeHtml).join('<br>')}</dd></dl>
     <h4>Why choose it</h4><p>${escapeHtml(trinket.advice)}</p><h4>Accessible alternative</h4><p>${escapeHtml(trinket.alternative)}</p>
     <a class="source-link" href="${escapeHtml(sources[trinket.source].url)}">Check item reference ↗</a></article>`;
-}
-
-function renderGuide(hero) {
-  const guide = hero.guide;
-  return `<a class="back-link" href="#game/darkest-dungeon/heroes">← All heroes</a>
-    <header class="guide-header"><div><p class="eyebrow">Darkest Dungeon I / ${requirementLabel(hero.requirements)}</p>
-      <h1 id="page-title" tabindex="-1">${escapeHtml(hero.name)}</h1><p class="epithet">${escapeHtml(hero.epithet)}</p>
-      <p class="role">${escapeHtml(hero.role)}</p><p class="lede">${escapeHtml(hero.summary)}</p>
-      <p class="card-positions">Preferred positions <strong>${hero.preferredPositions.join(' · ')}</strong><span>1 = front</span></p></div>${renderImage(hero.portrait, 'guide-portrait')}</header>
-      <nav class="guide-nav" aria-label="Guide sections">${sections.map((section, index) => `<a href="#hero/${escapeHtml(hero.id)}/${section}" data-section="${section}"><span aria-hidden="true">0${index + 1}</span> ${section === 'abilities' ? 'Combat skills' : section[0].toUpperCase() + section.slice(1)}</a>`).join('')}</nav>
-    <section class="guide-section" aria-labelledby="overview"><div class="section-heading"><h2 id="overview" tabindex="-1">Overview</h2><span>01 / Know your role</span></div>
-      <div class="two-columns"><article class="panel"><h3>Strengths</h3>${renderList(guide.strengths)}</article><article class="panel"><h3>Weaknesses</h3>${renderList(guide.weaknesses)}</article></div>
-      <div class="position-panel"><h3>Where to stand</h3>${renderPositions(hero)}<p>${escapeHtml(guide.positions)}</p></div>
-    </section>
-    ${renderAbilities(hero)}
-    <section class="guide-section" aria-labelledby="builds"><div class="section-heading"><h2 id="builds" tabindex="-1">Builds</h2><span>03 / Choose your approach</span></div>
-      <p class="section-intro">Suggested builds · Not playtested. Four skills each; rank lists show your position → enemy targets.</p><div class="two-columns">${guide.builds.map(renderBuild).join('')}</div></section>
-    <section class="guide-section" aria-labelledby="teams"><div class="section-heading"><h2 id="teams" tabindex="-1">Teams</h2><span>04 / Company for the road</span></div>
-      <p class="section-intro">Parties for ${escapeHtml(hero.name)} · Suggested, not playtested. Read 4–3–2–1 from rear to front; adapt to actual turn order.</p><div class="team-list">${guide.teams.map(team => renderTeamCard({ ...team, hero })).join('')}</div></section>
-    <section class="guide-section" aria-labelledby="trinkets"><div class="section-heading"><h2 id="trinkets" tabindex="-1">Trinkets</h2><span>05 / Equip with intent</span></div>
-      <p class="section-intro">Picks for ${escapeHtml(hero.name)} · Reference values; installed patch not checked. Availability is not guaranteed. The two supplied game icons have unverified provenance; the other two remain labeled placeholders.</p><div class="two-columns">${guide.trinkets.map(renderTrinket).join('')}</div></section>
-    <details class="references"><summary>Sources & verification</summary><p>${escapeHtml(guide.verification)}</p><p>Campaign only; no DLC or mods required. Supplied character and item artwork has unverified original sources and reuse terms. See <code>docs/content-sources.md</code>.</p><ul>${guide.sourceIds.map(id => `<li><a href="${escapeHtml(sources[id].url)}">${escapeHtml(sources[id].title)} ↗</a></li>`).join('')}</ul><p>Image research and provenance: <code>docs/content-sources.md</code> in the source repository.</p></details>`;
 }
 
 function activeCategoryId(route) {
@@ -404,7 +507,7 @@ function readRoute(hash) {
   if (parts[0] === 'hero' && parts.length <= 3) {
     const hero = heroes.find(entry => entry.id === parts[1] && (entry.guide || heroAbilities[entry.id]));
     const section = parts[2] || 'overview';
-    if (hero && (hero.guide ? sections.includes(section) : section === 'abilities')) return { view: 'hero', hero, section, game: true };
+    if (hero && sections.includes(section)) return { view: 'hero', hero, section, game: true };
   }
   return { view: 'missing' };
 }
@@ -433,7 +536,7 @@ function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
   const views = { home: renderHome, game: renderGameLanding, heroes: renderGallery,
     teams: () => renderCollection('teams'), trinkets: () => renderCollection('trinkets') };
-  const content = route.hero ? (route.hero.guide ? renderGuide(route.hero) : renderAbilityPage(route.hero)) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
+  const content = route.hero ? renderHeroPage(route.hero) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
     '<section class="empty-state"><h1 id="page-title" tabindex="-1">Page not found</h1><p>This page is not available.</p><a href="#home">Return home</a></section>';
   const page = renderBreadcrumbs(route) + content;
   if (!route.game) return page;

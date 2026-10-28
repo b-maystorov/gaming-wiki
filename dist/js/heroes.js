@@ -35,11 +35,17 @@ export const heroes = [
     requirements: baseGame,
     portrait,
     summary: 'A mobile damage dealer who can pressure the back line and punish incoming attacks. Build around the party’s formation, not just his next shot.',
+    uniqueAttributes: [{
+      name: 'Riposte',
+      description: 'Duelist’s Advance activates Riposte for 3 rounds. It counters eligible attacks directed at the Highwayman; the level-one Riposte damage modifier is −40%, and Stun disables the counter.',
+      source: 'https://darkestdungeon.wiki.gg/wiki/Riposte'
+    }],
     guide: {
       verification: 'Campaign mechanics and item values checked against the linked references on 26 October 2026. Builds and parties are editorial suggestions, not tested guarantees. No installed game data or patch-specific validation was available.',
       strengths: ['Pistol Shot reaches enemy rank 4.', 'Duelist’s Advance adds Riposte and forward movement.', 'Melee and ranged options cover different targets.'],
       weaknesses: ['No combat healing or stun in his own skill set.', 'Riposte needs enemies to attack him; its value varies.', 'Movement can disrupt allies. Plan the next formation.'],
       positions: 'Start in 3 or 2 for flexible skill access. Rank 4 is an alternative for Pistol Shot or advancing; it disables his close-range attacks. Rank 1 is situational: Point Blank Shot can take him back to 2. These are recommendations, not universal best positions.',
+      beginnerAdvice: 'Start in rank 3 or 2 to keep both melee and ranged options available. Duelist’s Advance can set up Riposte; follow with another skill rather than repeatedly advancing, since the Riposte damage penalty stacks.',
       builds: [
         {
           id: 'riposte', name: 'The moving duelist', label: 'Flexible melee + ranged', start: 'Start in 3 or 2',
@@ -124,6 +130,11 @@ export const heroes = [
   // Original 17-class gallery scope. Tags summarize capabilities, not tier ratings.
   { id: "abomination", name: "Abomination", roleTags: ["Damage", "Stun", "Blight"],
     requirements: baseGame, guide: null,
+    uniqueAttributes: [{
+      name: 'Human and Beast forms',
+      description: 'Transform is a free action that changes the Abomination’s available combat skills. It can be used twice per battle, once to enter Beast form and once to return. Entering Beast form stresses the party, and the Abomination gains stress while he remains transformed; he returns to Human form at battle end or when afflicted.',
+      source: 'https://darkestdungeon.wiki.gg/wiki/Abomination_%28Darkest_Dungeon%29'
+    }],
     galleryArt: { src: 'assets/images/darkest-dungeon/abomination-portrait.png', permission: 'user-provided', monogram: 'AB', alt: 'User-provided Darkest Dungeon-style illustration identified as Abomination', credit: 'User-provided image · original source unverified' } },
   { id: "antiquarian", name: "Antiquarian", roleTags: ["Support", "Debuff"],
     requirements: baseGame, guide: null,
@@ -135,7 +146,15 @@ export const heroes = [
     requirements: baseGame, guide: null,
     galleryArt: { src: 'assets/images/darkest-dungeon/bounty-hunter-portrait.png', permission: 'user-provided', monogram: 'BH', alt: 'User-provided Darkest Dungeon-style illustration identified as Bounty Hunter', credit: 'User-provided image · original source unverified' } },
   { id: "crusader", name: "Crusader", roleTags: ["Damage", "Stress relief"],
-    requirements: baseGame, guide: null,
+    role: 'Frontline damage · Stun · Recovery',
+    summary: 'A durable frontline fighter who can strike, stun, protect himself, and provide small health and stress recovery.',
+    preferredPositions: [1, 2], alternativePositions: [3], requirements: baseGame, guide: null,
+    overview: {
+      positions: 'Ranks 1 and 2 keep Smite and Stunning Blow available. Rank 3 is a situational alternative for Holy Lance, which advances the Crusader when used.',
+      strengths: ['Durable frontline fighter with strong melee damage.', 'Can stun front enemies and deal bonus damage to Unholy foes.', 'Offers small party health, stress, and torch recovery.'],
+      weaknesses: ['Very low base Speed means many enemies and allies may act first.', 'Most direct attacks are limited to the front; Holy Lance is needed to reach back ranks.'],
+      beginnerAdvice: 'Start in rank 1 or 2 and use Smite or Stunning Blow against a front threat. If the party is shuffled, Holy Lance can reach deeper enemies and move him forward.'
+    },
     galleryArt: { src: 'assets/images/darkest-dungeon/crusader-portrait.png', permission: 'user-provided', monogram: 'CR', alt: 'User-provided Darkest Dungeon-style illustration identified as Crusader', credit: 'User-provided image · original source unverified' } },
   { id: "grave-robber", name: "Grave Robber", roleTags: ["Damage", "Blight"],
     requirements: baseGame, guide: null,
@@ -159,7 +178,15 @@ export const heroes = [
     requirements: baseGame, guide: null,
     galleryArt: { src: 'assets/images/darkest-dungeon/occultist-portrait.png', permission: 'user-provided', monogram: 'OC', alt: 'User-provided Darkest Dungeon-style illustration identified as Occultist', credit: 'User-provided image · original source unverified' } },
   { id: "plague-doctor", name: "Plague Doctor", roleTags: ["Blight", "Stun", "Healing"],
-    requirements: baseGame, guide: null,
+    role: 'Backline Blight · Stun · Support',
+    summary: 'A backline specialist who controls enemies with Stuns, applies Blight, and supports allies with limited healing and cures.',
+    preferredPositions: [4, 3], alternativePositions: [2], requirements: baseGame, guide: null,
+    overview: {
+      positions: 'Ranks 4 and 3 preserve access to Blinding Gas, Plague Grenade, and Battlefield Medicine. Rank 2 is a situational option for Disorienting Blast or Incision; rank 1 leaves only Incision.',
+      strengths: ['Can Stun both enemy back ranks with Blinding Gas.', 'Blight damage can bypass enemy Protection.', 'Battlefield Medicine heals slightly and cures Bleed and Blight on both target and self.'],
+      weaknesses: ['Low base damage outside damage-over-time effects.', 'Blight is less reliable against resistant enemies.', 'Most skills favor the back ranks, so being pulled forward can restrict options.'],
+      beginnerAdvice: 'Use Blinding Gas to delay dangerous back-line enemies, then apply Blight where it can land. Keep Battlefield Medicine for ongoing Bleed or Blight when possible; its direct heal is small.'
+    },
     galleryArt: { src: 'assets/images/darkest-dungeon/plague-doctor-portrait.png', permission: 'user-provided', monogram: 'PD', alt: 'User-provided Darkest Dungeon-style illustration identified as Plague Doctor', credit: 'User-provided image · original source unverified' } },
   { id: "vestal", name: "Vestal", roleTags: ["Healing", "Stun"],
     requirements: baseGame, guide: null,

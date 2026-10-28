@@ -230,14 +230,62 @@ export const heroAbilities = {
     ['Hands from the Abyss', '2,1', '1,2,3', '-50%', '90', '10%', 'Stun; torch −5.'],
     ["Daemon’s Pull", '4,3,2', '3,4', '-50%', '90', '5%', 'Pull 2; clear corpses.']
   ]},
-  'plague-doctor': { source: 'https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/plague-doctor', skills: [
-    ['Noxious Blast', '4,3,2', '1,2', '-80%', '95', '5%', 'Blight 5/round for 3 rounds; −5 accuracy.'],
-    ['Plague Grenade', '4,3', '3 + 4', '-90%', '95', '0%', 'Blight 4/round for 3 rounds.'],
-    ['Blinding Gas', '4,3', '3 + 4', '-100%', '95', '—', 'Stun.'],
-    ['Incision', '3,2,1', '1,2', '+0%', '85', '5%', 'Bleed 1/round for 3 rounds.'],
-    ['Battlefield Medicine', '4,3', 'One ally', '—', '—', '—', 'Heal 1; cure blight/bleed on target and self.'],
-    ['Emboldening Vapours', 'Any', 'One ally', '—', '—', '—', '+20% damage and +3 speed for 1 battle.'],
-    ['Disorienting Blast', '4,3,2', '2,3,4', '-100%', '95', '—', 'Shuffle target, clear corpses, stun.']
+  'plague-doctor': {
+    source: 'https://darkestdungeon.wiki.gg/wiki/Plague_Doctor_%28Darkest_Dungeon%29',
+    strategySource: 'https://darkestdungeon.wiki.gg/wiki/Plague_Doctor_%28Darkest_Dungeon%29/Strategy',
+    note: 'Values and effects are for Darkest Dungeon I campaign combat skills at level 1. Base effect chances are listed before enemy resistance. These seven skills are part of the base game and do not require DLC or mods; Darkest Dungeon II and Butcher’s Circus changes are excluded.',
+    skillDetails: {
+      'Noxious Blast': {
+        type: 'Ranged attack · Blight',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A ranged vial attack that blights one of the two front enemy ranks and slightly lowers its accuracy.',
+        tacticalNote: 'Use against a front enemy with low Blight resistance; the damage over time can work through Protection.'
+      },
+      'Plague Grenade': {
+        type: 'Ranged attack · Multi-target · Blight',
+        target: { side: 'enemy', mode: 'simultaneous' },
+        description: 'A grenade that hits both back enemy ranks at once and applies Blight to each target.',
+        tacticalNote: 'Use to pressure dangerous back-line enemies together, especially when they are vulnerable to Blight.'
+      },
+      'Blinding Gas': {
+        type: 'Ranged control · Multi-target · Stun',
+        target: { side: 'enemy', mode: 'simultaneous' },
+        description: 'A cloud that can Stun both back enemy ranks at the same time.',
+        tacticalNote: 'Use early in a round to delay dangerous back-line enemies before they act.'
+      },
+      'Incision': {
+        type: 'Melee attack · Bleed',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A close-range cut that damages and Bleeds one of the two front enemy ranks.',
+        tacticalNote: 'Use when the Plague Doctor is pulled forward or when Bleed is more reliable than Blight against the enemy.'
+      },
+      'Battlefield Medicine': {
+        type: 'Ally heal · Cure',
+        target: { side: 'ally', mode: 'choose-one' },
+        description: 'Heals one selected ally for 1 HP and cures Bleed and Blight from both that ally and the Plague Doctor.',
+        tacticalNote: 'Use to stop ongoing Bleed or Blight on the Plague Doctor and an ally; the small heal alone is limited.'
+      },
+      'Emboldening Vapours': {
+        type: 'Ally buff',
+        target: { side: 'ally', mode: 'choose-one' },
+        description: 'Increases one ally’s damage and Speed for the rest of the battle.',
+        tacticalNote: 'Use before a high-value attack or during a longer fight when the buff can improve several turns.'
+      },
+      'Disorienting Blast': {
+        type: 'Ranged control · Stun · Shuffle',
+        target: { side: 'enemy', mode: 'choose-one' },
+        description: 'A ranged blast that can Stun and unpredictably Shuffle one enemy in ranks 2–4, while clearing all corpses.',
+        tacticalNote: 'Use to disrupt a priority enemy or clear corpses when Blinding Gas is unavailable or a single target is preferred.'
+      }
+    },
+    skills: [
+    ['Noxious Blast', '4,3,2', '1,2', '-80%', '95', '5%', 'Blight 5 damage/round for 3 rounds (100% base); −5 ACC for 3 rounds (100% base).'],
+    ['Plague Grenade', '4,3', '3 + 4', '-90%', '95', '0%', 'Blight 4 damage/round for 3 rounds (100% base).'],
+    ['Blinding Gas', '4,3', '3 + 4', '-100%', '95', '—', 'Stun (100% base chance); limited to 3 uses per battle.'],
+    ['Incision', '3,2,1', '1,2', '+0%', '85', '5%', 'Bleed 2 damage/round for 3 rounds (100% base chance).'],
+    ['Battlefield Medicine', '4,3', 'One ally', '—', '—', '—', 'Heal target for 1 HP; cure Bleed and Blight on target and self.'],
+    ['Emboldening Vapours', 'Any', 'One ally', '—', '—', '—', '+20% DMG and +3 SPD for 1 battle; limited to 2 uses per battle.'],
+    ['Disorienting Blast', '4,3,2', '2,3,4', '-100%', '95', '—', 'Shuffle one target (100% base); Stun (100% base); clear all corpses.']
   ]},
   shieldbreaker: { source: 'https://gamefaqs.gamespot.com/pc/804193-darkest-dungeon/faqs/76458/shieldbreaker', skills: [
     ['Pierce', '3,2,1', '1,2,3,4', '-10%', '90', '5%', 'Armor piercing; move forward 1.'],
