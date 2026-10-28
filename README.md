@@ -34,7 +34,9 @@ The project currently uses:
 
 No frameworks, databases, or external dependencies are required.
 
-I decided to keep the project lightweight and use plain HTML, CSS, and JavaScript for now.
+The public application stays lightweight and uses plain HTML, CSS, and
+JavaScript. The React + TypeScript + Vite BossCard pilot is isolated on the
+`experiment/react-boss-card` branch and is not part of the authoritative site.
 
 ## Run Locally
 
@@ -56,6 +58,9 @@ Open your browser at:
 http://127.0.0.1:8001
 
 Press `Ctrl+C` in the terminal to stop the server.
+
+For Python validation, Node.js setup, the isolated React pilot, and safe Git
+workflows, see [Development setup](docs/development.md).
 
 ## Project Structure
 
