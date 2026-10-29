@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Regenerate artwork references without changing gameplay content or copying images."""
 import argparse
+import hashlib
+import struct
 import json
 from collections import Counter
 from pathlib import Path
@@ -37,6 +39,23 @@ def build():
                 slots[slot] = dict(path=path, exists=(ROOT / 'dist' / path).is_file(),
                     currentlyReferenced=True, verifiedAuthentic=verified, verificationSource=evidence,
                     alt=prior.get('alt', f"{record['name']} — Darkest Dungeon I") if prior else f"{record['name']} — Darkest Dungeon I")
+                # Keep verified source metadata and atlas frames through regeneration.
+                for field in ('sourceRelativePath', 'sourceContent', 'sourceSha256', 'imageWidth', 'imageHeight', 'frame'):
+                    if prior and field in prior:
+                        slots[slot][field] = prior[field]
+                if slots[slot]['exists'] and slots[slot].get('sourceSha256'):
+                    asset_bytes = (ROOT / 'dist' / path).read_bytes()
+                    assert hashlib.sha256(asset_bytes).hexdigest() == slots[slot]['sourceSha256'], f'{path}: checksum mismatch'
+                    assert asset_bytes[:8] == b'\x89PNG\r\n\x1a\n', f'{path}: invalid PNG signature'
+                    width, height = struct.unpack('>II', asset_bytes[16:24])
+                    assert (width, height) == (slots[slot]['imageWidth'], slots[slot]['imageHeight']), f'{path}: dimensions mismatch'
+                    frame = slots[slot].get('frame')
+                    if frame:
+                        frame_width, frame_height = frame['width'], frame['height']
+                        assert frame_width > 0 and frame_height > 0 and frame['x'] >= 0 and frame['y'] >= 0
+                        if frame['rotated']:
+                            frame_width, frame_height = frame_height, frame_width
+                        assert frame['x'] + frame_width <= width and frame['y'] + frame_height <= height, f'{path}: atlas bounds mismatch'
             legacy = record.get('assetPath') or ''
             rows.append(dict(category=category, recordId=record['id'], recordName=record['name'],
                 **slots, legacyAssets=[dict(path=legacy, exists=(ROOT / 'dist' / legacy).is_file(),

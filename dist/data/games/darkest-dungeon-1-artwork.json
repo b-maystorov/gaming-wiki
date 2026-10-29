@@ -23,11 +23,23 @@
       "recordName": "Brigand Pounder",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/brigand-pounder.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Brigand Pounder — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/brigand_cannon/anim/brigand_cannon.sprite.defend.png; English localization str_monstername_brigand_cannon_A = Brigand 8 Pounder",
+        "alt": "Brigand Pounder — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/brigand_cannon/anim/brigand_cannon.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "705443b901829ce712fd6eaa37239caa195c3cb4903c62a52addbf26dcb57d6a",
+        "imageWidth": 1342,
+        "imageHeight": 1197,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1273,
+          "height": 1193,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -39,11 +51,23 @@
       "recordName": "Brigand Vvulf",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/brigand-vvulf.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Brigand Vvulf — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/brigand_sapper/anim/brigand_sapper.sprite.defend.png; English localization str_monstername_brigand_sapper_D = Brigand Vvulf",
+        "alt": "Brigand Vvulf — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/brigand_sapper/anim/brigand_sapper.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "158986ccadc0d99faee0d6aee95f6d1fb26b3295b5c073b0f987ea4215075946",
+        "imageWidth": 849,
+        "imageHeight": 654,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 650,
+          "height": 780,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -55,11 +79,23 @@
       "recordName": "The Collector",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/collector.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "The Collector — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/collector/anim/collector.sprite.defend.png; English localization str_monstername_collector_A = The Collector",
+        "alt": "The Collector — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/collector/anim/collector.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "454be1747fca4b9fce8bc76e489970b177dddbe9fe947e941238cd6eb98a394d",
+        "imageWidth": 1235,
+        "imageHeight": 514,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 510,
+          "height": 872,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -103,11 +139,23 @@
       "recordName": "Drowned Crew",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/drowned-crew.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Drowned Crew — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/drowned_captain/anim/drowned_captain.sprite.defend.png; English localization str_monstername_drowned_captain_C = Drowned Crew",
+        "alt": "Drowned Crew — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/drowned_captain/anim/drowned_captain.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "321c8063fa93842d2929ae27b104066488cc001100b128b71c8a19da3748ea46",
+        "imageWidth": 1334,
+        "imageHeight": 1188,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1184,
+          "height": 1265,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -135,11 +183,16 @@
       "recordName": "Flesh",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/flesh.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Flesh — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; campaign/town/buildings/statue/portrait_formless_flesh.png; English localization str_monstername_formless_guard_A = Inchoate Flesh",
+        "alt": "Flesh — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "campaign/town/buildings/statue/portrait_formless_flesh.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "ad470dc0f5492624bac91cf52bbebfbfba992bd0f94530400f2c413c71a62a51",
+        "imageWidth": 85,
+        "imageHeight": 85
       },
       "thumbnail": null,
       "banner": null,
@@ -167,11 +220,23 @@
       "recordName": "Hag",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/hag.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Hag — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/hag/anim/hag.sprite.defend.png; English localization str_monstername_hag = Hag",
+        "alt": "Hag — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/hag/anim/hag.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "7ccad5d1586f3798a3334cb303b0eb99cd88af2083a8de7c987d841f02fe80cf",
+        "imageWidth": 1105,
+        "imageHeight": 775,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 771,
+          "height": 1036,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -183,11 +248,23 @@
       "recordName": "Heart of Darkness",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/heart-of-darkness.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Heart of Darkness — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/ancestor_heart/anim/ancestor_heart.sprite.defend.png; English localization str_monstername_ancestor_heart_D = Heart of Darkness",
+        "alt": "Heart of Darkness — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/ancestor_heart/anim/ancestor_heart.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "9e9b82f55439127302d9bfc37bd178710a1c77ced6bfeac60f4aedffda012d60",
+        "imageWidth": 1343,
+        "imageHeight": 2245,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1339,
+          "height": 2241,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -199,11 +276,23 @@
       "recordName": "Mammoth Cyst",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/mammoth-cyst.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Mammoth Cyst — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cyst/anim/cyst.sprite.defend.png; English localization str_monstername_cyst_D = Mammoth Cyst",
+        "alt": "Mammoth Cyst — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cyst/anim/cyst.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "df2f0e9073e381063fc3453c8f33f837644b3c2c2eef79517e0a4c2b4d4e456c",
+        "imageWidth": 1478,
+        "imageHeight": 1236,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1232,
+          "height": 1409,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -231,11 +320,23 @@
       "recordName": "Necromancer",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/necromancer.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Necromancer — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/necromancer/anim/necromancer.sprite.defend.png; English localization str_monstername_necromancer = Necromancer",
+        "alt": "Necromancer — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/necromancer/anim/necromancer.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "3e568052541d8430c057d61095eb820c60a8115f1b4ace63604ab9989eda6cde",
+        "imageWidth": 957,
+        "imageHeight": 593,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 589,
+          "height": 888,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -247,11 +348,23 @@
       "recordName": "Prophet",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/prophet.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Prophet — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/prophet/anim/prophet.sprite.defend.png; English localization str_monstername_prophet_A = Sonorous Prophet",
+        "alt": "Prophet — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/prophet/anim/prophet.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "5c5b461ec374446fb91430013f1403962c8bbea1ec2aed61c8fa9a4ad13732da",
+        "imageWidth": 1121,
+        "imageHeight": 820,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 816,
+          "height": 1052,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -263,11 +376,23 @@
       "recordName": "Shambler",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/shambler.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Shambler — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/shambler/anim/shambler.sprite.defend.png; English localization str_monstername_shambler_A = Shambler",
+        "alt": "Shambler — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/shambler/anim/shambler.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "43b437fc4ef5bc9ca7d63c7af478e10edceff3e2f790bc806607acb387ac76d0",
+        "imageWidth": 1296,
+        "imageHeight": 1052,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1227,
+          "height": 1048,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -279,11 +404,23 @@
       "recordName": "Shrieker",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/shrieker.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Shrieker — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/crow/anim/crow.sprite.defend.png; English localization str_monstername_crow_A = Callous Shrieker",
+        "alt": "Shrieker — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/crow/anim/crow.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "9b4fec181a641b4c1188cc2ca1b1f7786f9b9e7a85d9c91074b7fa5edaf6c4f5",
+        "imageWidth": 1184,
+        "imageHeight": 840,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1115,
+          "height": 836,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -295,11 +432,23 @@
       "recordName": "Shuffling Horror",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/shuffling-horror.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Shuffling Horror — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/shuffler/anim/shuffler.sprite.defend.png; English localization str_monstername_shuffler_D = Shuffling Horror",
+        "alt": "Shuffling Horror — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/shuffler/anim/shuffler.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "05da24a070f740ddd5730a811c485fa604fa95b774b58b91b63176eab448018f",
+        "imageWidth": 1296,
+        "imageHeight": 1064,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1227,
+          "height": 1060,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -311,11 +460,23 @@
       "recordName": "Siren",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/siren.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Siren — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/siren/anim/siren.sprite.defend.png; English localization str_monstername_siren_A = Siren",
+        "alt": "Siren — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/siren/anim/siren.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "109494095992c4ce53c62476d1bde7acc726de1ef8017840ae6ff586417b8917",
+        "imageWidth": 869,
+        "imageHeight": 690,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 686,
+          "height": 800,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -343,11 +504,23 @@
       "recordName": "Swine Prince",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/swine-prince.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Swine Prince — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/swine_prince/anim/swine_prince.sprite.defend.png; English localization str_monstername_swine_prince = Swine Prince",
+        "alt": "Swine Prince — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/swine_prince/anim/swine_prince.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "74b1553f9b424504655422b5b673a955e139a7c44ea245d13a61a2e3c82b2c02",
+        "imageWidth": 1531,
+        "imageHeight": 1293,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 1462,
+          "height": 1289,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -359,11 +532,23 @@
       "recordName": "Templar Impaler",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/templar-impaler.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Templar Impaler — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/templar_melee_mb/anim/templar_melee_mb.sprite.defend.png; English localization str_monstername_templar_melee_mb_D = Templar Impaler",
+        "alt": "Templar Impaler — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/templar_melee_mb/anim/templar_melee_mb.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "ec8d6f548de55e06ec6340ed5a8c602985a2f79c3f7e32d831e68b72d45c18a5",
+        "imageWidth": 1086,
+        "imageHeight": 693,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 689,
+          "height": 1017,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -375,11 +560,23 @@
       "recordName": "Templar Warlord",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/bosses/templar-warlord.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Templar Warlord — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/templar_ranged_mb/anim/templar_ranged_mb.sprite.defend.png; English localization str_monstername_templar_ranged_mb_D = Templar Warlord",
+        "alt": "Templar Warlord — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/templar_ranged_mb/anim/templar_ranged_mb.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c71401efd78bc4fdeb601fa589a752e9508f0fe76b0081b99386f831806af006",
+        "imageWidth": 1174,
+        "imageHeight": 693,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 689,
+          "height": 1105,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -423,11 +620,23 @@
       "recordName": "Alchemy Table",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/alchemy-table.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Alchemy Table — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/alchemy_table/alchemy_table.png; English localization str_curio_title_alchemy_table = Alchemy Table",
+        "alt": "Alchemy Table — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/alchemy_table/alchemy_table.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f0617d7dbb4d97d05615a9e9575c051a123f9d183a4e5197a9490e79326fabf1",
+        "imageWidth": 2170,
+        "imageHeight": 536,
+        "frame": {
+          "x": 785,
+          "y": 2,
+          "width": 677,
+          "height": 532,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -439,11 +648,23 @@
       "recordName": "Altar of Light",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/altar-of-light.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Altar of Light — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/altar_of_light/altar_of_light.png; English localization str_curio_title_altar_of_light = Altar of Light",
+        "alt": "Altar of Light — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/altar_of_light/altar_of_light.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "7c421d847e35d4cf7e94d1e7487868b2b20a0b7b73395ae4c0c4e7f07d0a58bd",
+        "imageWidth": 883,
+        "imageHeight": 674,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 282,
+          "height": 670,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -455,11 +676,23 @@
       "recordName": "Barnacle-Crusted Chest",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/barnacle-chest.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Barnacle-Crusted Chest — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/barnacle_crusted_chest/barnacle_crusted_chest.png; English localization str_curio_title_barnacle_crusted_chest = Barnacle Crusted Chest",
+        "alt": "Barnacle-Crusted Chest — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/barnacle_crusted_chest/barnacle_crusted_chest.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "5d4f8bc43442d10b073f45af0e82056888e10c37b69873d149eba5bb1012f129",
+        "imageWidth": 1095,
+        "imageHeight": 336,
+        "frame": {
+          "x": 379,
+          "y": 18,
+          "width": 358,
+          "height": 316,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -471,11 +704,23 @@
       "recordName": "Bas-Relief",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/bas-relief.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bas-Relief — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/bas_relief/bas_relief.png; English localization str_curio_title_bas_relief = Bas-Relief",
+        "alt": "Bas-Relief — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/bas_relief/bas_relief.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "93d0959e61d2e91ba68384cc64fa715270204205d41f8e1f9276ff36829f7afb",
+        "imageWidth": 1832,
+        "imageHeight": 608,
+        "frame": {
+          "x": 666,
+          "y": 21,
+          "width": 610,
+          "height": 585,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -487,11 +732,23 @@
       "recordName": "Bookshelf",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/bookshelf.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bookshelf — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/bookshelf/bookshelf.png; English localization str_curio_title_bookshelf = Bookshelf",
+        "alt": "Bookshelf — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/bookshelf/bookshelf.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c1fd902089c6185750e569adf88c407409ca77ba7df0abd2bf9aee392041b5ed",
+        "imageWidth": 2056,
+        "imageHeight": 683,
+        "frame": {
+          "x": 751,
+          "y": 50,
+          "width": 631,
+          "height": 730,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -503,11 +760,23 @@
       "recordName": "Dinner Cart",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/dinner-cart.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Dinner Cart — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/dinner_cart/dinner_cart.png; English localization str_curio_title_dinner_cart = Dinner Cart",
+        "alt": "Dinner Cart — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/dinner_cart/dinner_cart.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "52c684d24910fb55406c9e56990e5ae6bc4deed9cf78fcc1301a4e47c4ff77b1",
+        "imageWidth": 2213,
+        "imageHeight": 629,
+        "frame": {
+          "x": 1510,
+          "y": 9,
+          "width": 701,
+          "height": 618,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -519,11 +788,23 @@
       "recordName": "Eerie Spiderweb",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/eerie-spiderweb.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Eerie Spiderweb — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/cosmic_spiderweb/cosmic_spiderweb.png; English localization str_curio_title_cosmic_spiderweb = Eerie Spiderweb",
+        "alt": "Eerie Spiderweb — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/cosmic_spiderweb/cosmic_spiderweb.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "a89075f9dee1b85bf4070f5e3473c19524e8eb17aaa4bb6b657d918d3e2014de",
+        "imageWidth": 1589,
+        "imageHeight": 679,
+        "frame": {
+          "x": 540,
+          "y": 2,
+          "width": 527,
+          "height": 675,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -535,11 +816,23 @@
       "recordName": "Fish Carcass",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/fish-carcass.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Fish Carcass — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/giant_fish_carcass/giant_fish_carcass.png; English localization str_curio_title_giant_fish_carcass = Fish Carcass",
+        "alt": "Fish Carcass — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/giant_fish_carcass/giant_fish_carcass.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "b1efc7294edbd9fe7834ee3275f0152bc627bc8c5cbb8bf8ffb0c5a11ce6a718",
+        "imageWidth": 577,
+        "imageHeight": 1306,
+        "frame": {
+          "x": 2,
+          "y": 384,
+          "width": 553,
+          "height": 452,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -551,11 +844,23 @@
       "recordName": "Holy Fountain",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/holy-fountain.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Holy Fountain — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/holy_fountain/holy_fountain.png; English localization str_curio_title_holy_fountain = Holy Fountain",
+        "alt": "Holy Fountain — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/holy_fountain/holy_fountain.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f344dc48fdd3658b4601848315749a43862dc9b935369bfc4e64aef07091eb08",
+        "imageWidth": 1667,
+        "imageHeight": 346,
+        "frame": {
+          "x": 2,
+          "y": 35,
+          "width": 309,
+          "height": 672,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -567,11 +872,23 @@
       "recordName": "Iron Maiden",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/iron-maiden.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Iron Maiden — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/iron_maiden/iron_maiden.png; English localization str_curio_title_iron_maiden = Iron Maiden",
+        "alt": "Iron Maiden — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/iron_maiden/iron_maiden.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "571cb4184ccbb8427570308d7a5ea95ef25ad92bcc621e2ca9379fb18e015727",
+        "imageWidth": 1226,
+        "imageHeight": 786,
+        "frame": {
+          "x": 459,
+          "y": 345,
+          "width": 439,
+          "height": 765,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -583,11 +900,23 @@
       "recordName": "Moonshine Barrel",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/moonshine-barrel.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Moonshine Barrel — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/moonshine_barrel/moonshine_barrel.png; English localization str_curio_title_moonshine_barrel = Moonshine Barrel",
+        "alt": "Moonshine Barrel — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/moonshine_barrel/moonshine_barrel.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "3cf37b05bd632995882f64ece5c1c3799c407bb97930e20305fba34fede28b6e",
+        "imageWidth": 1313,
+        "imageHeight": 484,
+        "frame": {
+          "x": 491,
+          "y": 17,
+          "width": 465,
+          "height": 476,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -599,11 +928,23 @@
       "recordName": "Mummified Remains",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/mummified-remains.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Mummified Remains — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/mummified_remains/mummified_remains.png; English localization str_curio_title_mummified_remains = Mummified Remains",
+        "alt": "Mummified Remains — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/mummified_remains/mummified_remains.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f65d6c4239759021577806899e03fa89a5e6a27bb1e202fcd6236870389b6870",
+        "imageWidth": 597,
+        "imageHeight": 613,
+        "frame": {
+          "x": 2,
+          "y": 181,
+          "width": 569,
+          "height": 198,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -647,11 +988,23 @@
       "recordName": "Shallow Grave",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/curios/shallow-grave.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Shallow Grave — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; props/shared/curios/shallow_grave/shallow_grave.png; English localization str_curio_title_shallow_grave = Shallow Grave",
+        "alt": "Shallow Grave — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "props/shared/curios/shallow_grave/shallow_grave.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "eee5069689b432da04ce0b5609aafc29fce86cfeb498746d0e562ec5999f7896",
+        "imageWidth": 1734,
+        "imageHeight": 474,
+        "frame": {
+          "x": 696,
+          "y": 2,
+          "width": 542,
+          "height": 470,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -679,11 +1032,23 @@
       "recordName": "Antibody",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/antibody.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Antibody — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cell_battle/anim/cell_battle.sprite.defend.png; English localization str_monstername_cell_battle_D = Antibody",
+        "alt": "Antibody — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cell_battle/anim/cell_battle.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c382be201e97da0dd709b891edabb7326cdd280873237054f66573a8b1faaab5",
+        "imageWidth": 762,
+        "imageHeight": 457,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 453,
+          "height": 693,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -695,11 +1060,23 @@
       "recordName": "Ascended Brawler",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/ascended-brawler.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Ascended Brawler — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cultist_warlord/anim/cultist_warlord.sprite.defend.png; English localization str_monstername_cultist_warlord_D = Ascended Brawler",
+        "alt": "Ascended Brawler — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cultist_warlord/anim/cultist_warlord.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "9d84d7e32ce8ecb198005f39f1e57dae78e9d31f1c27e89ab45f96cd382c0379",
+        "imageWidth": 677,
+        "imageHeight": 394,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 390,
+          "height": 608,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -711,11 +1088,23 @@
       "recordName": "Ascended Witch",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/ascended-witch.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Ascended Witch — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cultist_harpy/anim/cultist_harpy.sprite.defend.png; English localization str_monstername_cultist_harpy_D = Ascended Witch",
+        "alt": "Ascended Witch — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cultist_harpy/anim/cultist_harpy.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "60dfe585d91b892848029cab4b1ad9bd4deb8587dab3d5f94672edaf0f6a46ae",
+        "imageWidth": 692,
+        "imageHeight": 411,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 407,
+          "height": 623,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -727,11 +1116,23 @@
       "recordName": "Bone Arbalist",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/bone-arbalist.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bone Arbalist — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/skeleton_arbalist/anim/skeleton_arbalist.sprite.defend.png; English localization str_monstername_skeleton_arbalist_A = Bone Arbalist",
+        "alt": "Bone Arbalist — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/skeleton_arbalist/anim/skeleton_arbalist.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "65f6ed150a00a3596e16857060f623a2cc1a9cd60cb8b7ca794937c36b4118a7",
+        "imageWidth": 671,
+        "imageHeight": 381,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 377,
+          "height": 602,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -743,11 +1144,23 @@
       "recordName": "Bone Bearer",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/bone-bearer.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bone Bearer — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/skeleton_bearer/anim/skeleton_bearer.sprite.defend.png; English localization str_monstername_skeleton_bearer_A = Bone Bearer",
+        "alt": "Bone Bearer — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/skeleton_bearer/anim/skeleton_bearer.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "b66a3cd20a0d1eb5d4189632d1625667bc948e88e5ec38e19d38473c2f56a094",
+        "imageWidth": 1123,
+        "imageHeight": 474,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 470,
+          "height": 1054,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -759,11 +1172,23 @@
       "recordName": "Bone Captain",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/bone-captain.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bone Captain — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/skeleton_captain/anim/skeleton_captain.sprite.defend.png; English localization str_monstername_skeleton_captain_A = Bone Captain",
+        "alt": "Bone Captain — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/skeleton_captain/anim/skeleton_captain.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "40b7f211cb3f179eb224aec0e583ef9ebd7995ccb246d38cc67265f3d41ec452",
+        "imageWidth": 897,
+        "imageHeight": 742,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 828,
+          "height": 738,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -775,11 +1200,23 @@
       "recordName": "Bone Courtier",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/bone-courtier.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bone Courtier — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/skeleton_courtier/anim/skeleton_courtier.sprite.defend.png; English localization str_monstername_skeleton_courtier_A = Bone Courtier",
+        "alt": "Bone Courtier — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/skeleton_courtier/anim/skeleton_courtier.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "e656fcbe40451b0b6153871744d8c015e70c71cd29c30e430cda4b476c635673",
+        "imageWidth": 595,
+        "imageHeight": 361,
+        "frame": {
+          "x": 2,
+          "y": 27,
+          "width": 332,
+          "height": 526,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -791,11 +1228,23 @@
       "recordName": "Bone Defender",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/bone-defender.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bone Defender — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/skeleton_defender/anim/skeleton_defender.sprite.defend.png; English localization str_monstername_skeleton_defender_A = Bone Defender",
+        "alt": "Bone Defender — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/skeleton_defender/anim/skeleton_defender.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "534515cd3668b67ebb9223bddf37e9012159176d06a645be13abec89134abf8d",
+        "imageWidth": 689,
+        "imageHeight": 503,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 499,
+          "height": 620,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -807,11 +1256,23 @@
       "recordName": "Bone Soldier",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/bone-soldier.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bone Soldier — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/skeleton_militia/anim/skeleton_militia.sprite.defend.png; English localization str_monstername_skeleton_militia_A = Bone Soldier",
+        "alt": "Bone Soldier — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/skeleton_militia/anim/skeleton_militia.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "59c63b6b26de0bd5a2289b35987bdda1bf2a9af484ddbfbbdf7dd2c71456a172",
+        "imageWidth": 577,
+        "imageHeight": 361,
+        "frame": {
+          "x": 2,
+          "y": 24,
+          "width": 335,
+          "height": 508,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -823,11 +1284,23 @@
       "recordName": "Bone Spearman",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/bone-spearman.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bone Spearman — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/skeleton_spear/anim/skeleton_spear.sprite.defend.png; English localization str_monstername_skeleton_spear_A = Bone Spearman",
+        "alt": "Bone Spearman — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/skeleton_spear/anim/skeleton_spear.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "0813c2c0e0386104ddc582e606ea3ce19db7055d93fda106be002a78d1db3ced",
+        "imageWidth": 688,
+        "imageHeight": 468,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 464,
+          "height": 619,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -839,11 +1312,23 @@
       "recordName": "Brigand Bloodletter",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-bloodletter.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Brigand Bloodletter — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/brigand_blood/anim/brigand_blood.sprite.defend.png; English localization str_monstername_brigand_blood_A = Brigand Bloodletter",
+        "alt": "Brigand Bloodletter — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/brigand_blood/anim/brigand_blood.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "8410d44bf1af237a47d60d3b476fb37b816755058c736b51d43de93e4740b04d",
+        "imageWidth": 730,
+        "imageHeight": 615,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 611,
+          "height": 661,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -855,11 +1340,23 @@
       "recordName": "Brigand Cutthroat",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-cutthroat.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Brigand Cutthroat — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/brigand_cutthroat/anim/brigand_cutthroat.sprite.defend.png; English localization str_monstername_brigand_cutthroat_A = Brigand Cutthroat",
+        "alt": "Brigand Cutthroat — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/brigand_cutthroat/anim/brigand_cutthroat.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "039f1c648dad24136932280a2aa9f2ed7150cd889f6129ed1ce6dafd7527bc29",
+        "imageWidth": 662,
+        "imageHeight": 416,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 412,
+          "height": 593,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -871,11 +1368,23 @@
       "recordName": "Brigand Fusilier",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-fusilier.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Brigand Fusilier — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/brigand_fusilier/anim/brigand_fusilier.sprite.defend.png; English localization str_monstername_brigand_fusilier_A = Brigand Fusilier",
+        "alt": "Brigand Fusilier — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/brigand_fusilier/anim/brigand_fusilier.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "78820e54bbf6818034a6d2c5bd415a4aaa4b47732e864fdcbc7d754f593f4668",
+        "imageWidth": 621,
+        "imageHeight": 372,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 368,
+          "height": 552,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -887,11 +1396,23 @@
       "recordName": "Brigand Raider",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-raider.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Brigand Raider — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/brigand_raider/anim/brigand_raider.sprite.defend.png; English localization str_monstername_brigand_raider_D = Brigand Raider",
+        "alt": "Brigand Raider — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/brigand_raider/anim/brigand_raider.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "3bfddb4d37abc5f321b7c0bf1c8c63ec66efcb8d74aaaf3b8af20ae4f8abd8d1",
+        "imageWidth": 662,
+        "imageHeight": 416,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 412,
+          "height": 593,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -903,11 +1424,23 @@
       "recordName": "Carrion Eater",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/carrion-eater.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Carrion Eater — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/carrion_eater/anim/carrion_eater.sprite.defend.png; English localization str_monstername_carrion_eater_A = Carrion Eater",
+        "alt": "Carrion Eater — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/carrion_eater/anim/carrion_eater.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "41d111628fedb84f3fa1709f84ae265dfa0100020d10a9c1b6f156b2e545183c",
+        "imageWidth": 696,
+        "imageHeight": 440,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 436,
+          "height": 627,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -951,11 +1484,23 @@
       "recordName": "Crone",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/crone.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Crone — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/crone/anim/crone.sprite.defend.png; English localization str_monstername_crone_A = Crone",
+        "alt": "Crone — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/crone/anim/crone.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "1d82c3be3fd03b167004ad3111b063a15eb7de9a618060a278f949c6de345337",
+        "imageWidth": 637,
+        "imageHeight": 444,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 440,
+          "height": 568,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -983,11 +1528,23 @@
       "recordName": "Cultist Acolyte",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/cultist-acolyte.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Cultist Acolyte — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cultist_witch/anim/cultist_witch.sprite.defend.png; English localization str_monstername_cultist_witch_A = Cultist Acolyte",
+        "alt": "Cultist Acolyte — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cultist_witch/anim/cultist_witch.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "34bc113d93d0ef02166f9706860107a5fcc873f3d6d046101798e3a9c14925c8",
+        "imageWidth": 692,
+        "imageHeight": 411,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 407,
+          "height": 623,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -999,11 +1556,23 @@
       "recordName": "Cultist Brawler",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/cultist-brawler.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Cultist Brawler — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cultist_brawler/anim/cultist_brawler.sprite.defend.png; English localization str_monstername_cultist_brawler_A = Cultist Brawler",
+        "alt": "Cultist Brawler — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cultist_brawler/anim/cultist_brawler.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "4841f66e9ca84809afd300b0f8b471c6a4e330316c27c74370ffca2909fee662",
+        "imageWidth": 677,
+        "imageHeight": 394,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 390,
+          "height": 608,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1015,11 +1584,23 @@
       "recordName": "Cultist Priest",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/cultist-priest.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Cultist Priest — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cultist_shrouded/anim/cultist_shrouded.sprite.defend.png; English localization str_monstername_cultist_shrouded_D = Cultist Priest",
+        "alt": "Cultist Priest — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cultist_shrouded/anim/cultist_shrouded.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f7d0cbc9b75b9922eff55252bf739d46ac3a57c65affe9333e05a7a17b467224",
+        "imageWidth": 685,
+        "imageHeight": 510,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 506,
+          "height": 616,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1047,11 +1628,23 @@
       "recordName": "Deep Stinger",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/deep-stinger.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Deep Stinger — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/jellyfish/anim/jellyfish.sprite.defend.png; English localization str_monstername_jellyfish_A = Deep Stinger",
+        "alt": "Deep Stinger — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/jellyfish/anim/jellyfish.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "451260aec5ad9c7df51ff43f22a337f856502aebff2ded053c969d47c2954cc8",
+        "imageWidth": 746,
+        "imageHeight": 367,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 363,
+          "height": 677,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1063,11 +1656,23 @@
       "recordName": "Defensive Growth",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/defensive-growth.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Defensive Growth — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/totem_guard/anim/totem_guard.sprite.defend.png; English localization str_monstername_totem_guard_D = Defensive Growth",
+        "alt": "Defensive Growth — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/totem_guard/anim/totem_guard.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "d3bde6366e8a5590cc2c0a7becfc294cac2ed3fbfc9ea38051bcd32e3aaabf99",
+        "imageWidth": 797,
+        "imageHeight": 475,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 471,
+          "height": 728,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1079,11 +1684,23 @@
       "recordName": "Drowned Thrall",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/drowned-thrall.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Drowned Thrall — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/bloated_corpse/anim/bloated_corpse.sprite.defend.png; English localization str_monstername_bloated_corpse_A = Drowned Thrall",
+        "alt": "Drowned Thrall — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/bloated_corpse/anim/bloated_corpse.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "dd40292c3e5236c154773e0eabe3e13961045c50fd4ac555622536d735e15e31",
+        "imageWidth": 668,
+        "imageHeight": 450,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 446,
+          "height": 599,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1095,11 +1712,23 @@
       "recordName": "Ectoplasm",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/ectoplasm.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Ectoplasm — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/ectoplasm/anim/ectoplasm.sprite.defend.png; English localization str_monstername_ectoplasm_A = Ectoplasm",
+        "alt": "Ectoplasm — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/ectoplasm/anim/ectoplasm.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "a574b3baa28c85e8cba9ff390f68ab202f9649415fa6057340ca750fee81c7ca",
+        "imageWidth": 828,
+        "imageHeight": 578,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 574,
+          "height": 759,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1143,11 +1772,23 @@
       "recordName": "Flesh Hound",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/flesh-hound.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Flesh Hound — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/errant_flesh_dog/anim/errant_flesh_dog.sprite.defend.png; English localization str_monstername_errant_flesh_dog_D = Flesh Hound",
+        "alt": "Flesh Hound — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/errant_flesh_dog/anim/errant_flesh_dog.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "7fd7035377c572f0bff22a227c5e7269c4b07e6db3719afada185257ffc8df4e",
+        "imageWidth": 527,
+        "imageHeight": 435,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 431,
+          "height": 458,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1175,11 +1816,23 @@
       "recordName": "Fungal Artillery",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/fungal-artillery.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Fungal Artillery — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/fungal_artillery/anim/fungal_artillery.sprite.defend.png; English localization str_monstername_fungal_artillery_A = Fungal Artillery",
+        "alt": "Fungal Artillery — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/fungal_artillery/anim/fungal_artillery.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "5b926ff2c5776fcdf59c2112d8114bfbcc137f19e279e5cb528029c805d055e9",
+        "imageWidth": 500,
+        "imageHeight": 369,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 431,
+          "height": 365,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1191,11 +1844,23 @@
       "recordName": "Fungal Scratcher",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/fungal-scratcher.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Fungal Scratcher — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/fungal_bloat/anim/fungal_bloat.sprite.defend.png; English localization str_monstername_fungal_bloat_A = Fungal Scratcher",
+        "alt": "Fungal Scratcher — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/fungal_bloat/anim/fungal_bloat.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f75ef167e34e56573edf570028cd5a09d3953ac3505428ffe2e5d4a452aaf83d",
+        "imageWidth": 672,
+        "imageHeight": 476,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 472,
+          "height": 603,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1207,11 +1872,23 @@
       "recordName": "Gargoyle",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/gargoyle.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Gargoyle — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/gargoyle/anim/gargoyle.sprite.defend.png; English localization str_monstername_gargoyle_A = Gargoyle",
+        "alt": "Gargoyle — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/gargoyle/anim/gargoyle.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "bf8a75948b9dde0936991b054d5619da415cb8984b2643af484781f262bf5dea",
+        "imageWidth": 754,
+        "imageHeight": 693,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 685,
+          "height": 689,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1239,11 +1916,23 @@
       "recordName": "Ghoul",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/ghoul.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Ghoul — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/ghoul/anim/ghoul.sprite.defend.png; English localization str_monstername_ghoul_A = Ghoul",
+        "alt": "Ghoul — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/ghoul/anim/ghoul.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "eb85a6ffab8b116577f80faf114923618bf17ec4942076888a7b65f4516905f7",
+        "imageWidth": 744,
+        "imageHeight": 537,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 533,
+          "height": 675,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1255,11 +1944,23 @@
       "recordName": "Large Carrion Eater",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/large-carrion-eater.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Large Carrion Eater — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/carrion_eater_big/anim/carrion_eater_big.sprite.defend.png; English localization str_monstername_carrion_eater_big_A = Large Carrion Eater",
+        "alt": "Large Carrion Eater — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/carrion_eater_big/anim/carrion_eater_big.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "4f74fc9f0c6d30334cbe103f08f096459863ab146c134417559d929078102c6d",
+        "imageWidth": 829,
+        "imageHeight": 721,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 760,
+          "height": 717,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1271,11 +1972,23 @@
       "recordName": "Large Ectoplasm",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/large-ectoplasm.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Large Ectoplasm — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/ectoplasm_large/anim/ectoplasm_large.sprite.defend.png; English localization str_monstername_ectoplasm_large_A = Large Ectoplasm",
+        "alt": "Large Ectoplasm — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/ectoplasm_large/anim/ectoplasm_large.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "5fcc2ba24c3c6a29ae9273606656a0c7aa60ab05c8b9f27967f93913b76c7a31",
+        "imageWidth": 992,
+        "imageHeight": 814,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 810,
+          "height": 923,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1287,11 +2000,23 @@
       "recordName": "Madman",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/madman.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Madman — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/madman/anim/madman.sprite.defend.png; English localization str_monstername_madman_A = Madman",
+        "alt": "Madman — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/madman/anim/madman.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "5a35e4ff74b1a907c6d1fa2cad442b9fe4ac8c60e311b46fb0c1f3a5efcc17df",
+        "imageWidth": 533,
+        "imageHeight": 394,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 390,
+          "height": 464,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1303,11 +2028,23 @@
       "recordName": "Maggot",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/maggot.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Maggot — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/maggot/anim/maggot.sprite.defend.png; English localization str_monstername_maggot_A = Maggot",
+        "alt": "Maggot — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/maggot/anim/maggot.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c50f94914a0b96fbc2482883c0275097c09528da30bf59a3b46ab86a562a2e58",
+        "imageWidth": 361,
+        "imageHeight": 440,
+        "frame": {
+          "x": 2,
+          "y": 67,
+          "width": 371,
+          "height": 304,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1319,11 +2056,23 @@
       "recordName": "Malignant Growth",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/malignant-growth.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Malignant Growth — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/totem_attack/anim/totem_attack.sprite.defend.png; English localization str_monstername_totem_attack_D = Malignant Growth",
+        "alt": "Malignant Growth — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/totem_attack/anim/totem_attack.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "8fe4f772863f38e15cbd1b826ac9824bb81eb7c7cbb47a9d4148be170a8c7665",
+        "imageWidth": 623,
+        "imageHeight": 432,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 428,
+          "height": 554,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1351,11 +2100,23 @@
       "recordName": "Pelagic Grouper",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/pelagic-grouper.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Pelagic Grouper — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/fishman_harpoon/anim/fishman_harpoon.sprite.defend.png; English localization str_monstername_fishman_harpoon_A = Pelagic Grouper",
+        "alt": "Pelagic Grouper — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/fishman_harpoon/anim/fishman_harpoon.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "fc68af03de80963cfd0b495896506ecfd0bb617b010c070485c2636e54a670fc",
+        "imageWidth": 873,
+        "imageHeight": 592,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 588,
+          "height": 804,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1367,11 +2128,23 @@
       "recordName": "Pelagic Guardian",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/pelagic-guardian.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Pelagic Guardian — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/octotank/anim/octotank.sprite.defend.png; English localization str_monstername_octotank_A = Pelagic Guardian",
+        "alt": "Pelagic Guardian — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/octotank/anim/octotank.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f544eb2e37fdbc8cba25724314885622f3090dfece09cb0d39f3cb582583f51c",
+        "imageWidth": 708,
+        "imageHeight": 627,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 639,
+          "height": 623,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1383,11 +2156,23 @@
       "recordName": "Pelagic Shaman",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/pelagic-shaman.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Pelagic Shaman — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/fishman_shaman/anim/fishman_shaman.sprite.defend.png; English localization str_monstername_fishman_shaman_A = Pelagic Shaman",
+        "alt": "Pelagic Shaman — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/fishman_shaman/anim/fishman_shaman.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "e1b27fed36576a9672b50fb038c25838de58e2519d20da88ad13d83a12872602",
+        "imageWidth": 838,
+        "imageHeight": 671,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 667,
+          "height": 769,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1415,11 +2200,23 @@
       "recordName": "Polyp",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/polyp.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Polyp — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/errant_flesh_bat/anim/errant_flesh_bat.sprite.defend.png; English localization str_monstername_errant_flesh_bat_D = Polyp",
+        "alt": "Polyp — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/errant_flesh_bat/anim/errant_flesh_bat.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "1d662d583f77afc5b85d9685c0387f6699f6fbfcf0cdc3a76ab1f033fa2176e8",
+        "imageWidth": 638,
+        "imageHeight": 573,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 569,
+          "height": 569,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1431,11 +2228,23 @@
       "recordName": "Rabid Gnasher",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/rabid-gnasher.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Rabid Gnasher — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/rabid_dog/anim/rabid_dog.sprite.defend.png; English localization str_monstername_rabid_dog_A = Rabid Gnasher",
+        "alt": "Rabid Gnasher — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/rabid_dog/anim/rabid_dog.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "bc2af73b14b91af0b5f246000f09fe353baffbb6ed58a8346286404c80e0c1a0",
+        "imageWidth": 760,
+        "imageHeight": 263,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 397,
+          "height": 259,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1447,11 +2256,23 @@
       "recordName": "Rapturous Cultist",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/rapturous-cultist.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Rapturous Cultist — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cultist_orgiastic/anim/cultist_orgiastic.sprite.defend.png; English localization str_monstername_cultist_orgiastic_D = Rapturous Cultist",
+        "alt": "Rapturous Cultist — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cultist_orgiastic/anim/cultist_orgiastic.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "7958399f9087fefcd1ac693ded93ff1231af9a69d380836bd046f3e406c37612",
+        "imageWidth": 353,
+        "imageHeight": 513,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 284,
+          "height": 509,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1479,11 +2300,23 @@
       "recordName": "Sea Maggot",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/sea-maggot.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Sea Maggot — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/snail_urchin/anim/snail_urchin.sprite.defend.png; English localization str_monstername_snail_urchin_A = Sea Maggot",
+        "alt": "Sea Maggot — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/snail_urchin/anim/snail_urchin.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "ba96417af6dd29478828005e6722d677f2f496f6cc77c0af93b760d99a5bcb06",
+        "imageWidth": 522,
+        "imageHeight": 361,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 453,
+          "height": 357,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1495,11 +2328,23 @@
       "recordName": "Spitter",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/spitter.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Spitter — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/spider_spitter/anim/spider_spitter.sprite.defend.png; English localization str_monstername_spider_spitter_A = Spitter",
+        "alt": "Spitter — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/spider_spitter/anim/spider_spitter.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "a03083221e250fafb39ce56ccce764a5f13592bdf7683371613cd501dd932a82",
+        "imageWidth": 632,
+        "imageHeight": 443,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 563,
+          "height": 439,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1527,11 +2372,23 @@
       "recordName": "Swine Chopper",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/swine-chopper.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Swine Chopper — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/swine_reaver/anim/swine_reaver.sprite.defend.png; English localization str_monstername_swine_reaver_A = Swine Chopper",
+        "alt": "Swine Chopper — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/swine_reaver/anim/swine_reaver.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "1c9665e8398b8a1c38b259b51682aac0c3095c57a3f99ab5b829e498280e2c6c",
+        "imageWidth": 861,
+        "imageHeight": 511,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 507,
+          "height": 792,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1543,11 +2400,23 @@
       "recordName": "Swine Drummer",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/swine-drummer.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Swine Drummer — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/swine_drummer/anim/swine_drummer.sprite.defend.png; English localization str_monstername_swine_drummer_A = Swine Drummer",
+        "alt": "Swine Drummer — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/swine_drummer/anim/swine_drummer.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "302a1d9e3dbf0a82f03ae01ed852ae873c21db07d511526c37474b359ab2a7c5",
+        "imageWidth": 665,
+        "imageHeight": 516,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 512,
+          "height": 596,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1559,11 +2428,23 @@
       "recordName": "Swine Skiver",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/swine-skiver.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Swine Skiver — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/swine_skiver/anim/swine_skiver.sprite.defend.png; English localization str_monstername_swine_skiver_A = Swine Skiver",
+        "alt": "Swine Skiver — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/swine_skiver/anim/swine_skiver.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "4bce0f3ac93aac152c682824d0d2e6b1efa58a8f28160380ca751ddd8763cbbd",
+        "imageWidth": 710,
+        "imageHeight": 601,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 597,
+          "height": 641,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1575,11 +2456,23 @@
       "recordName": "Swine Slasher",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/swine-slasher.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Swine Slasher — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/swine_slasher/anim/swine_slasher.sprite.defend.png; English localization str_monstername_swine_slasher_A = Swine Slasher",
+        "alt": "Swine Slasher — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/swine_slasher/anim/swine_slasher.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "79cb0cfb712cce4f755d1a7a9f7f0221953e0fc38fd5b5fd0972ecf4913c09f6",
+        "imageWidth": 622,
+        "imageHeight": 368,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 364,
+          "height": 553,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1591,11 +2484,23 @@
       "recordName": "Swine Wretch",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/swine-wretch.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Swine Wretch — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/swine_wretch/anim/swine_wretch.sprite.defend.png; English localization str_monstername_swine_wretch_A = Swine Wretch",
+        "alt": "Swine Wretch — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/swine_wretch/anim/swine_wretch.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "dd2a080e0379b4d3621e8042c6d8daab41ac5c2ad2d93b9d526cfd354e243a03",
+        "imageWidth": 361,
+        "imageHeight": 302,
+        "frame": {
+          "x": 2,
+          "y": 67,
+          "width": 322,
+          "height": 233,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1607,11 +2512,23 @@
       "recordName": "Swinetaur",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/swinetaur.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Swinetaur — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/swinetaur/anim/swinetaur.sprite.defend.png; English localization str_monstername_swinetaur_A = Swinetaur",
+        "alt": "Swinetaur — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/swinetaur/anim/swinetaur.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f54bff6b779ccb2c44c2ae7ee0722ddad8cae02c82ce75aa37e3b025f1055ce8",
+        "imageWidth": 928,
+        "imageHeight": 845,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 859,
+          "height": 841,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1639,11 +2556,23 @@
       "recordName": "Templar Gladiator",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/templar-gladiator.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Templar Gladiator — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/templar_melee/anim/templar_melee.sprite.defend.png; English localization str_monstername_templar_melee_D = Templar Gladiator",
+        "alt": "Templar Gladiator — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/templar_melee/anim/templar_melee.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "b5899704be4cd07506f4a4d56e87104ed6d5007757d9d95ddf9d8b00df9087e1",
+        "imageWidth": 1086,
+        "imageHeight": 693,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 689,
+          "height": 1017,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1655,11 +2584,23 @@
       "recordName": "Templar Sniper",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/templar-sniper.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Templar Sniper — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/templar_ranged/anim/templar_ranged.sprite.defend.png; English localization str_monstername_templar_ranged_D = Templar Sniper",
+        "alt": "Templar Sniper — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/templar_ranged/anim/templar_ranged.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "ab96f42377a3bb9e6b44f4aa0e9d96063fe7158394d8e95e0d632816deed0aeb",
+        "imageWidth": 1174,
+        "imageHeight": 693,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 689,
+          "height": 1105,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1671,11 +2612,23 @@
       "recordName": "Uca Crusher",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/uca-crusher.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Uca Crusher — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/fishman_crabby/anim/fishman_crabby.sprite.defend.png; English localization str_monstername_fishman_crabby_B = Uca Crusher",
+        "alt": "Uca Crusher — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/fishman_crabby/anim/fishman_crabby.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "bc578954463c1f8205c17fd974b3c5d41b5100ac1ccac9e043a8610cba5c2225",
+        "imageWidth": 758,
+        "imageHeight": 661,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 689,
+          "height": 657,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1687,11 +2640,23 @@
       "recordName": "Unclean Giant",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/unclean-giant.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Unclean Giant — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/unclean_giant/anim/unclean_giant.sprite.defend.png; English localization str_monstername_unclean_giant_A = Unclean Giant",
+        "alt": "Unclean Giant — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/unclean_giant/anim/unclean_giant.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "63960d857bb9bbbea508ed2010fe35bcee1b3207eddaadeba975b94fa122099b",
+        "imageWidth": 980,
+        "imageHeight": 717,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 713,
+          "height": 911,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1703,11 +2668,23 @@
       "recordName": "Webber",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/webber.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Webber — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/spider_webber/anim/spider_webber.sprite.defend.png; English localization str_monstername_spider_webber_A = Webber",
+        "alt": "Webber — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/spider_webber/anim/spider_webber.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "dc6c6d9fac9ae7b1f757e93be0a1bfe907b1ccbf9390ca834568723fcf57da55",
+        "imageWidth": 628,
+        "imageHeight": 449,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 559,
+          "height": 445,
+          "rotated": false
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1719,11 +2696,23 @@
       "recordName": "White Cell Stalk",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/enemies/white-cell-stalk.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "White Cell Stalk — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; monsters/cell_white/anim/cell_white.sprite.defend.png; English localization str_monstername_cell_white_D = White Cell Stalk",
+        "alt": "White Cell Stalk — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "monsters/cell_white/anim/cell_white.sprite.defend.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c86a131bf8c7a63de83ed2f9e723dfdc262c238d9603c99635aa3f7b24fafe88",
+        "imageWidth": 762,
+        "imageHeight": 457,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "width": 453,
+          "height": 693,
+          "rotated": true
+        }
       },
       "thumbnail": null,
       "banner": null,
@@ -1735,11 +2724,16 @@
       "recordName": "Abomination",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/abomination.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Abomination — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/abomination/abomination_guild_header.png; English localization hero_class_name_abomination = Abomination",
+        "alt": "Abomination — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/abomination/abomination_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "320224c1386da98d990edfd3ba85a6338579be1a216370fc64e15ea6ba86f153",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1760,11 +2754,16 @@
       "recordName": "Antiquarian",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/antiquarian.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Antiquarian — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/antiquarian/antiquarian_guild_header.png; English localization hero_class_name_antiquarian = Antiquarian",
+        "alt": "Antiquarian — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/antiquarian/antiquarian_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "81c157f6afb8c11645b5ca140c7a2ec9aab89aa80999f2db916560979979632a",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1785,11 +2784,16 @@
       "recordName": "Arbalest",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/arbalest.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Arbalest — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/arbalest/arbalest_guild_header.png; English localization hero_class_name_arbalest = Arbalest",
+        "alt": "Arbalest — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/arbalest/arbalest_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "8cec55f6b59b3adbf239be5b36fc16213d669e200cbb111f427ad26fedd08768",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1810,11 +2814,16 @@
       "recordName": "Bounty Hunter",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/bounty-hunter.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bounty Hunter — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/bounty_hunter/bounty_hunter_guild_header.png; English localization hero_class_name_bounty_hunter = Bounty Hunter",
+        "alt": "Bounty Hunter — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/bounty_hunter/bounty_hunter_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "fca6628620ca50f8ab92ec46f2c733512a0c4cacf3ed5bf61693742c3ad16f0c",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1835,11 +2844,16 @@
       "recordName": "Crusader",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/crusader.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Crusader — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/crusader/crusader_guild_header.png; English localization hero_class_name_crusader = Crusader",
+        "alt": "Crusader — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/crusader/crusader_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "688564bf0125a14cc47dba8b095bec3c286de551371762971d2408ecd6a5e1bf",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1885,11 +2899,16 @@
       "recordName": "Grave Robber",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/grave-robber.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Grave Robber — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/grave_robber/grave_robber_guild_header.png; English localization hero_class_name_grave_robber = Grave Robber",
+        "alt": "Grave Robber — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/grave_robber/grave_robber_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "6c4f84092bfa7291ca377f545ab77e559dda64a121ca553bbd4ba645a4634320",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1910,11 +2929,16 @@
       "recordName": "Hellion",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/hellion.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Hellion — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/hellion/hellion_guild_header.png; English localization hero_class_name_hellion = Hellion",
+        "alt": "Hellion — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/hellion/hellion_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "3f4827c12b243e13e084059cb005a299b2d4aba5463e77d45d49227732205c60",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1935,11 +2959,16 @@
       "recordName": "Highwayman",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/highwayman.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Highwayman — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/highwayman/highwayman_guild_header.png; English localization hero_class_name_highwayman = Highwayman",
+        "alt": "Highwayman — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/highwayman/highwayman_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "d35f974168320e2ac5b8342cd3036b787cf8d17f3ad14d96964d3306ffc56e22",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1968,11 +2997,16 @@
       "recordName": "Houndmaster",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/houndmaster.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Houndmaster — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/houndmaster/houndmaster_guild_header.png; English localization hero_class_name_houndmaster = Houndmaster",
+        "alt": "Houndmaster — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/houndmaster/houndmaster_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "3bd5a30c4e3aeaeca8ca2100a8333099041e5633149e0b1d664c6a49a970bcc5",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -1993,11 +3027,16 @@
       "recordName": "Jester",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/jester.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Jester — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/jester/jester_guild_header.png; English localization hero_class_name_jester = Jester",
+        "alt": "Jester — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/jester/jester_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "b33889f9f311eeaae1baa2f7cda46fb193040e1502573b0135c587e3e92efaec",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -2018,11 +3057,16 @@
       "recordName": "Leper",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/leper.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Leper — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/leper/leper_guild_header.png; English localization hero_class_name_leper = Leper",
+        "alt": "Leper — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/leper/leper_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "59fd220c5e6fcc05e3751755e7683329434cf71924bea460b6e314de083edb4f",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -2043,11 +3087,16 @@
       "recordName": "Man-at-Arms",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/man-at-arms.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Man-at-Arms — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/man_at_arms/man_at_arms_guild_header.png; English localization hero_class_name_man_at_arms = Man-at-Arms",
+        "alt": "Man-at-Arms — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/man_at_arms/man_at_arms_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "8e425edc82cfa1005aff3ec2ebb3fb357fcc8109e556a0c5af9ca8d0e67059c4",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -2068,11 +3117,16 @@
       "recordName": "Occultist",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/occultist.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Occultist — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/occultist/occultist_guild_header.png; English localization hero_class_name_occultist = Occultist",
+        "alt": "Occultist — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/occultist/occultist_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "b5501d04799c3a53fb5769c676468f0eec2e6af7a0e17de0187fe3a95e5e5f51",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -2093,11 +3147,16 @@
       "recordName": "Plague Doctor",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/plague-doctor.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Plague Doctor — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/plague_doctor/plague_doctor_guild_header.png; English localization hero_class_name_plague_doctor = Plague Doctor",
+        "alt": "Plague Doctor — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/plague_doctor/plague_doctor_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c0b033840f40be9c345ccda80800fffa90528c4818cd0d41c7c581f50216faa7",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -2143,11 +3202,16 @@
       "recordName": "Vestal",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/heroes/vestal.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Vestal — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; heroes/vestal/vestal_guild_header.png; English localization hero_class_name_vestal = Vestal",
+        "alt": "Vestal — original Darkest Dungeon I guild illustration",
+        "sourceRelativePath": "heroes/vestal/vestal_guild_header.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c9f592783d135d633fc7fe3c83827ec13520b878d3ad3bf8a9151b43fc2a1bf8",
+        "imageWidth": 715,
+        "imageHeight": 630
       },
       "thumbnail": null,
       "banner": null,
@@ -2184,11 +3248,16 @@
       "recordName": "Antivenom",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/antivenom.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Antivenom — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+antivenom.png; English localization str_inventory_title_supplyantivenom = Antivenom",
+        "alt": "Antivenom — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+antivenom.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "a9c035040b2f8f6fb3ace88c13e0b014e8e4c27e6ad0316e0059679ef9e1c661",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2200,11 +3269,16 @@
       "recordName": "Bandage",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/bandage.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Bandage — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+bandage.png; English localization str_inventory_title_supplybandage = Bandage",
+        "alt": "Bandage — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+bandage.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "7e76e252e0fbb352008d1a290fe64349847893b18ed6677ec7025fbdcae95baf",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2216,11 +3290,16 @@
       "recordName": "Dog Treats",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/dog-treats.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Dog Treats — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+dog_treats.png; English localization str_inventory_title_supplydog_treats = Dog Treats",
+        "alt": "Dog Treats — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+dog_treats.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "1b25e08d28e6dfe248c2e54f094221a10cc0a0abbbb65a41fa4172662f310979",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2232,11 +3311,16 @@
       "recordName": "Firewood",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/firewood.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Firewood — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+firewood.png; English localization str_inventory_title_supplyfirewood = Firewood",
+        "alt": "Firewood — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+firewood.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "96a2191d5029647c60b828ee4720f44043a724ef53c88802a5fcd66f7097931e",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2248,11 +3332,16 @@
       "recordName": "Food",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/food.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Food — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/provision/inv_provision+_0.png; English localization str_inventory_title_provision = Food",
+        "alt": "Food — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/provision/inv_provision+_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "fc7e49190ec7438143c57be93c1943aa42d8ce2ba81c13df41e59a34683d11ee",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2264,11 +3353,16 @@
       "recordName": "Holy Water",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/holy-water.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Holy Water — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+holy_water.png; English localization str_inventory_title_supplyholy_water = Holy Water",
+        "alt": "Holy Water — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+holy_water.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "3d8afffe0d9e72c6ab9f7baa5231f6f8d57aa898d0e4d0754f5f108bd5fe5d1e",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2280,11 +3374,16 @@
       "recordName": "Laudanum",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/laudanum.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Laudanum — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+laudanum.png; English localization str_inventory_title_supplylaudanum = Laudanum",
+        "alt": "Laudanum — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+laudanum.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "ad5e466d915b055a1027502458adfcd87ee38da32bc4d88e5e4d02bfd144bc21",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2296,11 +3395,16 @@
       "recordName": "Medicinal Herbs",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/medicinal-herbs.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Medicinal Herbs — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+medicinal_herbs.png; English localization str_inventory_title_supplymedicinal_herbs = Medicinal Herbs",
+        "alt": "Medicinal Herbs — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+medicinal_herbs.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "bd167bac8e35e5f05c4a4e1ad92430e44887aaf0c8e4f96a470c7f9bb16a54f2",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2328,11 +3432,16 @@
       "recordName": "Shovel",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/shovel.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Shovel — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+shovel.png; English localization str_inventory_title_supplyshovel = Shovel",
+        "alt": "Shovel — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+shovel.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "d3532e8a015a89da944f36ec39bd38e706df52ebefcba15b76926ead57e688f8",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2344,11 +3453,16 @@
       "recordName": "Skeleton Key",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/skeleton-key.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Skeleton Key — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+skeleton_key.png; English localization str_inventory_title_supplyskeleton_key = Skeleton Key",
+        "alt": "Skeleton Key — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+skeleton_key.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "3ba1f1ab73be2e9582dcfb48249707731cfc4b7dadefbfdd4c34b91bbe2e7825",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2392,11 +3506,16 @@
       "recordName": "Torch",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/items/torch.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Torch — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/supply/inv_supply+torch.png; English localization str_inventory_title_supplytorch = Torch",
+        "alt": "Torch — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/supply/inv_supply+torch.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "47a8cc0dd27bd2bbd295ba18d3d945a776af8f31a0b18977a14d40b4f0e05f3f",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2424,14 +3543,31 @@
       "recordName": "Cove",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/locations/cove.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Cove — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.cove_0.png; English localization dungeon_name_cove = Cove",
+        "alt": "Cove — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.cove_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "dc914ef38cd998a2bae54df2e33c98f6b9763ac4b6107ba66421bb31a474d5c4",
+        "imageWidth": 1920,
+        "imageHeight": 1080
       },
       "thumbnail": null,
-      "banner": null,
+      "banner": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/cove.png",
+        "exists": true,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.cove_0.png; English localization dungeon_name_cove = Cove",
+        "alt": "Cove — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.cove_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "dc914ef38cd998a2bae54df2e33c98f6b9763ac4b6107ba66421bb31a474d5c4",
+        "imageWidth": 1920,
+        "imageHeight": 1080
+      },
       "legacyAssets": []
     },
     {
@@ -2440,14 +3576,31 @@
       "recordName": "Darkest Dungeon",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/locations/darkest-dungeon.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Darkest Dungeon — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.darkestdungeon_0.png; English localization dungeon_name_darkestdungeon = Darkest Dungeon",
+        "alt": "Darkest Dungeon — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.darkestdungeon_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "0d8756e5af8ade1c3627e6316cfe14e46322829ba9d9dfae3d5b5741c04f531f",
+        "imageWidth": 1920,
+        "imageHeight": 1080
       },
       "thumbnail": null,
-      "banner": null,
+      "banner": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/darkest-dungeon.png",
+        "exists": true,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.darkestdungeon_0.png; English localization dungeon_name_darkestdungeon = Darkest Dungeon",
+        "alt": "Darkest Dungeon — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.darkestdungeon_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "0d8756e5af8ade1c3627e6316cfe14e46322829ba9d9dfae3d5b5741c04f531f",
+        "imageWidth": 1920,
+        "imageHeight": 1080
+      },
       "legacyAssets": []
     },
     {
@@ -2472,14 +3625,31 @@
       "recordName": "Ruins",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/locations/ruins.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Ruins — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.crypts_0.png; English localization dungeon_name_crypts = Ruins",
+        "alt": "Ruins — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.crypts_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "1dd93977ff4d4a06d797cff999f30066beb48812142ab24f25747d8dc0bd1335",
+        "imageWidth": 1920,
+        "imageHeight": 1080
       },
       "thumbnail": null,
-      "banner": null,
+      "banner": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/ruins.png",
+        "exists": true,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.crypts_0.png; English localization dungeon_name_crypts = Ruins",
+        "alt": "Ruins — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.crypts_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "1dd93977ff4d4a06d797cff999f30066beb48812142ab24f25747d8dc0bd1335",
+        "imageWidth": 1920,
+        "imageHeight": 1080
+      },
       "legacyAssets": []
     },
     {
@@ -2488,14 +3658,31 @@
       "recordName": "Warrens",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/locations/warrens.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Warrens — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.warrens_0.png; English localization dungeon_name_warrens = Warrens",
+        "alt": "Warrens — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.warrens_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "dfce9dfab74f53a3c661590315cddd4167015a1c64019bc6787db51265b0775b",
+        "imageWidth": 1920,
+        "imageHeight": 1080
       },
       "thumbnail": null,
-      "banner": null,
+      "banner": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/warrens.png",
+        "exists": true,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.warrens_0.png; English localization dungeon_name_warrens = Warrens",
+        "alt": "Warrens — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.warrens_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "dfce9dfab74f53a3c661590315cddd4167015a1c64019bc6787db51265b0775b",
+        "imageWidth": 1920,
+        "imageHeight": 1080
+      },
       "legacyAssets": []
     },
     {
@@ -2504,14 +3691,31 @@
       "recordName": "Weald",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/locations/weald.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Weald — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.weald_0.png; English localization dungeon_name_weald = Weald",
+        "alt": "Weald — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.weald_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f8d4d5da62f9d0d916d7942363f0685bce3d5e4577e4cfed60cab4951677ed2c",
+        "imageWidth": 1920,
+        "imageHeight": 1080
       },
       "thumbnail": null,
-      "banner": null,
+      "banner": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/weald.png",
+        "exists": true,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; loading_screen/loading_screen.weald_0.png; English localization dungeon_name_weald = Weald",
+        "alt": "Weald — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "loading_screen/loading_screen.weald_0.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f8d4d5da62f9d0d916d7942363f0685bce3d5e4577e4cfed60cab4951677ed2c",
+        "imageWidth": 1920,
+        "imageHeight": 1080
+      },
       "legacyAssets": []
     },
     {
@@ -2520,11 +3724,16 @@
       "recordName": "Ancestor's Candle",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/ancestral-candle.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Ancestor's Candle — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+ancestors_candle.png; English localization str_inventory_title_trinketancestors_candle = Ancestor's Candle",
+        "alt": "Ancestor's Candle — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+ancestors_candle.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "e42df5f1e9dc0cb88dbb885c29dc215cccfa62fb4737bd087cc16c9a1a6f89c6",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2536,11 +3745,16 @@
       "recordName": "Ancestor's Map",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/ancestral-map.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Ancestor's Map — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+ancestors_map.png; English localization str_inventory_title_trinketancestors_map = Ancestor's Map",
+        "alt": "Ancestor's Map — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+ancestors_map.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "f6df4692a72153c55c7e5ee88cf91cd9f2c414b2e3d0c1810cdff19b939827ee",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2568,11 +3782,16 @@
       "recordName": "Crew's Bell",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/crews-bell.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Crew's Bell — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_crew.png; English localization str_inventory_title_trinketboss_crew = Crew's Bell",
+        "alt": "Crew's Bell — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_crew.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "e6e419319a94b9b61566f536becb3ab7ecacb52298f8bab4b7e75e9d306d6dec",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2584,11 +3803,16 @@
       "recordName": "Damage Stone",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/damage-stone.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Damage Stone — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+damage_stone.png; English localization str_inventory_title_trinketdamage_stone = Damage Stone",
+        "alt": "Damage Stone — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+damage_stone.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "58b8c27205a9e702dcbde01116abe0f52481251346fc3db875c242d666083278",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2600,11 +3824,16 @@
       "recordName": "Flesh's Heart",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/fleshs-heart.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Flesh's Heart — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_flesh.png; English localization str_inventory_title_trinketboss_flesh = Flesh's Heart",
+        "alt": "Flesh's Heart — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_flesh.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "13b808c8b2ddf0c3dc34b8695addc316c2f1f8ddd485344ac64187df614b3f2d",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2616,11 +3845,16 @@
       "recordName": "Focus Ring",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/focus-ring.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Focus Ring — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+focus_ring.png; English localization str_inventory_title_trinketfocus_ring = Focus Ring",
+        "alt": "Focus Ring — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+focus_ring.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "5c8ab27fd18280549cd05b582dd1f53a050c40c1f49dc211e9f24581ee68993a",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2641,11 +3875,16 @@
       "recordName": "Fuseman's Matchstick",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/fusemans-matchstick.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Fuseman's Matchstick — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_cannon.png; English localization str_inventory_title_trinketboss_cannon = Fuseman's Matchstick",
+        "alt": "Fuseman's Matchstick — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_cannon.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "88d192f05f605eda5d37a0304581c81a0f2ae695b4a214409a12cbfb073f78e2",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2673,11 +3912,16 @@
       "recordName": "Gunslinger's Buckle",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/gunslingers-buckle.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Gunslinger's Buckle — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+poisoning_buckle.png; English localization str_inventory_title_trinketpoisoning_buckle = Gunslinger's Buckle",
+        "alt": "Gunslinger's Buckle — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+poisoning_buckle.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "85d8da816e5e0338b69a4232bed5440e80dceee6deb1ec8cb36f5d3142c23ffb",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2698,11 +3942,16 @@
       "recordName": "Hag's Ladle",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/hags-ladle.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Hag's Ladle — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_hag.png; English localization str_inventory_title_trinketboss_hag = Hag's Ladle",
+        "alt": "Hag's Ladle — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_hag.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "a1bf882ab37075310652899073dab778f1ad6fea3786c9a23c87bb2a12c30d87",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2714,11 +3963,16 @@
       "recordName": "Man Slayer's Ring",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/man-slayer-ring.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Man Slayer's Ring — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+man_slayers_ring.png; English localization str_inventory_title_trinketman_slayers_ring = Man Slayer's Ring",
+        "alt": "Man Slayer's Ring — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+man_slayers_ring.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "bf931edde01bacbf44629641c9814f7027affd13808546256da90b96584c1cbe",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2730,11 +3984,16 @@
       "recordName": "Moon Ring",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/moon-ring.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Moon Ring — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+moon_ring.png; English localization str_inventory_title_trinketmoon_ring = Moon Ring",
+        "alt": "Moon Ring — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+moon_ring.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "1a2a3224621e1f74ef87efe130bcac4e7df80202395d50058f2a43eb65da2198",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2746,11 +4005,16 @@
       "recordName": "Necromancer's Collar",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/necromancers-collar.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Necromancer's Collar — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_necromancer.png; English localization str_inventory_title_trinketboss_necromancer = Necromancer's Collar",
+        "alt": "Necromancer's Collar — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_necromancer.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "b938e83a06e300952ac4d4ff432ff793c4b3ca12ff519a777b2ba24cf9fa05a1",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2762,11 +4026,16 @@
       "recordName": "Prophet's Eye",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/prophets-eye.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Prophet's Eye — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_prophet.png; English localization str_inventory_title_trinketboss_prophet = Prophet's Eye",
+        "alt": "Prophet's Eye — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_prophet.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "0bac9af53fc597ac4996d6e0537772be7e55589bf1f49dddb5208126f4dcbcb7",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2778,11 +4047,16 @@
       "recordName": "Quick Draw Charm",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/quick-draw-charm.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Quick Draw Charm — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+quick_draw_charm.png; English localization str_inventory_title_trinketquick_draw_charm = Quick Draw Charm",
+        "alt": "Quick Draw Charm — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+quick_draw_charm.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "340f95ffb7d2a97b4826fc21098a7d955959dc12627f81e6a183115c4d95e8d4",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2794,11 +4068,16 @@
       "recordName": "Reckless Charm",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/reckless-charm.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Reckless Charm — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+reckless_charm.png; English localization str_inventory_title_trinketreckless_charm = Reckless Charm",
+        "alt": "Reckless Charm — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+reckless_charm.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "340aa5c8a2f6c7706a96c52a27e678c2aa612bbef77b4f39f839ed190fa67ead",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2842,11 +4121,16 @@
       "recordName": "Siren's Conch",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/sirens-conch.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Siren's Conch — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_siren.png; English localization str_inventory_title_trinketboss_siren = Siren's Conch",
+        "alt": "Siren's Conch — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_siren.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "0f6dc7dee35ab7e1b6cd9389ff6ad1f24d7559ff678376a3ed3e6a0e2f8fe365",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2858,11 +4142,16 @@
       "recordName": "Sun Ring",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/sun-ring.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Sun Ring — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+sun_ring.png; English localization str_inventory_title_trinketsun_ring = Sun Ring",
+        "alt": "Sun Ring — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+sun_ring.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "bb6b40092f169e2735db7d9290d01d84b42f382187b93cd4a1bfe7af6af922c2",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2874,11 +4163,16 @@
       "recordName": "Unholy Slayer's Ring",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/unholy-slayer-ring.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Unholy Slayer's Ring — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+unholy_slayers_ring.png; English localization str_inventory_title_trinketunholy_slayers_ring = Unholy Slayer's Ring",
+        "alt": "Unholy Slayer's Ring — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+unholy_slayers_ring.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "73cffaa9b3abe09246331662e50740d00968e291940a9967670378b42f59189f",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,
@@ -2890,11 +4184,16 @@
       "recordName": "Wilbur's Flag",
       "primary": {
         "path": "assets/games/darkest-dungeon-1/private/trinkets/wilburs-flag.png",
-        "exists": false,
+        "exists": true,
         "currentlyReferenced": true,
-        "verifiedAuthentic": false,
-        "verificationSource": "",
-        "alt": "Wilbur's Flag — Darkest Dungeon I"
+        "verifiedAuthentic": true,
+        "verificationSource": "Installed Steam app 262060; panels/icons_equip/trinket/inv_trinket+boss_wilbur.png; English localization str_inventory_title_trinketboss_wilbur = Wilbur's Flag",
+        "alt": "Wilbur's Flag — original Darkest Dungeon I game artwork",
+        "sourceRelativePath": "panels/icons_equip/trinket/inv_trinket+boss_wilbur.png",
+        "sourceContent": "base-game",
+        "sourceSha256": "c82dc788ab6a23cc3a1f40f901ed77ca9a8c5585ad311bdd967cfeb42e1c2cd7",
+        "imageWidth": 72,
+        "imageHeight": 144
       },
       "thumbnail": null,
       "banner": null,

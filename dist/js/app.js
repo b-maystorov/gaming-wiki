@@ -646,7 +646,7 @@ function renderHeroTrinketSection(hero) {
   const trinkets = getTrinkets().filter(trinket => trinket.hero.id === hero.id);
   if (!trinkets.length) return renderGuideDevelopmentSection('trinkets', 'Recommended trinkets', `Class-specific equipment recommendations for ${hero.name} are still in development.`, '#game/darkest-dungeon/trinkets', 'Browse available item records', '05');
   return `<section class="guide-section" aria-labelledby="trinkets"><div class="section-heading"><h2 id="trinkets" tabindex="-1">Recommended trinkets</h2><span>05 / Equipment notes</span></div>
-    <p class="section-intro">Picks for ${escapeHtml(hero.name)} · ${structuredGameContent ? 'Reference values; installed patch not checked. Availability is not guaranteed. The two supplied game icons have unverified provenance; the other two remain labeled placeholders.' : 'Item effects and availability cannot be shown until the encyclopedia data loads.'}</p><div class="two-columns">${trinkets.map(renderTrinket).join('')}</div>
+    <p class="section-intro">Picks for ${escapeHtml(hero.name)} · ${structuredGameContent ? 'Reference values; installed patch not checked. Availability is not guaranteed. Verified local game icons are shown when available; missing artwork keeps its fallback.' : 'Item effects and availability cannot be shown until the encyclopedia data loads.'}</p><div class="two-columns">${trinkets.map(renderTrinket).join('')}</div>
     <p class="section-intro"><a href="#game/darkest-dungeon/trinkets">Browse available item records →</a></p></section>`;
 }
 
@@ -711,9 +711,10 @@ function renderHeroPage(hero) {
 function renderTeamPortrait(name) {
   const hero = heroes.find(entry => entry.name === name);
   const portrait = hero?.portrait || (hero?.galleryArt?.src ? hero.galleryArt : null);
-  if (portrait && !portrait.placeholder) return renderImage(portrait, 'team-portrait');
   const initials = name.split(' ').map(word => word[0]).join('');
-  return `<div class="portrait-unavailable" role="img" aria-label="${escapeHtml(name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(initials)}</span><small>Portrait unavailable</small></div>`;
+  const unavailable = `<div class="portrait-unavailable" role="img" aria-label="${escapeHtml(name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(initials)}</span><small>Portrait unavailable</small></div>`;
+  const fallback = portrait && !portrait.placeholder ? renderImage(portrait, 'team-portrait') : unavailable;
+  return hero ? `<span class="team-art">${renderEntryArtwork('heroes', hero, 'thumbnail', fallback)}</span>` : fallback;
 }
 
 function renderHeroName(name) {
@@ -763,7 +764,7 @@ function renderTeam(team) {
 function renderTrinket(trinket) {
   if (trinket.contentUnavailable) return `<article class="panel trinket-card"><h3>${escapeHtml(trinket.name || trinket.routeId)}</h3><p>Item details are unavailable because the encyclopedia data could not be loaded. Reload the page to try again.</p></article>`;
   return `<article class="panel trinket-card"><div class="trinket-heading">
-    ${trinket.image ? renderImage(trinket.image, 'trinket-art') : '<span class="trinket-art-placeholder" aria-hidden="true">◇</span>'}
+    ${renderEntryArtwork('trinkets', trinket, 'thumbnail')}
     <div><p class="eyebrow">${escapeHtml(trinket.rarity)}</p><h3>${escapeHtml(trinket.name)}</h3><p class="small-label">${requirementLabel(trinket.requirements)}</p></div></div>
     <p class="selection-label">${escapeHtml(trinket.use)}</p><dl class="effects"><dt>Benefits</dt><dd class="benefits">${trinket.effects.map(escapeHtml).join('<br>')}</dd><dt>Penalties</dt><dd class="penalties">${trinket.drawbacks.map(escapeHtml).join('<br>')}</dd></dl>
     <h4>Why choose it</h4><p>${escapeHtml(trinket.advice)}</p><h4>Accessible alternative</h4><p>${escapeHtml(trinket.alternative)}</p>

@@ -168,18 +168,45 @@ test('artwork requires verified local assets and uses stable hero IDs', () => {
   } finally { artwork.setArtworkManifest(artworkManifest); }
 });
 
-test('image errors exhaust candidates then hide the broken image and reveal fallback', () => {
-  const fallback = { hidden: true };
-  const classes = [];
-  const image = { matches: () => true, dataset: { artRemaining: '["primary.png"]' }, hidden: false,
-    closest: () => ({ classList: { add: name => classes.push(name) }, querySelector: () => fallback }) };
-  artwork.handleArtworkError({ target: image });
-  assert.equal(image.src, 'primary.png');
-  assert.equal(fallback.hidden, true);
-  artwork.handleArtworkError({ target: image });
-  assert.equal(image.hidden, true);
-  assert.equal(fallback.hidden, false);
-  assert.deepEqual(classes, ['image-failed']);
+test('PNG and SVG failures advance candidates and preserve the final fallback', () => {
+  for (const hiddenFailsFirst of [false, true]) {
+    const fallback = { hidden: true };
+    const classes = [];
+    const visuals = [{ hidden: false, dataset: {} }, { hidden: true, dataset: {} }];
+    const frame = { classList: { add: name => classes.push(name) }, querySelector: () => fallback,
+      querySelectorAll: () => visuals };
+    const fail = index => artwork.handleArtworkError({ target: { matches: () => true,
+      closest: selector => selector === '[data-art-visual]' ? visuals[index] : frame } });
+    if (hiddenFailsFirst) {
+      fail(1);
+      assert.equal(fallback.hidden, true);
+      assert.equal(visuals[0].hidden, false);
+    }
+    fail(0);
+    if (!hiddenFailsFirst) {
+      assert.equal(visuals[1].hidden, false);
+      assert.equal(fallback.hidden, true);
+      fail(1);
+    }
+    assert.ok(visuals.every(visual => visual.hidden));
+    assert.equal(fallback.hidden, false);
+    assert.deepEqual(classes, ['image-failed']);
+  }
+});
+
+test('atlas poses use native SVG clipping, packing rotation and accessible labels', () => {
+  const entry = structuredClone(artworkManifest.records.find(row => row.primary.frame?.rotated));
+  assert.ok(entry);
+  entry.primary.exists = true;
+  artwork.setArtworkManifest({ records: [entry] });
+  try {
+    const html = artwork.renderEntryArtwork(entry.category, { id: entry.recordId, name: entry.recordName });
+    const frame = entry.primary.frame;
+    assert.ok(html.includes(`viewBox="0 0 ${frame.width} ${frame.height}"`));
+    assert.ok(html.includes(`translate(${frame.width} 0) rotate(90)`));
+    assert.ok(html.includes(`href="${entry.primary.path}"`));
+    assert.ok(html.includes('role="img" aria-label='));
+  } finally { artwork.setArtworkManifest(artworkManifest); }
 });
 
 test('manifest covers every requested record without certifying legacy art', () => {
@@ -208,12 +235,32 @@ test('verified slots render through real collection and detail routes', () => {
       const path = manifest.records.find(entry => entry.recordId === record.id).primary.path;
       for (const suffix of ['', `/${record.routeId}`]) {
         const html = h.app.renderPage(h.app.readRoute(`#game/darkest-dungeon/${category}${suffix}`));
-        assert.ok(html.includes(`src="${path}"`), `${category}${suffix}`);
+        assert.ok(html.includes(`"${path}"`), `${category}${suffix}`);
       }
     }
     for (const route of ['#game/darkest-dungeon/heroes', '#hero/crusader/overview']) {
       const html = h.app.renderPage(h.app.readRoute(route));
       assert.ok(html.includes('private/heroes/crusader.png'), route);
     }
+  } finally { artwork.setArtworkManifest(artworkManifest); }
+});
+
+test('a checkout without private assets keeps legacy artwork and usable routes', () => {
+  const manifest = structuredClone(artworkManifest);
+  for (const entry of manifest.records) for (const slot of ['primary', 'thumbnail', 'banner']) {
+    if (entry[slot]) entry[slot].exists = false;
+  }
+  artwork.setArtworkManifest(manifest);
+  try {
+    for (const route of ['#game/darkest-dungeon/heroes', '#hero/highwayman/overview',
+      '#game/darkest-dungeon/teams', '#game/darkest-dungeon/bosses', '#game/darkest-dungeon/enemies',
+      '#game/darkest-dungeon/trinkets', '#game/darkest-dungeon/items', '#game/darkest-dungeon/curios',
+      '#game/darkest-dungeon/locations']) {
+      const html = h.app.renderPage(h.app.readRoute(route));
+      assert.ok(!html.includes('assets/games/darkest-dungeon-1/private/'), route);
+      assert.ok(!html.includes('Page not found'), route);
+    }
+    const hero = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/heroes'));
+    assert.ok(hero.includes('assets/images/darkest-dungeon/crusader-portrait.png'));
   } finally { artwork.setArtworkManifest(artworkManifest); }
 });

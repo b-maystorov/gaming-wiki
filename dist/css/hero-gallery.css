@@ -1,4 +1,5 @@
 /* Gallery-specific selectors leave the guide, party portraits and global portal intact. */
+.class-codex { container-type: inline-size; }
 .class-intro { padding-block: 1.3rem 1rem; border-bottom: 1px solid #573d40; background: radial-gradient(ellipse at 100% 0, #64252d33, transparent 65%); }
 .class-intro .eyebrow { margin-bottom: .7rem; }
 .class-roster-summary { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1.3rem; color: #dbc8bd; font-size: .72rem; }
@@ -11,9 +12,9 @@
 .class-filters button:hover { background: #56303b; }
 .class-filters :is(input, select, button):focus-visible { outline: 2px solid #ffd0bd; outline-offset: 3px; }
 .class-results-status { margin-block: .8rem 1.1rem; font-size: .75rem; color: #c4b4ad; }
-.class-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
-.class-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #56383e; border-radius: 4px; background: linear-gradient(155deg, #21191b, #151214); text-decoration: none; color: var(--text); transition: border-color 180ms, box-shadow 180ms, background-color 180ms; }
-.class-card:hover { border-color: var(--accent-hover); background: #24181b; box-shadow: 0 10px 28px #0006, inset 0 0 24px #8e263322; color: var(--text); }
+.class-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 1.5vw, 1.5rem); align-items: stretch; }
+.class-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #56383e; border-radius: 4px; background: linear-gradient(155deg, #21191b, #151214); text-decoration: none; color: var(--text); transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease; }
+.class-card:hover { border-color: var(--accent-hover); background: #24181b; box-shadow: 0 8px 24px #0004, 0 0 18px #a52a3933; color: var(--text); }
 .class-card:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; box-shadow: 0 0 26px #a7314033; color: var(--text); }
 .class-guide-available { border-color: var(--accent-fill); }
 .class-skills-available { border-color: #56383e; }
@@ -33,18 +34,40 @@
 .class-art.image-failed .class-monogram { display: flex; }
 .class-art.image-failed .class-placeholder-label { display: inline; }
 .class-art.image-failed figcaption { display: block; }
-.class-card-copy { flex: 1; display: flex; flex-direction: column; align-items: center; padding: .75rem .8rem .85rem; text-align: center; }
-.class-card h3 { margin: .1rem 0 .65rem; color: #e9dec9; font: small-caps 600 clamp(1.1rem, 1.55vw, 1.38rem)/1.25 Georgia, 'Times New Roman', serif; letter-spacing: .045em; }
+.class-card-copy { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 1.1rem 1rem 1.2rem; min-height: 156px; text-align: center; }
+.class-card h3 { margin: .1rem 0 .65rem; color: #e9dec9; font: small-caps 600 clamp(1.35rem, 1.6vw, 1.65rem)/1.25 Georgia, 'Times New Roman', serif; letter-spacing: .045em; }
 .class-role-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem; padding: 0; margin: 0 0 .2rem; list-style: none; }
-.class-role-tags li { margin: 0; padding: .18rem .48rem; border: 1px solid #634046; border-radius: 2px; background: var(--accent-surface); color: #e5c5c5; font: .58rem Georgia, 'Times New Roman', serif; letter-spacing: .09em; text-transform: uppercase; }
-.class-guide-status { display: flex; justify-content: center; align-items: center; gap: .35rem; width: 100%; margin-top: .6rem; padding-top: .5rem; border-top: 1px solid #56383e; color: var(--muted); font-size: .62rem; line-height: 1.4; }
+.class-role-tags li { margin: 0; padding: .18rem .48rem; border: 1px solid #634046; border-radius: 2px; background: var(--accent-surface); color: #e5c5c5; font: .67rem Georgia, 'Times New Roman', serif; letter-spacing: .09em; text-transform: uppercase; }
+.class-guide-status { display: flex; justify-content: center; align-items: center; gap: .35rem; width: 100%; margin-top: auto; padding-top: .85rem; border-top: 1px solid #56383e; color: var(--muted); font-size: .75rem; line-height: 1.5; }
 .class-guide-available .class-guide-status { color: var(--accent-text); }
 .class-empty { border: 1px dashed #8f5c66; background: #241a20; padding: 2rem; text-align: center; }
 .class-empty p { color: #d2beb4; margin-top: .6rem; }
 .class-scope { margin-top: 1.8rem; color: #c4b4ad; font-size: .8rem; }
 .class-scope summary { color: #dfc6bc; padding-block: .6rem; cursor: pointer; }
 .class-scope p { margin-top: .75rem; }
-@media (max-width: 1000px) { .class-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Scale the whole original illustration: no cover crop or face/weapon clipping. */
+.class-card > :is(.entry-art-heroes.entry-art-thumbnail, .class-art) {
+  height: auto; aspect-ratio: 1 / 1.06; flex: 0 0 auto; width: 100%;
+  min-height: 0; border-bottom: 1px solid #56383e;
+  background: radial-gradient(ellipse at 50% 40%, #67344026, transparent 72%), #171417;
+}
+.class-card > .entry-art [data-art-visual] > :is(img, svg) {
+  width: 100%; height: 100%; max-height: none; object-fit: contain;
+  filter: brightness(1.55) contrast(1.06);
+  transform: scale(1); transition: transform 240ms ease;
+}
+.class-card > .class-art img { padding: 0; }
+.class-card > .entry-art > [data-art-fallback],
+.class-card > .entry-art > [data-art-fallback] > .class-art { height: 100%; }
+/* A tiny zoom stays inside the surrounding letterbox, preserving character detail. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .class-card:hover > .entry-art [data-art-visual] > :is(img, svg) { transform: scale(1.025); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .class-card > .entry-art [data-art-visual] > :is(img, svg) { transition: none; transform: none; }
+}
+@container (max-width: 850px) { .class-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container (max-width: 540px) { .class-grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 600px) {
   .class-grid { grid-template-columns: minmax(0, 1fr); }
   .class-filters { grid-template-columns: minmax(0, 1fr) auto; }

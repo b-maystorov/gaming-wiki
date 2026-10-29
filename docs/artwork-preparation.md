@@ -101,3 +101,85 @@ Manifest freshness and `git diff --check` are checked separately.
 `git check-ignore` confirms private paths are ignored, while game JSON and code
 remain unignored; no files were already tracked in the new private subtree.
 No browser layout or interaction tests were performed.
+
+## Round 2: installed game import
+
+The Round 1 counts and rendering notes above are historical. Round 2 found the
+Steam Snap installation at `~/snap/steam/common/.local/share/Steam/steamapps/common/DarkestDungeon`.
+Steam's library configuration lists this library and app 262060. The game contains
+4,364 PNGs, base-game hero/monster/curio directories, inventory icons under
+`panels/icons_equip`, and `loading_screen` region scenes. Its only installed DLC
+art directory is `dlc/445700_musketeer`; Musketeer is outside the current roster.
+No downloaded artwork, archive extraction, third-party tools, or modifications to
+the installed game were needed. No external source search was needed.
+
+Imported **133 unchanged PNG files**, connecting **133 of 170 records**:
+
+| Category | Connected | Missing |
+| --- | ---: | ---: |
+| Heroes | 15 | 2 |
+| Bosses | 17 | 9 |
+| Enemies | 53 | 13 |
+| Trinkets | 19 | 4 |
+| Items | 11 | 4 |
+| Curios | 13 | 3 |
+| Locations | 5 | 2 |
+
+Hero cards use the original guild illustrations, which are larger than the game's
+small roster icons. Monster images use the atlas's complete `defend` frame;
+curios use `closed`. Native SVG clips the original PNG and reverses atlas packing
+rotation. This is a static game pose, not a reconstructed animation or generated
+image. Flesh uses its original encounter statue portrait. Location primary and
+banner slots share one PNG per region; no duplicate banner file is created.
+Team portraits and guide trinket recommendations now also select verified art.
+Existing generated/unknown files remain fallback assets and are untouched.
+
+Identification uses English localization entries bundled with the installation,
+not filename resemblance alone. Four explicit heading aliases are documented in
+`tools/import_game_art.py`. The manifest records the source-relative filename,
+localization key/name, SHA-256, native dimensions, base-game content origin, and
+optional atlas frame (`x`, `y`, `width`, `height`, `rotated`). No personal absolute
+installation path is stored in the manifest. `sourceContent: base-game` describes
+the installed image source; existing game-data DLC requirements are unchanged.
+No missing DLC image is certified or replaced with base-game artwork.
+
+Remaining blockers:
+
+- Flagellant and Shieldbreaker: their DLC artwork is not installed.
+- All other missing records except Cultist Witch require absent Crimson Court,
+  Shieldbreaker, or Color of Madness artwork. Their existing record requirements
+  remain the source of DLC classification.
+- Cultist Witch: the champion variant uses shader tinting of the Acolyte texture.
+  Import is deliberately skipped until its correct appearance can be reproduced
+  or an identifiable original image is available. The texture is not substituted
+  under the Witch name.
+
+Repeat an import from the repository root with:
+
+```
+python3 tools/import_game_art.py /path/to/installed/DarkestDungeon
+python3 tools/build_game_art_manifest.py --check
+```
+
+The importer is intentionally limited to the verified base-game layouts and
+mapping rules used here. Newly installed DLC needs its own source inspection and
+mapping before importing; merely installing it will not automatically certify it.
+The script checks app identity, localization, PNG signatures, atlas bounds and
+Git exclusions. Existing destinations must match the original checksum; different
+files are never overwritten. Regeneration preserves source and frame metadata;
+validation checks imported PNG hashes, dimensions and frame bounds.
+
+Visual changes retain the black/crimson palette: subtle card glow, short
+transitions, and noninteractive region-edge shading. Images retain their native
+proportions; atlas clipping excludes adjacent frames and shadows. Headings remain
+in opaque panels for readability. Reduced-motion CSS disables transitions and
+hover movement. Failed PNG/SVG candidates advance to the next image and finally
+the original fallback, including when a hidden candidate fails first. A missing
+banner collapses instead of displaying a broken-image icon.
+
+Validation: Python content check, manifest integrity/freshness check, JavaScript
+VM-module regression suite (15 tests), and `git diff --check` pass. Tests cover
+routes, private-art selection, atlas markup, failure ordering, and absent-private-
+asset behavior. All 133 private PNGs are ignored by Git and match their source
+checksums. No old image files or gameplay data were changed. No visual browser
+tests were performed. Nothing was committed, pushed, merged, or deployed.
