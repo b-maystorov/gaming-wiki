@@ -21,7 +21,7 @@ So far, I've added:
 - Original game sprites and item icons where available
 - A responsive layout for desktop and mobile
 
-The website is still in development. Some sections, such as Bosses, Enemies, Curios, and Locations, will be added later.
+The website is still in development. Bosses, Enemies, Trinkets, Items & Provisions, Curios, Locations, and selected Quests now have structured Darkest Dungeon I indexes. Many entries are partial reference records; detailed enemy guides and broader item coverage remain in progress.
 
 ## Technologies
 
@@ -34,7 +34,9 @@ The project currently uses:
 
 No frameworks, databases, or external dependencies are required.
 
-I decided to keep the project lightweight and use plain HTML, CSS, and JavaScript for now.
+The public application stays lightweight and uses plain HTML, CSS, and
+JavaScript. The React + TypeScript + Vite BossCard pilot is isolated on the
+`experiment/react-boss-card` branch and is not part of the authoritative site.
 
 ## Run Locally
 
@@ -56,6 +58,9 @@ Open your browser at:
 http://127.0.0.1:8001
 
 Press `Ctrl+C` in the terminal to stop the server.
+
+For Python validation, Node.js setup, the isolated React pilot, and safe Git
+workflows, see [Development setup](docs/development.md).
 
 ## Project Structure
 
@@ -110,7 +115,7 @@ Darkest Dungeon and its associated characters and artwork belong to their respec
 
 ## Game universe previews
 
-The global homepage uses `dist/css/portal.css`; approved Darkest Dungeon styles
+The vanilla application in `dist/` remains the authoritative website. The React + TypeScript + Vite prototype in `experiments/react-pilot/` is isolated and is not part of the production site. The global homepage uses `dist/css/portal.css`; approved Darkest Dungeon styles
 remain in `styles.css`. `portalGames` in `dist/js/games.js` configures each scene,
 its availability, entry link, and planned categories. Future games share one
 preview template and have no gameplay guides yet.
@@ -130,7 +135,7 @@ the opener; choosing a result lets the existing router focus the destination.
 
 `dist/js/command-center.js` derives its index from `games.js` and `heroes.js`.
 Only real games/previews and implemented hero guides, builds, teams, trinkets,
-and combat skills are indexed. Build, trinket, and skill results open their
+combat skills, bosses, enemies, items, curios, locations, and quests are indexed. Build, trinket, and skill results open their
 existing sections; preview games are labeled in development. Empty input lists
 all indexed content. The native HTML
 `dialog` makes background content inactive while open. Styling lives in
@@ -170,3 +175,24 @@ Check the data locally, without network access or extra packages:
 ```bash
 python3 tools/check_content.py
 ```
+
+
+## Darkest Dungeon field encyclopedias
+
+The canonical DD1 JSON pack now contains a sourced enemy index, normalized trinket records, expedition items, curated curio interactions, regional guides, and selected quest formats. These collections are rendered by the existing vanilla hash router and are also included in global search.
+
+Enemy roster facts and regional mechanics were reference-checked against the DD1 community wiki. Detailed stats and attack tables are intentionally omitted unless recorded. The initial curios list is a curated sample, not an exhaustive database; interaction probabilities are shown only where recorded. Trinket records include the established Highwayman recommendations plus selected general and Crimson Court examples. No source artwork is claimed for encyclopedia entries; CSS monograms are used where permitted local art is unavailable.
+
+Run `python3 tools/check_content.py` to check IDs, source and DLC links, region relationships, item-curio links, asset paths, and routed collection entry points.
+
+Artwork provenance and unresolved image needs are listed in
+[`docs/artwork-inventory.csv`](docs/artwork-inventory.csv). Regenerate that
+inventory after changing the DD1 records with:
+
+```bash
+python3 tools/build_artwork_inventory.py
+```
+
+Existing supplied character and item images
+are retained, but their redistribution permission is not established; see
+[`docs/content-sources.md`](docs/content-sources.md) before adding artwork.

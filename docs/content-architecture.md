@@ -166,3 +166,34 @@ and version-context references, related hero/composition IDs, local paths,
 verification states, and source integrity. The browser routes resolve only
 bosses in this pack, so an in-development record has a real identity page while
 clearly withholding unresearched guide content.
+
+## DD1 field encyclopedia collections
+
+The existing `dist/data/games/darkest-dungeon-1.json` pack remains the sole static source for the new Enemies, Trinkets, Items, Curios, Locations, and Quests collections. The existing `bosses` array remains authoritative for bosses; bosses are excluded from `enemies`. Stable IDs identify records and route IDs provide readable hashes. Location records reference enemy, boss, and curio IDs; curio interactions reference provision item IDs; trinkets keep structured benefits/drawbacks, conditional text, class route restrictions, DLC requirements, and optional set membership.
+
+The first enemy index prioritizes the four standard regions and adds selected shared, Crimson Court, Farmstead, and Darkest Dungeon encounter records. It stores region, enemy family, a unique summary, and selected sourced mechanics. Exact attack tables and resistance values are omitted where they were not verified for every tier. The records are therefore roster references, not complete tactical dossiers. The Curios collection is also a deliberately curated sample; outcome probability is not encounter-spawn probability, and unspecified outcomes remain random or unrecorded.
+
+Trinket recommendation prose in `heroes.js` now holds only Highwayman-specific editorial use/advice and a stable `routeId`; factual rarity, effects, restriction, requirements, and local asset path resolve from the pack. Existing hero guide rendering combines the canonical item record with its recommendation copy. Legacy heroes that have not yet moved into the pack can be linked with `heroRouteIds` until their structured hero records are migrated.
+
+New routes use `#game/darkest-dungeon/<collection>` and `#game/darkest-dungeon/<collection>/<routeId>`. The app's shared collection renderer, breadcrumb builder, sidebar configuration, and global search consume these structured arrays. No publishing step or backend is needed because JSON is served from `dist/data/`.
+
+The content checker validates stable and route IDs, prohibits boss/enemy duplicate names, checks source/DLC/region and entity relationships, verifies local image paths, and checks that collection routes are registered. For future relational storage, these arrays map to entity tables and join tables; source IDs, game-version context, and verification status remain explicit columns rather than being inferred.
+
+## Encyclopedia reliability
+
+Collection filters select fields by collection: quest/item category, trinket
+rarity, or region. `dist/js/encyclopedia.js` shares searchable relationship names
+and all curio interactions between collection search and both global searches.
+Card summaries may remain abbreviated without limiting search coverage.
+
+Trinket `heroRouteIds` retain existing associations; they do not establish a
+class restriction. `classRestrictionHeroRouteIds` records only the existing
+class-specific Buckle and four Crimson Court class-set restrictions. Focus
+Ring's Highwayman association and all guide recommendations remain intact.
+Absent restriction metadata is not a new assertion about an item's usability.
+
+Detail verification labels reflect record metadata, with partial-information
+notes for recorded gaps. Reference checking does not imply installed-patch
+verification. Failed JSON loads show an unavailable state on collection and
+detail routes; independent guides and teams remain accessible. Missing canonical
+trinket effects are withheld rather than reconstructed from editorial advice.

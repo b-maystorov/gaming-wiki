@@ -27,12 +27,13 @@ export const games = {
       { id: 'overview', label: 'Overview', icon: '⌂', view: 'game', description: 'Start with featured guides and compositions.' },
       { id: 'heroes', label: 'Heroes', icon: '♟', view: 'heroes', description: 'Browse hero guides and positions.' },
       { id: 'bosses', label: 'Bosses', icon: '♜', view: 'bosses', description: 'Browse the boss index and encounter guides.' },
-      { id: 'enemies', label: 'Enemies', icon: '⚔', comingSoon: true },
+      { id: 'enemies', label: 'Enemies', icon: '⚔', view: 'enemies', description: 'Search enemies by region, type, and threat.' },
       { id: 'trinkets', label: 'Trinkets', icon: '◇', view: 'trinkets', description: 'Browse currently documented items.' },
-      { id: 'curios', label: 'Curios', icon: '▤', comingSoon: true },
+      { id: 'items', label: 'Items & Provisions', icon: '▧', view: 'items', description: 'Review provisions and expedition supplies.' },
+      { id: 'curios', label: 'Curios', icon: '▤', view: 'curios', description: 'Find curios and their documented interactions.' },
       { id: 'teams', label: 'Team Compositions', icon: '◉', view: 'teams', description: 'Browse all current example parties.' },
-      { id: 'locations', label: 'Locations', icon: '⌖', comingSoon: true },
-      { id: 'quests', label: 'Quests', icon: '☷', comingSoon: true }
+      { id: 'locations', label: 'Locations', icon: '⌖', view: 'locations', description: 'Browse the campaign regions.' },
+      { id: 'quests', label: 'Quests', icon: '☷', view: 'quests', description: 'Understand named and special expeditions.' }
     ]
   }
 };

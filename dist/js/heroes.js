@@ -95,34 +95,10 @@ export const heroes = [
         }
       ],
       trinkets: [
-        {
-          name: 'Focus Ring', rarity: 'Very rare', use: 'Accuracy for the mixed build',
-          image: { src: 'assets/images/darkest-dungeon/focus-ring.png', alt: 'Focus Ring item icon from Darkest Dungeon I', width: 36, height: 72, placeholder: false },
-          effects: ['+10 ACC', '+5% CRIT'], drawbacks: ['−8 DODGE'],
-          advice: 'A general accuracy option for a loadout using both melee and ranged attacks.',
-          alternative: 'Reckless Charm is common: less accuracy, but a smaller dodge penalty.', requirements: baseGame, source: 'trinkets'
-        },
-        {
-          name: 'Gunslinger’s Buckle', rarity: 'Very rare · Highwayman only', use: 'For a ranged commitment',
-          image: { src: 'assets/images/darkest-dungeon/gunslingers-buckle.png', alt: "Gunslinger's Buckle item icon from Darkest Dungeon I", width: 36, height: 72, placeholder: false },
-          effects: ['+20% DMG ranged skills', '+15 ACC ranged skills'], drawbacks: ['−10% DMG melee skills', '−5% CRIT melee skills'],
-          advice: 'Fits the gunslinger loadout. Its melee penalties make it a poor default for a mixed build.',
-          alternative: 'Use the common Reckless Charm for accuracy or Damage Stone for damage until you find it.', requirements: baseGame, source: 'highwayman'
-        },
-        {
-          name: 'Reckless Charm', rarity: 'Common', use: 'Accessible accuracy alternative',
-          image: { src: 'assets/images/charm-placeholder.svg', alt: 'Charm symbol placeholder; not Reckless Charm game artwork', placeholder: true },
-          effects: ['+5 ACC'], drawbacks: ['−2 DODGE'],
-          advice: 'A modest general accuracy option while collecting rarer equipment.',
-          alternative: 'If unavailable, leave the slot open or use an owned item whose downside your party can handle; no drop is guaranteed.', requirements: baseGame, source: 'trinkets'
-        },
-        {
-          name: 'Damage Stone', rarity: 'Common', use: 'Accessible damage option',
-          image: { src: 'assets/images/stone-placeholder.svg', alt: 'Stone symbol placeholder; not Damage Stone game artwork', placeholder: true },
-          effects: ['+10% DMG'], drawbacks: ['−4 DODGE'],
-          advice: 'Useful when accuracy is already covered. Combining it with Focus Ring gives up more dodge.',
-          alternative: 'Choose Reckless Charm instead when misses are the bigger problem. Neither is required to use these builds.', requirements: baseGame, source: 'trinkets'
-        }
+        { routeId: 'focus-ring', use: 'Accuracy for the mixed build', advice: 'A general accuracy option for a loadout using both melee and ranged attacks.', alternative: 'Reckless Charm is common: less accuracy, but a smaller dodge penalty.' },
+        { routeId: 'gunslingers-buckle', use: 'For a ranged commitment', advice: 'Fits the gunslinger loadout. Its melee penalties make it a poor default for a mixed build.', alternative: 'Use the common Reckless Charm for accuracy or Damage Stone for damage until you find it.' },
+        { routeId: 'reckless-charm', use: 'Accessible accuracy alternative', advice: 'A modest general accuracy option while collecting rarer equipment.', alternative: 'If unavailable, leave the slot open or use an owned item whose downside your party can handle; no drop is guaranteed.' },
+        { routeId: 'damage-stone', use: 'Accessible damage option', advice: 'Useful when accuracy is already covered. Combining it with Focus Ring gives up more dodge.', alternative: 'Choose Reckless Charm instead when misses are the bigger problem. Neither is required to use these builds.' }
       ],
       sourceIds: ['highwayman', 'strategy', 'ranges', 'trinkets', 'doctor', 'vestal', 'crusader', 'hellion']
     }

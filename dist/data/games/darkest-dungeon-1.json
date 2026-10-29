@@ -126,7 +126,105 @@
       "kind": "community-wiki",
       "verificationStatus": "reference-checked"
     }
-  ],
+  ,
+    {
+      "id": "wiki-enemies-dd1",
+      "title": "Enemies (Darkest Dungeon)",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Enemies_(Darkest_Dungeon)",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-regions-dd1",
+      "title": "Darkest Dungeon region enemy rosters",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Ruins",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-provisions-dd1",
+      "title": "Provisions and expedition supplies",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Provisions",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-curios-dd1",
+      "title": "Curios and documented interactions",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Curios",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-trinkets-dd1",
+      "title": "Trinkets (Darkest Dungeon)",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Trinkets",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-locations-dd1",
+      "title": "Locations (Darkest Dungeon)",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Locations_(Darkest_Dungeon)",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-quests-dd1",
+      "title": "Expedition length, difficulty, and objectives",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Expedition",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-shieldbreaker-dlc",
+      "title": "The Shieldbreaker DLC",
+      "url": "https://darkestdungeon.wiki.gg/wiki/The_Shieldbreaker_(DLC)",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-crimson-court-trinkets",
+      "title": "Crimson Court trinket set records",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Trinkets_(Darkest_Dungeon)",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-crimson-court-context",
+      "title": "The Crimson Court DLC campaign",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Crimson_Court",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-color-madness-context",
+      "title": "The Color of Madness DLC campaign",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Color_of_Madness",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-warrens-dd1",
+      "title": "Warrens enemy roster and encounter notes",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Warren",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-weald-dd1",
+      "title": "Weald enemy roster and encounter notes",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Weald",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-cove-dd1",
+      "title": "Cove enemy roster and encounter notes",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Cove",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
+    }],
   "heroes": [
     {
       "id": "darkest-dungeon-1:crusader",
@@ -340,7 +438,1345 @@
   ],
   "campingSkills": [],
   "equipmentProgressions": [],
-  "trinkets": [],
+  "trinkets": [
+    {
+      "id": "darkest-dungeon-1:trinket:focus-ring",
+      "routeId": "focus-ring",
+      "name": "Focus Ring",
+      "rarity": "Very rare",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+10 ACC",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+5% CRIT",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−8 DODGE",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": "assets/images/darkest-dungeon/focus-ring.png",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      },
+      "heroRouteIds": [
+        "highwayman"
+      ]
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:gunslingers-buckle",
+      "routeId": "gunslingers-buckle",
+      "name": "Gunslinger's Buckle",
+      "rarity": "Very rare",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+20% DMG ranged skills",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+15 ACC ranged skills",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−10% DMG melee skills",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−5% CRIT melee skills",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": "assets/images/darkest-dungeon/gunslingers-buckle.png",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      },
+      "heroRouteIds": [
+        "highwayman"
+      ],
+      "classRestrictionHeroRouteIds": ["highwayman"]
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:reckless-charm",
+      "routeId": "reckless-charm",
+      "name": "Reckless Charm",
+      "rarity": "Common",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+5 ACC",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−2 DODGE",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:damage-stone",
+      "routeId": "damage-stone",
+      "name": "Damage Stone",
+      "rarity": "Common",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+10% DMG",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−4 DODGE",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:quick-draw-charm",
+      "routeId": "quick-draw-charm",
+      "name": "Quick Draw Charm",
+      "rarity": "Rare",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+8 SPD on first round",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+12% CRIT on first round",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−3 SPD after first round",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:sun-ring",
+      "routeId": "sun-ring",
+      "name": "Sun Ring",
+      "rarity": "Rare",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+10% DMG when Torchlight is above 75",
+          "polarity": "positive",
+          "condition": "Torchlight above 75",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+5 ACC when Torchlight is above 75",
+          "polarity": "positive",
+          "condition": "Torchlight above 75",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10% Stress",
+          "polarity": "negative",
+          "condition": "Torchlight above 75",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:moon-ring",
+      "routeId": "moon-ring",
+      "name": "Moon Ring",
+      "rarity": "Rare",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+15% DMG when Torchlight is below 26",
+          "polarity": "positive",
+          "condition": "Torchlight below 26",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10 ACC when Torchlight is below 26",
+          "polarity": "positive",
+          "condition": "Torchlight below 26",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10% Stress",
+          "polarity": "negative",
+          "condition": "Torchlight below 26",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:ancestral-candle",
+      "routeId": "ancestral-candle",
+      "name": "Ancestor's Candle",
+      "rarity": "Ancestral",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+15% DMG when Torchlight is above 50",
+          "polarity": "positive",
+          "condition": "Torchlight above 50",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+2 SPD when Torchlight is above 50",
+          "polarity": "positive",
+          "condition": "Torchlight above 50",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+5 DODGE when Torchlight is above 50",
+          "polarity": "positive",
+          "condition": "Torchlight above 50",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10% Stress",
+          "polarity": "negative",
+          "condition": "Torchlight above 50",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:ancestral-map",
+      "routeId": "ancestral-map",
+      "name": "Ancestor's Map",
+      "rarity": "Ancestral",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+25% Trap Disarm Chance",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+25% Scouting Chance",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10% Stress",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:man-slayer-ring",
+      "routeId": "man-slayer-ring",
+      "name": "Man Slayer's Ring",
+      "rarity": "Rare",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+25% DMG vs Human",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−8 DODGE",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:unholy-slayer-ring",
+      "routeId": "unholy-slayer-ring",
+      "name": "Unholy Slayer's Ring",
+      "rarity": "Rare",
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+25% DMG vs Unholy",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−8 DODGE",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": null,
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:bloodied-neckerchief",
+      "routeId": "bloodied-neckerchief",
+      "name": "Bloodied Neckerchief",
+      "rarity": "Crimson Court",
+      "heroRouteIds": [
+        "highwayman"
+      ],
+      "classRestrictionHeroRouteIds": ["highwayman"],
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+2 SPD",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        },
+        {
+          "text": "+10 DODGE",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": "darkest-dungeon-1:trinket-set:highwayman",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-crimson-court-trinkets"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:shameful-locket",
+      "routeId": "shameful-locket",
+      "name": "Shameful Locket",
+      "rarity": "Crimson Court",
+      "heroRouteIds": [
+        "highwayman"
+      ],
+      "classRestrictionHeroRouteIds": ["highwayman"],
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+10 ACC",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        },
+        {
+          "text": "+5% CRIT",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        },
+        {
+          "text": "+15% Stress",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": "darkest-dungeon-1:trinket-set:highwayman",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-crimson-court-trinkets"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:glittering-spaulders",
+      "routeId": "glittering-spaulders",
+      "name": "Glittering Spaulders",
+      "rarity": "Crimson Court",
+      "heroRouteIds": [
+        "crusader"
+      ],
+      "classRestrictionHeroRouteIds": ["crusader"],
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+15% PROT",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        },
+        {
+          "text": "+35% Move Resist",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        },
+        {
+          "text": "−15% Stress",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        },
+        {
+          "text": "−2 SPD",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": "darkest-dungeon-1:trinket-set:crusader",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-crimson-court-trinkets"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:signed-conscription",
+      "routeId": "signed-conscription",
+      "name": "Signed Conscription",
+      "rarity": "Crimson Court",
+      "heroRouteIds": [
+        "crusader"
+      ],
+      "classRestrictionHeroRouteIds": ["crusader"],
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+20% Healing Skills",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        },
+        {
+          "text": "+20% Stress Skills",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-crimson-court-trinkets"
+            ]
+          }
+        }
+      ],
+      "acquisition": null,
+      "setId": "darkest-dungeon-1:trinket-set:crusader",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-crimson-court-trinkets"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:necromancers-collar",
+      "routeId": "necromancers-collar",
+      "name": "Necromancer's Collar",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+20% DMG vs Unholy",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+8% CRIT vs Unholy",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Necromancer boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:necromancer",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:prophets-eye",
+      "routeId": "prophets-eye",
+      "name": "Prophet's Eye",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+15 ACC in position 4",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+3 SPD in position 4",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−15% Stress in position 4",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Prophet boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:prophet",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:hags-ladle",
+      "routeId": "hags-ladle",
+      "name": "Hag's Ladle",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+30% Blight Skill Chance",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+40% Blight Resist",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+40% Disease Resist",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Hag boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:hag",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:fusemans-matchstick",
+      "routeId": "fusemans-matchstick",
+      "name": "Fuseman's Matchstick",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+2 SPD",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10% DMG ranged skills",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+6% CRIT ranged skills",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Brigand Pounder boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:brigand-pounder",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:wilburs-flag",
+      "routeId": "wilburs-flag",
+      "name": "Wilbur's Flag",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+50% Stun Resist",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10 DODGE",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Swine Prince boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:swine-prince",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:fleshs-heart",
+      "routeId": "fleshs-heart",
+      "name": "Flesh's Heart",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+50% Bleed Resist",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+15% MAX HP",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Flesh boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:flesh",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:sirens-conch",
+      "routeId": "sirens-conch",
+      "name": "Siren's Conch",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+50% Debuff Resist",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "−20% Stress",
+          "polarity": "negative",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Siren boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:siren",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket:crews-bell",
+      "routeId": "crews-bell",
+      "name": "Crew's Bell",
+      "rarity": "Trophy",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "heroIds": [],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "effects": [
+        {
+          "text": "+50% Move Resist",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+20% Healing Received",
+          "polarity": "positive",
+          "condition": null,
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-trinkets-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Reward from the Champion-level Drowned Crew boss quest; exact reward availability follows quest completion.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-trinkets-dd1"
+          ]
+        }
+      },
+      "setId": null,
+      "bossId": "darkest-dungeon-1:boss:drowned-crew",
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1"
+        ]
+      }
+    }
+  ],
   "bosses": [
     {
       "id": "darkest-dungeon-1:boss:necromancer",
@@ -3020,7 +4456,2200 @@
       }
     }
   ],
-  "enemies": [],
+  "enemies": [
+    {
+      "id": "darkest-dungeon-1:enemy:bone-soldier",
+      "routeId": "bone-soldier",
+      "name": "Bone Soldier",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A front-line skeleton that mixes direct strikes with a stumble that can disturb party order.",
+      "mechanics": [
+        "Its listed Bleed resistance is exceptionally high."
+      ],
+      "attacks": [
+        "Graveyard Slash",
+        "Graveyard Stumble"
+      ],
+      "statusEffects": [
+        "Bleed"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:bone-courtier",
+      "routeId": "bone-courtier",
+      "name": "Bone Courtier",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A rear-rank stress threat whose goblet attack can reach any hero rank.",
+      "mechanics": [
+        "Tempting Goblet applies stress; the Courtier tends to remain in the rear."
+      ],
+      "attacks": [
+        "Tempting Goblet",
+        "Knife in the Dark"
+      ],
+      "statusEffects": [
+        "Stress"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:bone-arbalist",
+      "routeId": "bone-arbalist",
+      "name": "Bone Arbalist",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A ranged skeleton that threatens marked heroes with accurate fire.",
+      "mechanics": [
+        "Quarrel gains extra threat against marked targets."
+      ],
+      "attacks": [
+        "Quarrel",
+        "Bayonet Jab"
+      ],
+      "statusEffects": [
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:bone-defender",
+      "routeId": "bone-defender",
+      "name": "Bone Defender",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A heavily protected skeleton that can disrupt a hero with a shove.",
+      "mechanics": [
+        "Axeblade attacks the front; Dead Weight can knock a hero backward."
+      ],
+      "attacks": [
+        "Axeblade",
+        "Dead Weight"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:bone-spearman",
+      "routeId": "bone-spearman",
+      "name": "Bone Spearman",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A veteran and champion spear fighter with powerful reach into the party.",
+      "mechanics": [
+        "Impale can strike multiple heroes; its resistances rise at higher dungeon tiers."
+      ],
+      "attacks": [
+        "Spear Thrust",
+        "Impale"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:bone-captain",
+      "routeId": "bone-captain",
+      "name": "Bone Captain",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A durable veteran-or-higher frontliner with a stunning ground attack.",
+      "mechanics": [
+        "Ground Pound can stun and disrupt the front ranks."
+      ],
+      "attacks": [
+        "Crushing Blow",
+        "Ground Pound"
+      ],
+      "statusEffects": [
+        "Stun"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:bone-bearer",
+      "routeId": "bone-bearer",
+      "name": "Bone Bearer",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A support skeleton that rallies its allies and should not be mistaken for a boss.",
+      "mechanics": [
+        "Its drum abilities can strengthen or restore the enemy group."
+      ],
+      "attacks": [
+        "Drums of Debilitation",
+        "Drums of Doom"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:gargoyle",
+      "routeId": "gargoyle",
+      "name": "Gargoyle",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A stone creature that can attack from the rear and disrupt formation.",
+      "mechanics": [
+        "Can inflict Stun and move heroes."
+      ],
+      "attacks": [],
+      "statusEffects": [
+        "Stun"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-regions-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:cultist-acolyte",
+      "routeId": "cultist-acolyte",
+      "name": "Cultist Acolyte",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A shared cultist support enemy that stresses, marks, and shifts heroes.",
+      "mechanics": [
+        "Pull and knockback effects can change party formation."
+      ],
+      "attacks": [
+        "Stress attack; pull / knockback effects"
+      ],
+      "statusEffects": [
+        "Knockback",
+        "Pull"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:cultist-brawler",
+      "routeId": "cultist-brawler",
+      "name": "Cultist Brawler",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A shared frontline cultist that pressures marked heroes and can cause Bleed.",
+      "mechanics": [
+        "Its damage threat increases against marked targets."
+      ],
+      "attacks": [
+        "Bleed attack; bonus pressure against marked heroes"
+      ],
+      "statusEffects": [
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:cultist-witch",
+      "routeId": "cultist-witch",
+      "name": "Cultist Witch",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A shared backline support who marks heroes and weakens their defenses.",
+      "mechanics": [
+        "Marking and defensive debuffs make it a priority threat."
+      ],
+      "attacks": [
+        "Marking and defensive debuff abilities"
+      ],
+      "statusEffects": [
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:cultist-priest",
+      "routeId": "cultist-priest",
+      "name": "Cultist Priest",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A late-game cultist support enemy found in the Darkest Dungeon.",
+      "mechanics": [
+        "Its encounter belongs to the final dungeon; detailed move values are not recorded."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:brigand-cutthroat",
+      "routeId": "brigand-cutthroat",
+      "name": "Brigand Cutthroat",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A common bandit fighter that can inflict Bleed and disrupt heroes.",
+      "mechanics": [
+        "Its attack set includes bleeding and movement effects."
+      ],
+      "attacks": [
+        "Bleed attack; knockback"
+      ],
+      "statusEffects": [
+        "Bleed"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:brigand-fusilier",
+      "routeId": "brigand-fusilier",
+      "name": "Brigand Fusilier",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A ranged bandit who threatens the party from rear ranks.",
+      "mechanics": [
+        "Can apply a Dodge debuff."
+      ],
+      "attacks": [
+        "Ranged attack; Dodge debuff"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:brigand-bloodletter",
+      "routeId": "brigand-bloodletter",
+      "name": "Brigand Bloodletter",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A bandit attacker whose attacks can cause Bleed.",
+      "mechanics": [
+        "Shared bandit encounter; detailed values vary by dungeon tier."
+      ],
+      "attacks": [
+        "Bleed attack"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:brigand-raider",
+      "routeId": "brigand-raider",
+      "name": "Brigand Raider",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A durable bandit fighter from the shared encounter roster.",
+      "mechanics": [
+        "Exact attack values are not included in this entry."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:webber",
+      "routeId": "webber",
+      "name": "Webber",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A small spider that can mark and blight a target before allies focus it.",
+      "mechanics": [
+        "Mark, Blight and Stun are listed threats."
+      ],
+      "attacks": [
+        "Web; mark / Blight / Stun effects"
+      ],
+      "statusEffects": [
+        "Blight",
+        "Stun",
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:spitter",
+      "routeId": "spitter",
+      "name": "Spitter",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A spider variant that uses ranged Blight pressure.",
+      "mechanics": [
+        "Can focus a marked hero."
+      ],
+      "attacks": [
+        "Ranged Blight attack"
+      ],
+      "statusEffects": [
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:maggot",
+      "routeId": "maggot",
+      "name": "Maggot",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A small shared creature with a chance to spread disease.",
+      "mechanics": [
+        "Disease and Stun are listed effects."
+      ],
+      "attacks": [
+        "Disease / Stun attack"
+      ],
+      "statusEffects": [
+        "Stun",
+        "Disease"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:ghoul",
+      "routeId": "ghoul",
+      "name": "Ghoul",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Unholy",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A wandering undead threat that combines stress, Bleed and control.",
+      "mechanics": [
+        "Its reported effects include Stun, stress, Bleed and Disease."
+      ],
+      "attacks": [
+        "Stun, stress, and Bleed attacks"
+      ],
+      "statusEffects": [
+        "Bleed",
+        "Stress",
+        "Stun",
+        "Disease"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:madman",
+      "routeId": "madman",
+      "name": "Madman",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A fragile but dangerous shared enemy focused on stress and debuffs.",
+      "mechanics": [
+        "Its attacks inflict stress and can weaken heroes."
+      ],
+      "attacks": [
+        "Stress and stress-debuff attacks"
+      ],
+      "statusEffects": [
+        "Stress"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:swine-chopper",
+      "routeId": "swine-chopper",
+      "name": "Swine Chopper",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast / Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A bulky Swine frontliner with a bleed attack and a party-wide stun threat.",
+      "mechanics": [
+        "Ball and Chain can stun; Butcher Cut can cause Bleed."
+      ],
+      "attacks": [
+        "Butcher Cut",
+        "Ball and Chain"
+      ],
+      "statusEffects": [
+        "Bleed",
+        "Stun"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:swine-slasher",
+      "routeId": "swine-slasher",
+      "name": "Swine Slasher",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast / Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A fast Swine fighter whose attacks can weaken heroes and spread disease.",
+      "mechanics": [
+        "Listed effects include Bleed and Disease debuffs."
+      ],
+      "attacks": [
+        "Hook Where It Hurts"
+      ],
+      "statusEffects": [
+        "Bleed",
+        "Disease"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:swine-wretch",
+      "routeId": "swine-wretch",
+      "name": "Swine Wretch",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A quick, fragile Swine support whose vomit can add stress and disease risk.",
+      "mechanics": [
+        "Prioritize it when disease and stress pressure are accumulating."
+      ],
+      "attacks": [
+        "Vomit"
+      ],
+      "statusEffects": [
+        "Stress",
+        "Disease"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:swine-drummer",
+      "routeId": "swine-drummer",
+      "name": "Swine Drummer",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast / Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A support enemy that marks heroes, applies stress, and changes enemy strength.",
+      "mechanics": [
+        "Drum attacks provide support effects and stress."
+      ],
+      "attacks": [
+        "Drums of Debilitation",
+        "Drums of Doom"
+      ],
+      "statusEffects": [
+        "Stress"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:carrion-eater",
+      "routeId": "carrion-eater",
+      "name": "Carrion Eater",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A scavenging beast that can inflict Blight and disease, especially against marked heroes.",
+      "mechanics": [
+        "Can focus marked targets."
+      ],
+      "attacks": [
+        "Munch"
+      ],
+      "statusEffects": [
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:large-carrion-eater",
+      "routeId": "large-carrion-eater",
+      "name": "Large Carrion Eater",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A larger scavenger with strong control and marked-target pressure.",
+      "mechanics": [
+        "Weaken Prey applies damage and accuracy reductions."
+      ],
+      "attacks": [
+        "Weaken Prey",
+        "Tentacle Devour"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:swinetaur",
+      "routeId": "swinetaur",
+      "name": "Swinetaur",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast / Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A powerful Swine bruiser whose spear can strike the party and knock heroes back.",
+      "mechanics": [
+        "Can cause multi-rank damage and major knockback."
+      ],
+      "attacks": [
+        "Pig Spear",
+        "Boar Rush"
+      ],
+      "statusEffects": [
+        "Knockback"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:swine-skiver",
+      "routeId": "swine-skiver",
+      "name": "Swine Skiver",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "enemyType": "Beast / Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A champion-only back-rank threat that hits multiple heroes with Blight or stuns and repositions itself.",
+      "mechanics": [
+        "Champion Warrens only; Cripple Them targets the back three ranks, while Spit to Roast can stun and knock back."
+      ],
+      "attacks": [
+        "Spit to Roast",
+        "Cripple Them!",
+        "Goring Flight"
+      ],
+      "statusEffects": [
+        "Stun"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-warrens-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:rabid-gnasher",
+      "routeId": "rabid-gnasher",
+      "name": "Rabid Gnasher",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A fast pack hunter that can inflict Bleed and Rabies.",
+      "mechanics": [
+        "High speed and dodge make it an evasive nuisance."
+      ],
+      "attacks": [
+        "Rabid Rush"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-weald-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:fungal-scratcher",
+      "routeId": "fungal-scratcher",
+      "name": "Fungal Scratcher",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "enemyType": "Human / Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A protected fungal creature that becomes more dangerous when an ally marks a hero.",
+      "mechanics": [
+        "Rend the Marked punishes a marked target; higher tiers add Blight."
+      ],
+      "attacks": [
+        "Groping Swipe",
+        "Rend the Marked"
+      ],
+      "statusEffects": [
+        "Blight",
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-weald-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:fungal-artillery",
+      "routeId": "fungal-artillery",
+      "name": "Fungal Artillery",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "enemyType": "Human / Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A backline fungus that marks heroes and attacks with Blight.",
+      "mechanics": [
+        "Rain of Blight and Mark Prey make it a back-rank threat."
+      ],
+      "attacks": [
+        "Mark Prey",
+        "Rain of Blight"
+      ],
+      "statusEffects": [
+        "Blight",
+        "Mark"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-weald-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:ectoplasm",
+      "routeId": "ectoplasm",
+      "name": "Ectoplasm",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A small slime that can multiply, allowing a fight to grow if it is left unchecked.",
+      "mechanics": [
+        "Can summon or coalesce with ectoplasms."
+      ],
+      "attacks": [
+        "Slime",
+        "Cytokinesis"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-weald-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:large-ectoplasm",
+      "routeId": "large-ectoplasm",
+      "name": "Large Ectoplasm",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A larger slime that can stun and create further ectoplasms.",
+      "mechanics": [
+        "Its abilities can prolong the encounter through duplication."
+      ],
+      "attacks": [
+        "Big Slime",
+        "Slimesmack",
+        "Cytokinesis"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-weald-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:unclean-giant",
+      "routeId": "unclean-giant",
+      "name": "Unclean Giant",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A high-health brute with a devastating branch strike and Blight.",
+      "mechanics": [
+        "Treebranch Smackdown is a major single-target threat; it can also shuffle or Blight."
+      ],
+      "attacks": [
+        "Treebranch Smackdown"
+      ],
+      "statusEffects": [
+        "Blight",
+        "Shuffle"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-weald-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:crone",
+      "routeId": "crone",
+      "name": "Crone",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A fast witch who can stress and Blight the party while weakening heroes.",
+      "mechanics": [
+        "Can inflict stress, Blight, accuracy/dodge debuffs, and reduce Torchlight."
+      ],
+      "attacks": [
+        "Blight and stress attacks"
+      ],
+      "statusEffects": [
+        "Blight",
+        "Stress"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-weald-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:pelagic-grouper",
+      "routeId": "pelagic-grouper",
+      "name": "Pelagic Grouper",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A hard-hitting fishfolk fighter that can pull a hero out of position.",
+      "mechanics": [
+        "Seaward Slash and Spearfishing pressure the party; rear placement enables pulls."
+      ],
+      "attacks": [
+        "Seaward Slash",
+        "Spearfishing"
+      ],
+      "statusEffects": [
+        "Pull"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-cove-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:pelagic-shaman",
+      "routeId": "pelagic-shaman",
+      "name": "Pelagic Shaman",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A fast support enemy that stresses the party and strengthens its allies.",
+      "mechanics": [
+        "Can heal and buff allies while using stress attacks."
+      ],
+      "attacks": [
+        "Stress Wave",
+        "Call of the Deep"
+      ],
+      "statusEffects": [
+        "Stress"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-cove-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:pelagic-guardian",
+      "routeId": "pelagic-guardian",
+      "name": "Pelagic Guardian",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "An armored fishfolk defender that guards its allies.",
+      "mechanics": [
+        "Guarding allies substantially increases their protection."
+      ],
+      "attacks": [
+        "Octocestus",
+        "Barnacle Barrier"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-cove-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:sea-maggot",
+      "routeId": "sea-maggot",
+      "name": "Sea Maggot",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A slow, heavily protected creature with a debuffing attack.",
+      "mechanics": [
+        "Its listed armor is high; Brine can debuff and cause disease."
+      ],
+      "attacks": [
+        "Brine"
+      ],
+      "statusEffects": [
+        "Disease"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-cove-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:deep-stinger",
+      "routeId": "deep-stinger",
+      "name": "Deep Stinger",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A quick stinging enemy that can stun and bleed heroes.",
+      "mechanics": [
+        "Shocker stuns; Salty Gouge adds Bleed pressure."
+      ],
+      "attacks": [
+        "Shocker",
+        "Salty Gouge"
+      ],
+      "statusEffects": [
+        "Bleed",
+        "Stun"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-cove-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:drowned-thrall",
+      "routeId": "drowned-thrall",
+      "name": "Drowned Thrall",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Unholy / Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A dangerous drowned enemy that attacks once, then explodes across the party.",
+      "mechanics": [
+        "Its delayed explosion deals party-wide damage and stress; kill quickly."
+      ],
+      "attacks": [
+        "Gargling Grab"
+      ],
+      "statusEffects": [
+        "Stress"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-cove-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:uca-crusher",
+      "routeId": "uca-crusher",
+      "name": "Uca Crusher",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A large crab that can stun, knock back, and inflict heavy Bleed.",
+      "mechanics": [
+        "Arterial Pinch is a significant Bleed threat."
+      ],
+      "attacks": [
+        "Arterial Pinch"
+      ],
+      "statusEffects": [
+        "Bleed"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-cove-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:manservant",
+      "routeId": "manservant",
+      "name": "Manservant",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "enemyType": "Bloodsucker",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A Crimson Court servant that combines stress and melee pressure.",
+      "mechanics": [
+        "Bloodsuckers can inflict the Crimson Curse."
+      ],
+      "attacks": [
+        "Infallible Servitude",
+        "The Thirst"
+      ],
+      "statusEffects": [
+        "Crimson Curse"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:esquire",
+      "routeId": "esquire",
+      "name": "Esquire",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "enemyType": "Bloodsucker",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A Crimson Court courtier focused on forceful close-range attacks.",
+      "mechanics": [
+        "Bloodsuckers can inflict the Crimson Curse."
+      ],
+      "attacks": [
+        "Rib Cracker",
+        "Skewering Repartee"
+      ],
+      "statusEffects": [
+        "Crimson Curse"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:courtesan",
+      "routeId": "courtesan",
+      "name": "Courtesan",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "enemyType": "Bloodsucker",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A Crimson Court support enemy with stress and debuff attacks.",
+      "mechanics": [
+        "Bloodsuckers can inflict the Crimson Curse."
+      ],
+      "attacks": [
+        "Mind Your Manners",
+        "Careless Whispers"
+      ],
+      "statusEffects": [
+        "Crimson Curse"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:supplicant",
+      "routeId": "supplicant",
+      "name": "Supplicant",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "enemyType": "Bloodsucker",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A common Bloodsucker found in the Courtyard and, after the first mission, other regions.",
+      "mechanics": [
+        "Bloodsuckers spread into the four main regions after the first Courtyard mission."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:chevalier",
+      "routeId": "chevalier",
+      "name": "Chevalier",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "enemyType": "Bloodsucker",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A Crimson Court enemy whose attacks can inflict Bleed and the Crimson Curse.",
+      "mechanics": [
+        "Bloodsuckers are resistant to Blight and weak to Bleed."
+      ],
+      "attacks": [],
+      "statusEffects": [
+        "Bleed",
+        "Blight"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:sycophant",
+      "routeId": "sycophant",
+      "name": "Sycophant",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "enemyType": "Bloodsucker",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A mobile Bloodsucker support enemy from the Courtyard roster.",
+      "mechanics": [
+        "Bloodsucker faction; exact attack details are not listed here."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:gatekeeper",
+      "routeId": "gatekeeper",
+      "name": "Gatekeeper",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "enemyType": "Bloodsucker",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A Courtyard Bloodsucker associated with the estate map and its invitations.",
+      "mechanics": [
+        "Bloodsucker faction; detailed combat notes are not recorded here."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:farmhand",
+      "routeId": "farmhand",
+      "name": "Farmhand",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "enemyType": "Husk / Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "summary": "A Farmstead worker whose attacks can inflict Blight and stress.",
+      "mechanics": [
+        "A regular Color of Madness enemy; available attacks can change below half health."
+      ],
+      "attacks": [
+        "Ceaseless Labor",
+        "Sow the Seeds"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:foreman",
+      "routeId": "foreman",
+      "name": "Foreman",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "enemyType": "Husk / Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "summary": "A sturdier Farmstead worker that rallies allies and disrupts intruders.",
+      "mechanics": [
+        "Farmstead-only roster; selected move values are not recorded here."
+      ],
+      "attacks": [
+        "Stir the Rabble",
+        "No Trespassers"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:scarecrow",
+      "routeId": "scarecrow",
+      "name": "Scarecrow",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "enemyType": "Husk / Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "summary": "A Farmstead threat that mixes ranged pressure and stress.",
+      "mechanics": [
+        "Color of Madness enemy; detailed attack values not recorded."
+      ],
+      "attacks": [
+        "Torment",
+        "Stinger Shot"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:plow-horse",
+      "routeId": "plow-horse",
+      "name": "Plow Horse",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "enemyType": "Husk / Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "summary": "A crystalline Farmstead creature capable of dangerous impact attacks.",
+      "mechanics": [
+        "Farmstead-only enemy; detailed attack values not recorded."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:crystalline-aberration",
+      "routeId": "crystalline-aberration",
+      "name": "Crystalline Aberration",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "enemyType": "Husk",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "summary": "A crystalline enemy encountered in the Farmstead expedition.",
+      "mechanics": [
+        "Husk enemy; detailed attack and resistance values not included."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:antibody",
+      "routeId": "antibody",
+      "name": "Antibody",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Eldritch / Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A support organism in the third Darkest Dungeon mission.",
+      "mechanics": [
+        "Can stun heroes; encountered with the Mammoth Cyst."
+      ],
+      "attacks": [
+        "Stunning Secretion"
+      ],
+      "statusEffects": [
+        "Stun"
+      ],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:white-cell-stalk",
+      "routeId": "white-cell-stalk",
+      "name": "White Cell Stalk",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Eldritch / Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A support enemy that heals, displaces the party, and may teleport it to another map room.",
+      "mechanics": [
+        "Teleport does not occur on its first turn; it can lengthen the route without resetting the encounter."
+      ],
+      "attacks": [
+        "Reconstitute",
+        "Teleport",
+        "Displace"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:templar-gladiator",
+      "routeId": "templar-gladiator",
+      "name": "Templar Gladiator",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Eldritch / Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A powerful Templar encountered in the final dungeon.",
+      "mechanics": [
+        "Spoiler-sensitive endgame enemy; detailed attack data not recorded."
+      ],
+      "attacks": [
+        "Templar combat attacks"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:templar-sniper",
+      "routeId": "templar-sniper",
+      "name": "Templar Sniper",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Eldritch / Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A powerful ranged Templar encountered in the final dungeon.",
+      "mechanics": [
+        "Spoiler-sensitive endgame enemy; detailed attack data not recorded."
+      ],
+      "attacks": [
+        "Templar ranged attacks"
+      ],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:ascended-brawler",
+      "routeId": "ascended-brawler",
+      "name": "Ascended Brawler",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A dangerous cultist fighter found only in the final dungeon.",
+      "mechanics": [
+        "Spoiler-sensitive endgame enemy; detailed attack data not recorded."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:ascended-witch",
+      "routeId": "ascended-witch",
+      "name": "Ascended Witch",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A dangerous cultist support enemy found only in the final dungeon.",
+      "mechanics": [
+        "Spoiler-sensitive endgame enemy; detailed attack data not recorded."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:rapturous-cultist",
+      "routeId": "rapturous-cultist",
+      "name": "Rapturous Cultist",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Human",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A final-dungeon cultist with high stress pressure.",
+      "mechanics": [
+        "Spoiler-sensitive endgame enemy; detailed attack data not recorded."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:malignant-growth",
+      "routeId": "malignant-growth",
+      "name": "Malignant Growth",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A hostile growth encountered in the final dungeon.",
+      "mechanics": [
+        "Spoiler-sensitive roster entry; mechanics not yet detailed."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:defensive-growth",
+      "routeId": "defensive-growth",
+      "name": "Defensive Growth",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A defensive support growth encountered in the final dungeon.",
+      "mechanics": [
+        "Spoiler-sensitive roster entry; mechanics not yet detailed."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:polyp",
+      "routeId": "polyp",
+      "name": "Polyp",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Eldritch",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A small final-dungeon organism encountered alongside larger threats.",
+      "mechanics": [
+        "Spoiler-sensitive roster entry; mechanics not yet detailed."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:enemy:flesh-hound",
+      "routeId": "flesh-hound",
+      "name": "Flesh Hound",
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "enemyType": "Beast",
+      "encounterClass": "regular",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A hostile hound encountered in the final dungeon.",
+      "mechanics": [
+        "Spoiler-sensitive roster entry; mechanics not yet detailed."
+      ],
+      "attacks": [],
+      "statusEffects": [],
+      "stats": {},
+      "assetPath": null,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1"
+        ]
+      }
+    }
+  ],
   "teamCompositions": [],
   "strategyRecommendations": []
 ,
@@ -3051,7 +6680,20 @@
         ]
       }
     }
-  ],
+  ,
+    {
+      "id": "darkest-dungeon-1:dlc:shieldbreaker",
+      "name": "The Shieldbreaker",
+      "sourceIds": [
+        "wiki-shieldbreaker-dlc"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-shieldbreaker-dlc"
+        ]
+      }
+    }],
   "regions": [
     {
       "id": "darkest-dungeon-1:region:ruins",
@@ -3248,6 +6890,1997 @@
       "id": "darkest-dungeon-1:boss-category:darkest-dungeon",
       "name": "Darkest Dungeon · spoilers",
       "order": 10
+    }
+  ]
+,
+  "trinketSets":   [
+    {
+      "id": "darkest-dungeon-1:trinket-set:highwayman",
+      "name": "Highwayman set",
+      "heroRouteId": "highwayman",
+      "bonus": [
+        "+45% Virtue Chance"
+      ],
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-crimson-court-trinkets"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:trinket-set:crusader",
+      "name": "Crusader set",
+      "heroRouteId": "crusader",
+      "bonus": [
+        "+20% MAX HP"
+      ],
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-crimson-court-trinkets"
+        ]
+      }
+    }
+  ],
+  "items":   [
+    {
+      "id": "darkest-dungeon-1:item:food",
+      "routeId": "food",
+      "name": "Food",
+      "category": "Provision",
+      "purpose": "Restores a small amount of health and is consumed to prevent Hunger.",
+      "usage": "Can be eaten outside combat to heal; heals 5% of max HP, rounded up.",
+      "limitations": "Cannot be consumed during combat; does not critically heal.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 75,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 12
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:torch",
+      "routeId": "torch",
+      "name": "Torch",
+      "category": "Provision",
+      "purpose": "Raises the party Light meter by 25.",
+      "usage": "In Courtyard quests, grants the party a small accuracy buff for one battle.",
+      "limitations": "Light value changes some combat conditions.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 75,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 8
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [
+        "darkest-dungeon-1:curio:alchemy-table"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:shovel",
+      "routeId": "shovel",
+      "name": "Shovel",
+      "category": "Provision",
+      "purpose": "Clears dungeon obstacles and can improve some curio outcomes.",
+      "usage": "Also usable on selected curios, such as Cove barnacle chests.",
+      "limitations": "Do not assume a fixed number is optimal for every route.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 250,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 4
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [
+        "darkest-dungeon-1:curio:barnacle-chest",
+        "darkest-dungeon-1:curio:bas-relief",
+        "darkest-dungeon-1:curio:shallow-grave"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:skeleton-key",
+      "routeId": "skeleton-key",
+      "name": "Skeleton Key",
+      "category": "Provision",
+      "purpose": "Unlocks specific locked curios.",
+      "usage": "Can open strongboxes and selected locked chests/cabinets.",
+      "limitations": "Curio-only use; not a general obstacle tool.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 200,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 6
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:holy-water",
+      "routeId": "holy-water",
+      "name": "Holy Water",
+      "category": "Provision",
+      "purpose": "Provides a short defensive benefit when used on a hero and improves selected curio outcomes.",
+      "usage": "Use on eligible heroes or documented holy curios.",
+      "limitations": "Curio outcomes depend on the specific object.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 150,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 6
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [
+        "darkest-dungeon-1:curio:altar-of-light",
+        "darkest-dungeon-1:curio:holy-fountain"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:medicinal-herbs",
+      "routeId": "medicinal-herbs",
+      "name": "Medicinal Herbs",
+      "category": "Provision",
+      "purpose": "Cures selected debuffs and improves several curio interactions.",
+      "usage": "Can clear some negative effects and obtain supplies or loot from certain curios.",
+      "limitations": "Effects vary by target and curio.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 200,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 6
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [
+        "darkest-dungeon-1:curio:alchemy-table",
+        "darkest-dungeon-1:curio:dinner-cart",
+        "darkest-dungeon-1:curio:fish-carcass",
+        "darkest-dungeon-1:curio:iron-maiden",
+        "darkest-dungeon-1:curio:moonshine-barrel"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:bandage",
+      "routeId": "bandage",
+      "name": "Bandage",
+      "category": "Provision",
+      "purpose": "Stops an active Bleed effect.",
+      "usage": "Can also be used on certain curios for loot.",
+      "limitations": "One Bandage is supplied per Arbalest in party.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 150,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 6
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [
+        "darkest-dungeon-1:curio:eerie-spiderweb",
+        "darkest-dungeon-1:curio:mummified-remains",
+        "darkest-dungeon-1:curio:pile-of-strange-bones"
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:antivenom",
+      "routeId": "antivenom",
+      "name": "Antivenom",
+      "category": "Provision",
+      "purpose": "Cures Blight.",
+      "usage": "Can be used on selected curios and some traps.",
+      "limitations": "One Antivenom is supplied per Plague Doctor in party.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 150,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 6
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:laudanum",
+      "routeId": "laudanum",
+      "name": "Laudanum",
+      "category": "Provision",
+      "purpose": "Cures Horror.",
+      "usage": "Use on a hero affected by Horror.",
+      "limitations": "Does not remove ordinary stress.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased in the Provision stage unless otherwise noted.",
+        "cost": 100,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        },
+        "stackSize": 6
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:firewood",
+      "routeId": "firewood",
+      "name": "Firewood",
+      "category": "Camping supply",
+      "purpose": "Starts a camp in eligible medium and long expeditions.",
+      "usage": "The campaign automatically supplies it based on dungeon length.",
+      "limitations": "Not purchased in the Provision stage; short quests provide none.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Automatically supplied at embarkation based on expedition length or party composition; not purchased.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        }
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:dog-treats",
+      "routeId": "dog-treats",
+      "name": "Dog Treats",
+      "category": "Class supply",
+      "purpose": "Temporarily buffs a Houndmaster during combat.",
+      "usage": "Houndmaster-only; grants damage and accuracy for three rounds.",
+      "limitations": "Automatically supplied with a Houndmaster; not purchased.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Automatically supplied at embarkation based on expedition length or party composition; not purchased.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        }
+      },
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:the-blood",
+      "routeId": "the-blood",
+      "name": "The Blood",
+      "category": "DLC supply",
+      "purpose": "Manages Crimson Curse stages and provides benefits to cursed heroes.",
+      "usage": "Can be consumed by heroes affected by the Crimson Curse.",
+      "limitations": "Requires The Crimson Court; not a general cure.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Persistent Crimson Court supply; can be found and carried back to the Hamlet.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        }
+      },
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:the-cure",
+      "routeId": "the-cure",
+      "name": "The Cure",
+      "category": "DLC supply",
+      "purpose": "Cures the Crimson Curse.",
+      "usage": "Can be consumed to remove the Curse.",
+      "limitations": "Rare quest item dropped by the Fanatic; requires The Crimson Court.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Dropped by the Fanatic; persistent supply.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        }
+      },
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:aegis-scale",
+      "routeId": "aegis-scale",
+      "name": "Aegis Scale",
+      "category": "DLC supply",
+      "purpose": "Gives one block of Aegis protection.",
+      "usage": "May be consumed on a hero to absorb an attack.",
+      "limitations": "Shieldbreaker DLC encounter reward; requires The Shieldbreaker, not listed in this pack DLC catalog.",
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Dropped through Shieldbreaker nightmare and snake encounters; not sold as a standard provision.",
+        "cost": null,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        }
+      },
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:shieldbreaker"
+        ],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:item:shard-dust",
+      "routeId": "shard-dust",
+      "name": "Shard Dust",
+      "category": "DLC supply",
+      "purpose": "A Color of Madness consumable that grants a battle buff and a quest-duration drawback.",
+      "usage": "Cannot be used while the hero is Virtuous. Purchase from the Jeweler using Comet Shards.",
+      "limitations": "The buff lasts one battle; the stress and Virtue penalty last for the quest.",
+      "effects": [
+        {
+          "text": "+1 SPD and +15% DMG for one battle",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-provisions-dd1"
+            ]
+          }
+        },
+        {
+          "text": "+10% Stress and −10% Virtue Chance for the quest",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-provisions-dd1"
+            ]
+          }
+        }
+      ],
+      "acquisition": {
+        "status": "reference-checked",
+        "text": "Purchased from the Jeweler for 3 Comet Shards.",
+        "cost": null,
+        "stackSize": 6,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "wiki-provisions-dd1"
+          ]
+        }
+      },
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "relatedCurioIds": [],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-provisions-dd1"
+        ]
+      },
+      "assetPath": null
+    }
+  ],
+  "curios":   [
+    {
+      "id": "darkest-dungeon-1:curio:alchemy-table",
+      "routeId": "alchemy-table",
+      "name": "Alchemy Table",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:medicinal-herbs",
+          "outcome": "Loot: gold/gems x2",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": "darkest-dungeon-1:item:torch",
+          "outcome": "Raises Light to 100%",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible Blight, loot, or no effect",
+          "chance": "50% / 25% / 25%",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:altar-of-light",
+      "routeId": "altar-of-light",
+      "name": "Altar of Light",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:holy-water",
+          "outcome": "+30% DMG until camp",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "+20% DMG until camp",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:bookshelf",
+      "routeId": "bookshelf",
+      "name": "Bookshelf",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": null,
+          "outcome": "Possible scouting, stress, positive/negative quirk, or no effect",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:iron-maiden",
+      "routeId": "iron-maiden",
+      "name": "Iron Maiden",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:medicinal-herbs",
+          "outcome": "Loot",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible loot, negative quirk/disease, or no effect",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:holy-fountain",
+      "routeId": "holy-fountain",
+      "name": "Holy Fountain",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Curio rooms",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": null,
+          "outcome": "Stress −10, cures status effects, heals 5 HP",
+          "chance": "50%",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": "darkest-dungeon-1:item:holy-water",
+          "outcome": "Documented interaction listed; exact outcome not recorded here",
+          "chance": null,
+          "certainty": "incomplete",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:dinner-cart",
+      "routeId": "dinner-cart",
+      "name": "Dinner Cart",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:medicinal-herbs",
+          "outcome": "Food x3 plus loot",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible food/loot, Blight, disease, or nothing",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:moonshine-barrel",
+      "routeId": "moonshine-barrel",
+      "name": "Moonshine Barrel",
+      "regionIds": [
+        "darkest-dungeon-1:region:warrens"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:medicinal-herbs",
+          "outcome": "+30% DMG until camp",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible food/supplies, Blight, Tippler quirk, or nothing",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:eerie-spiderweb",
+      "routeId": "eerie-spiderweb",
+      "name": "Eerie Spiderweb",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:bandage",
+          "outcome": "Loot",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible loot, negative quirks, or no effect",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:shallow-grave",
+      "routeId": "shallow-grave",
+      "name": "Shallow Grave",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:shovel",
+          "outcome": "Loot",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible Blight or disease",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:barnacle-chest",
+      "routeId": "barnacle-chest",
+      "name": "Barnacle-Crusted Chest",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:shovel",
+          "outcome": "Loot x3",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible loot, Bleed, or nothing",
+          "chance": "50% / 25% / 25%",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:bas-relief",
+      "routeId": "bas-relief",
+      "name": "Bas-Relief",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "whereFound": "Curio rooms",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": null,
+          "outcome": "Possible positive quirk or harmful result",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": "darkest-dungeon-1:item:shovel",
+          "outcome": "Stress +100",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Shovel interaction has a documented harmful result; avoid treating it as a safe loot option.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:fish-carcass",
+      "routeId": "fish-carcass",
+      "name": "Fish Carcass",
+      "regionIds": [
+        "darkest-dungeon-1:region:cove"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:medicinal-herbs",
+          "outcome": "Food",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible food, disease, Blight, or nothing",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:mummified-remains",
+      "routeId": "mummified-remains",
+      "name": "Mummified Remains",
+      "regionIds": [
+        "darkest-dungeon-1:region:weald"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:bandage",
+          "outcome": "Loot",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible loot or Bleed",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:pile-of-strange-bones",
+      "routeId": "pile-of-strange-bones",
+      "name": "Pile of Strange Bones",
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "whereFound": "Courtyard corridors",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:bandage",
+          "outcome": "The Blood",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible Bleed, loot, Crimson Curse, or nothing",
+          "chance": "varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "DLC content; interaction details and conditional drops should be checked against the current game version.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:stockpile",
+      "routeId": "stockpile",
+      "name": "Stockpile",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "whereFound": "Farmstead",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": null,
+          "outcome": "Guaranteed cache with food, supplies, and a trinket",
+          "chance": "100%",
+          "certainty": "guaranteed",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:rotted-fare",
+      "routeId": "rotted-fare",
+      "name": "Rotted Fare",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "whereFound": "Farmstead",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": null,
+          "outcome": "Removes 100 stress",
+          "chance": "100%",
+          "certainty": "guaranteed",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curios-dd1"
+            ]
+          }
+        }
+      ],
+      "warning": "Outcomes not guaranteed unless explicitly marked guaranteed.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curios-dd1"
+        ]
+      },
+      "assetPath": null
+    }
+  ],
+  "locations":   [
+    {
+      "id": "darkest-dungeon-1:location:ruins",
+      "routeId": "ruins",
+      "name": "Ruins",
+      "regionId": "darkest-dungeon-1:region:ruins",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "An ancient stone complex populated by undead and cultists.",
+      "enemyIds": [
+        "darkest-dungeon-1:enemy:bone-soldier",
+        "darkest-dungeon-1:enemy:bone-courtier",
+        "darkest-dungeon-1:enemy:bone-arbalist",
+        "darkest-dungeon-1:enemy:bone-defender",
+        "darkest-dungeon-1:enemy:bone-spearman",
+        "darkest-dungeon-1:enemy:bone-captain",
+        "darkest-dungeon-1:enemy:bone-bearer",
+        "darkest-dungeon-1:enemy:gargoyle",
+        "darkest-dungeon-1:enemy:cultist-acolyte",
+        "darkest-dungeon-1:enemy:cultist-brawler",
+        "darkest-dungeon-1:enemy:cultist-witch",
+        "darkest-dungeon-1:enemy:brigand-cutthroat",
+        "darkest-dungeon-1:enemy:brigand-fusilier",
+        "darkest-dungeon-1:enemy:brigand-bloodletter",
+        "darkest-dungeon-1:enemy:brigand-raider",
+        "darkest-dungeon-1:enemy:webber",
+        "darkest-dungeon-1:enemy:spitter",
+        "darkest-dungeon-1:enemy:maggot",
+        "darkest-dungeon-1:enemy:ghoul",
+        "darkest-dungeon-1:enemy:madman"
+      ],
+      "bossIds": [
+        "darkest-dungeon-1:boss:necromancer",
+        "darkest-dungeon-1:boss:prophet",
+        "darkest-dungeon-1:boss:brigand-pounder",
+        "darkest-dungeon-1:boss:shambler",
+        "darkest-dungeon-1:boss:collector",
+        "darkest-dungeon-1:boss:fanatic",
+        "darkest-dungeon-1:boss:thing-from-the-stars"
+      ],
+      "curioIds": [
+        "darkest-dungeon-1:curio:alchemy-table",
+        "darkest-dungeon-1:curio:altar-of-light",
+        "darkest-dungeon-1:curio:bookshelf",
+        "darkest-dungeon-1:curio:iron-maiden",
+        "darkest-dungeon-1:curio:holy-fountain"
+      ],
+      "specialMechanics": [
+        "The region roster is primarily Unholy. Bone enemies resist Bleed heavily; Blight is generally more effective against them."
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1",
+          "wiki-locations-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:location:warrens",
+      "routeId": "warrens",
+      "name": "Warrens",
+      "regionId": "darkest-dungeon-1:region:warrens",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A corpse-choked tunnel network inhabited by Swinefolk and scavengers.",
+      "enemyIds": [
+        "darkest-dungeon-1:enemy:cultist-acolyte",
+        "darkest-dungeon-1:enemy:cultist-brawler",
+        "darkest-dungeon-1:enemy:cultist-witch",
+        "darkest-dungeon-1:enemy:brigand-cutthroat",
+        "darkest-dungeon-1:enemy:brigand-fusilier",
+        "darkest-dungeon-1:enemy:brigand-bloodletter",
+        "darkest-dungeon-1:enemy:brigand-raider",
+        "darkest-dungeon-1:enemy:webber",
+        "darkest-dungeon-1:enemy:spitter",
+        "darkest-dungeon-1:enemy:maggot",
+        "darkest-dungeon-1:enemy:ghoul",
+        "darkest-dungeon-1:enemy:madman",
+        "darkest-dungeon-1:enemy:swine-chopper",
+        "darkest-dungeon-1:enemy:swine-slasher",
+        "darkest-dungeon-1:enemy:swine-wretch",
+        "darkest-dungeon-1:enemy:swine-drummer",
+        "darkest-dungeon-1:enemy:carrion-eater",
+        "darkest-dungeon-1:enemy:large-carrion-eater",
+        "darkest-dungeon-1:enemy:swinetaur",
+        "darkest-dungeon-1:enemy:swine-skiver"
+      ],
+      "bossIds": [
+        "darkest-dungeon-1:boss:swine-prince",
+        "darkest-dungeon-1:boss:flesh",
+        "darkest-dungeon-1:boss:brigand-pounder",
+        "darkest-dungeon-1:boss:shambler",
+        "darkest-dungeon-1:boss:collector",
+        "darkest-dungeon-1:boss:fanatic",
+        "darkest-dungeon-1:boss:thing-from-the-stars"
+      ],
+      "curioIds": [
+        "darkest-dungeon-1:curio:dinner-cart",
+        "darkest-dungeon-1:curio:moonshine-barrel"
+      ],
+      "specialMechanics": [
+        "Swine enemies commonly combine Human and Beast types. Disease threats and low Bleed resistance are recurring features."
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1",
+          "wiki-locations-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:location:weald",
+      "routeId": "weald",
+      "name": "Weald",
+      "regionId": "darkest-dungeon-1:region:weald",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A corrupted woodland where fungal creatures, beasts, and bandits converge.",
+      "enemyIds": [
+        "darkest-dungeon-1:enemy:cultist-acolyte",
+        "darkest-dungeon-1:enemy:cultist-brawler",
+        "darkest-dungeon-1:enemy:cultist-witch",
+        "darkest-dungeon-1:enemy:brigand-cutthroat",
+        "darkest-dungeon-1:enemy:brigand-fusilier",
+        "darkest-dungeon-1:enemy:brigand-bloodletter",
+        "darkest-dungeon-1:enemy:brigand-raider",
+        "darkest-dungeon-1:enemy:webber",
+        "darkest-dungeon-1:enemy:spitter",
+        "darkest-dungeon-1:enemy:maggot",
+        "darkest-dungeon-1:enemy:ghoul",
+        "darkest-dungeon-1:enemy:madman",
+        "darkest-dungeon-1:enemy:rabid-gnasher",
+        "darkest-dungeon-1:enemy:fungal-scratcher",
+        "darkest-dungeon-1:enemy:fungal-artillery",
+        "darkest-dungeon-1:enemy:ectoplasm",
+        "darkest-dungeon-1:enemy:large-ectoplasm",
+        "darkest-dungeon-1:enemy:unclean-giant",
+        "darkest-dungeon-1:enemy:crone"
+      ],
+      "bossIds": [
+        "darkest-dungeon-1:boss:hag",
+        "darkest-dungeon-1:boss:brigand-pounder",
+        "darkest-dungeon-1:boss:shambler",
+        "darkest-dungeon-1:boss:collector",
+        "darkest-dungeon-1:boss:fanatic",
+        "darkest-dungeon-1:boss:thing-from-the-stars"
+      ],
+      "curioIds": [
+        "darkest-dungeon-1:curio:eerie-spiderweb",
+        "darkest-dungeon-1:curio:shallow-grave",
+        "darkest-dungeon-1:curio:mummified-remains"
+      ],
+      "specialMechanics": [
+        "Many local enemies resist Blight well and are comparatively vulnerable to Bleed. Fungal enemies can spread Blight and disease."
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1",
+          "wiki-locations-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:location:cove",
+      "routeId": "cove",
+      "name": "Cove",
+      "regionId": "darkest-dungeon-1:region:cove",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "A flooded coast inhabited by fishfolk and Eldritch creatures.",
+      "enemyIds": [
+        "darkest-dungeon-1:enemy:cultist-acolyte",
+        "darkest-dungeon-1:enemy:cultist-brawler",
+        "darkest-dungeon-1:enemy:cultist-witch",
+        "darkest-dungeon-1:enemy:brigand-cutthroat",
+        "darkest-dungeon-1:enemy:brigand-fusilier",
+        "darkest-dungeon-1:enemy:brigand-bloodletter",
+        "darkest-dungeon-1:enemy:brigand-raider",
+        "darkest-dungeon-1:enemy:webber",
+        "darkest-dungeon-1:enemy:spitter",
+        "darkest-dungeon-1:enemy:maggot",
+        "darkest-dungeon-1:enemy:ghoul",
+        "darkest-dungeon-1:enemy:madman",
+        "darkest-dungeon-1:enemy:pelagic-grouper",
+        "darkest-dungeon-1:enemy:pelagic-shaman",
+        "darkest-dungeon-1:enemy:pelagic-guardian",
+        "darkest-dungeon-1:enemy:sea-maggot",
+        "darkest-dungeon-1:enemy:deep-stinger",
+        "darkest-dungeon-1:enemy:drowned-thrall",
+        "darkest-dungeon-1:enemy:uca-crusher"
+      ],
+      "bossIds": [
+        "darkest-dungeon-1:boss:siren",
+        "darkest-dungeon-1:boss:brigand-pounder",
+        "darkest-dungeon-1:boss:drowned-crew",
+        "darkest-dungeon-1:boss:shambler",
+        "darkest-dungeon-1:boss:collector",
+        "darkest-dungeon-1:boss:fanatic",
+        "darkest-dungeon-1:boss:thing-from-the-stars"
+      ],
+      "curioIds": [
+        "darkest-dungeon-1:curio:barnacle-chest",
+        "darkest-dungeon-1:curio:bas-relief",
+        "darkest-dungeon-1:curio:fish-carcass"
+      ],
+      "specialMechanics": [
+        "Many fishfolk resist Bleed and are more vulnerable to Blight. Several encounters threaten heroes with Bleed and formation disruption."
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1",
+          "wiki-locations-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:location:courtyard",
+      "routeId": "courtyard",
+      "name": "Courtyard",
+      "regionId": "darkest-dungeon-1:region:courtyard",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "summary": "A Crimson Court expedition centered on Bloodsuckers and the Crimson Curse.",
+      "enemyIds": [
+        "darkest-dungeon-1:enemy:manservant",
+        "darkest-dungeon-1:enemy:esquire",
+        "darkest-dungeon-1:enemy:courtesan",
+        "darkest-dungeon-1:enemy:supplicant",
+        "darkest-dungeon-1:enemy:chevalier",
+        "darkest-dungeon-1:enemy:sycophant",
+        "darkest-dungeon-1:enemy:gatekeeper"
+      ],
+      "bossIds": [
+        "darkest-dungeon-1:boss:crocodilian",
+        "darkest-dungeon-1:boss:baron",
+        "darkest-dungeon-1:boss:viscount",
+        "darkest-dungeon-1:boss:countess",
+        "darkest-dungeon-1:boss:garden-guardian"
+      ],
+      "curioIds": [
+        "darkest-dungeon-1:curio:pile-of-strange-bones"
+      ],
+      "specialMechanics": [
+        "Bloodsuckers resist Blight and are weak to Bleed; after the first Courtyard mission, some appear in the four main regions."
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1",
+          "wiki-crimson-court-context"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:location:farmstead",
+      "routeId": "farmstead",
+      "name": "Farmstead",
+      "regionId": "darkest-dungeon-1:region:farmstead",
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "summary": "A Color of Madness endless expedition through crystalline corruption.",
+      "enemyIds": [
+        "darkest-dungeon-1:enemy:farmhand",
+        "darkest-dungeon-1:enemy:foreman",
+        "darkest-dungeon-1:enemy:scarecrow",
+        "darkest-dungeon-1:enemy:plow-horse",
+        "darkest-dungeon-1:enemy:crystalline-aberration"
+      ],
+      "bossIds": [
+        "darkest-dungeon-1:boss:thing-from-the-stars",
+        "darkest-dungeon-1:boss:miller",
+        "darkest-dungeon-1:boss:sleeper"
+      ],
+      "curioIds": [
+        "darkest-dungeon-1:curio:stockpile",
+        "darkest-dungeon-1:curio:rotted-fare"
+      ],
+      "specialMechanics": [
+        "The region is a Color of Madness endless expedition. Farmstead-only Husk enemies coexist with recurring enemies from elsewhere."
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1",
+          "wiki-color-madness-context"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:location:darkest-dungeon",
+      "routeId": "darkest-dungeon",
+      "name": "Darkest Dungeon",
+      "regionId": "darkest-dungeon-1:region:darkest-dungeon",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "summary": "The spoiler-sensitive final region, with unique encounters and quest rules.",
+      "enemyIds": [
+        "darkest-dungeon-1:enemy:cultist-priest",
+        "darkest-dungeon-1:enemy:antibody",
+        "darkest-dungeon-1:enemy:white-cell-stalk",
+        "darkest-dungeon-1:enemy:templar-gladiator",
+        "darkest-dungeon-1:enemy:templar-sniper",
+        "darkest-dungeon-1:enemy:ascended-brawler",
+        "darkest-dungeon-1:enemy:ascended-witch",
+        "darkest-dungeon-1:enemy:rapturous-cultist",
+        "darkest-dungeon-1:enemy:malignant-growth",
+        "darkest-dungeon-1:enemy:defensive-growth",
+        "darkest-dungeon-1:enemy:polyp",
+        "darkest-dungeon-1:enemy:flesh-hound"
+      ],
+      "bossIds": [
+        "darkest-dungeon-1:boss:shuffling-horror",
+        "darkest-dungeon-1:boss:templar-impaler",
+        "darkest-dungeon-1:boss:templar-warlord",
+        "darkest-dungeon-1:boss:mammoth-cyst",
+        "darkest-dungeon-1:boss:heart-of-darkness"
+      ],
+      "curioIds": [],
+      "specialMechanics": [
+        "This is the spoiler-sensitive endgame region and contains unique enemies and quest mechanics."
+      ],
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-enemies-dd1",
+          "wiki-locations-dd1"
+        ]
+      }
+    }
+  ],
+  "quests":   [
+    {
+      "id": "darkest-dungeon-1:quest:short-expedition",
+      "routeId": "short-expedition",
+      "name": "Short expeditions",
+      "category": "duration",
+      "duration": "Short",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Standard short missions have no camp phase and no firewood provision.",
+      "specialMechanics": [
+        "No camping phase."
+      ],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:medium-expedition",
+      "routeId": "medium-expedition",
+      "name": "Medium expeditions",
+      "category": "duration",
+      "duration": "Medium",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Standard medium missions include one camp phase.",
+      "specialMechanics": [
+        "One camp phase; firewood is supplied automatically."
+      ],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:long-expedition",
+      "routeId": "long-expedition",
+      "name": "Long expeditions",
+      "category": "duration",
+      "duration": "Long",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Standard long missions include two camp phases.",
+      "specialMechanics": [
+        "Two camp phases; firewood is supplied automatically."
+      ],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:shrieker-perch",
+      "routeId": "shrieker-perch",
+      "name": "Shrieker's Perch",
+      "category": "wandering-boss",
+      "duration": null,
+      "regionIds": [],
+      "summary": "A special encounter that becomes available after losing enough trinkets.",
+      "specialMechanics": [
+        "This is a named special quest tied to the Shrieker encounter."
+      ],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-trinkets-dd1",
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:crimson-court",
+      "routeId": "crimson-court",
+      "name": "The Crimson Court questline",
+      "category": "DLC questline",
+      "duration": null,
+      "regionIds": [
+        "darkest-dungeon-1:region:courtyard"
+      ],
+      "summary": "A staged DLC questline that introduces the Courtyard and Crimson Curse.",
+      "specialMechanics": [
+        "Quest progression and infestation affect access and encounter context."
+      ],
+      "spoilerSensitive": false,
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:crimson-court"
+        ],
+        "mods": []
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-crimson-court-context"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:farmstead",
+      "routeId": "farmstead",
+      "name": "Farmstead expeditions",
+      "category": "endless-expedition",
+      "duration": "Endless",
+      "regionIds": [
+        "darkest-dungeon-1:region:farmstead"
+      ],
+      "summary": "The Color of Madness adds an endless expedition with waves of enemies and shard rewards.",
+      "specialMechanics": [
+        "The expedition uses wave progression; standard dungeon duration labels do not apply."
+      ],
+      "spoilerSensitive": false,
+      "requirements": {
+        "baseGame": false,
+        "dlc": [
+          "darkest-dungeon-1:dlc:color-of-madness"
+        ],
+        "mods": []
+      },
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-color-madness-context"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:darkest-dungeon",
+      "routeId": "darkest-dungeon",
+      "name": "Darkest Dungeon quests",
+      "category": "final-dungeon",
+      "duration": null,
+      "regionIds": [
+        "darkest-dungeon-1:region:darkest-dungeon"
+      ],
+      "summary": "A sequence of named endgame missions with unique objectives and encounters.",
+      "specialMechanics": [
+        "Spoiler-sensitive endgame content."
+      ],
+      "spoilerSensitive": true,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:cleanse",
+      "routeId": "cleanse",
+      "name": "Cleanse",
+      "category": "objective",
+      "duration": null,
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Clear the required room battles; corridor fights do not count toward the room objective.",
+      "specialMechanics": [],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:explore",
+      "routeId": "explore",
+      "name": "Explore",
+      "category": "objective",
+      "duration": null,
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Visit 90% of dungeon rooms. The map can be completed without entering every room.",
+      "specialMechanics": [],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:gather",
+      "routeId": "gather",
+      "name": "Gather",
+      "category": "objective",
+      "duration": null,
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Collect the quest-marked heirlooms from curios and return to town.",
+      "specialMechanics": [],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:activate",
+      "routeId": "activate",
+      "name": "Activate",
+      "category": "objective",
+      "duration": null,
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Use the supplied quest item on the designated curio.",
+      "specialMechanics": [],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
+    },
+    {
+      "id": "darkest-dungeon-1:quest:boss-expedition",
+      "routeId": "boss-expedition",
+      "name": "Boss expedition",
+      "category": "objective",
+      "duration": null,
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins",
+        "darkest-dungeon-1:region:warrens",
+        "darkest-dungeon-1:region:weald",
+        "darkest-dungeon-1:region:cove"
+      ],
+      "summary": "Defeat the target boss. Boss missions use medium-length dungeons.",
+      "specialMechanics": [],
+      "spoilerSensitive": false,
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-quests-dd1"
+        ]
+      }
     }
   ]
 }

@@ -1,3 +1,4 @@
+import { encyclopediaSearchText } from './encyclopedia.js';
 import { games, portalGames } from './games.js';
 import { heroes } from './heroes.js';
 import { heroAbilities } from './hero-abilities.js';
@@ -7,7 +8,7 @@ function normalizeSearch(value) {
     .replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
-export function createSearchIndex(bosses = []) {
+export function createSearchIndex(bosses = [], content = null) {
   const entries = portalGames.map(game => ({
     title: game.name, type: game.available ? 'Game wiki' : 'Game preview', icon: '◈',
     detail: game.available ? 'Guides available' : 'In development · Preview only', href: game.href,
@@ -29,9 +30,11 @@ export function createSearchIndex(bosses = []) {
         keywords: `${context} ${team.build} ${team.members.join(' ')} ${team.synergy}` });
     }
     for (const trinket of hero.guide.trinkets) {
-      entries.push({ title: trinket.name, type: 'Trinket', icon: '◇', detail: `${hero.name} · Opens Trinkets`,
-        href: `#game/${game.id}/trinkets`,
-        keywords: `${context} equipment item ${trinket.rarity} ${trinket.use} ${trinket.effects.join(' ')}` });
+      const record = content?.trinkets.find(item => item.routeId === trinket.routeId);
+      if (!record) continue;
+      entries.push({ title: record.name, type: 'Trinket', icon: '◇', detail: `${hero.name} · Opens Trinkets`,
+        href: `#game/${game.id}/trinkets/${record.routeId}`,
+        keywords: `${context} equipment item ${record.rarity} ${trinket.use} ${record.effects.map(effect => effect.text).join(' ')}` });
     }
   }
   for (const hero of heroes) {
@@ -54,6 +57,19 @@ export function createSearchIndex(bosses = []) {
       keywords: `${boss.name} ${(boss.aliases || []).join(' ')} ${boss.summary} ${boss.regionLabel} ${categoryNames}`
     });
   }
+  if (content) {
+    const collections = [
+      ['enemies', 'Enemy', '⚔'], ['trinkets', 'Trinket', '◇'],
+      ['items', 'Provision', '▧'], ['curios', 'Curio', '▤'],
+      ['locations', 'Location', '⌖'], ['quests', 'Quest', '☷']
+    ];
+    for (const [key, type, icon] of collections) {
+      for (const record of content[key] || []) {
+        entries.push({ title: record.name, type, icon, detail: `Darkest Dungeon · ${record.verification?.status || 'in development'}`,
+          href: `#game/darkest-dungeon/${key}/${record.routeId}`, keywords: encyclopediaSearchText(key, record, content, heroes) });
+      }
+    }
+  }
   // Future guides may recommend the same item or party; show each destination/title once.
   return entries.filter((entry, index) => entries.findIndex(other => other.title === entry.title && other.href === entry.href) === index)
     .map(entry => ({ ...entry, searchText: normalizeSearch(`${entry.title} ${entry.type} ${entry.detail} ${entry.keywords}`) }));
@@ -72,7 +88,7 @@ export function searchEntries(entries, query) {
   }
 }
 
-export function initializeCommandCenter({ navigate, bosses = [] }) {
+export function initializeCommandCenter({ navigate, bosses = [], content = null }) {
   const dialog = document.getElementById('command-center');
   const trigger = document.getElementById('open-command-center');
   const closeButton = document.getElementById('close-command-center');
@@ -80,7 +96,7 @@ export function initializeCommandCenter({ navigate, bosses = [] }) {
   const results = document.getElementById('command-results');
   const status = document.getElementById('command-status');
   const empty = document.getElementById('command-empty');
-  const index = createSearchIndex(bosses);
+  const index = createSearchIndex(bosses, content);
   let matches = [];
   let selectedIndex = -1;
   let returnTarget = trigger;

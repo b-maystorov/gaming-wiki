@@ -4,11 +4,18 @@ export async function loadStructuredGameContent({ heroes, heroAbilities }) {
   const response = await fetch(dataUrl);
   if (!response.ok) throw new Error(`Structured game data request failed (${response.status}).`);
   const pack = await response.json();
+  const collections = ['heroes', 'combatSkills', 'sources', 'dlcs', 'regions', 'bossCategories',
+    'bosses', 'enemies', 'trinkets', 'trinketSets', 'items', 'curios', 'locations', 'quests'];
+  if (!pack?.game?.versionContext || collections.some(key => !Array.isArray(pack[key]))) {
+    throw new Error('Structured game data is missing required collections or version context.');
+  }
   const hero = pack.heroes.find(record => record.routeId === 'crusader');
   if (!hero) throw new Error('Structured game data does not contain the Crusader record.');
 
   const pageHero = heroes.find(record => record.id === hero.routeId);
   if (!pageHero) throw new Error(`No roster entry exists for ${hero.routeId}.`);
+  // Finish conversion before mutating the legacy roster so failed loads stay isolated.
+  const abilities = toLegacyAbilityEntry(pack, hero);
   Object.assign(pageHero, {
     roleTags: hero.roleTags,
     role: hero.role,
@@ -26,7 +33,7 @@ export async function loadStructuredGameContent({ heroes, heroAbilities }) {
     }
   });
 
-  heroAbilities.crusader = toLegacyAbilityEntry(pack, hero);
+  heroAbilities.crusader = abilities;
   return pack;
 }
 
