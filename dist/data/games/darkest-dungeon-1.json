@@ -564,7 +564,8 @@
       },
       "heroRouteIds": [
         "highwayman"
-      ]
+      ],
+      "classRestrictionHeroRouteIds": ["highwayman"]
     },
     {
       "id": "darkest-dungeon-1:trinket:reckless-charm",
@@ -1045,6 +1046,7 @@
       "heroRouteIds": [
         "highwayman"
       ],
+      "classRestrictionHeroRouteIds": ["highwayman"],
       "requirements": {
         "baseGame": false,
         "dlc": [
@@ -1094,6 +1096,7 @@
       "heroRouteIds": [
         "highwayman"
       ],
+      "classRestrictionHeroRouteIds": ["highwayman"],
       "requirements": {
         "baseGame": false,
         "dlc": [
@@ -1154,6 +1157,7 @@
       "heroRouteIds": [
         "crusader"
       ],
+      "classRestrictionHeroRouteIds": ["crusader"],
       "requirements": {
         "baseGame": false,
         "dlc": [
@@ -1225,6 +1229,7 @@
       "heroRouteIds": [
         "crusader"
       ],
+      "classRestrictionHeroRouteIds": ["crusader"],
       "requirements": {
         "baseGame": false,
         "dlc": [

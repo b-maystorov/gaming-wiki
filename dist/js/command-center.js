@@ -1,3 +1,4 @@
+import { encyclopediaSearchText } from './encyclopedia.js';
 import { games, portalGames } from './games.js';
 import { heroes } from './heroes.js';
 import { heroAbilities } from './hero-abilities.js';
@@ -58,17 +59,14 @@ export function createSearchIndex(bosses = [], content = null) {
   }
   if (content) {
     const collections = [
-      ['enemies', 'Enemy', '⚔', record => `${record.name} ${record.summary} ${record.enemyType} ${(record.mechanics || []).join(' ')}`],
-      ['trinkets', 'Trinket', '◇', record => `${record.name} ${record.rarity} ${(record.effects || []).map(effect => effect.text).join(' ')}`],
-      ['items', 'Provision', '▧', record => `${record.name} ${record.purpose} ${record.usage}`],
-      ['curios', 'Curio', '▤', record => `${record.name} ${record.whereFound} ${(record.interactions || []).map(item => item.outcome).join(' ')}`],
-      ['locations', 'Location', '⌖', record => `${record.name} ${record.summary}`],
-      ['quests', 'Quest', '☷', record => `${record.name} ${record.summary}`]
+      ['enemies', 'Enemy', '⚔'], ['trinkets', 'Trinket', '◇'],
+      ['items', 'Provision', '▧'], ['curios', 'Curio', '▤'],
+      ['locations', 'Location', '⌖'], ['quests', 'Quest', '☷']
     ];
-    for (const [key, type, icon, keywords] of collections) {
+    for (const [key, type, icon] of collections) {
       for (const record of content[key] || []) {
         entries.push({ title: record.name, type, icon, detail: `Darkest Dungeon · ${record.verification?.status || 'in development'}`,
-          href: `#game/darkest-dungeon/${key}/${record.routeId}`, keywords: keywords(record) });
+          href: `#game/darkest-dungeon/${key}/${record.routeId}`, keywords: encyclopediaSearchText(key, record, content, heroes) });
       }
     }
   }

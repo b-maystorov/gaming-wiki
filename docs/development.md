@@ -42,6 +42,17 @@ From the repository root, validate structured content and local references:
 python3 tools/check_content.py
 ```
 
+Run the vanilla encyclopedia regression tests with Node.js 24 (no packages needed):
+
+```bash
+node --experimental-vm-modules tests/encyclopedia.test.mjs
+```
+
+The tests load the real ES modules with simulated data requests and a minimal
+DOM. They check filters, search, metadata, routes, and load failures; they do
+not replace browser accessibility, layout, or keyboard testing. The VM flag is
+only for this test harness; the website still runs directly in a browser.
+
 Regenerate the artwork inventory only after changing the content records:
 
 ```bash

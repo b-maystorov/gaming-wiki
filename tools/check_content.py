@@ -283,7 +283,9 @@ def check_pack(pack):
         require(requirements.get("baseGame") is not None and all(dlc_id in dlc_ids for dlc_id in requirements["dlc"]), f"trinket {trinket['id']}: malformed or unknown DLC requirement")
         for hero_id in trinket.get("heroIds", []):
             require(hero_id in hero_ids, f"trinket {trinket['id']}: unknown hero {hero_id}")
-        for route_id in trinket.get("heroRouteIds", []):
+        restrictions = trinket.get("classRestrictionHeroRouteIds", [])
+        require(isinstance(restrictions, list), f"trinket {trinket['id']}: class restrictions must be a list")
+        for route_id in trinket.get("heroRouteIds", []) + trinket.get("classRestrictionHeroRouteIds", []):
             require(route_id in hero_route_ids, f"trinket {trinket['id']}: unknown hero route {route_id}")
         for effect in trinket["effects"]:
             require(effect.get("polarity") in {"positive", "negative"}, f"trinket {trinket['id']}: effect polarity must be positive or negative")

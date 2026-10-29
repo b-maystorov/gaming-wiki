@@ -1,3 +1,4 @@
+import { matchesCollectionFilter, encyclopediaSearchText, verificationLabel } from './encyclopedia.js';
 import { heroes, sources } from './heroes.js';
 import { games, portalGames } from './games.js';
 import { initializeCommandCenter } from './command-center.js';
@@ -10,12 +11,12 @@ try {
   structuredGameContent = await loadStructuredGameContent({ heroes, heroAbilities });
 } catch (error) {
   // Keep the rest of the site navigable if its required static data file is missing.
-  console.error('Could not load the structured Crusader guide:', error);
+  console.error('Could not load the Darkest Dungeon encyclopedia:', error);
   const crusader = heroes.find(hero => hero.id === 'crusader');
   if (crusader) Object.assign(crusader, {
     roleTags: ['Content unavailable'], requirements: { baseGame: true, dlc: [], mods: [] },
     galleryArt: { src: '', alt: 'Crusader portrait unavailable', monogram: 'CR', credit: '', permission: 'unavailable' },
-    summary: 'Crusader guide data could not be loaded.'
+    summary: 'Crusader guide data could not be loaded.', contentUnavailable: true
   });
   heroAbilities.crusader = { skills: [], loadError: true };
 }
@@ -195,7 +196,7 @@ function getTrinkets() {
       drawbacks: record.effects.filter(effect => effect.polarity === 'negative').map(effect => effect.text),
       requirements: record.requirements,
       image: record.assetPath ? { src: record.assetPath, alt: `${record.name} local icon; reuse terms unverified`, width: 36, height: 72 } : null,
-      source: record.verification.sourceIds[0] } : { ...trinket, hero };
+      source: record.verification.sourceIds[0] } : { ...trinket, hero, contentUnavailable: true };
   }) : []);
 }
 
@@ -210,7 +211,7 @@ function encyclopediaHref(kind, record) {
 function renderEncyclopediaCard(kind, record, meta, summary) {
   const label = Array.isArray(meta) ? meta.join(' · ') : meta;
   const title = record.name;
-  return `<a class="encyclopedia-card" data-encyclopedia-card data-search-text="${escapeHtml(`${title} ${label} ${summary} ${record.enemyType || ''} ${(record.mechanics || []).join(' ')}`.toLowerCase())}" data-region-ids="${escapeHtml((record.regionIds || []).join(' '))}" href="${escapeHtml(encyclopediaHref(kind, record))}">
+  return `<a class="encyclopedia-card" data-encyclopedia-card data-search-text="${escapeHtml(`${title} ${label} ${summary} ${encyclopediaSearchText(kind, record, structuredGameContent, heroes)}`.toLowerCase())}" data-region-ids="${escapeHtml((record.regionIds || []).join(' '))}" href="${escapeHtml(encyclopediaHref(kind, record))}">
     <span class="encyclopedia-mark" role="img" aria-label="CSS monogram placeholder; no local artwork available">${escapeHtml(title.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}<small>No local art</small></span><span class="encyclopedia-card-copy"><small>${escapeHtml(label)}</small><strong>${escapeHtml(title)}</strong><span>${escapeHtml(summary)}</span><em>Open entry →</em></span></a>`;
 }
 
@@ -228,16 +229,16 @@ function filterEncyclopedia() {
   const filter = document.getElementById('encyclopedia-filter')?.value || 'all';
   const extraFilters = [...document.querySelectorAll('[data-encyclopedia-filter]')].map(select => [select.dataset.encyclopediaFilter, select.value]);
   const cards = [...document.querySelectorAll('[data-encyclopedia-card]')];
+  const kind = location.hash.replace(/^#game\/darkest-dungeon\//, '').split('/')[0];
   let visible = 0;
   for (const card of cards) {
-    const record = collectionRecords(location.hash.replace(/^#game\/darkest-dungeon\//, '').split('/')[0]).find(entry => card.href.endsWith(`/${entry.routeId}`));
+    const record = collectionRecords(kind).find(entry => card.href.endsWith(`/${entry.routeId}`));
     const matchText = card.dataset.searchText.includes(query);
-    let matchFilter = filter === 'all';
-    if (!matchFilter && record) matchFilter = record.regionIds ? record.regionIds.includes(filter) : record.regionId ? record.regionId === filter : (record.rarity || record.category) === filter;
+    let matchFilter = matchesCollectionFilter(kind, record, filter);
     if (record) for (const [field, value] of extraFilters) {
       if (value === 'all') continue;
       if (field === 'provision') matchFilter = matchFilter && record.interactions?.some(interaction => interaction.itemId === value);
-      if (field === 'class') matchFilter = matchFilter && (record.heroRouteIds || []).includes(value);
+      if (field === 'class') matchFilter = matchFilter && (record.classRestrictionHeroRouteIds || []).includes(value);
       if (field === 'dlc') matchFilter = matchFilter && (record.requirements?.dlc || []).includes(value);
       if (field === 'region') matchFilter = matchFilter && (record.regionIds || []).includes(value);
       if (field === 'effect') matchFilter = matchFilter && record.effects?.some(effect => effect.polarity === value || (value === 'conditional' && effect.condition));
@@ -264,7 +265,7 @@ function renderEncyclopediaCollection(kind) {
     : [...new Set(records.map(record => kind === 'trinkets' ? record.rarity : kind === 'items' ? record.category : record.category))].map(value => [value, value]);
   const cards = records.map(record => {
     if (kind === 'enemies') return renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary);
-    if (kind === 'trinkets') return renderEncyclopediaCard(kind, record, [record.rarity, requirementLabel(record.requirements), (record.heroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).join(', ')], record.effects.map(effect => effect.text).join(' · '));
+    if (kind === 'trinkets') return renderEncyclopediaCard(kind, record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).join(', ')], record.effects.map(effect => effect.text).join(' · '));
     if (kind === 'items') return renderEncyclopediaCard(kind, record, record.category, record.purpose);
     if (kind === 'curios') {
       const outcomes = record.interactions.map(interaction => {
@@ -276,7 +277,7 @@ function renderEncyclopediaCollection(kind) {
     if (kind === 'locations') return renderEncyclopediaCard(kind, record, requirementLabel(record.requirements), record.summary);
     return renderEncyclopediaCard(kind, record, record.category, record.summary);
   }).join('');
-  const moreFilters = kind === 'trinkets' ? `<div><label for="filter-class">Class restriction</label><select id="filter-class" data-encyclopedia-filter="class"><option value="all">Any class</option><option value="highwayman">Highwayman</option><option value="crusader">Crusader</option></select></div><div><label for="filter-dlc">Requirement</label><select id="filter-dlc" data-encyclopedia-filter="dlc"><option value="all">Any requirement</option>${structuredGameContent.dlcs.map(dlc=>`<option value="${escapeHtml(dlc.id)}">${escapeHtml(dlc.name)}</option>`).join('')}</select></div><div><label for="filter-effect">Effect</label><select id="filter-effect" data-encyclopedia-filter="effect"><option value="all">Any effect</option><option value="positive">Benefits</option><option value="negative">Drawbacks</option><option value="conditional">Conditional effects</option></select></div><div><label for="filter-origin">Region / origin</label><select id="filter-origin" data-encyclopedia-filter="region"><option value="all">Any origin</option>${structuredGameContent.regions.map(region=>`<option value="${escapeHtml(region.id)}">${escapeHtml(region.name)}</option>`).join('')}</select></div>` : kind === 'curios' ? `<div><label for="filter-provision">Provision</label><select id="filter-provision" data-encyclopedia-filter="provision"><option value="all">Any provision</option>${structuredGameContent.items.map(item=>`<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('')}</select></div>` : '';
+  const moreFilters = kind === 'trinkets' ? `<div><label for="filter-class">Class restriction</label><select id="filter-class" data-encyclopedia-filter="class"><option value="all">All restrictions</option><option value="highwayman">Highwayman</option><option value="crusader">Crusader</option></select></div><div><label for="filter-dlc">Requirement</label><select id="filter-dlc" data-encyclopedia-filter="dlc"><option value="all">Any requirement</option>${structuredGameContent.dlcs.map(dlc=>`<option value="${escapeHtml(dlc.id)}">${escapeHtml(dlc.name)}</option>`).join('')}</select></div><div><label for="filter-effect">Effect</label><select id="filter-effect" data-encyclopedia-filter="effect"><option value="all">Any effect</option><option value="positive">Benefits</option><option value="negative">Drawbacks</option><option value="conditional">Conditional effects</option></select></div><div><label for="filter-origin">Region / origin</label><select id="filter-origin" data-encyclopedia-filter="region"><option value="all">Any origin</option>${structuredGameContent.regions.map(region=>`<option value="${escapeHtml(region.id)}">${escapeHtml(region.name)}</option>`).join('')}</select></div>` : kind === 'curios' ? `<div><label for="filter-provision">Provision</label><select id="filter-provision" data-encyclopedia-filter="provision"><option value="all">Any provision</option>${structuredGameContent.items.map(item=>`<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('')}</select></div>` : '';
   const groupedCards = kind === 'enemies' ? [
     ['Shared and wandering enemies', records.filter(record => record.regionIds.length > 1)],
     ...structuredGameContent.regions.map(region => [region.name, records.filter(record => record.regionIds.length === 1 && record.regionIds[0] === region.id)])
@@ -308,9 +309,9 @@ function renderEncyclopediaDetail(kind, record) {
   } else {
     sections = `<section class="encyclopedia-section"><h2>Expedition context</h2><p>${escapeHtml(record.summary)}</p>${record.specialMechanics?.length?`<ul>${record.specialMechanics.map(item=>`<li>${escapeHtml(item)}</li>`).join('')}</ul>`:''}<p>${record.spoilerSensitive?'Spoilers are minimized by default; this entry contains a high-level description only.':'This record covers a named or format-level quest, not generated objectives.'}</p></section>`;
   }
-  const meta = kind === 'enemies' ? `${record.regionIds.map(regionName).join(' · ')} · ${record.enemyType} · ${record.encounterClass} · ${requirementLabel(record.requirements)}` : kind === 'curios' ? `${record.regionIds.map(regionName).join(' · ')} · ${requirementLabel(record.requirements)}` : kind === 'locations' ? `${regionName(record.regionId)} · ${requirementLabel(record.requirements)}` : kind === 'trinkets' ? `${record.rarity} · ${requirementLabel(record.requirements)}${record.heroRouteIds?.length ? ` · ${record.heroRouteIds.map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', ')}` : ''}${record.regionIds?.length ? ` · ${record.regionIds.map(regionName).join(' · ')}` : ''}` : record.category || 'Reference entry';
+  const meta = kind === 'enemies' ? `${record.regionIds.map(regionName).join(' · ')} · ${record.enemyType} · ${record.encounterClass} · ${requirementLabel(record.requirements)}` : kind === 'curios' ? `${record.regionIds.map(regionName).join(' · ')} · ${requirementLabel(record.requirements)}` : kind === 'locations' ? `${regionName(record.regionId)} · ${requirementLabel(record.requirements)}` : kind === 'trinkets' ? `${record.rarity} · ${requirementLabel(record.requirements)}${record.classRestrictionHeroRouteIds?.length ? ` · ${record.classRestrictionHeroRouteIds.map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', ')}` : ''}${record.regionIds?.length ? ` · ${record.regionIds.map(regionName).join(' · ')}` : ''}` : record.category || 'Reference entry';
   const sources = (record.verification?.sourceIds || []).map(id=>structuredGameContent.sources.find(source=>source.id===id)).filter(Boolean);
-  return `<a class="back-link" href="${back}">← All ${collectionConfig[kind].title.toLowerCase()}</a><section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">${escapeHtml(meta)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)}</h1><p class="lede">${escapeHtml(record.summary || record.purpose || record.whereFound || '')}</p><span class="boss-status">Reference-checked · details may be incomplete</span></section>${sections}<section class="encyclopedia-section"><h2>Sources & verification</h2><p>Reference-checked against Darkest Dungeon I community references; not tested against an installed patch.</p><ul>${sources.map(source=>`<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a></li>`).join('')}</ul></section>`;
+  return `<a class="back-link" href="${back}">← All ${collectionConfig[kind].title.toLowerCase()}</a><section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">${escapeHtml(meta)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)}</h1><p class="lede">${escapeHtml(record.summary || record.purpose || record.whereFound || '')}</p><span class="boss-status">${escapeHtml(verificationLabel(kind, record))}</span></section>${sections}<section class="encyclopedia-section"><h2>Sources & verification</h2><p>${escapeHtml(verificationLabel(kind, record))}. ${structuredGameContent.game.versionContext.verifiedAgainstInstalledBuild ? 'See the recorded game-version context for testing scope.' : 'Not tested against an installed game patch.'}</p><ul>${sources.map(source=>`<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a></li>`).join('')}</ul></section>`;
 }
 
 function linkedList(records, kind) {
@@ -346,7 +347,7 @@ function renderSearchResults(query) {
     results.push({ title: boss.name, kind: boss.guideStatus === 'available' ? 'Boss guide' : 'Boss · In development', href: `#game/darkest-dungeon/bosses/${boss.routeId}` });
   });
   for (const kind of ['enemies', 'trinkets', 'items', 'curios', 'locations', 'quests']) {
-    collectionRecords(kind).filter(record => `${record.name} ${record.summary || ''} ${record.purpose || ''} ${record.enemyType || ''} ${(record.mechanics || []).join(' ')}`.toLowerCase().includes(normalizedQuery))
+    collectionRecords(kind).filter(record => encyclopediaSearchText(kind, record, structuredGameContent, heroes).includes(normalizedQuery))
       .forEach(record => results.push({ title: record.name, kind: ({ enemies: 'Enemy', trinkets: 'Trinket', items: 'Item', curios: 'Curio', locations: 'Location', quests: 'Quest' })[kind], href: encyclopediaHref(kind, record) }));
   }
   return {
@@ -640,7 +641,7 @@ function renderHeroTrinketSection(hero) {
   const trinkets = getTrinkets().filter(trinket => trinket.hero.id === hero.id);
   if (!trinkets.length) return renderGuideDevelopmentSection('trinkets', 'Recommended trinkets', `Class-specific equipment recommendations for ${hero.name} are still in development.`, '#game/darkest-dungeon/trinkets', 'Browse available item records', '05');
   return `<section class="guide-section" aria-labelledby="trinkets"><div class="section-heading"><h2 id="trinkets" tabindex="-1">Recommended trinkets</h2><span>05 / Equipment notes</span></div>
-    <p class="section-intro">Picks for ${escapeHtml(hero.name)} · Reference values; installed patch not checked. Availability is not guaranteed. The two supplied game icons have unverified provenance; the other two remain labeled placeholders.</p><div class="two-columns">${trinkets.map(renderTrinket).join('')}</div>
+    <p class="section-intro">Picks for ${escapeHtml(hero.name)} · ${structuredGameContent ? 'Reference values; installed patch not checked. Availability is not guaranteed. The two supplied game icons have unverified provenance; the other two remain labeled placeholders.' : 'Item effects and availability cannot be shown until the encyclopedia data loads.'}</p><div class="two-columns">${trinkets.map(renderTrinket).join('')}</div>
     <p class="section-intro"><a href="#game/darkest-dungeon/trinkets">Browse available item records →</a></p></section>`;
 }
 
@@ -689,6 +690,7 @@ function renderHeroSequence(hero) {
 }
 
 function renderHeroPage(hero) {
+  if (hero.contentUnavailable) return renderContentError('Crusader');
   return `${renderHeroHeader(hero)}${renderHeroGuideNavigation(hero)}
     ${renderHeroOverview(hero)}
     ${renderHeroTeamSection(hero)}
@@ -754,6 +756,7 @@ function renderTeam(team) {
 }
 
 function renderTrinket(trinket) {
+  if (trinket.contentUnavailable) return `<article class="panel trinket-card"><h3>${escapeHtml(trinket.name || trinket.routeId)}</h3><p>Item details are unavailable because the encyclopedia data could not be loaded. Reload the page to try again.</p></article>`;
   return `<article class="panel trinket-card"><div class="trinket-heading">
     ${trinket.image ? renderImage(trinket.image, 'trinket-art') : '<span class="trinket-art-placeholder" aria-hidden="true">◇</span>'}
     <div><p class="eyebrow">${escapeHtml(trinket.rarity)}</p><h3>${escapeHtml(trinket.name)}</h3><p class="small-label">${requirementLabel(trinket.requirements)}</p></div></div>
@@ -790,6 +793,9 @@ function readRoute(hash) {
   // Preserve existing bookmarks without rewriting history entries.
   if (path === 'heroes') return { view: 'heroes', game: true };
   const parts = path.split('/');
+  if (!structuredGameContent && parts[0] === 'game' && parts[1] === 'darkest-dungeon'
+      && ['bosses', 'enemies', 'trinkets', 'items', 'curios', 'locations', 'quests'].includes(parts[2])
+      && parts.length <= 4) return { view: 'content-unavailable', game: true };
   const preview = portalGames.find(game => !game.available && game.id === parts[1]);
   if (parts[0] === 'game' && parts.length === 2 && preview) return { view: 'preview', preview };
   if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts.length <= 3) {
@@ -844,16 +850,20 @@ function renderBreadcrumbs(route) {
   ).join('')}</ol></nav>`;
 }
 
-const pageTitles = { home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', bosses: 'Bosses', 'boss-detail': 'Boss guide', teams: 'Team Compositions', 'team-detail': 'Team composition', trinkets: 'Trinkets', enemies: 'Enemies', items: 'Items & Provisions', curios: 'Curios', locations: 'Locations', quests: 'Quests', missing: 'Page not found' };
+const pageTitles = { 'content-unavailable': 'Encyclopedia unavailable', home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', bosses: 'Bosses', 'boss-detail': 'Boss guide', teams: 'Team Compositions', 'team-detail': 'Team composition', trinkets: 'Trinkets', enemies: 'Enemies', items: 'Items & Provisions', curios: 'Curios', locations: 'Locations', quests: 'Quests', missing: 'Page not found' };
+
+function renderContentError(title = 'Encyclopedia unavailable') {
+  return `<section class="page-intro"><h1 id="page-title" tabindex="-1">${escapeHtml(title)}</h1><p class="lede" role="status">The Darkest Dungeon encyclopedia data could not be loaded. Reload the page to try again. Existing hero guides and team compositions are still available.</p><a href="#game/darkest-dungeon/heroes">Browse heroes</a> · <a href="#game/darkest-dungeon/teams">Browse teams</a></section>`;
+}
 
 function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
-  const views = { home: renderHome, game: renderGameLanding, heroes: renderGallery,
+  const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), trinkets: () => renderEncyclopediaCollection('trinkets'),
     enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests') };
   const content = route.hero ? renderHeroPage(route.hero) : route.boss ? renderBossDetail(route.boss) : route.kind && route.record ? renderEncyclopediaDetail(route.kind, route.record) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
     '<section class="empty-state"><h1 id="page-title" tabindex="-1">Page not found</h1><p>This page is not available.</p><a href="#home">Return home</a></section>';
-  const page = renderBreadcrumbs(route) + content;
+  const page = renderBreadcrumbs(route) + (!structuredGameContent && route.game ? '<p class="guide-data-note" role="status">Encyclopedia data is unavailable. Some records and item details cannot be shown. Reload the page to try again.</p>' : '') + content;
   if (!route.game) return page;
   return `<div class="game-layout" data-game-theme="${escapeHtml(games['darkest-dungeon'].theme)}">${renderGameSidebar(route)}<div class="game-content">${page}</div></div>`;
 }
@@ -883,10 +893,10 @@ function showRoute() {
     currentView = viewKey;
   }
   document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Gaming Wiki` :
-    route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view]} · Gaming Wiki`;
+    route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view] || 'Encyclopedia unavailable'} · Gaming Wiki`;
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
-  const sectionTarget = route.hero && (!changed || route.section !== 'overview');
+  const sectionTarget = route.hero && !route.hero.contentUnavailable && (!changed || route.section !== 'overview');
   const target = document.getElementById(route.library ? 'games-heading' : sectionTarget ? route.section : 'page-title');
   target.focus({ preventScroll: true });
   if (sectionTarget || route.library) target.scrollIntoView({ block: 'start' });

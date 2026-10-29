@@ -178,3 +178,22 @@ Trinket recommendation prose in `heroes.js` now holds only Highwayman-specific e
 New routes use `#game/darkest-dungeon/<collection>` and `#game/darkest-dungeon/<collection>/<routeId>`. The app's shared collection renderer, breadcrumb builder, sidebar configuration, and global search consume these structured arrays. No publishing step or backend is needed because JSON is served from `dist/data/`.
 
 The content checker validates stable and route IDs, prohibits boss/enemy duplicate names, checks source/DLC/region and entity relationships, verifies local image paths, and checks that collection routes are registered. For future relational storage, these arrays map to entity tables and join tables; source IDs, game-version context, and verification status remain explicit columns rather than being inferred.
+
+## Encyclopedia reliability
+
+Collection filters select fields by collection: quest/item category, trinket
+rarity, or region. `dist/js/encyclopedia.js` shares searchable relationship names
+and all curio interactions between collection search and both global searches.
+Card summaries may remain abbreviated without limiting search coverage.
+
+Trinket `heroRouteIds` retain existing associations; they do not establish a
+class restriction. `classRestrictionHeroRouteIds` records only the existing
+class-specific Buckle and four Crimson Court class-set restrictions. Focus
+Ring's Highwayman association and all guide recommendations remain intact.
+Absent restriction metadata is not a new assertion about an item's usability.
+
+Detail verification labels reflect record metadata, with partial-information
+notes for recorded gaps. Reference checking does not imply installed-patch
+verification. Failed JSON loads show an unavailable state on collection and
+detail routes; independent guides and teams remain accessible. Missing canonical
+trinket effects are withheld rather than reconstructed from editorial advice.
