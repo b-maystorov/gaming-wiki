@@ -1,3 +1,4 @@
+import { renderEntryArtwork } from './artwork.js';
 import { heroAbilities } from './hero-abilities.js';
 
 function escapeGalleryText(value) {
@@ -18,12 +19,14 @@ function renderClassArtwork(hero) {
   const dlc = hero.requirements.dlc;
   // Permission is explicit: an existing file or source URL alone does not grant reuse.
   const usable = ['permitted', 'user-provided'].includes(art.permission) && art.src;
-  return `<figure class="class-art${usable ? ' has-image' : ''}${art.animated ? ' animated-class-art' : ''}">
+  const dlcBadge = dlc.length ? `<span class="class-art-dlc" data-dlc="${dlc.some(name => name.includes('Crimson Court')) ? 'crimson-court' : 'shieldbreaker'}" aria-label="Downloadable content required: ${dlc.map(escapeGalleryText).join(', ')}"><span aria-hidden="true">•</span> ${dlc.map(name => escapeGalleryText(name.replace(/^The /, ''))).join(' · ')}</span>` : '';
+  const fallback = `<figure class="class-art${usable ? ' has-image' : ''}${art.animated ? ' animated-class-art' : ''}">
     <div class="class-monogram" aria-hidden="true"><span>${escapeGalleryText(art.monogram)}</span><small>${escapeGalleryText(hero.name)}</small></div>
     ${usable ? `<img src="${escapeGalleryText(art.src)}" alt="${escapeGalleryText(art.alt || `${hero.name} portrait`)}" loading="lazy">` : ''}
-    ${dlc.length ? `<span class="class-art-dlc" data-dlc="${dlc.some(name => name.includes('Crimson Court')) ? 'crimson-court' : 'shieldbreaker'}" aria-label="Downloadable content required: ${dlc.map(escapeGalleryText).join(', ')}"><span aria-hidden="true">•</span> ${dlc.map(name => escapeGalleryText(name.replace(/^The /, ''))).join(' · ')}</span>` : ''}
+    ${dlcBadge}
     <figcaption><span class="class-placeholder-label">Class monogram · Illustration unavailable</span>${usable ? `<span class="class-image-credit">${escapeGalleryText(art.credit || 'Image source unverified')}</span>` : ''}</figcaption>
   </figure>`;
+  return renderEntryArtwork('heroes', hero, 'thumbnail', fallback, dlcBadge);
 }
 
 function renderClassCard(hero) {

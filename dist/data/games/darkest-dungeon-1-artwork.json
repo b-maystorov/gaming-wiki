@@ -1,0 +1,2904 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:baron",
+      "recordName": "Baron",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/baron.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Baron — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:brigand-pounder",
+      "recordName": "Brigand Pounder",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/brigand-pounder.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Brigand Pounder — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:brigand-vvulf",
+      "recordName": "Brigand Vvulf",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/brigand-vvulf.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Brigand Vvulf — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:collector",
+      "recordName": "The Collector",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/collector.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "The Collector — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:countess",
+      "recordName": "Countess",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/countess.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Countess — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:crocodilian",
+      "recordName": "Crocodilian",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/crocodilian.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Crocodilian — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:drowned-crew",
+      "recordName": "Drowned Crew",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/drowned-crew.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Drowned Crew — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:fanatic",
+      "recordName": "The Fanatic",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/fanatic.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "The Fanatic — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:flesh",
+      "recordName": "Flesh",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/flesh.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Flesh — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:garden-guardian",
+      "recordName": "Garden Guardian",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/garden-guardian.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Garden Guardian — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:hag",
+      "recordName": "Hag",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/hag.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Hag — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:heart-of-darkness",
+      "recordName": "Heart of Darkness",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/heart-of-darkness.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Heart of Darkness — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:mammoth-cyst",
+      "recordName": "Mammoth Cyst",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/mammoth-cyst.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Mammoth Cyst — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:miller",
+      "recordName": "Miller",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/miller.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Miller — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:necromancer",
+      "recordName": "Necromancer",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/necromancer.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Necromancer — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:prophet",
+      "recordName": "Prophet",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/prophet.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Prophet — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:shambler",
+      "recordName": "Shambler",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/shambler.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shambler — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:shrieker",
+      "recordName": "Shrieker",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/shrieker.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shrieker — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:shuffling-horror",
+      "recordName": "Shuffling Horror",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/shuffling-horror.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shuffling Horror — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:siren",
+      "recordName": "Siren",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/siren.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Siren — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:sleeper",
+      "recordName": "The Sleeper",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/sleeper.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "The Sleeper — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:swine-prince",
+      "recordName": "Swine Prince",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/swine-prince.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Swine Prince — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:templar-impaler",
+      "recordName": "Templar Impaler",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/templar-impaler.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Templar Impaler — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:templar-warlord",
+      "recordName": "Templar Warlord",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/templar-warlord.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Templar Warlord — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:thing-from-the-stars",
+      "recordName": "Thing from the Stars",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/thing-from-the-stars.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Thing from the Stars — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "bosses",
+      "recordId": "darkest-dungeon-1:boss:viscount",
+      "recordName": "Viscount",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/bosses/viscount.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Viscount — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:alchemy-table",
+      "recordName": "Alchemy Table",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/alchemy-table.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Alchemy Table — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:altar-of-light",
+      "recordName": "Altar of Light",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/altar-of-light.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Altar of Light — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:barnacle-chest",
+      "recordName": "Barnacle-Crusted Chest",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/barnacle-chest.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Barnacle-Crusted Chest — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:bas-relief",
+      "recordName": "Bas-Relief",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/bas-relief.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bas-Relief — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:bookshelf",
+      "recordName": "Bookshelf",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/bookshelf.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bookshelf — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:dinner-cart",
+      "recordName": "Dinner Cart",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/dinner-cart.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Dinner Cart — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:eerie-spiderweb",
+      "recordName": "Eerie Spiderweb",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/eerie-spiderweb.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Eerie Spiderweb — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:fish-carcass",
+      "recordName": "Fish Carcass",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/fish-carcass.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Fish Carcass — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:holy-fountain",
+      "recordName": "Holy Fountain",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/holy-fountain.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Holy Fountain — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:iron-maiden",
+      "recordName": "Iron Maiden",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/iron-maiden.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Iron Maiden — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:moonshine-barrel",
+      "recordName": "Moonshine Barrel",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/moonshine-barrel.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Moonshine Barrel — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:mummified-remains",
+      "recordName": "Mummified Remains",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/mummified-remains.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Mummified Remains — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:pile-of-strange-bones",
+      "recordName": "Pile of Strange Bones",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/pile-of-strange-bones.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Pile of Strange Bones — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:rotted-fare",
+      "recordName": "Rotted Fare",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/rotted-fare.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Rotted Fare — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:shallow-grave",
+      "recordName": "Shallow Grave",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/shallow-grave.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shallow Grave — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:stockpile",
+      "recordName": "Stockpile",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/stockpile.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Stockpile — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:antibody",
+      "recordName": "Antibody",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/antibody.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Antibody — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:ascended-brawler",
+      "recordName": "Ascended Brawler",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/ascended-brawler.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Ascended Brawler — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:ascended-witch",
+      "recordName": "Ascended Witch",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/ascended-witch.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Ascended Witch — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:bone-arbalist",
+      "recordName": "Bone Arbalist",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/bone-arbalist.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bone Arbalist — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:bone-bearer",
+      "recordName": "Bone Bearer",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/bone-bearer.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bone Bearer — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:bone-captain",
+      "recordName": "Bone Captain",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/bone-captain.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bone Captain — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:bone-courtier",
+      "recordName": "Bone Courtier",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/bone-courtier.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bone Courtier — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:bone-defender",
+      "recordName": "Bone Defender",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/bone-defender.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bone Defender — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:bone-soldier",
+      "recordName": "Bone Soldier",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/bone-soldier.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bone Soldier — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:bone-spearman",
+      "recordName": "Bone Spearman",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/bone-spearman.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bone Spearman — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:brigand-bloodletter",
+      "recordName": "Brigand Bloodletter",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-bloodletter.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Brigand Bloodletter — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:brigand-cutthroat",
+      "recordName": "Brigand Cutthroat",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-cutthroat.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Brigand Cutthroat — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:brigand-fusilier",
+      "recordName": "Brigand Fusilier",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-fusilier.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Brigand Fusilier — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:brigand-raider",
+      "recordName": "Brigand Raider",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/brigand-raider.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Brigand Raider — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:carrion-eater",
+      "recordName": "Carrion Eater",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/carrion-eater.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Carrion Eater — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:chevalier",
+      "recordName": "Chevalier",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/chevalier.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Chevalier — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:courtesan",
+      "recordName": "Courtesan",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/courtesan.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Courtesan — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:crone",
+      "recordName": "Crone",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/crone.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Crone — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:crystalline-aberration",
+      "recordName": "Crystalline Aberration",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/crystalline-aberration.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Crystalline Aberration — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:cultist-acolyte",
+      "recordName": "Cultist Acolyte",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/cultist-acolyte.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Cultist Acolyte — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:cultist-brawler",
+      "recordName": "Cultist Brawler",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/cultist-brawler.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Cultist Brawler — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:cultist-priest",
+      "recordName": "Cultist Priest",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/cultist-priest.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Cultist Priest — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:cultist-witch",
+      "recordName": "Cultist Witch",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/cultist-witch.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Cultist Witch — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:deep-stinger",
+      "recordName": "Deep Stinger",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/deep-stinger.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Deep Stinger — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:defensive-growth",
+      "recordName": "Defensive Growth",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/defensive-growth.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Defensive Growth — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:drowned-thrall",
+      "recordName": "Drowned Thrall",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/drowned-thrall.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Drowned Thrall — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:ectoplasm",
+      "recordName": "Ectoplasm",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/ectoplasm.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Ectoplasm — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:esquire",
+      "recordName": "Esquire",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/esquire.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Esquire — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:farmhand",
+      "recordName": "Farmhand",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/farmhand.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Farmhand — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:flesh-hound",
+      "recordName": "Flesh Hound",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/flesh-hound.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Flesh Hound — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:foreman",
+      "recordName": "Foreman",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/foreman.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Foreman — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:fungal-artillery",
+      "recordName": "Fungal Artillery",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/fungal-artillery.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Fungal Artillery — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:fungal-scratcher",
+      "recordName": "Fungal Scratcher",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/fungal-scratcher.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Fungal Scratcher — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:gargoyle",
+      "recordName": "Gargoyle",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/gargoyle.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Gargoyle — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:gatekeeper",
+      "recordName": "Gatekeeper",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/gatekeeper.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Gatekeeper — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:ghoul",
+      "recordName": "Ghoul",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/ghoul.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Ghoul — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:large-carrion-eater",
+      "recordName": "Large Carrion Eater",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/large-carrion-eater.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Large Carrion Eater — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:large-ectoplasm",
+      "recordName": "Large Ectoplasm",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/large-ectoplasm.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Large Ectoplasm — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:madman",
+      "recordName": "Madman",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/madman.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Madman — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:maggot",
+      "recordName": "Maggot",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/maggot.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Maggot — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:malignant-growth",
+      "recordName": "Malignant Growth",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/malignant-growth.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Malignant Growth — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:manservant",
+      "recordName": "Manservant",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/manservant.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Manservant — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:pelagic-grouper",
+      "recordName": "Pelagic Grouper",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/pelagic-grouper.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Pelagic Grouper — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:pelagic-guardian",
+      "recordName": "Pelagic Guardian",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/pelagic-guardian.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Pelagic Guardian — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:pelagic-shaman",
+      "recordName": "Pelagic Shaman",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/pelagic-shaman.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Pelagic Shaman — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:plow-horse",
+      "recordName": "Plow Horse",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/plow-horse.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Plow Horse — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:polyp",
+      "recordName": "Polyp",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/polyp.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Polyp — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:rabid-gnasher",
+      "recordName": "Rabid Gnasher",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/rabid-gnasher.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Rabid Gnasher — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:rapturous-cultist",
+      "recordName": "Rapturous Cultist",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/rapturous-cultist.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Rapturous Cultist — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:scarecrow",
+      "recordName": "Scarecrow",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/scarecrow.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Scarecrow — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:sea-maggot",
+      "recordName": "Sea Maggot",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/sea-maggot.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Sea Maggot — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:spitter",
+      "recordName": "Spitter",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/spitter.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Spitter — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:supplicant",
+      "recordName": "Supplicant",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/supplicant.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Supplicant — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:swine-chopper",
+      "recordName": "Swine Chopper",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/swine-chopper.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Swine Chopper — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:swine-drummer",
+      "recordName": "Swine Drummer",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/swine-drummer.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Swine Drummer — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:swine-skiver",
+      "recordName": "Swine Skiver",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/swine-skiver.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Swine Skiver — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:swine-slasher",
+      "recordName": "Swine Slasher",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/swine-slasher.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Swine Slasher — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:swine-wretch",
+      "recordName": "Swine Wretch",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/swine-wretch.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Swine Wretch — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:swinetaur",
+      "recordName": "Swinetaur",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/swinetaur.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Swinetaur — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:sycophant",
+      "recordName": "Sycophant",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/sycophant.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Sycophant — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:templar-gladiator",
+      "recordName": "Templar Gladiator",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/templar-gladiator.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Templar Gladiator — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:templar-sniper",
+      "recordName": "Templar Sniper",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/templar-sniper.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Templar Sniper — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:uca-crusher",
+      "recordName": "Uca Crusher",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/uca-crusher.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Uca Crusher — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:unclean-giant",
+      "recordName": "Unclean Giant",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/unclean-giant.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Unclean Giant — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:webber",
+      "recordName": "Webber",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/webber.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Webber — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "enemies",
+      "recordId": "darkest-dungeon-1:enemy:white-cell-stalk",
+      "recordName": "White Cell Stalk",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/enemies/white-cell-stalk.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "White Cell Stalk — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:abomination",
+      "recordName": "Abomination",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/abomination.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Abomination — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/abomination-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:antiquarian",
+      "recordName": "Antiquarian",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/antiquarian.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Antiquarian — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/antiquarian-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:arbalest",
+      "recordName": "Arbalest",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/arbalest.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Arbalest — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/arbalest-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:bounty-hunter",
+      "recordName": "Bounty Hunter",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/bounty-hunter.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bounty Hunter — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/bounty-hunter-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:crusader",
+      "recordName": "Crusader",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/crusader.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Crusader — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/crusader-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:flagellant",
+      "recordName": "Flagellant",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/flagellant.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Flagellant — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/flagellant-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:grave-robber",
+      "recordName": "Grave Robber",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/grave-robber.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Grave Robber — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/grave-robber-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:hellion",
+      "recordName": "Hellion",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/hellion.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Hellion — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/hellion-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:highwayman",
+      "recordName": "Highwayman",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/highwayman.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Highwayman — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/highwayman-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        },
+        {
+          "path": "assets/images/darkest-dungeon/highwayman-idle.gif",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "unknown; guide and team animation",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:houndmaster",
+      "recordName": "Houndmaster",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/houndmaster.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Houndmaster — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/houndmaster-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:jester",
+      "recordName": "Jester",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/jester.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Jester — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/jester-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:leper",
+      "recordName": "Leper",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/leper.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Leper — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/leper-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:man-at-arms",
+      "recordName": "Man-at-Arms",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/man-at-arms.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Man-at-Arms — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/man-at-arms-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:occultist",
+      "recordName": "Occultist",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/occultist.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Occultist — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/occultist-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:plague-doctor",
+      "recordName": "Plague Doctor",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/plague-doctor.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Plague Doctor — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/plague-doctor-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:shieldbreaker",
+      "recordName": "Shieldbreaker",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/shieldbreaker.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shieldbreaker — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/shieldbreaker-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "heroes",
+      "recordId": "darkest-dungeon-1:hero:vestal",
+      "recordName": "Vestal",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/heroes/vestal.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Vestal — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/vestal-portrait.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "game-inspired illustration; AI attribution unverified",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:aegis-scale",
+      "recordName": "Aegis Scale",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/aegis-scale.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Aegis Scale — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:antivenom",
+      "recordName": "Antivenom",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/antivenom.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Antivenom — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:bandage",
+      "recordName": "Bandage",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/bandage.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bandage — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:dog-treats",
+      "recordName": "Dog Treats",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/dog-treats.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Dog Treats — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:firewood",
+      "recordName": "Firewood",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/firewood.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Firewood — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:food",
+      "recordName": "Food",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/food.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Food — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:holy-water",
+      "recordName": "Holy Water",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/holy-water.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Holy Water — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:laudanum",
+      "recordName": "Laudanum",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/laudanum.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Laudanum — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:medicinal-herbs",
+      "recordName": "Medicinal Herbs",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/medicinal-herbs.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Medicinal Herbs — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:shard-dust",
+      "recordName": "Shard Dust",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/shard-dust.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shard Dust — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:shovel",
+      "recordName": "Shovel",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/shovel.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shovel — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:skeleton-key",
+      "recordName": "Skeleton Key",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/skeleton-key.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Skeleton Key — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:the-blood",
+      "recordName": "The Blood",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/the-blood.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "The Blood — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:the-cure",
+      "recordName": "The Cure",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/the-cure.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "The Cure — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "items",
+      "recordId": "darkest-dungeon-1:item:torch",
+      "recordName": "Torch",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/items/torch.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Torch — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "locations",
+      "recordId": "darkest-dungeon-1:location:courtyard",
+      "recordName": "Courtyard",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/courtyard.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Courtyard — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "locations",
+      "recordId": "darkest-dungeon-1:location:cove",
+      "recordName": "Cove",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/cove.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Cove — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "locations",
+      "recordId": "darkest-dungeon-1:location:darkest-dungeon",
+      "recordName": "Darkest Dungeon",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/darkest-dungeon.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Darkest Dungeon — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "locations",
+      "recordId": "darkest-dungeon-1:location:farmstead",
+      "recordName": "Farmstead",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/farmstead.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Farmstead — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "locations",
+      "recordId": "darkest-dungeon-1:location:ruins",
+      "recordName": "Ruins",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/ruins.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Ruins — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "locations",
+      "recordId": "darkest-dungeon-1:location:warrens",
+      "recordName": "Warrens",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/warrens.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Warrens — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "locations",
+      "recordId": "darkest-dungeon-1:location:weald",
+      "recordName": "Weald",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/locations/weald.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Weald — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:ancestral-candle",
+      "recordName": "Ancestor's Candle",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/ancestral-candle.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Ancestor's Candle — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:ancestral-map",
+      "recordName": "Ancestor's Map",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/ancestral-map.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Ancestor's Map — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:bloodied-neckerchief",
+      "recordName": "Bloodied Neckerchief",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/bloodied-neckerchief.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Bloodied Neckerchief — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:crews-bell",
+      "recordName": "Crew's Bell",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/crews-bell.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Crew's Bell — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:damage-stone",
+      "recordName": "Damage Stone",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/damage-stone.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Damage Stone — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:fleshs-heart",
+      "recordName": "Flesh's Heart",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/fleshs-heart.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Flesh's Heart — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:focus-ring",
+      "recordName": "Focus Ring",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/focus-ring.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Focus Ring — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/focus-ring.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "unknown",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:fusemans-matchstick",
+      "recordName": "Fuseman's Matchstick",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/fusemans-matchstick.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Fuseman's Matchstick — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:glittering-spaulders",
+      "recordName": "Glittering Spaulders",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/glittering-spaulders.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Glittering Spaulders — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:gunslingers-buckle",
+      "recordName": "Gunslinger's Buckle",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/gunslingers-buckle.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Gunslinger's Buckle — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": [
+        {
+          "path": "assets/images/darkest-dungeon/gunslingers-buckle.png",
+          "exists": true,
+          "currentlyReferenced": true,
+          "verifiedAuthentic": false,
+          "origin": "unknown",
+          "replaceWhenAuthenticAvailable": true
+        }
+      ]
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:hags-ladle",
+      "recordName": "Hag's Ladle",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/hags-ladle.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Hag's Ladle — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:man-slayer-ring",
+      "recordName": "Man Slayer's Ring",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/man-slayer-ring.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Man Slayer's Ring — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:moon-ring",
+      "recordName": "Moon Ring",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/moon-ring.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Moon Ring — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:necromancers-collar",
+      "recordName": "Necromancer's Collar",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/necromancers-collar.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Necromancer's Collar — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:prophets-eye",
+      "recordName": "Prophet's Eye",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/prophets-eye.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Prophet's Eye — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:quick-draw-charm",
+      "recordName": "Quick Draw Charm",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/quick-draw-charm.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Quick Draw Charm — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:reckless-charm",
+      "recordName": "Reckless Charm",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/reckless-charm.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Reckless Charm — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:shameful-locket",
+      "recordName": "Shameful Locket",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/shameful-locket.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Shameful Locket — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:signed-conscription",
+      "recordName": "Signed Conscription",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/signed-conscription.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Signed Conscription — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:sirens-conch",
+      "recordName": "Siren's Conch",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/sirens-conch.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Siren's Conch — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:sun-ring",
+      "recordName": "Sun Ring",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/sun-ring.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Sun Ring — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:unholy-slayer-ring",
+      "recordName": "Unholy Slayer's Ring",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/unholy-slayer-ring.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Unholy Slayer's Ring — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "trinkets",
+      "recordId": "darkest-dungeon-1:trinket:wilburs-flag",
+      "recordName": "Wilbur's Flag",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/trinkets/wilburs-flag.png",
+        "exists": false,
+        "currentlyReferenced": true,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Wilbur's Flag — Darkest Dungeon I"
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    }
+  ]
+}

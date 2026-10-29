@@ -5,6 +5,7 @@ import { SourceTextModule, createContext } from 'node:vm';
 import { test } from 'node:test';
 
 const root = resolve(import.meta.dirname, '..');
+const artworkManifest = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-dungeon-1-artwork.json'), 'utf8'));
 const pack = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-dungeon-1.json'), 'utf8'));
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
@@ -21,7 +22,8 @@ async function harness(failure = null) {
       querySelectorAll: selector => selector === '[data-encyclopedia-card]' ? cards
         : selector === '[data-encyclopedia-filter]' ? extraFilters : []
     },
-    fetch: async () => {
+    fetch: async url => {
+      if (String(url).endsWith('-artwork.json')) return { ok: true, json: async () => structuredClone(artworkManifest) };
       if (failure === 'network') throw new Error('Network unavailable');
       return { ok: failure !== 'http', status: 404, json: async () => {
         if (failure === 'json') throw new SyntaxError('Invalid JSON');
@@ -145,3 +147,73 @@ for (const failure of ['network', 'http', 'json', 'shape']) {
     }
   });
 }
+
+const artwork = h.modules.get(resolve(root, 'dist/js/artwork.js')).namespace;
+
+test('artwork requires verified local assets and uses stable hero IDs', () => {
+  const record = { id: 'crusader', name: 'Crusader' };
+  const path = 'assets/games/darkest-dungeon-1/private/heroes/crusader.png';
+  const entry = { recordId: 'darkest-dungeon-1:hero:crusader', primary: {
+    path, exists: true, verifiedAuthentic: false, verificationSource: '', alt: 'Crusader portrait'
+  } };
+  try {
+    artwork.setArtworkManifest({ records: [entry] });
+    assert.equal(artwork.renderEntryArtwork('heroes', record, 'thumbnail', 'legacy portrait'), 'legacy portrait');
+    entry.primary.verifiedAuthentic = true;
+    entry.primary.verificationSource = 'Test fixture evidence';
+    assert.ok(artwork.renderEntryArtwork('heroes', record, 'thumbnail', 'legacy portrait').includes(`src="${path}"`));
+    assert.equal(artwork.renderEntryArtwork('heroes', record, 'banner'), '');
+    entry.primary.exists = false;
+    assert.equal(artwork.renderEntryArtwork('heroes', record, 'primary', 'legacy portrait'), 'legacy portrait');
+  } finally { artwork.setArtworkManifest(artworkManifest); }
+});
+
+test('image errors exhaust candidates then hide the broken image and reveal fallback', () => {
+  const fallback = { hidden: true };
+  const classes = [];
+  const image = { matches: () => true, dataset: { artRemaining: '["primary.png"]' }, hidden: false,
+    closest: () => ({ classList: { add: name => classes.push(name) }, querySelector: () => fallback }) };
+  artwork.handleArtworkError({ target: image });
+  assert.equal(image.src, 'primary.png');
+  assert.equal(fallback.hidden, true);
+  artwork.handleArtworkError({ target: image });
+  assert.equal(image.hidden, true);
+  assert.equal(fallback.hidden, false);
+  assert.deepEqual(classes, ['image-failed']);
+});
+
+test('manifest covers every requested record without certifying legacy art', () => {
+  assert.equal(artworkManifest.records.length, 170);
+  for (const category of ['bosses', 'enemies', 'trinkets', 'items', 'curios', 'locations']) {
+    assert.deepEqual(artworkManifest.records.filter(row => row.category === category).map(row => row.recordId).sort(),
+      pack[category].map(row => row.id).sort());
+  }
+  for (const entry of artworkManifest.records) {
+    assert.ok(entry.primary.path.startsWith(`assets/games/darkest-dungeon-1/private/${entry.category}/`));
+    assert.ok(entry.legacyAssets.every(asset => !asset.verifiedAuthentic));
+  }
+});
+
+test('verified slots render through real collection and detail routes', () => {
+  const manifest = structuredClone(artworkManifest);
+  for (const entry of manifest.records) {
+    entry.primary.exists = true;
+    entry.primary.verifiedAuthentic = true;
+    entry.primary.verificationSource = 'Test fixture only';
+  }
+  artwork.setArtworkManifest(manifest);
+  try {
+    for (const category of ['bosses', 'enemies', 'trinkets', 'items', 'curios', 'locations']) {
+      const record = pack[category][0];
+      const path = manifest.records.find(entry => entry.recordId === record.id).primary.path;
+      for (const suffix of ['', `/${record.routeId}`]) {
+        const html = h.app.renderPage(h.app.readRoute(`#game/darkest-dungeon/${category}${suffix}`));
+        assert.ok(html.includes(`src="${path}"`), `${category}${suffix}`);
+      }
+    }
+    for (const route of ['#game/darkest-dungeon/heroes', '#hero/crusader/overview']) {
+      const html = h.app.renderPage(h.app.readRoute(route));
+      assert.ok(html.includes('private/heroes/crusader.png'), route);
+    }
+  } finally { artwork.setArtworkManifest(artworkManifest); }
+});

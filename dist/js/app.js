@@ -1,3 +1,4 @@
+import { loadArtworkManifest, renderEntryArtwork, handleArtworkError } from './artwork.js';
 import { matchesCollectionFilter, encyclopediaSearchText, verificationLabel } from './encyclopedia.js';
 import { heroes, sources } from './heroes.js';
 import { games, portalGames } from './games.js';
@@ -21,7 +22,10 @@ try {
   heroAbilities.crusader = { skills: [], loadError: true };
 }
 
+await loadArtworkManifest();
+
 const main = document.querySelector('main');
+main.addEventListener('error', handleArtworkError, true);
 // `builds` remains the route alias for the long-form strategy section.
 const sections = ['overview', 'teams', 'bosses', 'trinkets', 'attributes', 'abilities', 'progression', 'builds'];
 let currentView = '';
@@ -60,9 +64,10 @@ function renderImage(image, className = '', fallbackMarkup = '') {
 
 function renderHeroPortrait(hero) {
   const portrait = hero.portrait || (hero.galleryArt?.src ? hero.galleryArt : null);
-  return portrait
+  const fallback = portrait
     ? renderImage(portrait, 'guide-portrait', `<span class="portrait-unavailable" data-portrait-fallback hidden role="img" aria-label="${escapeHtml(hero.name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(hero.galleryArt?.monogram || hero.name.slice(0, 2).toUpperCase())}</span><small>Portrait unavailable</small></span>`)
     : `<div class="ability-hero-mark" role="img" aria-label="${escapeHtml(hero.name)} portrait unavailable">${escapeHtml(hero.galleryArt?.monogram || hero.name.slice(0, 2).toUpperCase())}</div>`;
+  return renderEntryArtwork('heroes', hero, 'banner') + renderEntryArtwork('heroes', hero, 'primary', fallback);
 }
 
 function renderHeroGuideNavigation(hero) {
@@ -212,7 +217,7 @@ function renderEncyclopediaCard(kind, record, meta, summary) {
   const label = Array.isArray(meta) ? meta.join(' · ') : meta;
   const title = record.name;
   return `<a class="encyclopedia-card" data-encyclopedia-card data-search-text="${escapeHtml(`${title} ${label} ${summary} ${encyclopediaSearchText(kind, record, structuredGameContent, heroes)}`.toLowerCase())}" data-region-ids="${escapeHtml((record.regionIds || []).join(' '))}" href="${escapeHtml(encyclopediaHref(kind, record))}">
-    <span class="encyclopedia-mark" role="img" aria-label="CSS monogram placeholder; no local artwork available">${escapeHtml(title.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}<small>No local art</small></span><span class="encyclopedia-card-copy"><small>${escapeHtml(label)}</small><strong>${escapeHtml(title)}</strong><span>${escapeHtml(summary)}</span><em>Open entry →</em></span></a>`;
+    ${renderEntryArtwork(kind, record, 'thumbnail')}<span class="encyclopedia-card-copy"><small>${escapeHtml(label)}</small><strong>${escapeHtml(title)}</strong><span>${escapeHtml(summary)}</span><em>Open entry →</em></span></a>`;
 }
 
 const collectionConfig = {
@@ -311,7 +316,7 @@ function renderEncyclopediaDetail(kind, record) {
   }
   const meta = kind === 'enemies' ? `${record.regionIds.map(regionName).join(' · ')} · ${record.enemyType} · ${record.encounterClass} · ${requirementLabel(record.requirements)}` : kind === 'curios' ? `${record.regionIds.map(regionName).join(' · ')} · ${requirementLabel(record.requirements)}` : kind === 'locations' ? `${regionName(record.regionId)} · ${requirementLabel(record.requirements)}` : kind === 'trinkets' ? `${record.rarity} · ${requirementLabel(record.requirements)}${record.classRestrictionHeroRouteIds?.length ? ` · ${record.classRestrictionHeroRouteIds.map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', ')}` : ''}${record.regionIds?.length ? ` · ${record.regionIds.map(regionName).join(' · ')}` : ''}` : record.category || 'Reference entry';
   const sources = (record.verification?.sourceIds || []).map(id=>structuredGameContent.sources.find(source=>source.id===id)).filter(Boolean);
-  return `<a class="back-link" href="${back}">← All ${collectionConfig[kind].title.toLowerCase()}</a><section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">${escapeHtml(meta)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)}</h1><p class="lede">${escapeHtml(record.summary || record.purpose || record.whereFound || '')}</p><span class="boss-status">${escapeHtml(verificationLabel(kind, record))}</span></section>${sections}<section class="encyclopedia-section"><h2>Sources & verification</h2><p>${escapeHtml(verificationLabel(kind, record))}. ${structuredGameContent.game.versionContext.verifiedAgainstInstalledBuild ? 'See the recorded game-version context for testing scope.' : 'Not tested against an installed game patch.'}</p><ul>${sources.map(source=>`<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a></li>`).join('')}</ul></section>`;
+  return `<a class="back-link" href="${back}">← All ${collectionConfig[kind].title.toLowerCase()}</a><section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">${escapeHtml(meta)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)}</h1><p class="lede">${escapeHtml(record.summary || record.purpose || record.whereFound || '')}</p><span class="boss-status">${escapeHtml(verificationLabel(kind, record))}</span></section>${renderEntryArtwork(kind, record, 'banner')}${renderEntryArtwork(kind, record)}${sections}<section class="encyclopedia-section"><h2>Sources & verification</h2><p>${escapeHtml(verificationLabel(kind, record))}. ${structuredGameContent.game.versionContext.verifiedAgainstInstalledBuild ? 'See the recorded game-version context for testing scope.' : 'Not tested against an installed game patch.'}</p><ul>${sources.map(source=>`<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a></li>`).join('')}</ul></section>`;
 }
 
 function linkedList(records, kind) {
@@ -395,7 +400,7 @@ function renderBossCard(boss) {
   const regionIds = boss.regionIds.join(' ');
   const searchable = `${boss.name} ${(boss.aliases || []).join(' ')} ${boss.summary} ${boss.regionLabel} ${categories} ${requirementLabel(boss.requirements)}`.toLowerCase();
   return `<a class="boss-card" data-boss-card data-region-ids="${escapeHtml(regionIds)}" data-search-text="${escapeHtml(searchable)}" href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">
-    <span class="boss-artwork" data-boss-theme="${escapeHtml(theme)}" role="img" aria-label="Atmospheric placeholder for ${escapeHtml(boss.name)}; no local portrait available"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}</span><small>Encounter dossier</small></span>
+    ${renderEntryArtwork('bosses', boss, 'thumbnail', `<span class="boss-artwork" data-boss-theme="${escapeHtml(theme)}" role="img" aria-label="Atmospheric placeholder for ${escapeHtml(boss.name)}; no local portrait available"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}</span><small>Encounter dossier</small></span>`)}
     <span class="boss-card-copy"><span class="boss-card-meta"><span>${escapeHtml(boss.regionLabel)}</span><span>${escapeHtml(requirementLabel(boss.requirements))}</span></span>
       <strong>${escapeHtml(boss.name)}</strong>${boss.aliases?.length ? `<span class="boss-card-alias">Also listed as ${escapeHtml(boss.aliases.join(', '))}</span>` : ''}
       <span class="boss-card-summary">${escapeHtml(boss.summary)}</span>
@@ -479,7 +484,7 @@ function renderBossDetail(boss) {
   const dlcLabel = requirementLabel(boss.requirements);
   const titleCategory = boss.categoryIds.map(bossCategoryName).join(' · ');
   return `<a class="back-link" href="#game/darkest-dungeon/bosses">← All bosses</a>
-    <header class="boss-detail-hero"><div class="boss-detail-copy"><p class="eyebrow">${escapeHtml(titleCategory)} · ${escapeHtml(dlcLabel)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(boss.name)}</h1>${boss.aliases?.length ? `<p class="boss-aliases">Also known as ${escapeHtml(boss.aliases.join(', '))}</p>` : ''}<p class="lede">${escapeHtml(boss.summary)}</p><span class="boss-status ${available ? 'is-available' : ''}">${available ? 'Detailed guide available' : 'Guide in development'}</span></div><div class="boss-artwork boss-detail-art" data-boss-theme="${escapeHtml(boss.categoryIds[0]?.split(':').at(-1) || 'ruins')}" role="img" aria-label="Atmospheric placeholder for ${escapeHtml(boss.name)}; no local portrait available"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}</span><small>No local portrait · CSS artwork placeholder</small></div></header>
+    <header class="boss-detail-hero"><div class="boss-detail-copy"><p class="eyebrow">${escapeHtml(titleCategory)} · ${escapeHtml(dlcLabel)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(boss.name)}</h1>${boss.aliases?.length ? `<p class="boss-aliases">Also known as ${escapeHtml(boss.aliases.join(', '))}</p>` : ''}<p class="lede">${escapeHtml(boss.summary)}</p><span class="boss-status ${available ? 'is-available' : ''}">${available ? 'Detailed guide available' : 'Guide in development'}</span></div>${renderEntryArtwork('bosses', boss, 'primary', `<div class="boss-artwork boss-detail-art" data-boss-theme="${escapeHtml(boss.categoryIds[0]?.split(':').at(-1) || 'ruins')}" role="img" aria-label="Atmospheric placeholder for ${escapeHtml(boss.name)}; no local portrait available"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}</span><small>No local portrait · CSS artwork placeholder</small></div>`)}${renderEntryArtwork('bosses', boss, 'banner')}</header>
     <section class="boss-detail-section" aria-labelledby="boss-context-heading"><div class="section-heading"><h2 id="boss-context-heading">Region & encounter context</h2><span>${escapeHtml(boss.regionLabel)}</span></div><div class="boss-context-grid"><article class="panel"><h3>Encounter location</h3><p>${regionNames.length ? escapeHtml(regionNames.join(' · ')) : escapeHtml(boss.regionLabel)}</p></article><article class="panel"><h3>Requirements</h3><p>${escapeHtml(dlcLabel)}</p></article><article class="panel"><h3>Version and source status</h3><p>Campaign reference · not tested against an installed patch</p></article></div></section>
     ${detail}
     <section class="boss-detail-section" aria-labelledby="boss-heroes-heading"><div class="section-heading"><h2 id="boss-heroes-heading">Related hero guides</h2><span>Links for further reading</span></div>${renderRelatedBossHeroes(boss)}</section>

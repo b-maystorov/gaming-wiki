@@ -46,3 +46,6 @@ __pycache__/
 ._*
 Thumbs.db
 Desktop.ini
+
+# Private local game artwork only; code, data and existing art remain tracked.
+/dist/assets/games/darkest-dungeon-1/private/
