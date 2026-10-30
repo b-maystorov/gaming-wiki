@@ -12,6 +12,8 @@
   --accent-hover: #a73140;
   --focus-ring: #ffb7bd;
   --image-background: #181616;
+  --art-frame-border: #675149;
+  --art-frame-inset: #e3c9aa12;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--text);
   background: var(--background);
@@ -551,7 +553,7 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 .encyclopedia-grid [hidden] { display:none; }
 @media(max-width:980px) { .encyclopedia-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:700px) { .encyclopedia-controls { grid-template-columns:1fr 1fr; } .encyclopedia-controls .search-status { grid-column:1/-1; } }
-@media(max-width:520px) { .encyclopedia-grid,.encyclopedia-controls { grid-template-columns:1fr; } .encyclopedia-card { grid-template-columns:64px minmax(0,1fr); } .encyclopedia-mark { min-height:90px; } }
+@media(max-width:520px) { .encyclopedia-grid,.encyclopedia-controls { grid-template-columns:1fr; } .encyclopedia-card { grid-template-columns:64px minmax(0,1fr); } .encyclopedia-mark { min-height:90px; } .encyclopedia-grid-locations .encyclopedia-card { grid-template-columns:100px minmax(0,1fr); } .encyclopedia-grid-curios .encyclopedia-card,.encyclopedia-grid-items .encyclopedia-card,.encyclopedia-grid-trinkets .encyclopedia-card { grid-template-columns:88px minmax(0,1fr); gap:.7rem; padding:.7rem; } .encyclopedia-grid-curios .encyclopedia-card > .entry-art,.encyclopedia-grid-items .encyclopedia-card > .entry-art,.encyclopedia-grid-trinkets .encyclopedia-card > .entry-art { width:88px; min-height:88px; } .encyclopedia-grid-curios .encyclopedia-card > .entry-art [data-art-visual] > :is(img,svg),.encyclopedia-grid-items .encyclopedia-card > .entry-art [data-art-visual] > :is(img,svg),.encyclopedia-grid-trinkets .encyclopedia-card > .entry-art [data-art-visual] > :is(img,svg) { max-height:88px; } .encyclopedia-grid-curios .encyclopedia-card .encyclopedia-mark,.encyclopedia-grid-items .encyclopedia-card .encyclopedia-mark,.encyclopedia-grid-trinkets .encyclopedia-card .encyclopedia-mark { min-height:88px; } }
 @media(prefers-reduced-motion:reduce) { .encyclopedia-card { transition:none; } .encyclopedia-card:hover,.encyclopedia-card:focus-visible { transform:none; } }
 @media (max-width: 980px) { .boss-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .boss-card { min-height: 185px; } }
 @media (max-width: 700px) { .boss-index-controls { grid-template-columns: 1fr 1fr; } .boss-index-controls .search-status { grid-column: 1 / -1; padding: 0; } .boss-detail-hero { grid-template-columns: 1fr; } .boss-detail-art { min-height: 190px; } .boss-context-grid { grid-template-columns: 1fr; } .boss-attack-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -583,6 +585,48 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 /* Shade the scene edges without obscuring the artwork's focal point. */
 .entry-art-banner::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #16090b22, transparent 35%, #10090b88), radial-gradient(ellipse, transparent 45%, #300c1455); }
 .entry-art-banner [data-art-visual] > img { max-height: 460px; }
+/* Encyclopedia collections use category-sized media so icons and scenes read at a glance. */
+.encyclopedia-grid-locations .encyclopedia-card { grid-template-columns: minmax(130px, .78fr) minmax(0, 1fr); }
+.encyclopedia-grid-curios .encyclopedia-card,
+.encyclopedia-grid-items .encyclopedia-card,
+.encyclopedia-grid-trinkets .encyclopedia-card { grid-template-columns: 116px minmax(0, 1fr); align-items: stretch; padding: .9rem; gap: 1rem; border-color: #51413b; background: linear-gradient(135deg, #24201d, #171719 72%); }
+.encyclopedia-grid-locations .encyclopedia-card > .entry-art { min-height: 128px; height: 100%; border: 1px solid #665348; background: linear-gradient(145deg, #342922, #151416); }
+.encyclopedia-grid-locations .encyclopedia-card .encyclopedia-mark { min-height: 128px; }
+.encyclopedia-grid-curios .encyclopedia-card > .entry-art,
+.encyclopedia-grid-items .encyclopedia-card > .entry-art,
+.encyclopedia-grid-trinkets .encyclopedia-card > .entry-art { width: 116px; min-height: 116px; height: 100%; border: 1px solid #665348; background: radial-gradient(ellipse at center, #49382b, #171517 74%); }
+.encyclopedia-grid-curios .encyclopedia-card .encyclopedia-mark,
+.encyclopedia-grid-items .encyclopedia-card .encyclopedia-mark,
+.encyclopedia-grid-trinkets .encyclopedia-card .encyclopedia-mark { min-height: 116px; border-color: #725b46; background: radial-gradient(ellipse at center, #58432f, #1a1717 75%); color: #e1c49a; }
+.encyclopedia-grid-curios .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg),
+.encyclopedia-grid-items .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg),
+.encyclopedia-grid-trinkets .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg) { width: 100%; height: 100%; max-height: 116px; object-fit: contain; }
+.encyclopedia-grid-locations .encyclopedia-card-copy,
+.encyclopedia-grid-curios .encyclopedia-card-copy,
+.encyclopedia-grid-items .encyclopedia-card-copy,
+.encyclopedia-grid-trinkets .encyclopedia-card-copy { gap: .45rem; padding-block: .1rem; }
+.encyclopedia-grid-locations .encyclopedia-card-copy small,
+.encyclopedia-grid-curios .encyclopedia-card-copy small,
+.encyclopedia-grid-items .encyclopedia-card-copy small,
+.encyclopedia-grid-trinkets .encyclopedia-card-copy small { color: #cbb18a; font-size: .68rem; letter-spacing: .055em; line-height: 1.5; }
+.encyclopedia-grid-trinkets .encyclopedia-card-copy strong { font-size: 1.35rem; line-height: 1.2; }
+.encyclopedia-grid-trinkets .encyclopedia-card-copy > span { padding: .5rem .6rem; border-left: 2px solid #92734c; background: #100f0f88; color: #e0d5c8; }
+.encyclopedia-grid-curios .encyclopedia-card-copy > span,
+.encyclopedia-grid-items .encyclopedia-card-copy > span { line-height: 1.55; }
+.curio-card-outcomes { display: grid; width: 100%; gap: .35rem; }
+.curio-card-outcomes > span { display: grid; gap: .08rem; padding: .35rem .5rem; border-left: 2px solid #92734c; background: #100f0f88; line-height: 1.4; }
+.curio-card-outcomes strong { color: #d7bf9b; font-size: .68rem; font-weight: 650; }
+.curio-card-outcomes > span > span { color: var(--text-secondary); font-size: .72rem; }
+.encyclopedia-grid :is(.encyclopedia-card-locations, .encyclopedia-card-curios, .encyclopedia-card-items, .encyclopedia-card-trinkets):hover,
+.encyclopedia-grid :is(.encyclopedia-card-locations, .encyclopedia-card-curios, .encyclopedia-card-items, .encyclopedia-card-trinkets):focus-visible { border-color: #a27c54; background: linear-gradient(135deg, #30251f, #1b1919 72%); }
+.entry-art-locations.entry-art-banner { max-width: none; aspect-ratio: 16 / 9; margin-block: 1.5rem 2rem; border-color: #745b45; background: #171515; box-shadow: 0 14px 36px #0008, inset 0 0 0 1px #d0a66a18; }
+.entry-art-locations.entry-art-banner [data-art-visual] > img { max-height: none; object-fit: contain; }
+.entry-art-locations.entry-art-banner.image-failed { display: grid; min-height: clamp(240px, 33vw, 430px); }
+.location-art-fallback { width: 100%; min-height: clamp(240px, 33vw, 430px); aspect-ratio: 16 / 9; border-color: #745b45; background: radial-gradient(ellipse at center, #44352b, #171515 72%); color: #e1c49a; font-size: clamp(2.5rem, 8vw, 6rem); }
+.entry-art-locations.entry-art-banner.image-failed .location-art-fallback { min-height: 100%; }
+.entry-art-locations.entry-art-banner::after { background: linear-gradient(180deg, #16090b12, transparent 48%, #10090b4a), radial-gradient(ellipse, transparent 52%, #300c1433); }
+.encyclopedia-section { margin-top: .35rem; padding-block: 1.6rem; border-top-color: #594943; }
+.encyclopedia-section h2 { color: #e7d1af; }
 /* Keep headings in the adjacent opaque panel instead of laying text over a busy atlas. */
 :is(.encyclopedia-card, .boss-card, .class-card) { transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background-color 180ms ease; }
 :is(.encyclopedia-card, .boss-card, .class-card):is(:hover, :focus-visible) { box-shadow: 0 0 18px #a1273533, inset 0 0 12px #6c182222; }
@@ -762,3 +806,140 @@ main:has(.team-guide-hero) { width: min(1700px, calc(100% - clamp(32px, 4vw, 64p
 @media (max-width: 760px) { main:has(.team-guide-hero) { width: calc(100% - 28px); } .team-guide-navigation { position: static; } .team-guide-build-grid { grid-template-columns: 1fr; } .team-formation-card { min-height: 330px; } .team-formation-card > .team-art { min-height: 190px; } .team-battle-steps { grid-template-columns: 1fr; } }
 @media (max-width: 520px) { .team-guide-hero { padding: 1.1rem; } .team-guide-hero h1 { font-size: 2rem; } .team-quick-facts { grid-template-columns: 1fr 1fr; gap: .45rem; } .team-guide-party { grid-template-columns: 1fr 1fr; } .team-formation-card { min-height: 270px; padding: .65rem; } .team-formation-card > .team-art { min-height: 155px; } .team-formation-card > .team-art .entry-art [data-art-visual] > :is(img, svg) { max-height: 190px; } .counter-guide-skills, .counter-guide-trinkets { grid-template-columns: 1fr; } .counter-guide-hero-heading { grid-template-columns: auto 82px minmax(0, 1fr); gap: .55rem; } .counter-guide-hero-heading .team-art { height: 88px; } .counter-guide-hero-heading .entry-art [data-art-visual] > :is(img, svg) { max-height: 88px; } }
 @media (prefers-reduced-motion: reduce) { .team-formation-card { transition: none; } .team-formation-card:hover, .team-formation-card:focus-within { transform: none; } }
+
+/* Shared DD1 media frames: portraits, icons, scenes, and their fallbacks share one quiet bronze edge. */
+body { background: radial-gradient(ellipse at 82% 8%, #80513a0b, transparent 34%), var(--background); }
+.entry-art { border: 1px solid var(--art-frame-border); border-radius: 2px; background: radial-gradient(ellipse at 50% 42%, #35282a, #171517 72%); box-shadow: inset 0 0 0 1px var(--art-frame-inset), 0 5px 16px #0004; }
+.entry-art [data-art-visual] > :is(img, svg) { max-height: 280px; }
+.entry-art-heroes.entry-art-thumbnail { height: 280px; }
+.class-art, .boss-artwork { border-color: var(--art-frame-border); box-shadow: inset 0 0 0 1px var(--art-frame-inset); }
+.class-art { height: clamp(230px, 23vw, 278px); }
+.team-art > .portrait-unavailable { border: 1px solid var(--art-frame-border); border-radius: 2px; background: radial-gradient(ellipse at 50% 40%, #35282a, #171517 74%); box-shadow: inset 0 0 0 1px var(--art-frame-inset); }
+.team-art > .entry-art { width: 100%; height: 100%; }
+.team-portrait img { max-width: min(100%, 72px); max-height: 88px; object-fit: contain; }
+
+/* Team index cards become compact field guides, with the formation visible before the detail. */
+.collection-group > .team-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: stretch; }
+.composition-overview-card, .boss-counter-preview, .team-card { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #5c4741; border-radius: 3px; background: radial-gradient(ellipse at 96% 0, #81543814, transparent 34%), linear-gradient(145deg, #24201e, #171618 72%); box-shadow: inset 0 1px #e5c8a40c, 0 8px 22px #0003; }
+.composition-overview-card::before, .boss-counter-preview::before { position: absolute; inset: 0 0 auto; height: 2px; content: ""; pointer-events: none; background: linear-gradient(90deg, #a3434d, #9c774b 48%, transparent 100%); opacity: .82; }
+.composition-overview-card { display: flex; flex-direction: column; min-width: 0; padding: 1.15rem; }
+.composition-overview-card > .eyebrow { color: #d4b184; letter-spacing: .1em; }
+.composition-overview-card h3 { margin-top: .15rem; font-size: clamp(1.3rem, 1.7vw, 1.65rem); line-height: 1.25; }
+.composition-overview-card .formation-label { margin-top: .7rem !important; color: #d8c3ad; font-size: .72rem !important; letter-spacing: .07em; text-transform: uppercase; }
+.composition-overview-card .party { gap: .35rem; margin-top: .35rem; }
+.composition-overview-card .party li { min-width: 0; padding: .45rem .25rem; border: 1px solid #4e413d; background: linear-gradient(180deg, #201b1a, #151416); }
+.composition-overview-card .team-art { height: 82px; padding: .2rem; border: 1px solid #52413c; background: radial-gradient(ellipse at center, #392d2b, #151416 75%); }
+.composition-overview-card .team-art .entry-art-heroes.entry-art-thumbnail { height: 100%; min-height: 0; border: 0; box-shadow: none; background: transparent; }
+.composition-overview-card .team-art .entry-art [data-art-visual] > :is(img, svg) { max-width: 100%; max-height: 78px; object-fit: contain; }
+.composition-overview-card .team-art > .portrait-unavailable { min-height: 0; height: 100%; margin: 0; }
+.composition-overview-card .party strong { font-size: .78rem; line-height: 1.25; }
+.composition-strategy { margin-top: .8rem; padding: .7rem .8rem; border-left: 2px solid #9a7048; background: #110f0fb0; }
+.composition-strategy h4 { color: #e3c89e; font: .92rem Georgia, serif; }
+.composition-strategy p { -webkit-line-clamp: 2; line-clamp: 2; }
+.composition-overview-card .team-details-link, .boss-counter-preview .team-details-link { align-self: flex-start; margin-top: auto; padding: .6rem .8rem; border: 1px solid #79534a; background: linear-gradient(110deg, #3a2024, #23191a); color: #f0c7ae; }
+.composition-overview-card .team-details-link:hover, .composition-overview-card .team-details-link:focus-visible, .boss-counter-preview .team-details-link:hover, .boss-counter-preview .team-details-link:focus-visible { border-color: #bd8b5c; background: #40252a; box-shadow: 0 0 14px #9b30351f; }
+.boss-counter-preview { display: flex; flex-direction: column; min-width: 0; padding: 1.1rem; }
+.boss-counter-preview .eyebrow { color: #d4b184; }
+.boss-counter-preview h3 { line-height: 1.28; }
+.counter-preview-party { gap: .35rem; }
+.counter-preview-party li { border-color: #50413c; background: linear-gradient(180deg, #211c1a, #151416); }
+.counter-preview-party .team-art { height: 68px; padding: .15rem; border: 1px solid #54443f; background: radial-gradient(ellipse at center, #392d2b, #151416 75%); }
+.counter-preview-party .entry-art-heroes.entry-art-thumbnail { height: 100%; min-height: 0; border: 0; box-shadow: none; background: transparent; }
+.counter-preview-party .entry-art img { max-height: 64px; }
+.counter-preview-party .team-art > .portrait-unavailable { height: 100%; min-height: 0; margin: 0; }
+.counter-preview-party strong { font-size: .64rem; line-height: 1.25; }
+.preview-tactical-edge { margin-block: .2rem .8rem; padding: .7rem .8rem; border-left: 2px solid #9a7048; background: #110f0fb0; }
+.preview-tactical-edge strong { color: #e3c89e; }
+.team-search-status { color: var(--muted); }
+
+/* Composition detail pages retain useful content while giving formation and tactics a calmer rhythm. */
+.composition-detail { position: relative; padding: 1.15rem 1.25rem 1.4rem; border: 1px solid #57453e; background: radial-gradient(ellipse at 92% 0, #8b51321c, transparent 38%), linear-gradient(125deg, #231d1a, #161517 75%); }
+.composition-detail .eyebrow { color: #d4b184; }
+.composition-detail .lede { max-width: 72ch; }
+.team-card { margin-top: 1.2rem; padding: clamp(1rem, 1.7vw, 1.5rem); }
+.team-card .team-card-header { padding-bottom: .75rem; border-bottom: 1px solid #51403b; }
+.team-card .team-card-header .eyebrow { color: #d4b184; }
+.team-card h3 { margin-top: .8rem; font: 1.65rem/1.25 Georgia, serif; color: #f0ded4; }
+.team-card .formation-label { color: #d8c3ad; font-size: .73rem !important; letter-spacing: .07em; text-transform: uppercase; }
+.team-card .party { gap: .4rem; }
+.team-card .party li { border: 1px solid #4e413d; background: linear-gradient(180deg, #201b1a, #151416); }
+.team-card .team-art { height: 86px; padding: .2rem; border: 1px solid #52413c; background: radial-gradient(ellipse at center, #392d2b, #151416 75%); }
+.team-card .team-art .entry-art-heroes.entry-art-thumbnail { height: 100%; min-height: 0; border: 0; box-shadow: none; background: transparent; }
+.team-card .team-art .entry-art [data-art-visual] > :is(img, svg) { max-height: 82px; }
+.team-card .team-art > .portrait-unavailable { min-height: 0; height: 100%; margin: 0; }
+.team-card .composition-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; margin-top: 1rem; }
+.team-card .composition-summary > div { padding: .8rem; border: 1px solid #493b37; background: #151315a8; }
+.team-card .composition-summary > div:first-child { grid-column: 1 / -1; background: linear-gradient(115deg, #21191a, #171618); }
+.team-card .composition-summary h4 { margin-top: .15rem; color: #e3c89e; font: 1rem Georgia, serif; }
+.team-card .composition-summary h4:not(:first-child) { margin-top: .9rem; }
+.team-card .composition-summary p, .team-card .composition-summary li { line-height: 1.55; }
+.composition-detail + .team-card .composition-meta { padding-top: .8rem; border-top: 1px solid #51403b; }
+
+/* Counter guides keep large character art present without letting it overwhelm the tactical notes. */
+.team-guide-hero { box-shadow: inset 0 0 0 1px #e1c5a40d, 0 16px 42px #0005; }
+.team-guide-formation, .team-guide-builds, .team-guide-battle, .team-guide-sources { margin-block: 1.7rem 2.1rem; }
+.team-formation-card { min-height: 320px; padding: .85rem; border-color: var(--art-frame-border); background: radial-gradient(ellipse at 50% 40%, #4a30301c, transparent 60%), linear-gradient(155deg, #211c1a, #141315 76%); box-shadow: inset 0 1px #e3c9aa0b, 0 7px 20px #0003; }
+.team-formation-card > .team-art { min-height: 170px; height: clamp(170px, 16vw, 220px); border: 1px solid var(--art-frame-border); background: radial-gradient(ellipse at center, #3a2d2b, #171517 74%); }
+.team-formation-card > .team-art .entry-art-heroes.entry-art-thumbnail { border: 0; box-shadow: none; background: transparent; }
+.team-formation-card > .team-art .entry-art [data-art-visual] > :is(img, svg) { max-height: 218px; }
+.team-formation-card > .team-art > .portrait-unavailable { min-height: 0; }
+.counter-guide-hero { border-color: var(--art-frame-border); background: radial-gradient(ellipse at 96% 0, #80533312, transparent 32%), linear-gradient(145deg, #211d1b, #151416 72%); box-shadow: inset 0 1px #e3c9aa0b, 0 7px 20px #0003; }
+.counter-guide-hero-heading .team-art { border-color: var(--art-frame-border); box-shadow: inset 0 0 0 1px var(--art-frame-inset); }
+.counter-guide-skill, .counter-guide-trinket { border-color: #51413c; background: linear-gradient(135deg, #1c1918, #141315) !important; }
+.team-battle-steps li { border-color: #51413c; background: radial-gradient(ellipse at 100% 0, #81543812, transparent 45%), linear-gradient(140deg, #211d1b, #151416 76%); }
+.team-battle-detail { border-color: #59463f; background: linear-gradient(140deg, #1e1a19, #151416); }
+.team-guide-navigation { border-color: #59463f; box-shadow: 0 6px 20px #0004; }
+@media (max-width: 980px) { .collection-group > .team-list { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .class-art { height: 238px; } }
+@media (max-width: 760px) { .team-formation-card { min-height: 290px; } .team-formation-card > .team-art { height: 185px; min-height: 185px; } }
+@media (max-width: 520px) { .team-formation-card { min-height: 255px; } .team-formation-card > .team-art { height: 145px; min-height: 145px; } .team-formation-card > .team-art .entry-art [data-art-visual] > :is(img, svg) { max-height: 155px; } }
+
+/* Grouped team browsing gives every listed composition its real, data-backed context. */
+.team-index-controls { display: grid; grid-template-columns: minmax(220px, 1.6fr) repeat(3, minmax(140px, 1fr)); align-items: end; gap: .8rem; margin-block: .6rem 1.5rem; padding: 1rem; border: 1px solid #5a4740; background: radial-gradient(ellipse at 100% 0, #80533312, transparent 38%), linear-gradient(115deg, #211d1a, #171618 72%); }
+.team-index-controls > div { display: grid; gap: .3rem; min-width: 0; }
+.team-index-controls label { color: #dfc9a9; font-size: .75rem; }
+.team-index-controls input, .team-index-controls select { width: 100%; min-height: 2.75rem; padding: .58rem .7rem; border: 1px solid #665149; border-radius: 2px; background: #141314; color: var(--text); font: inherit; }
+.team-index-controls :is(input, select):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-color: #a47b58; }
+.team-index-controls .composition-search { max-width: none; margin: 0; }
+.team-index-controls .composition-search label { margin: 0; }
+.team-index-controls .search-status { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: .78rem; }
+.team-composition-groups { display: grid; gap: 1.7rem; }
+.team-region-group { min-width: 0; }
+.team-region-heading { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: .8rem; padding: .75rem .9rem; border-bottom: 1px solid #655148; background: linear-gradient(90deg, #25201c, #171618 75%); }
+.team-region-heading .eyebrow { margin-bottom: .2rem; color: #d2ad78; font-size: .63rem; }
+.team-region-heading h2 { color: #f0dfc7; font: 1.55rem/1.2 Georgia, serif; }
+.team-region-heading > span { color: var(--muted); font-size: .73rem; white-space: nowrap; }
+.team-group-note { margin: -.2rem 0 .85rem; color: var(--muted); font-size: .83rem; }
+.team-boss-group { margin-top: 1rem; padding-left: .7rem; border-left: 2px solid #784750; }
+.team-boss-heading { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; margin: 0 0 .55rem; }
+.team-boss-heading h3 { color: #ead5c2; font: 1.15rem Georgia, serif; }
+.team-boss-heading h3 a { text-decoration-color: #76544e; }
+.team-boss-heading > span { color: #d0b186; font-size: .7rem; }
+.team-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; align-items: stretch; }
+.team-card-grid > [data-composition-card] { min-width: 0; }
+.team-card-association { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .55rem; margin-block: .25rem .45rem; color: #e5d4c0; font-size: .83rem; line-height: 1.4; }
+.team-card-association a { color: #efc2bd; font-weight: 650; }
+.team-card-association span { color: #cfb28e; }
+.team-card-tier { margin-bottom: .5rem; color: var(--muted); font-size: .76rem; line-height: 1.45; }
+.team-card-tier strong { color: #dbc49f; }
+.boss-counter-preview .team-card-association, .boss-counter-preview .team-card-tier { padding-inline: .1rem; }
+.counter-preview-party { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; }
+.counter-preview-party .team-art { height: 82px; padding: .15rem; }
+.counter-preview-party .entry-art img { max-height: 78px; }
+.counter-preview-party strong { font-size: .68rem; }
+.composition-overview-card .team-art { height: 98px; }
+.composition-overview-card .team-art .entry-art [data-art-visual] > :is(img, svg) { max-height: 94px; }
+.encyclopedia-grid-enemies .encyclopedia-card { grid-template-columns: 90px minmax(0, 1fr); }
+.encyclopedia-grid-enemies .encyclopedia-card > .entry-art { min-height: 112px; }
+.encyclopedia-grid-enemies .encyclopedia-mark { min-height: 112px; }
+.encyclopedia-grid-locations .encyclopedia-card { grid-template-columns: minmax(150px, .78fr) minmax(0, 1fr); }
+.encyclopedia-grid-curios .encyclopedia-card, .encyclopedia-grid-items .encyclopedia-card, .encyclopedia-grid-trinkets .encyclopedia-card { grid-template-columns: 134px minmax(0, 1fr); }
+.encyclopedia-grid-curios .encyclopedia-card > .entry-art, .encyclopedia-grid-items .encyclopedia-card > .entry-art, .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art { width: 134px; min-height: 134px; }
+.encyclopedia-grid-curios .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg), .encyclopedia-grid-items .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg), .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg) { max-height: 134px; }
+.boss-card { grid-template-columns: minmax(110px, 34%) minmax(0, 1fr); }
+.boss-artwork { min-height: 200px; }
+.team-empty-state { margin-top: 1rem; padding: 1rem; border: 1px dashed #79585a; background: #21191b; color: var(--text-secondary); }
+.team-empty-state[hidden], [data-team-region-group][hidden], [data-team-boss-group][hidden], [data-composition-card][hidden] { display: none; }
+@media (max-width: 1050px) { .team-index-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); } .team-index-controls .composition-search { grid-column: 1 / -1; } .team-card-grid { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .team-index-controls { grid-template-columns: 1fr; } .team-index-controls .composition-search, .team-index-controls .search-status { grid-column: auto; } }
+@media (max-width: 520px) { .counter-preview-party .team-art { height: 76px; } .counter-preview-party .entry-art img { max-height: 72px; } .encyclopedia-grid-enemies .encyclopedia-card { grid-template-columns: 76px minmax(0, 1fr); } .encyclopedia-grid-enemies .encyclopedia-card > .entry-art, .encyclopedia-grid-enemies .encyclopedia-mark { min-height: 96px; } .encyclopedia-grid-locations .encyclopedia-card { grid-template-columns: 116px minmax(0, 1fr); } .encyclopedia-grid-curios .encyclopedia-card, .encyclopedia-grid-items .encyclopedia-card, .encyclopedia-grid-trinkets .encyclopedia-card { grid-template-columns: 104px minmax(0, 1fr); } .encyclopedia-grid-curios .encyclopedia-card > .entry-art, .encyclopedia-grid-items .encyclopedia-card > .entry-art, .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art { width: 104px; min-height: 104px; } .encyclopedia-grid-curios .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg), .encyclopedia-grid-items .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg), .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg) { max-height: 104px; } }

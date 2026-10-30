@@ -197,6 +197,86 @@ function getBossCounterTeams() {
   return (structuredGameContent?.bosses || []).flatMap(boss => (boss.counterTeams || []).map(team => ({ ...team, boss })));
 }
 
+const teamCategoryLabels = { beginner: 'Beginner', balanced: 'Balanced', specialized: 'Specialized', unassessed: 'Unassessed' };
+
+function teamMatchesFilters(team, filters = {}) {
+  const matches = (key, value) => !value || value === 'all' || team[key] === value;
+  return matches('teamRegion', filters.region)
+    && matches('teamBoss', filters.boss)
+    && matches('teamCategory', filters.category);
+}
+
+function renderTeamCompositionGroups() {
+  const generalTeams = getTeams();
+  const bossTeams = getBossCounterTeams();
+  const regionsByName = new Map((structuredGameContent?.regions || []).map(region => [region.name.toLowerCase(), region]));
+  const preferredRegionNames = ['Ruins', 'Warrens', 'Weald', 'Cove', 'Darkest Dungeon', 'Courtyard', 'Farmstead'];
+  const regionTeams = new Map();
+  const otherTeams = [];
+  for (const team of bossTeams) {
+    const regionId = team.boss.regionIds?.[0];
+    const roamingEncounter = (team.boss.categoryIds || []).some(id => /:(wandering|events)$/.test(id));
+    if (!roamingEncounter && regionId && structuredGameContent.regions.some(region => region.id === regionId)) {
+      if (!regionTeams.has(regionId)) regionTeams.set(regionId, []);
+      regionTeams.get(regionId).push(team);
+    } else otherTeams.push(team);
+  }
+  const orderedRegions = preferredRegionNames.map(name => regionsByName.get(name.toLowerCase())).filter(region => region && regionTeams.has(region.id));
+  const knownIds = new Set(orderedRegions.map(region => region.id));
+  const additionalRegions = [...regionTeams.keys()].filter(id => !knownIds.has(id))
+    .map(id => structuredGameContent.regions.find(region => region.id === id)).filter(Boolean);
+  const groupForRegion = (region, teams) => {
+    const bossGroups = structuredGameContent.bosses.filter(boss => teams.some(team => team.boss.id === boss.id)).map(boss => {
+      const entries = teams.filter(team => team.boss.id === boss.id);
+      return `<section class="team-boss-group" data-team-boss-group="${escapeHtml(boss.id)}"><div class="team-boss-heading"><h3><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">${escapeHtml(boss.name)}</a></h3><span>${escapeHtml(boss.regionLabel)}</span></div><div class="team-card-grid">${entries.map(renderBossCounterPreview).join('')}</div></section>`;
+    }).join('');
+    return `<section class="team-region-group" data-team-region-group="${escapeHtml(region.id)}"><div class="team-region-heading"><div><p class="eyebrow">${escapeHtml(requirementLabel(region.requirements))}</p><h2>${escapeHtml(region.name)}</h2></div><span>${teams.length} ${teams.length === 1 ? 'team' : 'teams'}</span></div>${bossGroups}</section>`;
+  };
+  const groups = [];
+  if (generalTeams.length) groups.push(`<section class="team-region-group team-unassessed-group" data-team-region-group="unassessed"><div class="team-region-heading"><div><p class="eyebrow">No regional assignment recorded</p><h2>General-purpose / Unassessed</h2></div><span>${generalTeams.length} ${generalTeams.length === 1 ? 'team' : 'teams'}</span></div><p class="team-group-note">These formations come from hero guides and have no verified boss or region association.</p><div class="team-card-grid">${generalTeams.map(renderTeamCard).join('')}</div></section>`);
+  for (const region of [...orderedRegions, ...additionalRegions]) groups.push(groupForRegion(region, regionTeams.get(region.id)));
+  if (otherTeams.length) groups.push(groupForRegion({ id: 'other', name: 'Other / roaming encounters', requirements: { baseGame: false, dlc: [], mods: [] } }, otherTeams));
+
+  const regionOptions = [
+    ...(generalTeams.length ? [['unassessed', 'General-purpose / Unassessed']] : []),
+    ...[...orderedRegions, ...additionalRegions].map(region => [region.id, region.name]),
+    ...(otherTeams.length ? [['other', 'Other / roaming encounters']] : [])
+  ];
+  const bossOptions = [...new Map(bossTeams.map(team => [team.boss.id, [team.boss.id, team.boss.name]])).values()];
+  const categories = [...new Set([...generalTeams.map(() => 'unassessed'), ...bossTeams.map(team => team.category)])];
+  const categoryOptions = ['beginner', 'balanced', 'specialized', 'unassessed'].filter(category => categories.includes(category))
+    .map(category => [category, teamCategoryLabels[category] || category]);
+  return { markup: groups.join(''), count: generalTeams.length + bossTeams.length, regionOptions, bossOptions, categoryOptions };
+}
+
+function filterTeamCompositions() {
+  const query = document.getElementById('team-search-input')?.value.trim().toLowerCase() || '';
+  const filters = {
+    region: document.getElementById('team-region-filter')?.value || 'all',
+    boss: document.getElementById('team-boss-filter')?.value || 'all',
+    category: document.getElementById('team-category-filter')?.value || 'all'
+  };
+  const cards = [...document.querySelectorAll('[data-composition-card]')];
+  let visibleCount = 0;
+  for (const card of cards) {
+    const matches = card.dataset.searchText.includes(query) && teamMatchesFilters(card.dataset, filters);
+    card.hidden = !matches;
+    if (matches) visibleCount += 1;
+  }
+  document.querySelectorAll('[data-team-boss-group]').forEach(group => {
+    group.hidden = group.querySelectorAll('[data-composition-card]:not([hidden])').length === 0;
+  });
+  document.querySelectorAll('[data-team-region-group]').forEach(group => {
+    group.hidden = group.querySelectorAll('[data-composition-card]:not([hidden])').length === 0;
+  });
+  const status = document.getElementById('team-search-status');
+  if (status) status.textContent = query || Object.values(filters).some(value => value !== 'all')
+    ? `${visibleCount} matching ${visibleCount === 1 ? 'composition' : 'compositions'}.`
+    : `${visibleCount} compositions available.`;
+  const empty = document.getElementById('team-empty-state');
+  if (empty) empty.hidden = visibleCount > 0;
+}
+
 function findBossCounterTeam(id) {
   return getBossCounterTeams().find(team => team.id === id);
 }
@@ -221,11 +301,11 @@ function encyclopediaHref(kind, record) {
   return `#game/darkest-dungeon/${kind}/${record.routeId}`;
 }
 
-function renderEncyclopediaCard(kind, record, meta, summary) {
+function renderEncyclopediaCard(kind, record, meta, summary, extraMarkup = '') {
   const label = Array.isArray(meta) ? meta.join(' · ') : meta;
   const title = record.name;
-  return `<a class="encyclopedia-card" data-encyclopedia-card data-search-text="${escapeHtml(`${title} ${label} ${summary} ${encyclopediaSearchText(kind, record, structuredGameContent, heroes)}`.toLowerCase())}" data-region-ids="${escapeHtml((record.regionIds || []).join(' '))}" href="${escapeHtml(encyclopediaHref(kind, record))}">
-    ${renderEntryArtwork(kind, record, 'thumbnail')}<span class="encyclopedia-card-copy"><small>${escapeHtml(label)}</small><strong>${escapeHtml(title)}</strong><span>${escapeHtml(summary)}</span><em>Open entry →</em></span></a>`;
+  return `<a class="encyclopedia-card encyclopedia-card-${kind}" data-encyclopedia-card data-search-text="${escapeHtml(`${title} ${label} ${summary} ${encyclopediaSearchText(kind, record, structuredGameContent, heroes)}`.toLowerCase())}" data-region-ids="${escapeHtml((record.regionIds || []).join(' '))}" href="${escapeHtml(encyclopediaHref(kind, record))}">
+    ${renderEntryArtwork(kind, record, 'thumbnail')}<span class="encyclopedia-card-copy"><small>${escapeHtml(label)}</small><strong>${escapeHtml(title)}</strong><span>${escapeHtml(summary)}</span>${extraMarkup}<em>Open entry →</em></span></a>`;
 }
 
 const collectionConfig = {
@@ -281,11 +361,12 @@ function renderEncyclopediaCollection(kind) {
     if (kind === 'trinkets') return renderEncyclopediaCard(kind, record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).join(', ')], record.effects.map(effect => effect.text).join(' · '));
     if (kind === 'items') return renderEncyclopediaCard(kind, record, record.category, record.purpose);
     if (kind === 'curios') {
-      const outcomes = record.interactions.map(interaction => {
+      const visibleInteractions = record.interactions.slice(0, 2);
+      const interactionRows = visibleInteractions.map(interaction => {
         const item = interaction.itemId && structuredGameContent.items.find(entry => entry.id === interaction.itemId);
-        return `${item?.name || 'Unassisted'}: ${interaction.outcome}`;
-      }).slice(0, 2).join(' · ');
-      return renderEncyclopediaCard(kind, record, [...record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean), requirementLabel(record.requirements)], `${record.whereFound} · ${outcomes}`);
+        return `<span><strong>${escapeHtml(item?.name || 'Unassisted')}</strong><span>${escapeHtml(interaction.outcome)}</span></span>`;
+      }).join('');
+      return renderEncyclopediaCard(kind, record, [...record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean), requirementLabel(record.requirements)], record.whereFound, `<span class="curio-card-outcomes" aria-label="Example interaction outcomes">${interactionRows}</span>`);
     }
     if (kind === 'locations') return renderEncyclopediaCard(kind, record, requirementLabel(record.requirements), record.summary);
     return renderEncyclopediaCard(kind, record, record.category, record.summary);
@@ -294,7 +375,7 @@ function renderEncyclopediaCollection(kind) {
   const groupedCards = kind === 'enemies' ? [
     ['Shared and wandering enemies', records.filter(record => record.regionIds.length > 1)],
     ...structuredGameContent.regions.map(region => [region.name, records.filter(record => record.regionIds.length === 1 && record.regionIds[0] === region.id)])
-  ].filter(([, entries]) => entries.length).map(([name, entries]) => `<section class="encyclopedia-group" data-encyclopedia-group><div class="section-heading"><h2>${escapeHtml(name)}</h2><span>${entries.length} entries</span></div><div class="encyclopedia-grid">${entries.map(record => renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary)).join('')}</div></section>`).join('') : `<div class="encyclopedia-grid">${cards}</div>`;
+  ].filter(([, entries]) => entries.length).map(([name, entries]) => `<section class="encyclopedia-group" data-encyclopedia-group><div class="section-heading"><h2>${escapeHtml(name)}</h2><span>${entries.length} entries</span></div><div class="encyclopedia-grid encyclopedia-grid-enemies">${entries.map(record => renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary)).join('')}</div></section>`).join('') : `<div class="encyclopedia-grid encyclopedia-grid-${kind}">${cards}</div>`;
   return `<section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / Field encyclopedia</p><h1 id="page-title" tabindex="-1">${config.title}</h1><p class="lede">${config.intro}</p>${kind === 'enemies' ? '<p class="guide-data-note">Minibosses and bosses are listed separately in the <a href="#game/darkest-dungeon/bosses">Bosses encyclopedia</a>.</p>' : ''}</section>
     <section class="encyclopedia-controls" aria-label="Filter ${config.title}"><div><label for="encyclopedia-search">Search ${config.title.toLowerCase()}</label><input id="encyclopedia-search" type="search" placeholder="${config.search}" autocomplete="off"></div><div><label for="encyclopedia-filter">Filter by ${config.filter.toLowerCase()}</label><select id="encyclopedia-filter"><option value="all">All ${config.filter.toLowerCase()}s</option>${filterValues.map(([value,label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div>${moreFilters}<p id="encyclopedia-status" role="status" aria-live="polite">${records.length} ${config.title.toLowerCase()} entries.</p></section>
     ${groupedCards}<p id="encyclopedia-empty" class="panel" hidden>No entries match these filters. Try another search.</p>`;
@@ -324,7 +405,11 @@ function renderEncyclopediaDetail(kind, record) {
   }
   const meta = kind === 'enemies' ? `${record.regionIds.map(regionName).join(' · ')} · ${record.enemyType} · ${record.encounterClass} · ${requirementLabel(record.requirements)}` : kind === 'curios' ? `${record.regionIds.map(regionName).join(' · ')} · ${requirementLabel(record.requirements)}` : kind === 'locations' ? `${regionName(record.regionId)} · ${requirementLabel(record.requirements)}` : kind === 'trinkets' ? `${record.rarity} · ${requirementLabel(record.requirements)}${record.classRestrictionHeroRouteIds?.length ? ` · ${record.classRestrictionHeroRouteIds.map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', ')}` : ''}${record.regionIds?.length ? ` · ${record.regionIds.map(regionName).join(' · ')}` : ''}` : record.category || 'Reference entry';
   const sources = (record.verification?.sourceIds || []).map(id=>structuredGameContent.sources.find(source=>source.id===id)).filter(Boolean);
-  return `<a class="back-link" href="${back}">← All ${collectionConfig[kind].title.toLowerCase()}</a><section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">${escapeHtml(meta)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)}</h1><p class="lede">${escapeHtml(record.summary || record.purpose || record.whereFound || '')}</p><span class="boss-status">${escapeHtml(verificationLabel(kind, record))}</span></section>${renderEntryArtwork(kind, record, 'banner')}${renderEntryArtwork(kind, record)}${sections}<section class="encyclopedia-section"><h2>Sources & verification</h2><p>${escapeHtml(verificationLabel(kind, record))}. ${structuredGameContent.game.versionContext.verifiedAgainstInstalledBuild ? 'See the recorded game-version context for testing scope.' : 'Not tested against an installed game patch.'}</p><ul>${sources.map(source=>`<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a></li>`).join('')}</ul></section>`;
+  const locationArtworkFallback = `<span class="encyclopedia-mark location-art-fallback" role="img" aria-label="${escapeHtml(record.name)} artwork unavailable"><span aria-hidden="true">${escapeHtml(record.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3))}</span><small>No local art</small></span>`;
+  const artwork = kind === 'locations'
+    ? renderEntryArtwork(kind, record, 'banner', locationArtworkFallback) || renderEntryArtwork(kind, record)
+    : `${renderEntryArtwork(kind, record, 'banner')}${renderEntryArtwork(kind, record)}`;
+  return `<a class="back-link" href="${back}">← All ${collectionConfig[kind].title.toLowerCase()}</a><section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">${escapeHtml(meta)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)}</h1><p class="lede">${escapeHtml(record.summary || record.purpose || record.whereFound || '')}</p><span class="boss-status">${escapeHtml(verificationLabel(kind, record))}</span></section>${artwork}${sections}<section class="encyclopedia-section"><h2>Sources & verification</h2><p>${escapeHtml(verificationLabel(kind, record))}. ${structuredGameContent.game.versionContext.verifiedAgainstInstalledBuild ? 'See the recorded game-version context for testing scope.' : 'Not tested against an installed game patch.'}</p><ul>${sources.map(source=>`<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a></li>`).join('')}</ul></section>`;
 }
 
 function linkedList(records, kind) {
@@ -376,14 +461,14 @@ function renderSearchResults(query) {
 function renderCollection(kind) {
   const isTeams = kind === 'teams';
   const title = isTeams ? 'Team Compositions' : 'Trinkets';
-  const note = isTeams ? 'Editorial formations from the available hero guides. Read positions 4–3–2–1 from rear to front; no tier ratings or location assessments are recorded.' :
+  const note = isTeams ? 'Pick a region or boss to narrow the field, then compare the rear-to-front formation and tactical plan. General-purpose parties stay separate unless a guide records a specific encounter.' :
     'Recommendations collected from available hero guides. Item effects are reference-checked; the installed game patch was not verified.';
   const renderer = isTeams ? renderTeam : renderTrinket;
+  const teamIndex = isTeams ? renderTeamCompositionGroups() : null;
   return `<section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / ${title}</p>
     <h1 id="page-title" tabindex="-1">${title}</h1><p class="lede">${note}</p></section>
     <section class="collection-group" aria-label="Available ${title.toLowerCase()}"><div class="section-heading"><h2>Current entries</h2><span>Collected from implemented guides</span></div>
-      ${isTeams ? `<div class="composition-search"><label for="team-search-input">Find a composition</label><input id="team-search-input" type="search" autocomplete="off" placeholder="Search names, heroes, or strategy"><p id="team-search-status" class="search-status" aria-live="polite">${getTeams().length} compositions available.</p></div>` : ''}
-      <div class="${isTeams ? 'team-list' : 'two-columns'}">${(isTeams ? getTeams().map(renderTeamCard).join('') + getBossCounterTeams().map(renderBossCounterPreview).join('') : getTrinkets().map(renderer).join(''))}${isTeams ? getBossCounterTeams().map(renderBossCounterPreview).join('') : ''}</div></section>`;
+      ${isTeams ? `<section class="team-index-controls" aria-label="Find a team composition"><div class="composition-search"><label for="team-search-input">Search teams</label><input id="team-search-input" type="search" autocomplete="off" placeholder="Name, hero, boss, or strategy"></div><div><label for="team-region-filter">Region</label><select id="team-region-filter"><option value="all">All supported regions</option>${teamIndex.regionOptions.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div><div><label for="team-boss-filter">Boss</label><select id="team-boss-filter"><option value="all">All associated bosses</option>${teamIndex.bossOptions.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div><div><label for="team-category-filter">Team category</label><select id="team-category-filter"><option value="all">All categories</option>${teamIndex.categoryOptions.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div><p id="team-search-status" class="search-status" role="status" aria-live="polite">${teamIndex.count} compositions available.</p></section><div class="team-composition-groups">${teamIndex.markup}</div><p id="team-empty-state" class="team-empty-state" role="status" hidden>No compositions match those filters. Try another region, boss, category, or search.</p>` : `<div class="two-columns">${getTrinkets().map(renderer).join('')}</div>`}</section>`;
 }
 
 function bossCategoryName(categoryId) {
@@ -467,12 +552,15 @@ function renderRelatedBossHeroes(boss) {
 }
 
 function renderBossCounterPreview(team) {
-  const positions = team.members.map(member => {
+  const regionId = team.boss.regionIds?.[0] || 'other';
+  const positions = [...team.members].sort((left, right) => right.position - left.position).map(member => {
     const hero = heroes.find(entry => entry.id === member.heroRouteId);
     const name = hero?.name || member.heroRouteId;
     return `<li><span class="counter-preview-rank">Rank ${member.position}</span>${renderTeamPortrait(name)}<strong>${renderHeroName(name)}</strong></li>`;
   }).join('');
-  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p class="preview-tactical-edge"><strong>Team advantage</strong>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a></article>`;
+  const searchText = `${team.name} ${team.category} ${team.boss.name} ${team.boss.regionLabel} ${requirementLabel(team.requirements)} ${team.requirements.dlc.join(' ')} ${team.purpose} ${team.members.map(member => `${member.heroRouteId} ${member.role}`).join(' ')}`;
+  const category = teamCategoryLabels[team.category] || team.category;
+  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}" data-team-id="${escapeHtml(team.id)}" data-team-region="${escapeHtml(regionId)}" data-team-boss="${escapeHtml(team.boss.id)}" data-team-category="${escapeHtml(team.category)}" data-composition-card data-search-text="${escapeHtml(searchText.toLowerCase())}"><p class="eyebrow">${escapeHtml(category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><p class="team-card-association"><a href="#game/darkest-dungeon/bosses/${escapeHtml(team.boss.routeId)}">${escapeHtml(team.boss.name)}</a><span>${escapeHtml(team.boss.regionLabel)}</span></p><p class="team-card-tier"><strong>Recommended tiers:</strong> ${escapeHtml(team.difficultyRecommendations || 'Not recorded')}</p><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p class="preview-tactical-edge"><strong>Why this team works</strong>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a></article>`;
 }
 
 function teamQuickFacts(team) {
@@ -570,7 +658,7 @@ function renderBossCounterGuide(team) {
 
 function renderRelatedBossTeams(boss) {
   const bossTeams = boss.counterTeams || [];
-  if (bossTeams.length) return `<p class="boss-team-intro">Choose a plan that fits your roster. Each guide includes rank-specific skills, trinkets and encounter notes.</p><div class="boss-counter-teams">${bossTeams.map(renderBossCounterPreview).join('')}</div>`;
+  if (bossTeams.length) return `<p class="boss-team-intro">Choose a plan that fits your roster. Each guide includes rank-specific skills, trinkets and encounter notes.</p><div class="boss-counter-teams">${bossTeams.map(team => renderBossCounterPreview({ ...team, boss })).join('')}</div>`;
   const teams = getTeams().filter(team => (boss.relatedCompositionIds || []).includes(team.id));
   return teams.length ? `<div class="team-list">${teams.map(renderTeamCard).join('')}</div>` : `<p class="guide-development-note">No boss-specific team compositions are documented yet. <a href="#game/darkest-dungeon/teams">Browse existing compositions</a> (not assessed for this encounter).</p>`;
 }
@@ -855,13 +943,14 @@ function renderPartyMembers(team) {
 }
 
 function renderTeamCard(team) {
-  const searchText = `${team.name} ${team.build} ${team.members.join(' ')} ${team.synergy}`;
-  return `<article class="panel composition-overview-card" data-composition-card data-search-text="${escapeHtml(searchText.toLowerCase())}">
-    <p class="eyebrow">${requirementLabel(team.requirements)} · Editorial example</p>
+  const searchText = `${team.name} general-purpose unassessed ${team.build} ${requirementLabel(team.requirements)} ${team.members.join(' ')} ${team.synergy}`;
+  return `<article class="panel composition-overview-card" data-team-id="${escapeHtml(team.id)}" data-team-region="unassessed" data-team-boss="unassessed" data-team-category="unassessed" data-composition-card data-search-text="${escapeHtml(searchText.toLowerCase())}">
+    <p class="eyebrow">General-purpose · Unassessed · ${requirementLabel(team.requirements)}</p>
     <h3><a href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">${escapeHtml(team.name)}</a></h3>
-    <p class="formation-label">Starting formation · Rear → front</p>${renderPartyMembers(team)}
-    <div class="composition-strategy"><h4>Main strategy</h4><p>${escapeHtml(team.synergy)}</p></div>
-    <a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full strategy <span aria-hidden="true">→</span></a>
+    <p class="team-card-association">No verified boss or region association</p><p class="team-card-tier"><strong>Difficulty:</strong> Not assessed</p>
+    <p class="formation-label">Formation · Ranks 4 → 1</p>${renderPartyMembers(team)}
+    <div class="composition-strategy"><h4>Why this team works</h4><p>${escapeHtml(team.synergy)}</p></div>
+    <a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a>
   </article>`;
 }
 
@@ -1079,18 +1168,7 @@ document.addEventListener('input', event => {
     return;
   }
   if (event.target.id === 'team-search-input') {
-    const query = event.target.value.trim().toLowerCase();
-    const cards = [...document.querySelectorAll('[data-composition-card]')];
-    let visibleCount = 0;
-    cards.forEach(card => {
-      const matches = card.dataset.searchText.includes(query);
-      card.hidden = !matches;
-      if (matches) visibleCount += 1;
-    });
-    const status = document.getElementById('team-search-status');
-    status.textContent = query
-      ? `${visibleCount} matching ${visibleCount === 1 ? 'composition' : 'compositions'}.`
-      : `${visibleCount} compositions available.`;
+    filterTeamCompositions();
     return;
   }
   if (event.target.id !== 'game-search-input') return;
@@ -1101,6 +1179,7 @@ document.addEventListener('input', event => {
 document.addEventListener('change', event => {
   if (event.target.id === 'boss-region-filter') filterBossCollection();
   if (event.target.id === 'encyclopedia-filter' || event.target.matches('[data-encyclopedia-filter]')) filterEncyclopedia();
+  if (['team-region-filter', 'team-boss-filter', 'team-category-filter'].includes(event.target.id)) filterTeamCompositions();
 });
 initializeHeroGallery(main, heroes);
 

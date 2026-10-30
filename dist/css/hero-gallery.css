@@ -19,7 +19,7 @@
 .class-guide-available { border-color: var(--accent-fill); }
 .class-skills-available { border-color: #56383e; }
 .class-skills-available .class-guide-status { color: var(--accent-text); }
-.class-art { position: relative; isolation: isolate; height: 320px; flex: 0 0 auto; margin: 0; overflow: hidden; border-bottom: 1px solid #56383e; background: radial-gradient(ellipse at 50% 45%, #8e263333, transparent 68%), linear-gradient(180deg, #21191b, #181416); }
+.class-art { position: relative; isolation: isolate; height: clamp(230px, 23vw, 278px); flex: 0 0 auto; margin: 0; overflow: hidden; border-bottom: 1px solid #56383e; background: radial-gradient(ellipse at 50% 45%, #8e263333, transparent 68%), linear-gradient(180deg, #21191b, #181416); }
 .class-art::before { content: none; }
 .class-monogram { position: absolute; inset: 18px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .75rem; }
 .class-monogram > span { display: grid; place-items: center; width: 112px; height: 112px; border-block: 1px solid #a84c5755; color: #e0b2aa; font: 3.6rem Georgia, serif; letter-spacing: -.06em; text-shadow: 0 8px 20px #000; }
@@ -73,7 +73,7 @@
   .class-filters { grid-template-columns: minmax(0, 1fr) auto; }
   .class-filters > div:first-child { grid-column: 1 / -1; }
   .class-card h3 { font-size: 1.7rem; }
-  .class-art { height: 300px; }
+  .class-art { height: 238px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .class-card { transition: none; }

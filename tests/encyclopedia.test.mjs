@@ -37,7 +37,7 @@ async function harness(failure = null) {
     let source = await readFile(path, 'utf8');
     if (path.endsWith('/app.js')) {
       source = source.slice(0, source.indexOf("document.querySelector('.skip-link')"));
-      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets };';
+      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters };';
     }
     const module = new SourceTextModule(source, { context, identifier: path,
       initializeImportMeta: meta => { meta.url = `file://${path}`; } });
@@ -101,6 +101,65 @@ test('collection and both global searches include relationships and every intera
     assert.ok(h.app.renderSearchResults(query).markup.includes(href));
     assert.ok(search.searchEntries(index, query).some(entry => entry.href === href));
   }
+});
+
+test('location details use one main artwork and refreshed collections retain visible record data', () => {
+  const ruins = pack.locations.find(record => record.routeId === 'ruins');
+  const locationHtml = h.app.renderEncyclopediaDetail('locations', ruins);
+  assert.equal((locationHtml.match(/data-entry-art/g) || []).length, 1, 'location detail should render one artwork frame');
+  assert.ok(locationHtml.includes('entry-art-locations entry-art-banner'));
+  assert.ok(locationHtml.includes('location-art-fallback'));
+
+  const itemHtml = h.app.renderEncyclopediaCollection('items');
+  const curioHtml = h.app.renderEncyclopediaCollection('curios');
+  const trinketHtml = h.app.renderEncyclopediaCollection('trinkets');
+  assert.ok(itemHtml.includes('encyclopedia-grid-items'));
+  assert.ok(curioHtml.includes('curio-card-outcomes'));
+  assert.ok(curioHtml.includes('Possible Blight'));
+  assert.ok(trinketHtml.includes('encyclopedia-grid-trinkets'));
+  assert.ok(trinketHtml.includes('Very rare'));
+  assert.ok(trinketHtml.includes('+10 ACC'));
+});
+
+test('team composition index presents each boss guide once and keeps it searchable', () => {
+  const html = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams'));
+  const ids = [...html.matchAll(/data-team-id="([^"]+)"/g)].map(match => match[1]);
+  const bossTeamIds = pack.bosses.flatMap(boss => boss.counterTeams || []).map(team => team.id);
+  assert.equal(new Set(ids).size, ids.length, 'team index should not repeat composition previews');
+  for (const id of bossTeamIds) {
+    assert.equal(ids.filter(entryId => entryId === id).length, 1, `${id} should have one index card`);
+    const team = pack.bosses.flatMap(boss => (boss.counterTeams || []).map(entry => ({ ...entry, boss }))).find(entry => entry.id === id);
+    const card = html.match(new RegExp(`<article[^>]*data-team-id="${id}"[^>]*>([\\s\\S]*?)<\\/article>`))?.[1];
+    const cardElement = html.match(new RegExp(`<article[^>]*data-team-id="${id}"[^>]*>`))?.[0];
+    assert.ok(cardElement?.includes('data-search-text='), `${id} should participate in team search`);
+    assert.ok(card?.includes(team.name));
+    assert.ok(card?.includes(team.boss.name) && card.includes(team.boss.regionLabel));
+    assert.ok(card?.includes(team.difficultyRecommendations));
+    assert.equal([...card.matchAll(/counter-preview-rank">Rank (\d+)/g)].map(match => Number(match[1])).join(','), '4,3,2,1');
+    assert.ok(html.includes(`#game/darkest-dungeon/teams/${id}`), `${id} should link to its full guide`);
+  }
+  assert.ok(html.includes('View full team guide'));
+  assert.ok(html.includes('portrait unavailable'), 'unavailable local art should retain the team portrait fallback');
+  const groupPositions = ['unassessed', 'darkest-dungeon-1:region:ruins', 'darkest-dungeon-1:region:warrens', 'darkest-dungeon-1:region:weald', 'darkest-dungeon-1:region:cove']
+    .map(region => html.indexOf(`data-team-region-group="${region}"`));
+  assert.ok(groupPositions.every((position, index) => position >= 0 && (index === 0 || groupPositions[index - 1] < position)), 'supported groups should follow the requested order');
+  assert.ok(!html.includes('data-team-region-group="darkest-dungeon-1:region:courtyard"'));
+  assert.ok(!html.includes('data-team-region-group="darkest-dungeon-1:region:farmstead"'));
+});
+
+test('team filters combine region, boss and category without assigning general teams to regions', () => {
+  const necromancer = { teamRegion: 'ruins', teamBoss: 'darkest-dungeon-1:boss:necromancer', teamCategory: 'beginner' };
+  const general = { teamRegion: 'unassessed', teamBoss: 'unassessed', teamCategory: 'unassessed' };
+  const matches = h.app.teamMatchesFilters;
+  assert.equal(matches(necromancer, { region: 'ruins' }), true);
+  assert.equal(matches(necromancer, { boss: necromancer.teamBoss }), true);
+  assert.equal(matches(necromancer, { category: 'beginner' }), true);
+  assert.equal(matches(necromancer, { region: 'ruins', boss: necromancer.teamBoss, category: 'beginner' }), true);
+  assert.equal(matches(necromancer, { region: 'warrens', boss: necromancer.teamBoss, category: 'beginner' }), false);
+  assert.equal(matches(necromancer, { region: 'ruins', boss: 'swine-prince', category: 'beginner' }), false);
+  assert.equal(matches(necromancer, { region: 'ruins', boss: necromancer.teamBoss, category: 'balanced' }), false);
+  assert.equal(matches(general, { region: 'unassessed' }), true);
+  assert.equal(matches(general, { region: 'ruins' }), false);
 });
 
 test('verification presentation follows metadata without claiming patch testing', () => {
