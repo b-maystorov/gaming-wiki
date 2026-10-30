@@ -1126,3 +1126,60 @@ body { background: radial-gradient(ellipse at 82% 8%, #80513a0b, transparent 34%
   .location-boss-fallback, .location-curio-fallback { width: 72px; min-height: 84px; }
   .location-boss-card > .entry-art [data-art-visual] > :is(img, svg), .location-curio-card > .entry-art [data-art-visual] > :is(img, svg) { max-height: 84px; }
 }
+
+/* Planner-only layout: keep the four preparation steps visible without changing other guides. */
+.planner-step-nav { position:sticky; top:.35rem; z-index:4; display:flex; flex-wrap:wrap; gap:.4rem; margin:1rem 0; padding:.5rem; border:1px solid #55443b; background:#171516ee; backdrop-filter:blur(8px); }
+.planner-step-nav button { display:flex; align-items:center; gap:.45rem; padding:.55rem .7rem; border:1px solid transparent; background:transparent; color:#e3d5c5; font:inherit; font-size:.82rem; cursor:pointer; }
+.planner-step-nav a span,.planner-step-heading > span { color:#d0aa75; font:1rem Georgia,serif; }
+.planner-step-nav button:hover,.planner-step-nav button:focus-visible { border-color:#775446; background:#2a1b1b; color:#fff0d9; outline-offset:2px; }
+.planner-step { scroll-margin-top:5rem; margin:1.4rem 0 2rem; padding:clamp(.8rem,2vw,1.25rem); border:1px solid #493c39; background:linear-gradient(135deg,#1c191a,#151517 75%); }
+.planner-step-heading { display:flex; align-items:flex-start; gap:.75rem; margin-bottom:.8rem; padding-bottom:.7rem; border-bottom:1px solid #3d3434; }
+.planner-step-heading > span { display:grid; flex:0 0 2rem; place-items:center; width:2rem; height:2rem; border:1px solid #725744; background:#241d1a; }
+.planner-step-heading h2 { margin:0; color:#ead6b5; font:clamp(1.3rem,2.3vw,1.75rem) Georgia,serif; }
+.planner-step-heading p { margin:.25rem 0 0; color:var(--muted); font-size:.82rem; }
+.planner-selection-hint { color:var(--muted); font-size:.78rem; }
+.planner-teams-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.85rem; }
+.planner-team-card { display:flex; flex-direction:column; gap:.45rem; padding:.85rem; }
+.planner-team-card.is-selected { border-color:#a47b58; box-shadow:inset 0 0 0 1px #a47b5844,0 0 16px #89293422; }
+.planner-team-card > header h3 { margin:.1rem 0 .35rem; }
+.planner-team-purpose { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:3; margin:.2rem 0 .45rem; color:var(--text-secondary); font-size:.82rem; line-height:1.45; }
+.planner-team-lineup { gap:.35rem; margin:.45rem 0; }
+.planner-team-lineup li { padding:.3rem .2rem; }
+.planner-team-lineup .team-art { width:54px; height:60px; }
+.planner-team-meta { margin:.15rem 0; color:#cbbda9; font-size:.76rem; line-height:1.5; }
+.planner-team-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; margin-top:auto; padding-top:.4rem; }
+.planner-select-team { min-height:2.4rem; padding:.45rem .7rem; border:1px solid #8b514a; background:#32191c; color:#f0dfcf; font:inherit; font-size:.8rem; cursor:pointer; }
+.planner-select-team[aria-pressed="true"] { border-color:#b39767; background:#33281d; color:#f3d9ae; }
+.planner-team-actions > a { font-size:.78rem; }
+.planner-equipment-heading { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:.5rem 1rem; margin-bottom:.8rem; padding:.75rem; border-left:3px solid #977044; background:#1c1918; }
+.planner-equipment-heading h3 { margin:.15rem 0; color:#efddc5; font:1.2rem Georgia,serif; }
+.planner-equipment-heading p { margin:.15rem 0; color:var(--text-secondary); font-size:.78rem; }
+.planner-equipment-heading small { color:var(--muted); font-size:.7rem; }
+.planner-equipment-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; }
+.planner-equipment-hero { min-width:0; padding:.8rem; border:1px solid #4a3b39; background:linear-gradient(135deg,#211c1b,#151416 75%); }
+.planner-equipment-hero > header { display:flex; align-items:center; gap:.7rem; padding-bottom:.55rem; border-bottom:1px solid #3a3132; }
+.planner-equipment-hero > header > span { flex:0 0 auto; padding:.3rem .45rem; border:1px solid #705643; color:#e5c99d; font-size:.72rem; }
+.planner-equipment-hero h3 { margin:0; font:1.12rem Georgia,serif; }
+.planner-equipment-hero header p { margin:.2rem 0 0; color:var(--muted); font-size:.73rem; }
+.planner-equipment-rationale { margin:.55rem 0; color:var(--text-secondary); font-size:.78rem; line-height:1.45; }
+.planner-hero-trinkets,.planner-hero-alternatives ul { display:grid; gap:.45rem; margin:.5rem 0; padding:0; list-style:none; }
+.planner-hero-trinkets > li { display:flex; justify-content:space-between; align-items:center; gap:.5rem; padding:.55rem; border:1px solid #403637; background:#141315; }
+.planner-hero-trinkets > li > div { min-width:0; }
+.planner-hero-trinkets > li a,.planner-hero-alternatives a { color:#e7c995; }
+.planner-hero-trinkets > li p { margin:.2rem 0; color:#d6c9ba; font-size:.75rem; line-height:1.4; }
+.planner-hero-trinkets > li small,.planner-hero-alternatives small { color:var(--muted); font-size:.66rem; }
+.planner-trinket-owned { flex:0 0 auto; max-width:9.5rem; }
+.planner-hero-alternatives { margin-top:.6rem; padding:.6rem; border-left:2px solid #786044; background:#1a1717; font-size:.76rem; }
+.planner-hero-alternatives ul { gap:.3rem; }
+.planner-hero-alternatives li { display:grid; grid-template-columns:minmax(0,1fr); gap:.15rem; }
+.planner-hero-alternatives li span { color:var(--text-secondary); font-size:.72rem; line-height:1.4; }
+.planner-copy-warning { margin:.75rem 0; padding:.75rem .9rem; border:1px solid #a04d4c; border-left:4px solid #c15c58; background:#35191b; color:#f2dfce; font-size:.82rem; line-height:1.5; }
+.planner-copy-warning ul { margin:.35rem 0 0; padding-left:1.2rem; }
+.planner-copy-warning a { color:#f1cb96; }
+.planner-battle-details { margin:1rem 0; border:1px solid #55453a; background:#171516; }
+.planner-battle-details > summary { padding:.75rem; color:#e3c89c; cursor:pointer; }
+.planner-battle-details > .expedition-prep-grid { padding:.75rem; }
+.planner-step-nav,.planner-select-team { transition:border-color 150ms ease,background-color 150ms ease; }
+@media(max-width:900px) { .planner-equipment-grid { grid-template-columns:1fr; } }
+@media(max-width:680px) { .planner-step-nav { position:static; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); } .planner-step-nav button { padding:.45rem; font-size:.76rem; } .planner-teams-grid { grid-template-columns:1fr; } .planner-team-lineup .team-art { width:46px; height:54px; } .planner-hero-trinkets > li { align-items:flex-start; flex-direction:column; } .planner-trinket-owned { max-width:none; } }
+@media(prefers-reduced-motion:reduce) { .planner-step-nav,.planner-select-team { transition:none; } }

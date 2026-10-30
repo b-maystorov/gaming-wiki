@@ -41,7 +41,7 @@ async function harness(failure = null, storageMode = 'available') {
     let source = await readFile(path, 'utf8');
     if (path.endsWith('/app.js')) {
       source = source.slice(0, source.indexOf("document.querySelector('.skip-link')"));
-      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent, plannerBosses, updateExpeditionPlannerOptions, renderPlannerTeam, getExpeditionRoster, saveExpeditionRoster, renderExpeditionPlanner, renderPlannerRegionRecords, renderExpeditionPlannerResults };';
+      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent, plannerBosses, updateExpeditionPlannerOptions, renderPlannerTeam, renderPlannerEquipmentStep, selectExpeditionTeam, sortedPlannerTeams, getExpeditionRoster, saveExpeditionRoster, renderExpeditionPlanner, renderPlannerRegionRecords, renderExpeditionPlannerResults };';
     }
     const module = new SourceTextModule(source, { context, identifier: path,
       initializeImportMeta: meta => { meta.url = `file://${path}`; } });
@@ -249,6 +249,10 @@ test('expedition planner route and region boss choices use only recorded locatio
   assert.ok(page.includes('id="planner-region"'));
   assert.ok(page.includes('id="planner-boss"'));
   assert.ok(page.includes('data-reset-expedition-roster'));
+  for (const [id, label] of [['planner-step-expedition', 'Expedition'], ['planner-step-party', 'Party'], ['planner-step-equipment', 'Equipment'], ['planner-step-battle', 'Battle plan']]) {
+    assert.ok(page.includes(`id="${id}"`), `planner should include ${id}`);
+    assert.ok(page.includes(`data-planner-step="${id}"`), `step navigation should include ${label}`);
+  }
   const ruins = pack.locations.find(location => location.routeId === 'ruins');
   const warrens = pack.locations.find(location => location.routeId === 'warrens');
   const necromancer = pack.bosses.find(boss => boss.routeId === 'necromancer');
@@ -308,6 +312,35 @@ test('expedition planner roster distinguishes unknown, available and missing her
   assert.deepEqual(Array.from(local.app.getExpeditionRoster().heroIds), []);
 });
 
+test('selecting a team preserves expedition selections and opens per-hero equipment with duplicate-copy warnings', async () => {
+  const local = await harness();
+  const boss = pack.bosses.find(entry => entry.routeId === 'necromancer');
+  const team = boss.counterTeams[0];
+  const region = pack.locations.find(entry => entry.routeId === 'ruins');
+  const selectors = {
+    'planner-region': { value: region.regionId },
+    'planner-boss': { value: boss.id },
+    'planner-difficulty': { value: 'Apprentice' },
+    'planner-equipment-content': { innerHTML: '' },
+    'planner-battle-content': { innerHTML: '' }
+  };
+  for (const [id, element] of Object.entries(selectors)) local.elements.set(id, element);
+  const repeated = team.members[0].trinketIds.find(id => team.members.filter(member => member.trinketIds.includes(id)).length > 1);
+  const repeatedRecord = pack.trinkets.find(item => item.routeId === repeated);
+  local.app.setOwnedTrinket(repeatedRecord.id, true);
+  assert.equal(local.app.selectExpeditionTeam(team.id), true);
+  assert.equal(selectors['planner-region'].value, region.regionId);
+  assert.equal(selectors['planner-boss'].value, boss.id);
+  assert.equal(selectors['planner-difficulty'].value, 'Apprentice');
+  const equipment = selectors['planner-equipment-content'].innerHTML;
+  assert.ok(equipment.includes('Damage Stone</a> is recommended for 4 heroes'));
+  assert.ok(equipment.includes('yes/no checklist, not an inventory count'));
+  assert.match(equipment, new RegExp(`data-owned-trinket="${repeatedRecord.id}"[^>]* checked`));
+  assert.ok(equipment.includes('Recorded alternatives'));
+  assert.ok(selectors['planner-battle-content'].innerHTML.includes('Necromancer quick reminder'));
+  assert.equal(local.app.selectExpeditionTeam('unrelated-team-id'), false);
+});
+
 test('expedition planner filters related teams by supported boss and provides fallback artwork', async () => {
   const local = await harness();
   const region = pack.locations.find(location => location.routeId === 'ruins');
@@ -321,7 +354,7 @@ test('expedition planner filters related teams by supported boss and provides fa
   assert.ok(result.includes(necromancer.counterTeams[0].name));
   const swineTeamId = pack.bosses.find(boss => boss.routeId === 'swine-prince').counterTeams[0].id;
   assert.ok(!result.includes(swineTeamId), 'a boss outside this selected association must not appear as a team recommendation');
-  assert.ok(result.includes('Equipment Readiness') || result.includes('recommended trinkets marked owned'));
+  assert.ok(result.includes('Select a team in Party'));
   assert.ok(result.includes('No local image') || result.includes('data-art-kind="locations"'), 'region art must retain its local image or designed fallback');
   local.elements.set('planner-boss', { value: '' });
   const regionTeams = local.app.renderExpeditionPlannerResults();
@@ -338,7 +371,8 @@ test('expedition planner filters related teams by supported boss and provides fa
   assert.ok(swineResult.includes('Wilbur'));
   const swineTeam = { ...swine.counterTeams[0], boss: swine };
   const reminder = local.app.renderPlannerTeam(swineTeam, null);
-  assert.ok(reminder.includes('View full team guide'));
+  assert.ok(reminder.includes('Select this team'));
+  assert.ok(reminder.includes('Full team guide'));
 });
 
 test('expedition roster storage handles blocked localStorage in the current session', async () => {

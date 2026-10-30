@@ -458,6 +458,8 @@ function renderLocationGuideSections(locationRecord, enemies, bosses, curios) {
 
 const EXPEDITION_ROSTER_STORAGE_KEY = 'bm-gaming-wiki-available-heroes';
 let memoryExpeditionRoster = null;
+let selectedExpeditionTeamId = '';
+let expeditionSelection = { regionId: '', bossId: '', tier: '' };
 
 function getExpeditionRoster() {
   try {
@@ -493,7 +495,7 @@ function expeditionRosterHeroes() {
 
 function renderExpeditionRosterControls() {
   const roster = getExpeditionRoster();
-  return `<section class="expedition-roster panel" aria-labelledby="planner-roster-heading"><div class="planner-section-heading"><div><p class="eyebrow">Personal checklist · this browser only</p><h2 id="planner-roster-heading">Heroes available</h2><p>Mark the heroes currently in your roster. Unmarked does not mean unavailable until you start the checklist.</p></div><button type="button" class="planner-secondary-button" data-reset-expedition-roster>Reset to unknown</button></div><fieldset><legend>Mark available heroes</legend><div class="expedition-roster-grid">${expeditionRosterHeroes().map(hero => `<label class="expedition-roster-option"><input type="checkbox" data-expedition-hero="${escapeHtml(hero.id)}"${roster?.heroIds.includes(hero.id) ? ' checked' : ''}><span>${escapeHtml(hero.name)}</span><small>${requirementLabel(hero.requirements)}</small></label>`).join('')}</div></fieldset><p id="planner-roster-status" role="status" aria-live="polite">${roster ? `${roster.heroIds.length} heroes marked available. Roster is stored only in this browser.` : 'Roster availability is unknown. Mark heroes to compare teams.'}</p><p data-roster-storage-note class="planner-data-note">Personal roster data is never written to game JSON.</p></section>`;
+  return `<section class="expedition-roster panel" aria-labelledby="planner-roster-heading"><div class="planner-section-heading"><div><p class="eyebrow">Personal checklist · this browser only</p><h2 id="planner-roster-heading">Heroes available for this expedition</h2><p>Checked means available for this expedition; it does not mean permanently owned. Unmarked heroes stay in the checklist until you start it.</p></div><button type="button" class="planner-secondary-button" data-reset-expedition-roster>Reset to unknown</button></div><fieldset><legend>Mark available heroes</legend><div class="expedition-roster-grid">${expeditionRosterHeroes().map(hero => `<label class="expedition-roster-option"><input type="checkbox" data-expedition-hero="${escapeHtml(hero.id)}"${roster?.heroIds.includes(hero.id) ? ' checked' : ''}><span>${escapeHtml(hero.name)}</span><small>${requirementLabel(hero.requirements)}</small></label>`).join('')}</div></fieldset><p id="planner-roster-status" role="status" aria-live="polite">${roster ? `${roster.heroIds.length} heroes marked available. Roster is stored only in this browser.` : 'Roster availability is unknown. Mark heroes to compare teams.'}</p><p data-roster-storage-note class="planner-data-note">Personal roster data is never written to game JSON.</p></section>`;
 }
 
 function plannerLocation(regionId) {
@@ -511,7 +513,8 @@ function updateExpeditionPlannerOptions() {
   const difficultySelect = document.getElementById('planner-difficulty');
   if (!regionSelect || !bossSelect || !difficultySelect) return;
   const location = plannerLocation(regionSelect.value);
-  const previousBoss = bossSelect.value;
+  const previousBoss = bossSelect.value || expeditionSelection.bossId;
+  const previousTier = difficultySelect.value || expeditionSelection.tier;
   const bosses = plannerBosses(location);
   bossSelect.innerHTML = `<option value="">Any recorded boss in this region</option>${bosses.map(boss => `<option value="${escapeHtml(boss.id)}">${escapeHtml(boss.name)}</option>`).join('')}`;
   bossSelect.disabled = !location;
@@ -519,7 +522,8 @@ function updateExpeditionPlannerOptions() {
   const selectedBoss = bosses.find(boss => boss.id === bossSelect.value);
   difficultySelect.innerHTML = `<option value="">Not selected</option>${(selectedBoss?.variants || []).map(variant => `<option value="${escapeHtml(variant.tier)}">${escapeHtml(variant.tier)} · ${escapeHtml(variant.name)}</option>`).join('')}`;
   difficultySelect.disabled = !selectedBoss || !selectedBoss.variants?.length;
-  if (difficultySelect.disabled) difficultySelect.value = '';
+  difficultySelect.value = !difficultySelect.disabled && selectedBoss.variants.some(variant => variant.tier === previousTier) ? previousTier : '';
+  expeditionSelection = { regionId: regionSelect.value, bossId: bossSelect.value, tier: difficultySelect.value };
 }
 
 function renderPlannerDifficulty(boss, tier) {
@@ -551,7 +555,7 @@ function renderPlannerRegionHeader(location) {
   return `<section class="expedition-region-summary"><header>${renderEntryArtwork('locations', location, 'banner', `<div class="expedition-region-placeholder" role="img" aria-label="${escapeHtml(location.name)} image unavailable"><span>${escapeHtml(location.name.slice(0, 2).toUpperCase())}</span><small>No local image</small></div>`)}<div><p class="eyebrow">Region record · ${escapeHtml(requirementLabel(location.requirements))}</p><h2>${escapeHtml(location.name)}</h2><p>${escapeHtml(location.summary)}</p><p class="planner-data-note">${escapeHtml(verification)} · associations from the location record.</p><a href="#game/darkest-dungeon/locations/${escapeHtml(location.routeId)}">Open full region guide →</a></div></header></section>`;
 }
 
-function renderPlannerTeam(team, roster) {
+function renderPlannerTeam(team, roster, selected = selectedExpeditionTeamId === team.id) {
   const requiredIds = team.members.map(member => member.heroRouteId);
   const missing = roster ? requiredIds.filter(id => !roster.heroIds.includes(id)) : [];
   const status = !roster ? 'Roster availability unknown' : missing.length ? `Missing ${missing.length} marked ${missing.length === 1 ? 'hero' : 'heroes'}` : 'All required heroes marked available';
@@ -562,13 +566,77 @@ function renderPlannerTeam(team, roster) {
     return `<li><span>Rank ${member.position}</span>${renderTeamPortrait(name)}<a href="${href}">${escapeHtml(name)}</a></li>`;
   }).join('');
   const missingLinks = missing.length ? `<p class="planner-missing-heroes"><strong>Not marked:</strong> ${missing.map(id => { const hero = heroes.find(entry => entry.id === id); return `<a href="#hero/${escapeHtml(id)}/${hero?.guide ? 'overview' : 'abilities'}">${escapeHtml(hero?.name || id)}</a>`; }).join(', ')}</p>` : '';
-  const readiness = getTeamEquipmentStats(team);
-  return `<article class="planner-team-card"><header><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3><a href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">${escapeHtml(team.name)}</a></h3><p>${escapeHtml(team.purpose)}</p><span class="planner-roster-state${roster && !missing.length ? ' is-ready' : ''}">${status}</span>${missingLinks}</header><ol class="planner-team-lineup" aria-label="Formation, rank 4 to rank 1">${lineup}</ol><p><strong>Recommended tiers:</strong> ${escapeHtml(team.difficultyRecommendations || 'Not recorded')}</p><p class="planner-equipment-count">${readiness.owned}/${readiness.total} recommended trinkets marked owned</p>${renderTeamEquipmentReadinessContent(team)}<a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide →</a></article>`;
+  return `<article class="planner-team-card${selected ? ' is-selected' : ''}" data-planner-team-card="${escapeHtml(team.id)}"><header><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3><a href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">${escapeHtml(team.name)}</a></h3><p class="planner-team-purpose">${escapeHtml(team.purpose)}</p><span class="planner-roster-state${roster && !missing.length ? ' is-ready' : ''}">${status}</span>${missingLinks}</header><ol class="planner-team-lineup" aria-label="Formation, rank 4 to rank 1">${lineup}</ol><p class="planner-team-meta"><strong>Recommended tiers:</strong> ${escapeHtml(team.difficultyRecommendations || 'Not recorded')}<br><strong>Requirements:</strong> ${requirementLabel(team.requirements)}</p><div class="planner-team-actions"><button type="button" class="planner-select-team" data-select-expedition-team="${escapeHtml(team.id)}" aria-pressed="${selected}">${selected ? 'Selected for this plan' : 'Select this team'}</button><a href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">Full team guide →</a></div></article>`;
 }
 
-function renderPlannerBossReminder(boss, tier) {
+function getExpeditionPlannerContext() {
+  const regionId = document.getElementById('planner-region')?.value || '';
+  const bossId = document.getElementById('planner-boss')?.value || '';
+  const tier = document.getElementById('planner-difficulty')?.value || '';
+  const location = plannerLocation(regionId);
+  const bosses = plannerBosses(location);
+  const selectedBoss = bosses.find(boss => boss.id === bossId) || null;
+  const relevantBosses = selectedBoss ? [selectedBoss] : bosses;
+  const teams = [...new Map(relevantBosses.flatMap(boss => (boss.counterTeams || []).map(team => [team.id, { ...team, boss }]))).values()];
+  if (!teams.some(team => team.id === selectedExpeditionTeamId)) selectedExpeditionTeamId = '';
+  const selectedTeam = teams.find(team => team.id === selectedExpeditionTeamId) || null;
+  return { regionId, bossId, tier, location, bosses, selectedBoss, teams, selectedTeam, roster: getExpeditionRoster() };
+}
+
+function sortedPlannerTeams(teams, roster) {
+  if (!roster) return teams;
+  return teams.map((team, index) => ({ team, index, missing: team.members.filter(member => !roster.heroIds.includes(member.heroRouteId)).length }))
+    .sort((left, right) => left.missing - right.missing || left.index - right.index).map(entry => entry.team);
+}
+
+function renderPlannerPartyStep(context) {
+  if (!context.location) return '<p class="panel planner-empty">Choose an expedition region to see its supported team guides.</p>';
+  if (!context.teams.length) return `<p class="panel planner-empty">No boss-specific team guide is currently associated with ${context.selectedBoss ? escapeHtml(context.selectedBoss.name) : escapeHtml(context.location.name)}. General-purpose teams remain unassessed and are not shown as regional recommendations.</p><a href="#game/darkest-dungeon/teams">Browse all team compositions →</a>`;
+  const sorted = sortedPlannerTeams(context.teams, context.roster);
+  return `<p class="planner-selection-hint">Teams with every required hero marked available appear first. Other guides remain available with missing heroes listed.</p><div class="planner-teams-grid">${sorted.map(team => renderPlannerTeam(team, context.roster)).join('')}</div>`;
+}
+
+function renderPlannerEquipmentStep(team) {
+  if (!team) return '<div class="panel planner-empty"><h3>Select a team in Party</h3><p>Its recommended trinkets by hero, ownership status, and recorded alternatives will appear here.</p></div>';
+  const owned = new Set(getOwnedTrinketIds());
+  const recommended = team.members.flatMap(member => (member.trinketIds || []).map(routeId => ({ member, item: structuredGameContent.trinkets.find(entry => entry.routeId === routeId) }))).filter(entry => entry.item);
+  const heroesByTrinket = new Map();
+  recommended.forEach(({ member, item }) => heroesByTrinket.set(item.id, [...(heroesByTrinket.get(item.id) || []), member.heroRouteId]));
+  const duplicates = [...heroesByTrinket].filter(([, heroIds]) => new Set(heroIds).size > 1);
+  const copyWarnings = duplicates.length ? `<aside class="planner-copy-warning"><strong>Check physical copies before equipping.</strong><ul>${duplicates.map(([id, heroIds]) => { const item = structuredGameContent.trinkets.find(entry => entry.id === id); const names = [...new Set(heroIds)].map(id => heroes.find(hero => hero.id === id)?.name || id); return `<li><a href="${encyclopediaHref('trinkets', item)}">${escapeHtml(item.name)}</a> is recommended for ${names.length} heroes (${names.map(escapeHtml).join(', ')}). Owned status is yes/no and does not count copies.</li>`; }).join('')}</ul></aside>` : '';
+  const heroBuilds = [...team.members].sort((left, right) => right.position - left.position).map(member => {
+    const hero = heroes.find(entry => entry.id === member.heroRouteId);
+    const name = hero?.name || member.heroRouteId;
+    const heroHref = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`;
+    const items = (member.trinketIds || []).map(routeId => structuredGameContent.trinkets.find(entry => entry.routeId === routeId)).filter(Boolean);
+    const alternatives = (member.alternativeTrinketIds || []).map(routeId => structuredGameContent.trinkets.find(entry => entry.routeId === routeId)).filter(Boolean);
+    const itemList = items.length ? `<ul class="planner-hero-trinkets">${items.map(item => `<li data-planner-trinket="${escapeHtml(item.id)}"><div><a href="${encyclopediaHref('trinkets', item)}">${escapeHtml(item.name)}</a><p>${escapeHtml(item.effects?.map(effect => effect.text).join(' · ') || 'Effect details not recorded.')}</p><small>${escapeHtml(requirementLabel(item.requirements))} · ${escapeHtml(verificationLabel('trinkets', item))}</small></div>${renderTrinketOwnershipControl(item, 'planner-trinket-owned')}</li>`).join('')}</ul>` : '<p>No recommended trinkets recorded for this hero.</p>';
+    const alternativesMarkup = alternatives.length ? `<div class="planner-hero-alternatives"><strong>Recorded alternatives</strong><ul>${alternatives.map(item => `<li><a href="${encyclopediaHref('trinkets', item)}">${escapeHtml(item.name)}</a><span>${escapeHtml(item.effects?.map(effect => effect.text).join(' · ') || 'Effect details not recorded.')}</span><small>${escapeHtml(requirementLabel(item.requirements))}</small></li>`).join('')}</ul></div>` : `<p class="planner-data-note">No verified named alternative is recorded. Priorities: ${escapeHtml(member.budgetPriorities || 'Not recorded.')}</p>`;
+    const unmarked = items.filter(item => !owned.has(item.id)).length;
+    return `<article class="planner-equipment-hero" data-planner-equipment-hero="${escapeHtml(member.heroRouteId)}"><header><span>Rank ${member.position}</span><div><h3><a href="${heroHref}">${escapeHtml(name)}</a></h3><p data-planner-hero-owned-status>${escapeHtml(member.role)} · ${unmarked ? `${unmarked} recommendation${unmarked === 1 ? '' : 's'} not marked owned` : 'All recommendations marked owned'}</p></div></header><p class="planner-equipment-rationale">${escapeHtml(member.equipmentRationale || 'The recorded pairing supports this role.')}</p>${itemList}${alternativesMarkup}</article>`;
+  }).join('');
+  const stats = getTeamEquipmentStats(team);
+  return `<div class="planner-equipment-heading"><div><p class="eyebrow">Selected team equipment</p><h3>${escapeHtml(team.name)}</h3><p id="planner-equipment-summary" role="status" aria-live="polite">${stats.owned}/${stats.total} recommendations marked owned. This is a yes/no checklist, not an inventory count.</p><small data-ownership-storage-status>Trinket marks are stored only in this browser.</small></div><a href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">Full team guide →</a></div>${copyWarnings}<div class="planner-equipment-grid">${heroBuilds}</div>`;
+}
+
+function updatePlannerEquipmentSummary() {
+  const summary = document.getElementById('planner-equipment-summary');
+  const team = getExpeditionPlannerContext().selectedTeam;
+  if (!summary || !team) return;
+  const stats = getTeamEquipmentStats(team);
+  summary.textContent = `${stats.owned}/${stats.total} recommendations marked owned. This is a yes/no checklist, not an inventory count.`;
+  const owned = new Set(getOwnedTrinketIds());
+  document.querySelectorAll('[data-planner-equipment-hero]').forEach(article => {
+    const items = [...article.querySelectorAll('[data-planner-trinket]')];
+    const missing = items.filter(item => !owned.has(item.dataset.plannerTrinket)).length;
+    const status = article.querySelector('[data-planner-hero-owned-status]');
+    if (status) status.textContent = `${heroes.find(hero => hero.id === article.dataset.plannerEquipmentHero)?.role || 'Hero build'} · ${missing ? `${missing} recommendation${missing === 1 ? '' : 's'} not marked owned` : 'All recommendations marked owned'}`;
+  });
+}
+
+function renderPlannerBossReminder(boss, tier, selectedTeam = null) {
   const primary = boss.mechanics?.[0];
-  const strategyTeam = boss.counterTeams?.[0];
+  const strategyTeam = selectedTeam || boss.counterTeams?.[0];
   const mechanics = (boss.mechanics || []).slice(primary ? 1 : 0, primary ? 3 : 2).map(item => {
     const label = item.kind === 'editorial' ? 'Editorial advice' : item.verification?.status === 'reference-checked' ? 'Reference-checked' : 'Verification not recorded';
     return `<li><span>${escapeHtml(label)}</span>${escapeHtml(item.text)}</li>`;
@@ -579,26 +647,54 @@ function renderPlannerBossReminder(boss, tier) {
   return `<section class="planner-boss-reminder"><div class="planner-section-heading"><div><p class="eyebrow">Encounter reference · ${escapeHtml(verificationLabel('bosses', boss))}</p><h2>${escapeHtml(boss.name)} quick reminder</h2></div><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">Open full boss guide →</a></div>${warning}<p class="planner-key-mechanic"><strong>${escapeHtml(primaryStatus)}</strong>${escapeHtml(primary?.text || 'Mechanics are not recorded for this entry.')}</p><ul class="planner-boss-mechanics">${mechanics || '<li>Boss mechanics have not been documented.</li>'}</ul>${tacticalResponse ? `<p class="planner-opening-note"><strong>Response to the mechanic · ${tacticalResponse.kind === 'editorial' ? 'Editorial' : tacticalResponse.verification?.status === 'reference-checked' ? 'Reference-checked' : 'Coverage unverified'}:</strong> ${escapeHtml(tacticalResponse.text)}</p>` : ''}${renderPlannerDifficulty(boss, tier)}${strategyTeam ? `<p class="planner-opening-note"><strong>Opening strategy · ${escapeHtml(strategyTeam.name)}:</strong> ${escapeHtml(strategyTeam.openingStrategy)} <a href="#game/darkest-dungeon/teams/${escapeHtml(strategyTeam.id)}">Team guide →</a></p>` : ''}</section>`;
 }
 
+function renderPlannerBattleStep(context) {
+  if (!context.location) return '<div class="panel planner-empty">Choose an expedition to prepare a battle plan.</div>';
+  const boss = context.selectedBoss || context.selectedTeam?.boss || null;
+  const reminder = boss ? renderPlannerBossReminder(boss, context.tier, context.selectedTeam) : '<p class="panel planner-empty">Choose a boss or select a boss-specific team to view its battle reminder.</p>';
+  const regionDetails = `<details class="planner-battle-details"><summary>Regional threats, bosses, curios & provision interactions</summary>${renderPlannerRegionRecords(context.location)}</details>`;
+  const before = `<section class="planner-checklist panel"><h3>Before entering</h3><ul><li>Confirm the selected region and boss route; associations follow the location records.</li><li>Check your roster and the selected team’s rank order, skills, and requirements.</li><li>Review unmarked trinkets and alternatives; confirm physical copies for heroes who share recommendations.</li><li>Review curio interactions and pack for the actual quest. No fixed provision quantities are prescribed.</li>${boss ? '<li>Read the encounter warning and selected campaign variant before entering.</li>' : ''}</ul></section>`;
+  return `${reminder}${before}${regionDetails}`;
+}
+
 function renderExpeditionPlannerResults() {
-  const regionId = document.getElementById('planner-region')?.value || '';
-  const bossId = document.getElementById('planner-boss')?.value || '';
-  const tier = document.getElementById('planner-difficulty')?.value || '';
-  const location = plannerLocation(regionId);
-  const roster = getExpeditionRoster();
-  if (!location) return '<section class="panel planner-empty"><h2>Choose a region</h2><p>The planner will gather only records linked to that region.</p></section>';
-  const bosses = plannerBosses(location);
-  const selectedBoss = bosses.find(boss => boss.id === bossId) || null;
-  const relevantBosses = selectedBoss ? [selectedBoss] : bosses;
-  const teams = [...new Map(relevantBosses.flatMap(boss => (boss.counterTeams || []).map(team => [team.id, { ...team, boss }]))).values()];
-  const availableBossTeamLinks = selectedBoss ? '' : `<p class="planner-context-note">Select a specific boss above to focus its battle reminder. The current team list includes only teams attached to bosses recorded for ${escapeHtml(location.name)}.</p>`;
-  const teamSection = teams.length ? `<section class="expedition-planner-section"><div class="planner-section-heading"><div><p class="eyebrow">Supported boss associations</p><h2>Matching team guides</h2></div><a href="#game/darkest-dungeon/teams">All team compositions →</a></div>${availableBossTeamLinks}<div class="planner-teams-grid">${teams.map(team => renderPlannerTeam(team, roster)).join('')}</div></section>` : `<section class="expedition-planner-section"><h2>Matching team guides</h2><p class="panel planner-empty">No boss-specific team guide is currently associated with ${selectedBoss ? escapeHtml(selectedBoss.name) : escapeHtml(location.name)}. General-purpose teams remain unassessed, so they are not presented as regional recommendations.</p><a href="#game/darkest-dungeon/teams">Browse all team compositions →</a></section>`;
-  const checklist = `<section class="planner-checklist panel"><h2>Before entering</h2><ul><li>Confirm the selected region and boss route; these links follow recorded location-to-boss associations.</li><li>Check your roster status and choose a linked guide whose formation and skill loadout you can field.</li><li>Review owned trinkets and listed alternatives; the planner does not count copies, so confirm duplicate equipment in your inventory.</li><li>Read the linked curio interactions and pack provisions for your actual quest; no fixed quantities are prescribed.</li>${selectedBoss ? '<li>Review the boss warning and difficulty variant before starting the encounter.</li>' : ''}</ul></section>`;
-  return `${renderPlannerRegionHeader(location)}${selectedBoss ? renderPlannerBossReminder(selectedBoss, tier) : ''}${renderPlannerRegionRecords(location)}${teamSection}${checklist}`;
+  const context = getExpeditionPlannerContext();
+  if (!context.location) return '<p class="panel planner-empty">Choose a region to begin. Other steps remain available while you browse.</p>';
+  return `${renderPlannerRegionHeader(context.location)}${renderPlannerPartyStep(context)}${renderPlannerEquipmentStep(context.selectedTeam)}${renderPlannerBattleStep(context)}`;
+}
+
+function refreshExpeditionPlanner() {
+  const context = getExpeditionPlannerContext();
+  const regionContent = document.getElementById('planner-region-content');
+  const partyContent = document.getElementById('planner-party-content');
+  const equipmentContent = document.getElementById('planner-equipment-content');
+  const battleContent = document.getElementById('planner-battle-content');
+  if (regionContent) regionContent.innerHTML = context.location ? renderPlannerRegionHeader(context.location) : '<p class="panel planner-empty">Choose a region to begin. You can still edit your roster below.</p>';
+  if (partyContent) partyContent.innerHTML = renderPlannerPartyStep(context);
+  if (equipmentContent) equipmentContent.innerHTML = renderPlannerEquipmentStep(context.selectedTeam);
+  if (battleContent) battleContent.innerHTML = renderPlannerBattleStep(context);
+}
+
+function selectExpeditionTeam(teamId) {
+  const context = getExpeditionPlannerContext();
+  if (!context.teams.some(team => team.id === teamId)) return false;
+  selectedExpeditionTeamId = teamId;
+  document.querySelectorAll('[data-select-expedition-team]').forEach(button => {
+    const selected = button.dataset.selectExpeditionTeam === teamId;
+    button.setAttribute('aria-pressed', String(selected));
+    button.textContent = selected ? 'Selected for this plan' : 'Select this team';
+    button.closest('[data-planner-team-card]')?.classList.toggle('is-selected', selected);
+  });
+  const selectedTeam = context.teams.find(team => team.id === teamId);
+  const equipment = document.getElementById('planner-equipment-content');
+  const battle = document.getElementById('planner-battle-content');
+  if (equipment) equipment.innerHTML = renderPlannerEquipmentStep(selectedTeam);
+  if (battle) battle.innerHTML = renderPlannerBattleStep({ ...context, selectedTeam });
+  return true;
 }
 
 function renderExpeditionPlanner() {
   const locations = structuredGameContent.locations;
-  return `<section class="page-intro planner-intro"><p class="eyebrow">Darkest Dungeon / Field preparation</p><h1 id="page-title" tabindex="-1">Expedition Planner</h1><p class="lede">Choose a recorded region and boss to gather threats, preparation notes, team guides, and your local roster and equipment checklists.</p><p class="guide-data-note">The planner reuses existing encyclopedia relationships. It does not rank teams or infer unrecorded regional suitability.</p></section><section class="expedition-planner-controls" aria-label="Choose expedition"><div><label for="planner-region">Region</label><select id="planner-region"><option value="">Choose a region</option>${locations.map(location => `<option value="${escapeHtml(location.regionId)}">${escapeHtml(location.name)}</option>`).join('')}</select></div><div><label for="planner-boss">Boss (optional)</label><select id="planner-boss" disabled><option value="">Choose a region first</option></select></div><div><label for="planner-difficulty">Campaign difficulty</label><select id="planner-difficulty" disabled><option value="">Select a boss for supported tiers</option></select></div></section>${renderExpeditionRosterControls()}<div id="expedition-planner-results">${renderExpeditionPlannerResults()}</div>`;
+  return `<section class="page-intro planner-intro"><p class="eyebrow">Darkest Dungeon / Field preparation</p><h1 id="page-title" tabindex="-1">Expedition Planner</h1><p class="lede">Build a quick plan from recorded region, boss, team, and equipment data. All four steps stay on this page, so your selections remain in place.</p></section><nav class="planner-step-nav" aria-label="Expedition planner steps"><button type="button" data-planner-step="planner-step-expedition" aria-controls="planner-step-expedition"><span>01</span> Expedition</button><button type="button" data-planner-step="planner-step-party" aria-controls="planner-step-party"><span>02</span> Party</button><button type="button" data-planner-step="planner-step-equipment" aria-controls="planner-step-equipment"><span>03</span> Equipment</button><button type="button" data-planner-step="planner-step-battle" aria-controls="planner-step-battle"><span>04</span> Battle plan</button></nav><section class="planner-step" id="planner-step-expedition" tabindex="-1"><header class="planner-step-heading"><span>01</span><div><h2>Expedition</h2><p>Pick a region; boss and tier options follow recorded data.</p></div></header><section class="expedition-planner-controls" aria-label="Choose expedition"><div><label for="planner-region">Region</label><select id="planner-region"><option value="">Choose a region</option>${locations.map(location => `<option value="${escapeHtml(location.regionId)}"${expeditionSelection.regionId === location.regionId ? ' selected' : ''}>${escapeHtml(location.name)}</option>`).join('')}</select></div><div><label for="planner-boss">Boss (optional)</label><select id="planner-boss" disabled><option value="">Choose a region first</option></select></div><div><label for="planner-difficulty">Campaign difficulty</label><select id="planner-difficulty" disabled><option value="">Select a boss for supported tiers</option></select></div></section><div id="planner-region-content"><p class="panel planner-empty">Choose a region to see its overview.</p></div></section><section class="planner-step" id="planner-step-party" tabindex="-1"><header class="planner-step-heading"><span>02</span><div><h2>Party</h2><p>Mark expedition-available heroes, then compare supported team guides.</p></div></header>${renderExpeditionRosterControls()}<div id="planner-party-content"><p class="panel planner-empty">Choose a region to see matching teams.</p></div></section><section class="planner-step" id="planner-step-equipment" tabindex="-1"><header class="planner-step-heading"><span>03</span><div><h2>Equipment</h2><p>Choose a team to review recommendations by hero.</p></div></header><div id="planner-equipment-content"><div class="panel planner-empty">Select a team in Party to see its equipment.</div></div></section><section class="planner-step" id="planner-step-battle" tabindex="-1"><header class="planner-step-heading"><span>04</span><div><h2>Battle plan</h2><p>Keep the warning and opening plan close during the fight.</p></div></header><div id="planner-battle-content"><div class="panel planner-empty">Select a boss or a team for encounter reminders.</div></div></section>`;
 }
 
 function renderSearchResults(query) {
@@ -1426,6 +1522,10 @@ function showRoute() {
     main.innerHTML = renderPage(route);
     currentView = viewKey;
   }
+  if (route.view === 'expedition-planner') {
+    updateExpeditionPlannerOptions();
+    refreshExpeditionPlanner();
+  }
   document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Team Guide · BM Gaming Wiki` :
     route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view] || 'Encyclopedia unavailable'} · Gaming Wiki`;
   updateNavigation(route);
@@ -1461,6 +1561,7 @@ window.addEventListener('storage', event => {
       if (option) option.dataset.owned = String(owned);
     });
     refreshTeamEquipmentReadiness();
+    updatePlannerEquipmentSummary();
   }
   if (event.key === EXPEDITION_ROSTER_STORAGE_KEY) {
     if (event.newValue === null) memoryExpeditionRoster = null;
@@ -1468,8 +1569,7 @@ window.addEventListener('storage', event => {
     document.querySelectorAll('[data-expedition-hero]').forEach(input => { input.checked = Boolean(roster?.heroIds.includes(input.dataset.expeditionHero)); });
     const status = document.getElementById('planner-roster-status');
     if (status) status.textContent = roster ? `${roster.heroIds.length} heroes marked available. Roster is stored only in this browser.` : 'Roster availability is unknown. Mark heroes to compare teams.';
-    const results = document.getElementById('expedition-planner-results');
-    if (results) results.innerHTML = renderExpeditionPlannerResults();
+    refreshExpeditionPlanner();
   }
 });
 // Native buttons provide Tab, Enter, Space, and touch selection; mouse hover previews too.
@@ -1482,13 +1582,26 @@ document.addEventListener('focusin', event => {
   if (button) selectPortalGame(button);
 });
 document.addEventListener('click', event => {
+  const plannerStepButton = event.target.closest('[data-planner-step]');
+  if (plannerStepButton) {
+    const step = document.getElementById(plannerStepButton.dataset.plannerStep);
+    if (step) {
+      step.focus({ preventScroll: true });
+      step.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    }
+    return;
+  }
   if (event.target.closest('[data-reset-expedition-roster]')) {
     const persisted = saveExpeditionRoster(null);
     document.querySelectorAll('[data-expedition-hero]').forEach(input => { input.checked = false; });
     const status = document.getElementById('planner-roster-status');
     if (status) status.textContent = persisted ? 'Roster reset. Availability is unknown.' : 'Browser storage is unavailable. Roster reset for this open session.';
-    const results = document.getElementById('expedition-planner-results');
-    if (results) results.innerHTML = renderExpeditionPlannerResults();
+    refreshExpeditionPlanner();
+    return;
+  }
+  const selectTeamButton = event.target.closest('[data-select-expedition-team]');
+  if (selectTeamButton) {
+    selectExpeditionTeam(selectTeamButton.dataset.selectExpeditionTeam);
     return;
   }
   const clearOwnedButton = event.target.closest('[data-clear-owned-trinkets]');
@@ -1506,6 +1619,7 @@ document.addEventListener('click', event => {
       if (option) option.dataset.owned = 'false';
     });
     refreshTeamEquipmentReadiness();
+    updatePlannerEquipmentSummary();
     document.querySelectorAll('[data-ownership-storage-status]').forEach(status => { status.textContent = `${ownershipStorageNotice(result.persisted)} Owned list cleared.`; });
     return;
   }
@@ -1556,13 +1670,12 @@ document.addEventListener('input', event => {
 document.addEventListener('change', event => {
   if (event.target.id === 'planner-region' || event.target.id === 'planner-boss') {
     updateExpeditionPlannerOptions();
-    const results = document.getElementById('expedition-planner-results');
-    if (results) results.innerHTML = renderExpeditionPlannerResults();
+    refreshExpeditionPlanner();
     return;
   }
   if (event.target.id === 'planner-difficulty') {
-    const results = document.getElementById('expedition-planner-results');
-    if (results) results.innerHTML = renderExpeditionPlannerResults();
+    expeditionSelection.tier = event.target.value;
+    refreshExpeditionPlanner();
     return;
   }
   if (event.target.matches('[data-expedition-hero]')) {
@@ -1573,8 +1686,7 @@ document.addEventListener('change', event => {
     const persisted = saveExpeditionRoster({ initialized: true, heroIds: [...heroIds] });
     const status = document.getElementById('planner-roster-status');
     if (status) status.textContent = persisted ? `${heroIds.size} heroes marked available. Roster is stored only in this browser.` : `${heroIds.size} heroes marked available for this session; browser storage is unavailable.`;
-    const results = document.getElementById('expedition-planner-results');
-    if (results) results.innerHTML = renderExpeditionPlannerResults();
+    refreshExpeditionPlanner();
     return;
   }
   if (event.target.matches('[data-owned-trinket]')) {
@@ -1583,6 +1695,7 @@ document.addEventListener('change', event => {
     const result = setOwnedTrinket(id, owned);
     updateOwnershipControls(id, owned);
     refreshTeamEquipmentReadiness();
+    updatePlannerEquipmentSummary();
     document.querySelectorAll('[data-ownership-storage-status]').forEach(status => { status.textContent = ownershipStorageNotice(result.persisted); });
     return;
   }
