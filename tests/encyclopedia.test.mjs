@@ -306,7 +306,8 @@ test('Necromancer page renders three complete counter teams with valid ranks, sk
     assert.ok(!html.includes('Skills and trinkets by hero'));
     for (const member of team.members) assert.ok(html.includes(`Rank ${member.position}`));
   }
-  assert.ok(html.includes('shieldbreaker.png') || html.includes('shieldbreaker-portrait.png'));
+  assert.match(html, /Shieldbreaker portrait unavailable/);
+  assert.ok(!html.includes('shieldbreaker-portrait.png'));
 });
 
 test('Necromancer team IDs route to full guides and connect boss, hero, trinket and team navigation', () => {
@@ -317,10 +318,18 @@ test('Necromancer team IDs route to full guides and connect boss, hero, trinket 
     assert.equal(route.view, 'team-detail');
     assert.equal(route.team.id, team.id);
     const html = h.app.renderPage(route);
-    assert.ok(html.includes('boss-team-guide-intro'), `${route.view} ${route.team?.id} boss=${Boolean(route.team?.boss)} ${html.slice(html.indexOf('game-content'), html.indexOf('game-content') + 700)}`);
+    assert.ok(html.includes('class="team-guide-hero"'));
+    assert.ok(html.includes('Quick Battle Plan'));
+    assert.ok(html.includes('href="#formation"'));
+    assert.ok(html.includes('href="#builds"'));
+    assert.ok(html.includes('href="#strategy"'));
+    assert.equal((html.match(/class="team-formation-card/g) || []).length, 4);
+    assert.equal((html.match(/class="counter-guide-skill"/g) || []).length, 16);
+    assert.equal((html.match(/class="counter-guide-trinket"/g) || []).length, 8);
     assert.ok(html.includes(`href="#game/darkest-dungeon/bosses/${boss.routeId}"`));
     assert.ok(html.includes('class="team-guide-party"'));
     assert.ok(html.includes('class="team-guide-build-grid"'));
+    assert.ok(html.includes('team-battle-steps'));
     assert.ok(html.includes('#game/darkest-dungeon/teams'));
     for (const member of team.members) {
       assert.ok(html.includes(`href="#hero/${member.heroRouteId}/`));

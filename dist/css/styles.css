@@ -627,6 +627,7 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 .counter-preview-party .entry-art-heroes.entry-art-thumbnail { height: 78px; }
 .counter-preview-party .entry-art [data-art-visual] > :is(img, svg) { object-fit: contain; object-position: center 38%; }
 .counter-preview-party .entry-art img { max-height: 78px; }
+.counter-preview-party .team-art > .portrait-unavailable { width: 100%; height: 100%; min-height: 0; margin: 0; border-color: #725057; background: radial-gradient(ellipse at center, #34282b, #171517 75%); }
 .counter-preview-party strong { font-size: .68rem; }
 .boss-counter-preview .team-details-link { width: fit-content; margin-top: auto; padding: .65rem .8rem; border: 1px solid #75424a; background: #281a1e; color: #f0c7c2; text-decoration: none; }
 .boss-counter-preview .team-details-link:hover, .boss-counter-preview .team-details-link:focus-visible { border-color: #bd6a70; background: #351d23; box-shadow: 0 0 14px #a1273533; outline: 2px solid transparent; }
@@ -671,3 +672,87 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 @media (max-width: 480px) { .team-guide-party { grid-template-columns: 1fr 1fr; gap: .45rem; } .team-guide-party li { padding: .5rem; } .team-guide-party .team-art { height: 160px; } .counter-guide-hero-heading { grid-template-columns: auto 68px minmax(0, 1fr); gap: .5rem; } .counter-guide-hero-heading .team-art, .counter-guide-hero-heading .entry-art-heroes.entry-art-thumbnail { height: 78px; } }
 @media (prefers-reduced-motion: reduce) { .team-guide-navigation a { transition: none; } }
 @media (prefers-reduced-motion: reduce) { .boss-counter-preview { transition: none; } .boss-counter-preview:hover, .boss-counter-preview:focus-within { transform: none; } }
+
+/* Dedicated counter guides use the available desktop canvas without widening prose blocks. */
+main:has(.team-guide-hero) { width: min(1700px, calc(100% - clamp(32px, 4vw, 64px))); }
+.team-guide-hero { position: relative; isolation: isolate; overflow: hidden; padding: clamp(1.25rem, 2.8vw, 2.5rem); border: 1px solid #77424a; background: radial-gradient(ellipse at 88% 12%, #8f263320, transparent 34%), linear-gradient(118deg, #2b191e 0%, #191416 48%, #121214 100%); }
+.team-guide-hero::before { position: absolute; z-index: -1; inset: .45rem; border: 1px solid #ffffff0d; content: ""; pointer-events: none; }
+.team-boss-return { display: inline-flex; margin-bottom: 1.2rem; padding: .45rem .7rem; border: 1px solid #74454b; background: #160f11a8; color: #f0c4be; font-size: .82rem; text-decoration: none; }
+.team-boss-return:hover, .team-boss-return:focus-visible { border-color: #d0787e; background: #311c21; }
+.team-guide-hero .eyebrow { margin-bottom: .6rem; }
+.team-guide-hero h1 { max-width: 28ch; color: #f5e9df; font-size: clamp(2.1rem, 4vw, 3.4rem); text-shadow: 0 3px 20px #000; }
+.team-guide-lede { max-width: 76ch; margin-top: .75rem; color: #e0d1c7; font-size: 1.05rem; line-height: 1.65; }
+.team-guide-badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+.team-guide-badges span { padding: .35rem .62rem; border: 1px solid #684148; background: #110f10a8; color: #e8c5b4; font-size: .75rem; line-height: 1.4; }
+.team-quick-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin: 1.35rem 0 0; }
+.team-quick-facts > div { min-width: 0; padding: .7rem .8rem; border-left: 2px solid #9a4651; background: #100e0fa6; }
+.team-quick-facts dt { color: #d99a91; font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.team-quick-facts dd { margin: .25rem 0 0; color: #f0e7df; font-size: .88rem; line-height: 1.45; }
+.team-guide-navigation { position: sticky; z-index: 3; top: .25rem; gap: .4rem; margin: 1rem 0 1.8rem; padding: .45rem; border: 1px solid #48363b; background: #121113ed; backdrop-filter: blur(8px); }
+.team-guide-navigation a { padding: .5rem .75rem; border-color: transparent; background: transparent; color: #dfc2b8; font-size: .85rem; }
+.team-guide-navigation a:hover, .team-guide-navigation a:focus-visible { border-color: #8e4b53; background: #281a1e; }
+.team-guide-formation, .team-guide-builds, .team-guide-battle { scroll-margin-top: 5rem; margin-block: 2rem 2.5rem; }
+.guide-section-heading { margin-bottom: 1rem; padding-bottom: .75rem; border-bottom: 1px solid #52383e; }
+.guide-section-heading .eyebrow { margin-bottom: .35rem; }
+.guide-section-heading h2 { color: #f0ded4; font-size: clamp(1.7rem, 2.6vw, 2.2rem); }
+.guide-section-heading > p:last-child { margin-top: .35rem; color: var(--text-secondary); }
+.team-guide-party { gap: .9rem; }
+.team-formation-card { position: relative; grid-template-rows: auto minmax(220px, 1fr) auto auto; min-height: 390px; padding: 1rem 1rem 1.2rem; border-color: #694047; background: radial-gradient(ellipse at 50% 48%, #63252a24, transparent 56%), linear-gradient(160deg, #211a1d, #111113 76%); transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
+.team-formation-card:hover, .team-formation-card:focus-within { border-color: #a35a62; box-shadow: 0 0 22px #a1273530; transform: translateY(-2px); }
+.team-formation-card > .team-art { width: 100%; height: 100%; min-height: 220px; background: radial-gradient(ellipse at center, #3b2c2d 0, #1b1719 60%, #121214 100%); }
+.team-formation-card > .team-art .entry-art-heroes.entry-art-thumbnail { width: 100%; height: 100%; background: transparent; }
+.team-formation-card > .team-art .entry-art [data-art-visual] > :is(img, svg) { width: auto; max-width: 100%; height: 100%; max-height: 300px; object-fit: contain; object-position: center center; }
+.team-formation-card > .team-art > .portrait-unavailable, .counter-guide-hero-heading .team-art > .portrait-unavailable { width: 100%; height: 100%; min-height: 0; margin: 0; border-color: #725057; background: radial-gradient(ellipse at center, #3a2d30, #171517 74%); }
+.team-formation-card .formation-rank { width: fit-content; padding: .2rem .48rem; border: 1px solid #74434a; color: #edc2b8; font: .8rem Georgia, serif; }
+.team-formation-card > strong { margin-top: .2rem; font: 1.25rem Georgia, serif; }
+.team-formation-card > strong a { text-decoration: none; }
+.team-formation-card .formation-role { color: #d5b3a9; font-size: .85rem; line-height: 1.45; }
+.team-guide-build-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
+.counter-guide-hero { padding: clamp(1rem, 1.8vw, 1.5rem); border-color: #614047; box-shadow: inset 0 1px #ffffff08; }
+.counter-guide-hero-heading { grid-template-columns: auto 104px minmax(0, 1fr); min-height: 116px; padding-bottom: .75rem; border-bottom: 1px solid #48343a; }
+.counter-guide-hero-heading .team-art { display: grid; place-items: center; height: 112px; border: 1px solid #584047; background: radial-gradient(ellipse at center, #362b2b, #171517 72%); }
+.counter-guide-hero-heading .entry-art-heroes.entry-art-thumbnail { width: 100%; height: 100%; background: transparent; }
+.counter-guide-hero-heading .entry-art [data-art-visual] > :is(img, svg) { width: auto; max-width: 100%; height: 100%; max-height: 112px; object-fit: contain; }
+.counter-guide-hero-heading .eyebrow { margin-bottom: .2rem; font-size: .63rem; }
+.counter-guide-hero-heading h3 { font-size: 1.4rem; }
+.hero-guide-link { display: inline-block; margin-top: .35rem; color: #e9b4b0; font-size: .78rem; }
+.counter-guide-build-section { margin-top: .9rem; }
+.counter-guide-build-section h4 { margin: 0 0 .5rem; color: #edc8bb; font: 1.02rem Georgia, serif; letter-spacing: .025em; }
+.counter-guide-skills { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
+.counter-guide-skill { display: grid !important; grid-template-columns: 30px minmax(0, 1fr); align-items: start; gap: .5rem !important; min-width: 0; padding: .55rem !important; border: 1px solid #392e31; border-left: 2px solid #84505a !important; background: #151315 !important; }
+.counter-guide-skill-icon { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid #63434a; background: #22191d; color: #d5a29a; object-fit: contain; }
+.skill-icon-fallback { font-size: .9rem; }
+.counter-guide-skill > div, .counter-guide-trinket > div { display: grid; gap: .18rem; min-width: 0; }
+.counter-guide-skill strong { color: #f0e5dc; font-size: .82rem; line-height: 1.35; }
+.counter-guide-skills span, .counter-guide-trinkets span { font-size: .73rem; line-height: 1.45; }
+.counter-guide-skill small, .counter-guide-trinket small { color: #b9aaa3; font-size: .68rem; line-height: 1.4; }
+.counter-guide-skill b { color: #dbb9ad; font-weight: 600; }
+.counter-guide-trinkets { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.counter-guide-trinket { grid-template-columns: 44px minmax(0, 1fr) !important; align-items: center; gap: .55rem !important; padding: .5rem !important; border: 1px solid #45343a; background: #151315 !important; }
+.counter-guide-trinket-icon { display: grid; width: 42px; height: 42px; place-items: center; overflow: hidden; border: 1px solid #61454c; background: #211b1d; }
+.counter-guide-trinket-icon .entry-art { width: 100%; height: 100%; min-height: 0; background: transparent; }
+.counter-guide-trinket-icon .entry-art [data-art-visual] > :is(img, svg) { width: 100%; height: 100%; max-height: 100%; object-fit: contain; }
+.counter-guide-trinket-icon .entry-art.image-failed { display: grid; }
+.counter-guide-trinket > div > a { color: #efc2bd; font-size: .82rem; font-weight: 650; line-height: 1.35; }
+.trinket-icon-fallback { display: grid; width: 100%; height: 100%; place-items: center; color: #d2a9a3; font-size: 1.2rem; }
+.counter-guide-tip { display: grid; gap: .25rem; margin-top: .9rem; padding: .7rem .8rem; border-left: 3px solid #a94c56; background: #26191d; color: #e5d7d0; font-size: .82rem; line-height: 1.5; }
+.counter-guide-tip strong { color: #f0b9b6; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; }
+.team-battle-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; padding: 0; margin: 0; list-style: none; counter-reset: battle; }
+.team-battle-steps li { min-width: 0; margin: 0; padding: 1rem 1.1rem; border: 1px solid #50383e; background: linear-gradient(140deg, #21191d, #151416 76%); }
+.team-battle-steps li:first-child, .team-battle-steps li:nth-child(2) { border-top: 2px solid #98505a; }
+.team-battle-steps li > span { color: #e4b0aa; font: .92rem Georgia, serif; }
+.team-battle-steps li > p { margin-top: .45rem; color: var(--text-secondary); font-size: .9rem; line-height: 1.6; }
+.team-battle-detail { margin-top: .85rem; border: 1px solid #4c393e; background: #171517; }
+.team-battle-detail summary { padding: .75rem .9rem; color: #e8b7b1; cursor: pointer; }
+.team-battle-detail > div { display: grid; gap: .6rem; padding: 0 .9rem .9rem; }
+.team-battle-detail p { color: var(--text-secondary); line-height: 1.6; }
+.team-guide-related { display: flex; flex-wrap: wrap; gap: .6rem; margin-block: 1.5rem; padding-block: 1rem; border-block: 1px solid #49373c; }
+.team-guide-related a { padding: .55rem .75rem; border: 1px solid #604047; background: #1c1719; color: #efc2bd; text-decoration: none; }
+.team-guide-related a:hover, .team-guide-related a:focus-visible { border-color: #b35f68; background: #2a1b20; }
+.boss-counter-preview .counter-preview-rank { color: #dcb0a8; }
+.boss-counter-preview .preview-tactical-edge { display: grid; gap: .25rem; padding-top: .6rem; border-top: 1px solid #48353a; }
+.preview-tactical-edge strong { color: #e4ada8; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; }
+@media (max-width: 1100px) { .team-quick-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .team-formation-card { min-height: 350px; } }
+@media (max-width: 760px) { main:has(.team-guide-hero) { width: calc(100% - 28px); } .team-guide-navigation { position: static; } .team-guide-build-grid { grid-template-columns: 1fr; } .team-formation-card { min-height: 330px; } .team-formation-card > .team-art { min-height: 190px; } .team-battle-steps { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .team-guide-hero { padding: 1.1rem; } .team-guide-hero h1 { font-size: 2rem; } .team-quick-facts { grid-template-columns: 1fr 1fr; gap: .45rem; } .team-guide-party { grid-template-columns: 1fr 1fr; } .team-formation-card { min-height: 270px; padding: .65rem; } .team-formation-card > .team-art { min-height: 155px; } .team-formation-card > .team-art .entry-art [data-art-visual] > :is(img, svg) { max-height: 190px; } .counter-guide-skills, .counter-guide-trinkets { grid-template-columns: 1fr; } .counter-guide-hero-heading { grid-template-columns: auto 82px minmax(0, 1fr); gap: .55rem; } .counter-guide-hero-heading .team-art { height: 88px; } .counter-guide-hero-heading .entry-art [data-art-visual] > :is(img, svg) { max-height: 88px; } }
+@media (prefers-reduced-motion: reduce) { .team-formation-card { transition: none; } .team-formation-card:hover, .team-formation-card:focus-within { transform: none; } }

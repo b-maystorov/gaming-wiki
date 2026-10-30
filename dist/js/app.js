@@ -470,23 +470,81 @@ function renderBossCounterPreview(team) {
   const positions = team.members.map(member => {
     const hero = heroes.find(entry => entry.id === member.heroRouteId);
     const name = hero?.name || member.heroRouteId;
-    return `<li><span>Rank ${member.position}</span>${renderTeamPortrait(name)}<strong>${renderHeroName(name)}</strong></li>`;
+    return `<li><span class="counter-preview-rank">Rank ${member.position}</span>${renderTeamPortrait(name)}<strong>${renderHeroName(name)}</strong></li>`;
   }).join('');
-  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a></article>`;
+  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p class="preview-tactical-edge"><strong>Team advantage</strong>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a></article>`;
+}
+
+function teamQuickFacts(team) {
+  const skillNames = team.members.flatMap(member => member.skills.map(skill => skill.name.toLowerCase()));
+  const hasBlight = skillNames.some(name => ['plague grenade', 'noxious blast', 'poison dart'].includes(name));
+  const hasMark = skillNames.some(name => name.includes('mark'));
+  const healer = team.members.find(member => /healer|recovery/i.test(member.role));
+  const guardSupport = team.members.some(member => member.skills.some(skill => skill.name === 'Guard Dog'));
+  return {
+    focus: team.purpose,
+    damage: `${hasMark ? 'Mark support + ' : ''}${hasBlight ? 'direct damage + blight' : 'direct damage'}`,
+    survivability: healer ? `${heroes.find(hero => hero.id === healer.heroRouteId)?.name || healer.heroRouteId} recovery` : guardSupport ? 'Guard Dog protection; no dedicated healer' : 'No dedicated healer listed'
+  };
+}
+
+function renderCounterGuideSkills(member) {
+  const heroName = heroes.find(hero => hero.id === member.heroRouteId)?.name || member.heroRouteId;
+  const abilityDetails = heroAbilities[member.heroRouteId]?.skillDetails || {};
+  return `<ul class="counter-guide-skills">${member.skills.map(skill => {
+    const icon = abilityDetails[skill.name]?.icon;
+    const iconMarkup = icon?.approvedLocal && icon.src
+      ? `<img class="counter-guide-skill-icon" src="${escapeHtml(icon.src)}" alt="">`
+      : `<span class="counter-guide-skill-icon skill-icon-fallback" aria-hidden="true">✦</span>`;
+    const roleNote = abilityDetails[skill.name]?.tacticalNote || abilityDetails[skill.name]?.description || `Selected for ${member.role.toLowerCase()}.`;
+    return `<li class="counter-guide-skill">${iconMarkup}<div><strong>${escapeHtml(skill.name)}</strong><span><b>Use from:</b> ${skill.heroPositions.map(position => `rank ${position}`).join(', ')} · <b>Targets:</b> ${escapeHtml(skill.target)}.</span><small>${escapeHtml(roleNote)} Listed for ${escapeHtml(heroName)} in this boss plan.</small></div></li>`;
+  }).join('')}</ul>`;
+}
+
+function renderCounterGuideTrinkets(member) {
+  return `<ul class="counter-guide-trinkets">${member.trinketIds.map(id => {
+    const item = structuredGameContent.trinkets.find(trinket => trinket.routeId === id);
+    if (!item) return `<li class="counter-guide-trinket-missing"><span class="trinket-icon-fallback" aria-hidden="true">◇</span><span>Unresolved trinket: ${escapeHtml(id)}</span></li>`;
+    const effects = item.effects.map(effect => effect.text).join(' · ');
+    return `<li class="counter-guide-trinket"><a class="counter-guide-trinket-icon" href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}" aria-label="${escapeHtml(item.name)}">${renderEntryArtwork('trinkets', item, 'thumbnail', `<span class="trinket-icon-fallback" aria-hidden="true">◇</span>`)}</a><div><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(effects)}</span><small>Recommended pairing for the ${escapeHtml(member.role.toLowerCase())} role.</small></div></li>`;
+  }).join('')}</ul>`;
+}
+
+function renderCounterGuideBuild(member) {
+  const hero = heroes.find(entry => entry.id === member.heroRouteId);
+  const heroName = hero?.name || member.heroRouteId;
+  const heroHref = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`;
+  const tip = member.heroRouteId === 'shieldbreaker' && member.skills.some(skill => skill.name === 'Puncture')
+    ? 'At Champion, keep Puncture available to break Bone Defender Guard and pull through protection.'
+    : `During the fight, use the listed target ranks to keep ${member.role.toLowerCase()} pressure available as the boss moves.`;
+  return `<article class="panel counter-guide-hero"><header class="counter-guide-hero-heading"><span class="counter-guide-rank">Rank ${member.position}</span>${renderTeamPortrait(heroName)}<div><p class="eyebrow">${escapeHtml(member.role)}</p><h3><a href="${heroHref}">${escapeHtml(heroName)}</a></h3><a class="hero-guide-link" href="${heroHref}">Open hero guide →</a></div></header><section class="counter-guide-build-section"><h4>Combat skills</h4>${renderCounterGuideSkills(member)}</section><section class="counter-guide-build-section"><h4>Trinket recommendations</h4>${renderCounterGuideTrinkets(member)}</section><p class="counter-guide-tip"><strong>During the fight</strong>${escapeHtml(tip)}</p></article>`;
+}
+
+function renderCounterGuideBattlePlan(team) {
+  const specialized = team.category === 'specialized';
+  const guardPlan = specialized
+    ? 'At Champion, use Shieldbreaker’s Puncture to break a Bone Defender’s Guard and pull through protection. This specialist response is the reason to bring the DLC hero.'
+    : 'No dedicated Guard-breaking skill is assigned in this team. Do not assume its listed attacks bypass Guard; keep pressure on the Necromancer when a valid target is available.';
+  const healer = team.members.find(member => /healer|recovery/i.test(member.role));
+  const recovery = healer
+    ? `${heroes.find(hero => hero.id === healer.heroRouteId)?.name || healer.heroRouteId} has the team's recovery role. Heal when damage is meaningful, while the other heroes maintain boss pressure.`
+    : 'This composition has no dedicated healer in its listed roles. Use its selected protection and keep the fight focused; no healing guarantee is assumed.';
+  return `<section class="team-guide-battle" id="strategy" aria-labelledby="team-battle-heading"><div class="guide-section-heading"><p class="eyebrow">Encounter field notes</p><h2 id="team-battle-heading">Quick Battle Plan</h2><p>Short actions for play; keep rank and target coverage in view.</p></div><ol class="team-battle-steps"><li><span>01 · Before entering</span><p>Equip the four listed skills for each hero and preserve the shown ranks. Check the two recommended trinkets and the requirement badges above; this encounter is in the Ruins. This team data does not specify provision quantities.</p></li><li><span>02 · Opening turns</span><p>${escapeHtml(team.openingStrategy)}</p></li><li><span>03 · Retreats and summons</span><p>${escapeHtml(team.skeletonStrategy)}</p></li><li><span>04 · Guard and higher tiers</span><p>${escapeHtml(guardPlan)} The Specialized plan recommends Veteran and Champion; its Guard counter is specifically called out for Champion.</p></li><li><span>05 · Recovery and limits</span><p>${escapeHtml(recovery)} ${escapeHtml(team.alternatives)}</p></li></ol><details class="team-battle-detail"><summary>Detailed fight notes</summary><div><p>Summoned skeletons are life-linked to the Necromancer and disappear when he dies, so the team notes prioritize boss pressure over clearing each summon. Blinding Gas can stun rear skeletons in the Beginner build, but the boss's high Stun resistance makes repeated stun attempts an unreliable plan.</p><p>At higher difficulty, Bone Soldiers may begin stealthed. The Specialized composition does not assign stealth removal; its recorded plan is to let Stealth expire before targeting them. Team outcomes still depend on upgrades, turn order and status chances.</p></div></details></section>`;
 }
 
 function renderBossCounterGuide(team) {
   const boss = team.boss;
-  const members = team.members.map(member => {
-    const hero = heroes.find(entry => entry.id === member.heroRouteId);
-    const heroName = hero?.name || member.heroRouteId;
-    const heroHref = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`;
-    const trinkets = member.trinketIds.map(id => structuredGameContent.trinkets.find(item => item.routeId === id)).filter(Boolean);
-    const skills = member.skills.map(skill => `<li><strong>${escapeHtml(skill.name)}</strong><span>Usable from rank ${member.position}; target: ${escapeHtml(skill.target)}.</span></li>`).join('');
-    return `<article class="panel counter-guide-hero"><div class="counter-guide-hero-heading"><span class="counter-guide-rank">Rank ${member.position}</span>${renderTeamPortrait(heroName)}<div><h3><a href="${heroHref}">${escapeHtml(heroName)}</a></h3><p>${escapeHtml(member.role)}</p></div></div><h4>Selected combat skills</h4><ul class="counter-guide-skills">${skills}</ul><h4>Recommended trinkets</h4><ul class="counter-guide-trinkets">${trinkets.map(item => `<li><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(item.effects.map(effect => effect.text).join('; '))}</span></li>`).join('')}</ul><p class="guide-data-note">Keep this hero in rank ${member.position} for the listed skill set.</p></article>`;
-  }).join('');
+  const facts = teamQuickFacts(team);
   const otherTeams = getBossCounterTeams().filter(other => other.boss.id === boss.id && other.id !== team.id);
-  return `<a class="back-link" href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">← Back to ${escapeHtml(boss.name)}</a><header class="page-intro boss-team-guide-intro"><p class="eyebrow">${escapeHtml(boss.regionLabel)} · ${escapeHtml(team.difficultyRecommendations)} · ${requirementLabel(team.requirements)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(team.name)}</h1><p class="lede">${escapeHtml(team.purpose)}</p></header><section class="team-guide-overview"><div><h2>Team overview</h2><p>${escapeHtml(team.openingStrategy)}</p><p><strong>Boss:</strong> <a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">${escapeHtml(boss.name)}</a> · ${escapeHtml(boss.regionLabel)}</p><p><strong>Requirements:</strong> ${requirementLabel(team.requirements)}</p></div><div><h2>Combat approach</h2><p>${escapeHtml(team.skeletonStrategy)}</p><p>${escapeHtml(team.alternatives)}</p></div></section><section class="team-guide-formation"><h2>Party formation · rank 4 → rank 1</h2><ol class="team-guide-party">${team.members.map(member => { const hero = heroes.find(entry => entry.id === member.heroRouteId); const name = hero?.name || member.heroRouteId; const href = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`; return `<li><span>Rank ${member.position}</span>${renderTeamPortrait(name)}<strong><a href="${href}">${escapeHtml(name)}</a></strong><span>${escapeHtml(member.role)}</span></li>`; }).join('')}</ol></section><section class="team-guide-builds"><h2>Hero builds</h2><div class="team-guide-build-grid">${members}</div></section><section class="team-guide-notes"><h2>Before the fight</h2><ul><li>Equip the listed skills before entering the Ruins boss encounter; keep each hero in the listed rank.</li><li>Favor direct damage into the Necromancer instead of spending turns clearing every summon.</li><li>Use healing to recover meaningful damage and stress pressure; no fixed provision count is asserted here.</li></ul><h2>Retreats, summons and Guard</h2><p>The Necromancer moves back and summons as it attacks. Keep attacks that reach the rear ranks available, and continue focusing the boss. Summoned enemies are removed when the boss dies.</p><p>At higher difficulty, Bone Soldiers may begin stealthed and Bone Defenders can Guard. Wait out Stealth or use an available stealth counter; this team’s confirmed Guard response is described above where applicable. Avoid wasting focused attacks into an active Guard.</p><h2>Common mistakes and limits</h2><ul><li>Do not build the whole plan around repeatedly stunning the Necromancer; its Stun resistance is high.</li><li>Do not assume every attack can reach the boss after it retreats. The selected skills list their valid hero ranks and targets.</li><li>Damage, speed order and status success vary with upgrades, trinkets and difficulty; no exact turn outcome is guaranteed.</li></ul><p><strong>Alternatives:</strong> ${escapeHtml(team.alternatives)}</p></section><nav class="team-guide-navigation" aria-label="Related team guides"><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">Back to Necromancer</a><a href="#game/darkest-dungeon/teams">All team compositions</a>${otherTeams.map(other => `<a href="#game/darkest-dungeon/teams/${escapeHtml(other.id)}">${escapeHtml(other.name)}</a>`).join('')}</nav>`;
+  const difficulty = team.category === 'beginner' ? 'Beginner' : team.category === 'balanced' ? 'Intermediate' : 'Advanced';
+  const teamNav = `<nav class="team-guide-navigation" aria-label="On this team guide"><a href="#team-overview">Overview</a><a href="#formation">Party formation</a><a href="#builds">Hero builds</a><a href="#strategy">Battle strategy</a></nav>`;
+  const formation = team.members.map(member => {
+    const hero = heroes.find(entry => entry.id === member.heroRouteId);
+    const name = hero?.name || member.heroRouteId;
+    const href = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`;
+    return `<li class="team-formation-card"><span class="formation-rank">Rank ${member.position}</span>${renderTeamPortrait(name)}<strong><a href="${href}">${escapeHtml(name)}</a></strong><span class="formation-role">${escapeHtml(member.role)}</span><span class="formation-contribution">${escapeHtml(member.role)} · role in this lineup</span></li>`;
+  }).join('');
+  return `<header class="team-guide-hero" id="team-overview"><a class="team-boss-return" href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">← Necromancer boss guide</a><p class="eyebrow">${escapeHtml(boss.regionLabel)} · Boss counter-team guide</p><h1 id="page-title" tabindex="-1">${escapeHtml(team.name)}</h1><p class="team-guide-lede">${escapeHtml(team.purpose)}</p><div class="team-guide-badges"><span>${escapeHtml(team.category)} team · ${difficulty}</span><span>Recommended: ${escapeHtml(team.difficultyRecommendations)}</span><span>${requirementLabel(team.requirements)}</span><span>${escapeHtml(boss.name)} · ${escapeHtml(boss.regionLabel)}</span></div><dl class="team-quick-facts"><div><dt>Team focus</dt><dd>${escapeHtml(facts.focus)}</dd></div><div><dt>Damage profile</dt><dd>${escapeHtml(facts.damage)}</dd></div><div><dt>Survivability</dt><dd>${escapeHtml(facts.survivability)}</dd></div><div><dt>Guide level</dt><dd>${difficulty}</dd></div></dl></header>${teamNav}<section class="team-guide-formation" id="formation"><div class="guide-section-heading"><p class="eyebrow">Party order · rear to front</p><h2>Party Formation</h2><p>Rank 4 → Rank 1. Keep these positions for the skill selections below.</p></div><ol class="team-guide-party">${formation}</ol></section><section class="team-guide-builds" id="builds"><div class="guide-section-heading"><p class="eyebrow">Skills · trinkets · role</p><h2>Hero Builds</h2></div><div class="team-guide-build-grid">${team.members.map(renderCounterGuideBuild).join('')}</div></section>${renderCounterGuideBattlePlan(team)}<section class="team-guide-related" aria-label="Related guides"><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">Necromancer boss guide</a><a href="#game/darkest-dungeon/teams">All team compositions</a>${otherTeams.map(other => `<a href="#game/darkest-dungeon/teams/${escapeHtml(other.id)}">${escapeHtml(other.name)}</a>`).join('')}</section>`;
 }
 
 function renderRelatedBossTeams(boss) {
@@ -750,7 +808,8 @@ function renderTeamPortrait(name) {
   const portrait = hero?.portrait || (hero?.galleryArt?.src ? hero.galleryArt : null);
   const initials = name.split(' ').map(word => word[0]).join('');
   const unavailable = `<div class="portrait-unavailable" role="img" aria-label="${escapeHtml(name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(initials)}</span><small>Portrait unavailable</small></div>`;
-  const fallback = portrait && !portrait.placeholder ? renderImage(portrait, 'team-portrait') : unavailable;
+  // Shieldbreaker's only checked-in legacy portrait is a small, unverified image; keep a clear frame until authentic local art exists.
+  const fallback = hero?.id === 'shieldbreaker' ? unavailable : portrait && !portrait.placeholder ? renderImage(portrait, 'team-portrait') : unavailable;
   return hero ? `<span class="team-art">${renderEntryArtwork('heroes', hero, 'thumbnail', fallback)}</span>` : fallback;
 }
 
