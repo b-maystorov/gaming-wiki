@@ -3270,7 +3270,7 @@
           "requirements": {
             "baseGame": true,
             "dlc": [
-              "shieldbreaker"
+              "darkest-dungeon-1:dlc:shieldbreaker"
             ],
             "mods": []
           },
@@ -3944,7 +3944,239 @@
           "wiki-swine-prince",
           "hintbook-swine-prince"
         ]
-      }
+      },
+      "counterTeams": [
+        {
+          "id": "darkest-dungeon-1:boss-team:swine-prince-mark-removal",
+          "name": "Beginner · remove marks and focus the Prince",
+          "category": "beginner",
+          "purpose": "A base-game answer to Wilbur’s setup: Arbalest clears Mark and Stun while Houndmaster and Hellion attack the Swine Prince.",
+          "difficultyRecommendations": "Apprentice, Veteran and Champion; Wilbur gains an additional Stun action at higher tiers, so Rallying Flare becomes especially valuable.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "arbalest",
+              "role": "Mark removal, recovery and ranged damage",
+              "skills": [
+                {
+                  "name": "Rallying Flare",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All enemies"
+                },
+                {
+                  "name": "Sniper Shot",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Battlefield Bandage",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Sniper’s Mark",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                }
+              ],
+              "trinketIds": [
+                "fusemans-matchstick",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Read Wilbur’s marks each round. Use Rallying Flare to clear party Marks and Stun; otherwise use Sniper Shot on the Prince, never Wilbur."
+            },
+            {
+              "position": 3,
+              "heroRouteId": "occultist",
+              "role": "Damage reduction, mark support and emergency heal",
+              "skills": [
+                {
+                  "name": "Weakening Curse",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Vulnerability Hex",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Wyrd Reconstruction",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Sacrificial Stab",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Weakening Curse reduces the Prince’s damage; Vulnerability Hex or direct attacks can contribute when the danger is controlled."
+            },
+            {
+              "position": 2,
+              "heroRouteId": "houndmaster",
+              "role": "Beast damage, mark payoff and Guard",
+              "skills": [
+                {
+                  "name": "Hound’s Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Target Whistle",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Guard Dog",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Lick Wounds",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Target Whistle sets up the Prince for Hound’s Rush; Guard Dog can protect a hero who remains marked."
+            },
+            {
+              "position": 1,
+              "heroRouteId": "hellion",
+              "role": "Front-line damage against the Prince",
+              "skills": [
+                {
+                  "name": "Wicked Hack",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Bleed Out",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "1"
+                },
+                {
+                  "name": "Barbaric YAWP!",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1 + 2"
+                },
+                {
+                  "name": "Adrenaline Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Spend attacks on the Prince’s ranks 1–3. Keep all targeting away from Wilbur until the Prince is defeated."
+            }
+          ],
+          "openingStrategy": "Target the Swine Prince in enemy ranks 1–3. Use Target Whistle to mark the Prince for Houndmaster’s Hound’s Rush; the Arbalest can use Sniper Shot or Rallying Flare depending on whether Wilbur has marked or stunned the party.",
+          "alternatives": "Musketeer can fill the Arbalest’s Mark/Stun removal role with Skeet Shot, but this is a DLC class. Recheck skills and rank positions before substituting; the listed team is base-game.",
+          "battlePlan": {
+            "beforeEntering": "Equip Rallying Flare on the Arbalest and confirm the team’s ranks. The encounter is in the Warrens. This team data does not specify provision quantities.",
+            "openingTurns": "Target the Swine Prince in enemy ranks 1–3. Use Target Whistle to mark the Prince for Houndmaster’s Hound’s Rush; the Arbalest can use Sniper Shot or Rallying Flare depending on whether Wilbur has marked or stunned the party.",
+            "bossMechanic": "Wilbur marks one or two heroes for the Prince’s heavy attacks. Rallying Flare clears Mark and Stun from the other three heroes; it does not clear the Arbalest herself. If the Arbalest is stunned or marked, use Guard Dog, healing, or damage reduction while preserving the focus fire.",
+            "guardAndControl": "Do not damage Wilbur while the Prince lives. Any damaging hit on Wilbur triggers Enraged Destruction, and killing Wilbur makes the Prince use it repeatedly. Avoid Riposte that could hit Wilbur. This team relies on Rallying Flare, Guard Dog and Weakening Curse rather than a Wilbur kill.",
+            "recoveryAndLimits": "Arbalest Bandage heals one ally; Occultist’s Wyrd Reconstruction is an emergency heal with variable results. The team has no dependable party heal, so clearing Mark/Stun and reducing incoming damage should take priority over waiting for recovery.",
+            "detailedNotes": [
+              "On Veteran and Champion, Wilbur uses Bit o’ Squeal at the start of each round and can Stun the party. Rallying Flare can clear that Stun along with Marks when the Arbalest gets a turn.",
+              "After the Prince dies, Wilbur stops marking and uses Squeal. The quest objective is complete when the Prince is defeated; do not risk a weakened party during unnecessary cleanup."
+            ]
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-swine-prince",
+            "hintbook-swine-prince"
+          ]
+        }
+      ]
     },
     {
       "id": "darkest-dungeon-1:boss:hag",
@@ -4412,7 +4644,241 @@
           "wiki-hag",
           "hintbook-hag"
         ]
-      }
+      },
+      "counterTeams": [
+        {
+          "id": "darkest-dungeon-1:boss-team:hag-backline-burst",
+          "name": "Balanced · rank-flexible back-line pressure",
+          "category": "balanced",
+          "purpose": "A base-game lineup built to reach the Hag behind her cauldron, with a healer and flexible ranged pressure.",
+          "difficultyRecommendations": "Apprentice, Veteran and Champion; combat performance has not been tested in each tier.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "occultist",
+              "role": "Back-rank debuff, mark and emergency healing",
+              "skills": [
+                {
+                  "name": "Abyssal Artillery",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "3 + 4"
+                },
+                {
+                  "name": "Weakening Curse",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Vulnerability Hex",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Wyrd Reconstruction",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                }
+              ],
+              "trinketIds": [
+                "man-slayer-ring",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Use Abyssal Artillery while the Hag occupies the rear ranks; keep Weakening Curse and Wyrd Reconstruction available when damage pressure rises."
+            },
+            {
+              "position": 3,
+              "heroRouteId": "houndmaster",
+              "role": "Rank-flexible damage, mark support and Guard",
+              "skills": [
+                {
+                  "name": "Hound’s Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Target Whistle",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Guard Dog",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Hound’s Harry",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1 + 2 + 3 + 4"
+                }
+              ],
+              "trinketIds": [
+                "man-slayer-ring",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Use Hound’s Rush against the Hag; reserve Guard Dog for a vulnerable ally if the pot and repeated Hag actions create danger."
+            },
+            {
+              "position": 2,
+              "heroRouteId": "highwayman",
+              "role": "Flexible direct attacks into the rear ranks",
+              "skills": [
+                {
+                  "name": "Pistol Shot",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Duelist’s Advance",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3"
+                },
+                {
+                  "name": "Tracking Shot",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Open Vein",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                }
+              ],
+              "trinketIds": [
+                "man-slayer-ring",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Pistol Shot and Tracking Shot can reach the Hag from this starting position; reassess after the party shifts."
+            },
+            {
+              "position": 1,
+              "heroRouteId": "hellion",
+              "role": "Front-line damage with Iron Swan reach",
+              "skills": [
+                {
+                  "name": "Wicked Hack",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Iron Swan",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "4"
+                },
+                {
+                  "name": "Adrenaline Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                },
+                {
+                  "name": "Bleed Out",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "1"
+                }
+              ],
+              "trinketIds": [
+                "man-slayer-ring",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Iron Swan is the selected rank 4 attack from the front; do not spend the turn attacking the empty cauldron."
+            }
+          ],
+          "openingStrategy": "Attack the Hag in enemy ranks 3–4 immediately. The Occultist and Houndmaster can mark her for follow-up attacks; use Weakening Curse when reducing incoming pressure is more useful than another attack.",
+          "alternatives": "No drop-in replacements are recorded as mechanically equivalent. If substituting a hero, verify that the replacement can attack enemy rank 3 or 4 from the assigned position and after likely formation shifts.",
+          "battlePlan": {
+            "beforeEntering": "Equip the listed skills and check each hero is in ranks 4→1. The Hag is encountered in the Weald. No fixed provision quantities are recorded for this composition.",
+            "openingTurns": "Attack the Hag in enemy ranks 3–4 immediately. The Occultist and Houndmaster can mark her for follow-up attacks; use Weakening Curse when reducing incoming pressure is more useful than another attack.",
+            "bossMechanic": "The cauldron occupies enemy ranks 1–2 and the Hag stays in 3–4. Into the Pot removes one hero from the fight; continue with the other three and focus the Hag. Attack the filled cauldron only when freeing its occupant is worth losing an attack on the boss.",
+            "guardAndControl": "The Hag and cauldron cannot be moved. Do not plan around pulls or stuns; this team instead keeps multiple attacks that reach the Hag’s fixed back ranks.",
+            "recoveryAndLimits": "Wyrd Reconstruction is the Occultist’s uncertain emergency heal; Houndmaster can Guard an ally. If the captured hero is your main damage source, consider freeing them; otherwise keep damaging the Hag. A captured hero cannot retreat with the party.",
+            "detailedNotes": [
+              "The Hag acts more than once per round, so the trapped hero loses health during both party and boss actions. If released at Death’s Door, heal promptly because another party-wide hit may follow.",
+              "The cauldron cannot be damaged while empty. The Hag is resistant to Stun and Blight and more vulnerable to Bleed; this lineup primarily uses direct attacks, so it does not depend on a status effect landing."
+            ]
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-hag",
+              "hintbook-hag"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-hag",
+            "hintbook-hag"
+          ]
+        }
+      ]
     },
     {
       "id": "darkest-dungeon-1:boss:siren",
@@ -4879,7 +5345,244 @@
           "wiki-siren",
           "hintbook-siren"
         ]
-      }
+      },
+      "counterTeams": [
+        {
+          "id": "darkest-dungeon-1:boss-team:siren-charm-control",
+          "name": "Balanced · charm bait and guarded pressure",
+          "category": "balanced",
+          "purpose": "A base-game team that uses the Antiquarian as a low-threat likely charm target while Houndmaster and Man-at-Arms provide selectable Guard support.",
+          "difficultyRecommendations": "Apprentice, Veteran and Champion; charm and action-economy tactics apply across variants, but tier performance is not tested.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "antiquarian",
+              "role": "Low-threat support and likely charm bait",
+              "skills": [
+                {
+                  "name": "Flashpowder",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Get Down!",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                },
+                {
+                  "name": "Protect Me!",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Nervous Stab",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "quick-draw-charm"
+              ],
+              "tacticalPriority": "The Antiquarian is a likely charm target because of low Debuff resistance, not a guaranteed one. Keep her equipped actions low-threat and avoid using dangerous damage into allies if she is controlled."
+            },
+            {
+              "position": 3,
+              "heroRouteId": "arbalest",
+              "role": "Direct back-rank pressure and party recovery",
+              "skills": [
+                {
+                  "name": "Sniper Shot",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Sniper’s Mark",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Rallying Flare",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All enemies"
+                },
+                {
+                  "name": "Battlefield Bandage",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                }
+              ],
+              "trinketIds": [
+                "fusemans-matchstick",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Use Sniper Shot to keep direct pressure on the Siren. Rallying Flare can clear party Mark and Stun; Battlefield Bandage provides one-target recovery."
+            },
+            {
+              "position": 2,
+              "heroRouteId": "houndmaster",
+              "role": "Single-target damage and flexible Guard",
+              "skills": [
+                {
+                  "name": "Hound’s Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Target Whistle",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Guard Dog",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Lick Wounds",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Guard Dog can protect one chosen hero from charm. If the Houndmaster is charmed, he may use that skill on the Siren, so maintain control and avoid assuming Guard is permanent."
+            },
+            {
+              "position": 1,
+              "heroRouteId": "man-at-arms",
+              "role": "Front-line pressure and a second Guard option",
+              "skills": [
+                {
+                  "name": "Crush",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3"
+                },
+                {
+                  "name": "Rampart",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Defender",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Bolster",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All allies"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "focus-ring"
+              ],
+              "tacticalPriority": "Use Defender to guard a chosen ally. Rampart only reaches enemy ranks 1–2 from this position, so use it on a Pelagic Guardian there if it is guarding the Siren."
+            }
+          ],
+          "openingStrategy": "Use direct attacks on the Siren rather than spending repeated turns marking her; she acts twice per round, so debuffs and marks need frequent upkeep. Keep Houndmaster’s and Man-at-Arms’s Guard actions available for a hero you need to protect.",
+          "alternatives": "No fully verified drop-in replacement is recorded. If replacing a Guard hero, retain another verified Guard option and check the new hero’s skills after the Siren returns a charmed hero to rank 4.",
+          "battlePlan": {
+            "beforeEntering": "Equip the listed skills and confirm the rank order. Keep Antiquarian’s low Debuff resistance in mind: the Siren often favors the hero with the lowest resistance, but charm can still select someone else.",
+            "openingTurns": "Use direct attacks on the Siren rather than spending repeated turns marking her; she acts twice per round, so debuffs and marks need frequent upkeep. Keep Houndmaster’s and Man-at-Arms’s Guard actions available for a hero you need to protect.",
+            "bossMechanic": "Song of Desire can take control of an equipped hero, so plan to play with three. A returning hero is placed in rank 4. Avoid area attacks that could hit a charmed teammate and reassess skill positions after the return.",
+            "guardAndControl": "Guard Dog and Defender can prevent the selected hero from being charmed. A charmed Guard user can instead Guard the Siren; if that happens, use Man-at-Arms Rampart only when the guarding Pelagic Guardian is in enemy rank 1 or 2.",
+            "recoveryAndLimits": "Arbalest’s Battlefield Bandage heals one ally and Rallying Flare can clear Stun. The team has no full-party HP heal. The Antiquarian’s low-threat role reduces the cost of a likely charm but does not prevent charm or remove the threat from another hero being selected.",
+            "detailedNotes": [
+              "The Siren takes two turns per round and may summon Pelagic reinforcements. Stuns can interrupt a dangerous summon or a charmed hero, but the exact turn order is not guaranteed.",
+              "Do not flee while a hero is charmed. The returned hero goes to rank 4, so check that the Arbalest and Antiquarian can still perform their selected skills from the resulting ranks."
+            ]
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-siren",
+              "hintbook-siren"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-siren",
+            "hintbook-siren"
+          ]
+        }
+      ]
     },
     {
       "id": "darkest-dungeon-1:boss:prophet",

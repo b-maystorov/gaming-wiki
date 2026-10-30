@@ -196,6 +196,18 @@ def check_pack(pack):
     legacy_heroes = (ROOT / "dist/js/heroes.js").read_text(encoding="utf-8")
     hero_registry = legacy_heroes.split("export const heroes = [", 1)[1].split("\n];", 1)[0]
     hero_route_ids = set(re.findall(r"\bid:\s*['\"]([^'\"]+)['\"]", hero_registry))
+    hero_dlc_by_route = {hero["routeId"]: set(hero.get("requirements", {}).get("dlc", [])) for hero in pack["heroes"]}
+    for block in re.findall(r"(?ms)^  \{(.*?)(?=^  \{|\Z)", hero_registry):
+        hero_match = re.search(r"\bid:\s*['\"]([^'\"]+)['\"]", block)
+        requirements_match = re.search(r"requirements:\s*(baseGame|\{[^}]*\})", block)
+        if hero_match and requirements_match and requirements_match.group(1) != "baseGame":
+            dlc_names = re.search(r"dlc:\s*\[([^]]*)\]", requirements_match.group(1))
+            if dlc_names:
+                for dlc_name in re.findall(r"['\"]([^'\"]+)['\"]", dlc_names.group(1)):
+                    normalize_dlc_name = lambda value: value.casefold().removeprefix("the ").removesuffix(" dlc")
+                    dlc = next((item for item in pack["dlcs"] if normalize_dlc_name(item["name"]) == normalize_dlc_name(dlc_name)), None)
+                    require(dlc is not None, f"hero {hero_match.group(1)}: unknown DLC requirement {dlc_name!r}")
+                    hero_dlc_by_route.setdefault(hero_match.group(1), set()).add(dlc["id"])
     trinket_ids = {record["id"] for record in pack["trinkets"]}
     boss_ids = {record["id"] for record in pack["bosses"]}
     dlc_ids = {record["id"] for record in pack["dlcs"]}
@@ -358,6 +370,7 @@ def check_pack(pack):
         require(isinstance(recommendation.get("editorial"), bool), f"recommendation {recommendation['id']}: mark factual/editorial status")
 
     boss_route_ids = set()
+    boss_team_ids = set()
     composition_ids = {composition["id"] for composition in pack["teamCompositions"]}
     for boss in pack["bosses"]:
         route_id = boss["routeId"]
@@ -376,16 +389,35 @@ def check_pack(pack):
         for composition_id in boss.get("relatedCompositionIds", []):
             require(composition_id in composition_ids, f"boss {boss['id']}: unknown composition {composition_id!r}")
         for team in boss.get("counterTeams", []):
+            require(ID_PATTERN.fullmatch(team.get("id", "")) and team["id"] not in boss_team_ids,
+                    f"boss {boss['id']}: counter-team ID is invalid or duplicated: {team.get('id')!r}")
+            boss_team_ids.add(team["id"])
+            require(team["id"].startswith("darkest-dungeon-1:boss-team:"), f"boss {boss['id']}: counter-team ID does not use the stable team namespace")
+            require(team.get("category") in {"beginner", "balanced", "specialized"}, f"boss {boss['id']}: invalid counter-team category")
+            team_requirements = team.get("requirements", {})
+            require(isinstance(team_requirements.get("dlc"), list) and isinstance(team_requirements.get("mods"), list), f"team {team['id']}: DLC and mod requirements must be separate")
+            team_dlc_ids = set(team_requirements.get("dlc", []))
+            require(team_dlc_ids <= dlc_ids, f"team {team['id']}: unknown DLC requirement")
+            boss_dlc_ids = set(boss.get("requirements", {}).get("dlc", []))
+            require(boss_dlc_ids <= team_dlc_ids, f"team {team['id']}: missing DLC requirement for boss encounter")
+            verification = team.get("verification", {})
+            require(verification.get("status") in {"verified", "reference-checked", "partial", "unverified"}, f"team {team['id']}: verification status is missing")
+            require(bool(verification.get("sourceIds")), f"team {team['id']}: source references are missing")
+            require(all(source_id in source_ids for source_id in team.get("strategySourceIds", [])), f"team {team['id']}: unknown strategy source")
             require(len(team.get("members", [])) == 4, f"boss {boss['id']}: counter team must contain four heroes")
             require([member.get("position") for member in team["members"]] == [4, 3, 2, 1], f"boss {boss['id']}: counter team positions must be 4→1")
             for member in team["members"]:
                 require(member.get("heroRouteId") in hero_route_ids, f"boss {boss['id']}: unknown counter-team hero")
+                hero_dlc_ids = hero_dlc_by_route.get(member["heroRouteId"], set())
+                require(hero_dlc_ids <= team_dlc_ids, f"team {team['id']}: missing DLC requirement for {member['heroRouteId']}")
                 require(len(member.get("skills", [])) == 4, f"boss {boss['id']}: each counter-team hero needs four skills")
                 require(all(isinstance(skill.get("heroPositions"), list) and member["position"] in skill["heroPositions"] for skill in member["skills"]), f"boss {boss['id']}: counter-team skill is invalid for assigned rank")
+                require(len(member.get("trinketIds", [])) == 2, f"team {team['id']}: each hero needs two verified trinkets")
                 for route_id in member.get("trinketIds", []):
                     trinket = next((item for item in pack["trinkets"] if item["routeId"] == route_id), None)
                     require(trinket is not None, f"boss {boss['id']}: unknown counter-team trinket {route_id}")
                     require(not trinket.get("classRestrictionHeroRouteIds") or member["heroRouteId"] in trinket["classRestrictionHeroRouteIds"], f"boss {boss['id']}: counter-team trinket restricted from hero")
+                    require(set(trinket.get("requirements", {}).get("dlc", [])) <= team_dlc_ids, f"team {team['id']}: missing DLC requirement for trinket {route_id}")
         if boss["guideStatus"] == "available":
             require(bool(boss.get("guideVerification")), f"boss {boss['id']}: available guide requires guideVerification")
             require(all(isinstance(boss.get(field), list) and boss[field] for field in ("mechanics", "variants", "attacks", "tacticalConsiderations")), f"boss {boss['id']}: available guide is missing detail sections")
@@ -422,8 +454,11 @@ def main():
     except (OSError, json.JSONDecodeError, KeyError, TypeError, ContentError) as error:
         print(f"Content check failed: {error}", file=sys.stderr)
         return 1
+    complete_boss_guides = sum(b['guideStatus'] == 'available' for b in pack['bosses'])
+    counter_teams = sum(len(b.get('counterTeams', [])) for b in pack['bosses'])
     print(f"Content check passed: {len(pack['heroes'])} hero, {len(pack['combatSkills'])} combat skills, "
-          f"{len(pack['bosses'])} bosses ({sum(b['guideStatus'] == 'available' for b in pack['bosses'])} detailed), "
+          f"{len(pack['bosses'])} bosses ({complete_boss_guides} detailed, {len(pack['bosses']) - complete_boss_guides} in development), "
+          f"{counter_teams} boss counter teams, "
           f"{len(pack['enemies'])} enemies, {len(pack['trinkets'])} trinkets, {len(pack['items'])} items, "
           f"{len(pack['curios'])} curios, {len(pack['locations'])} locations, {len(pack['quests'])} quests, "
           f"{len(pack['sources'])} sources.")

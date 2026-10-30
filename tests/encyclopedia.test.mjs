@@ -344,3 +344,62 @@ test('Necromancer team IDs route to full guides and connect boss, hero, trinket 
   const index = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams'));
   for (const team of boss.counterTeams) assert.ok(index.includes(`href="#game/darkest-dungeon/teams/${team.id}"`));
 });
+
+test('boss coverage and all counter-team routes, links, ranks and restrictions stay coherent', () => {
+  assert.equal(pack.bosses.filter(boss => boss.guideStatus === 'available').length, 4);
+  assert.equal(pack.bosses.filter(boss => boss.guideStatus === 'in-development').length, 22);
+  const heroRoutes = new Set(h.modules.get(resolve(root, 'dist/js/heroes.js')).namespace.heroes.map(hero => hero.id));
+  const abilities = h.modules.get(resolve(root, 'dist/js/hero-abilities.js')).namespace.heroAbilities;
+  const teamIds = new Set();
+  let teamCount = 0;
+  for (const boss of pack.bosses) {
+    const bossHtml = h.app.renderPage(h.app.readRoute(`#game/darkest-dungeon/bosses/${boss.routeId}`));
+    for (const team of boss.counterTeams || []) {
+      teamCount += 1;
+      assert.ok(!teamIds.has(team.id), `duplicate team ID: ${team.id}`);
+      teamIds.add(team.id);
+      assert.ok(bossHtml.includes(`href="#game/darkest-dungeon/teams/${team.id}"`), `${boss.routeId} preview link`);
+      assert.deepEqual(team.members.map(member => member.position), [4, 3, 2, 1]);
+      const route = h.app.readRoute(`#game/darkest-dungeon/teams/${team.id}`);
+      assert.equal(route.team.id, team.id);
+      const page = h.app.renderPage(route);
+      assert.ok(page.includes('id="sources"'));
+      assert.ok(page.includes('id="strategy"'));
+      assert.ok(page.includes(`href="#game/darkest-dungeon/bosses/${boss.routeId}"`));
+      const localIds = [...page.matchAll(/href="#(?:game\/darkest-dungeon\/trinkets\/([^"#]+)|hero\/([^"#/]+)\/)/g)];
+      for (const [, trinketRoute, heroRoute] of localIds) {
+        if (trinketRoute) assert.ok(pack.trinkets.some(item => item.routeId === trinketRoute), `${team.id}: trinket link ${trinketRoute}`);
+        if (heroRoute) assert.ok(heroRoutes.has(heroRoute), `${team.id}: hero link ${heroRoute}`);
+      }
+      for (const member of team.members) {
+        assert.ok(heroRoutes.has(member.heroRouteId), `${team.id}: hero ${member.heroRouteId}`);
+        assert.equal(member.skills.length, 4);
+        assert.equal(member.trinketIds.length, 2);
+        for (const skill of member.skills) {
+          assert.ok(skill.heroPositions.includes(member.position), `${team.id}/${skill.name} launch rank`);
+          const ability = abilities[member.heroRouteId]?.skills?.find(row => row[0] === skill.name);
+          if (ability) {
+            assert.deepEqual(skill.heroPositions, ability[1].split(',').map(Number));
+            assert.equal(skill.target, ability[2]);
+          } else {
+            const canonical = pack.combatSkills.find(row => row.heroId.endsWith(`:${member.heroRouteId}`) && row.name === skill.name);
+            assert.ok(canonical, `${team.id}: skill ${skill.name} resolves`);
+            assert.deepEqual(skill.heroPositions, canonical.rankRules.heroPositions);
+          }
+        }
+        for (const id of member.trinketIds) {
+          const trinket = pack.trinkets.find(item => item.routeId === id);
+          assert.ok(trinket, `${team.id}: trinket ${id}`);
+          assert.ok(!trinket.classRestrictionHeroRouteIds?.length || trinket.classRestrictionHeroRouteIds.includes(member.heroRouteId));
+        }
+      }
+    }
+  }
+  assert.equal(teamCount, 6);
+  for (const routeId of ['hag', 'siren', 'swine-prince']) {
+    const boss = pack.bosses.find(row => row.routeId === routeId);
+    assert.equal(boss.counterTeams.length, 1);
+    const page = h.app.renderPage(h.app.readRoute(`#game/darkest-dungeon/bosses/${routeId}`));
+    assert.ok(page.includes('View full team guide'));
+  }
+});
