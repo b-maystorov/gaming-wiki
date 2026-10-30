@@ -1051,6 +1051,74 @@ body { background: radial-gradient(ellipse at 82% 8%, #80513a0b, transparent 34%
 .team-equipment-note { margin:.7rem 0 .3rem; }
 .boss-team-equipment-summary { margin:.3rem 0; color:#d8c19f; font-size:.76rem; }
 @media(max-width:640px) { .encyclopedia-card-trinkets { grid-template-columns:104px minmax(0,1fr); } .encyclopedia-card-trinkets > .encyclopedia-card-art-link > .entry-art { min-height:104px; } .encyclopedia-card-trinkets > .encyclopedia-card-art-link img { max-height:120px; } .team-equipment-columns { grid-template-columns:1fr; } }
+.expedition-planner-controls { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; margin:1rem 0; padding:1rem; border:1px solid #59483c; background:linear-gradient(125deg,#251d1b,#151517 75%); }
+.expedition-planner-controls > div { display:grid; gap:.35rem; }
+.expedition-planner-controls label,.expedition-roster fieldset legend { color:#e0c69f; font-size:.8rem; }
+.expedition-planner-controls select { min-height:2.7rem; padding:.5rem .65rem; border:1px solid #665149; background:#111113; color:var(--text); font:inherit; }
+.expedition-planner-controls select:focus-visible,.expedition-roster-option input:focus-visible,.planner-secondary-button:focus-visible { outline:2px solid var(--focus-ring); outline-offset:2px; }
+.expedition-planner-controls select:disabled { opacity:.62; }
+.expedition-roster { margin:1rem 0 1.3rem; padding:1rem; border-color:#58453a; background:linear-gradient(130deg,#211c1a,#151517 76%); }
+.planner-section-heading { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:.5rem 1rem; }
+.planner-section-heading h2,.planner-section-heading p { margin-block:.1rem .45rem; }
+.planner-section-heading p:not(.eyebrow) { color:var(--text-secondary); font-size:.82rem; }
+.planner-secondary-button { min-height:2.3rem; padding:.45rem .7rem; border:1px solid #79504a; background:#281719; color:#ead8c2; font:inherit; cursor:pointer; }
+.expedition-roster fieldset { margin:.6rem 0; padding:.7rem; border:1px solid #45383a; }
+.expedition-roster-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.4rem; }
+.expedition-roster-option { display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center; gap:.35rem; min-width:0; padding:.4rem; border:1px solid #393235; background:#141315; color:var(--text); font-size:.78rem; cursor:pointer; }
+.expedition-roster-option input { accent-color:#a2444c; }
+.expedition-roster-option small { grid-column:2; color:var(--muted); font-size:.64rem; }
+#planner-roster-status { margin:.5rem 0; color:#dfc9a9; font-size:.82rem; }
+.planner-data-note,.planner-context-note { color:var(--muted); font-size:.78rem; line-height:1.5; }
+.planner-empty { margin:0; padding:1rem; border-color:#554339; background:#1d1918; }
+.expedition-region-summary { margin:1rem 0; padding:1rem; border:1px solid #59483c; background:linear-gradient(130deg,#211c1a,#151517 76%); }
+.expedition-region-summary > header { display:grid; grid-template-columns:minmax(220px,.75fr) minmax(0,1fr); align-items:center; gap:1rem; padding-bottom:.9rem; border-bottom:1px solid #473a38; }
+.expedition-region-summary > header > .entry-art-banner { width:100%; max-width:none; height:170px; margin:0; }
+.expedition-region-summary > header > .entry-art-banner [data-art-visual] > img { width:100%; height:100%; max-height:168px; object-fit:contain; }
+.expedition-region-summary h2,.planner-boss-reminder h2 { margin:.15rem 0 .45rem; color:#ead6b5; font:clamp(1.4rem,2vw,1.9rem) Georgia,serif; }
+.expedition-region-placeholder { display:grid; place-content:center; justify-items:center; width:100%; height:100%; border:1px solid #745941; background:radial-gradient(ellipse,#453328,#171517 75%); color:#e1c49a; font:2rem Georgia,serif; }
+.expedition-region-placeholder small { color:var(--muted); font: .7rem Arial,sans-serif; }
+.expedition-prep-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; padding-top:.9rem; }
+.expedition-prep-grid > section { min-width:0; padding:.8rem; border:1px solid #403638; background:#151416; }
+.expedition-prep-grid h3,.planner-checklist h2 { margin:.1rem 0 .55rem; color:#dfc69e; font:1.12rem Georgia,serif; }
+.planner-record-disclosure summary { color:#e2d3c3; cursor:pointer; }
+.planner-record-list,.planner-curio-list,.planner-boss-list { display:grid; gap:.45rem; margin:.6rem 0; padding:0; list-style:none; }
+.planner-record-list li,.planner-curio-list li,.planner-boss-list li { padding:.45rem; border-left:2px solid #785b41; background:#1c1919; }
+.planner-record-list li span,.planner-curio-list li span,.planner-boss-list li span { display:block; color:var(--muted); font-size:.72rem; }
+.planner-record-list li p { margin:.25rem 0 0; color:var(--text-secondary); font-size:.78rem; line-height:1.45; }
+.expedition-interactions { grid-column:1/-1; }
+.expedition-interactions .table-scroll { max-height:22rem; overflow:auto; }
+.planner-item-purpose,.expedition-interactions td small { display:block; max-width:42ch; margin-top:.2rem; color:var(--muted); font-size:.7rem; line-height:1.4; }
+.planner-boss-reminder { margin:1rem 0; padding:1rem; border:1px solid #65434a; border-left:4px solid #9d5157; background:radial-gradient(ellipse at 100% 0,#741e2b22,transparent 48%),linear-gradient(130deg,#251a1d,#151416 75%); }
+.planner-boss-mechanics { display:grid; gap:.45rem; margin:.6rem 0; padding:0; list-style:none; }
+.planner-boss-mechanics li { padding:.55rem .7rem; border:1px solid #3f3436; background:#171517; color:#e1d6cb; font-size:.82rem; line-height:1.5; }
+.planner-boss-mechanics li span { display:block; margin-bottom:.2rem; color:#c9a572; font-size:.68rem; text-transform:uppercase; letter-spacing:.07em; }
+.planner-key-mechanic,.planner-opening-note { padding:.7rem .8rem; border-left:3px solid #a24d50; background:#31191d; color:#f0dfce; line-height:1.5; }
+.planner-key-mechanic strong,.planner-opening-note strong { display:block; margin-bottom:.2rem; color:#eccd9e; }
+.planner-encounter-warning { margin:.6rem 0; padding:.8rem; border:1px solid #bb4a4d; background:#40181d; color:#ffe3d4; }
+.planner-encounter-warning p { margin:.35rem 0 0; line-height:1.5; }
+.planner-difficulty-summary { display:flex; flex-wrap:wrap; gap:.5rem; margin:.65rem 0; }
+.planner-difficulty-summary > div { min-width:100px; padding:.5rem .65rem; border:1px solid #554640; background:#131315; }
+.planner-difficulty-summary dt { color:var(--muted); font-size:.68rem; }
+.planner-difficulty-summary dd { margin:.15rem 0 0; color:#eed9b7; }
+.planner-teams-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.planner-team-card { min-width:0; padding:.9rem; border:1px solid #5a4740; background:linear-gradient(140deg,#211b1b,#151416 75%); box-shadow:0 8px 22px #0003; }
+.planner-team-card > header h3 { margin:.2rem 0; font:1.25rem Georgia,serif; }
+.planner-team-card > header > p:not(.eyebrow) { color:var(--text-secondary); font-size:.82rem; line-height:1.5; }
+.planner-roster-state { display:inline-block; padding:.3rem .5rem; border:1px solid #735943; background:#2a211b; color:#e6c79a; font-size:.74rem; }
+.planner-roster-state.is-ready { border-color:#557454; background:#1a261c; color:#c7e1bc; }
+.planner-missing-heroes { margin:.4rem 0; color:#edc5a6; font-size:.78rem; }
+.planner-team-lineup { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.45rem; margin:.75rem 0; padding:0; list-style:none; }
+.planner-team-lineup li { display:grid; justify-items:center; gap:.2rem; min-width:0; padding:.4rem .25rem; border:1px solid #493b38; background:#141315; text-align:center; font-size:.72rem; }
+.planner-team-lineup li > span { color:#c6a779; font-size:.65rem; }
+.planner-team-lineup .team-art { width:48px; height:58px; }
+.planner-equipment-count { color:#d8c19f; font-size:.78rem; }
+.planner-team-card .team-equipment-columns { grid-template-columns:1fr; }
+.planner-team-card .team-equipment-columns li { align-items:baseline; }
+.planner-checklist { margin:1rem 0 2rem; padding:1rem; border:1px solid #57463b; background:#1d1918; }
+.planner-checklist ul { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem 1rem; padding-left:1.2rem; color:#e1d6cb; font-size:.83rem; line-height:1.5; }
+@media(max-width:900px) { .expedition-roster-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } .planner-teams-grid { grid-template-columns:1fr; } }
+@media(max-width:680px) { .expedition-planner-controls { grid-template-columns:1fr; } .expedition-roster-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .expedition-region-summary > header { grid-template-columns:1fr; } .expedition-region-summary > header > .entry-art-banner { height:145px; } .expedition-prep-grid { grid-template-columns:1fr; } .expedition-interactions { grid-column:auto; } .planner-checklist ul { grid-template-columns:1fr; } }
+@media(prefers-reduced-motion:reduce) { .planner-team-card { scroll-behavior:auto; } }
 @media (max-width: 680px) {
   .boss-counter-teams-rich { grid-template-columns: 1fr; }
   .location-boss-card, .location-curio-card { grid-template-columns: 72px minmax(0, 1fr); }

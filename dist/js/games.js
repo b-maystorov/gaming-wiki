@@ -32,6 +32,7 @@ export const games = {
       { id: 'items', label: 'Items & Provisions', icon: '▧', view: 'items', description: 'Review provisions and expedition supplies.' },
       { id: 'curios', label: 'Curios', icon: '▤', view: 'curios', description: 'Find curios and their documented interactions.' },
       { id: 'teams', label: 'Team Compositions', icon: '◉', view: 'teams', description: 'Browse all current example parties.' },
+      { id: 'expedition-planner', label: 'Expedition Planner', icon: '⚑', view: 'expedition-planner', description: 'Prepare a region, roster, boss plan, and equipment checklist.' },
       { id: 'locations', label: 'Locations', icon: '⌖', view: 'locations', description: 'Browse the campaign regions.' },
       { id: 'quests', label: 'Quests', icon: '☷', view: 'quests', description: 'Understand named and special expeditions.' }
     ]

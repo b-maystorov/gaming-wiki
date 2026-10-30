@@ -32,7 +32,7 @@ async function harness(failure = null, storageMode = 'available') {
       } };
     }
   };
-  if (storageMode === 'available') globals.localStorage = { getItem: key => storedValues.get(key) ?? null, setItem: (key, value) => storedValues.set(key, String(value)) };
+  if (storageMode === 'available') globals.localStorage = { getItem: key => storedValues.get(key) ?? null, setItem: (key, value) => storedValues.set(key, String(value)), removeItem: key => storedValues.delete(key) };
   if (storageMode === 'inaccessible') globals.localStorage = { getItem() { throw new Error('Storage denied'); }, setItem() { throw new Error('Storage denied'); } };
   const context = createContext(globals);
   const modules = new Map();
@@ -41,7 +41,7 @@ async function harness(failure = null, storageMode = 'available') {
     let source = await readFile(path, 'utf8');
     if (path.endsWith('/app.js')) {
       source = source.slice(0, source.indexOf("document.querySelector('.skip-link')"));
-      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent };';
+      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent, plannerBosses, updateExpeditionPlannerOptions, renderPlannerTeam, getExpeditionRoster, saveExpeditionRoster, renderExpeditionPlanner, renderPlannerRegionRecords, renderExpeditionPlannerResults };';
     }
     const module = new SourceTextModule(source, { context, identifier: path,
       initializeImportMeta: meta => { meta.url = `file://${path}`; } });
@@ -51,7 +51,7 @@ async function harness(failure = null, storageMode = 'available') {
   }
   const app = await load(resolve(root, 'dist/js/app.js'));
   await app.evaluate();
-  return { app: app.namespace, modules, context, storedValues,
+  return { app: app.namespace, modules, context, storedValues, elements,
     filter(kind, value, records, extras = []) {
       context.location.hash = `#game/darkest-dungeon/${kind}`;
       elements.set('encyclopedia-filter', { value });
@@ -238,6 +238,117 @@ test('team readiness links only recorded alternatives and does not invent fallba
     assert.ok(html.includes('Missing equipment does not make this team unusable'));
     assert.ok(html.includes('rate team power'));
     assert.ok(member.budgetPriorities, `${team.id}/${member.heroRouteId}: attribute fallback remains explicit`);
+  }
+});
+
+test('expedition planner route and region boss choices use only recorded location associations', () => {
+  const route = h.app.readRoute('#game/darkest-dungeon/expedition-planner');
+  assert.equal(route.view, 'expedition-planner');
+  const page = h.app.renderPage(route);
+  assert.ok(page.includes('Expedition Planner'));
+  assert.ok(page.includes('id="planner-region"'));
+  assert.ok(page.includes('id="planner-boss"'));
+  assert.ok(page.includes('data-reset-expedition-roster'));
+  const ruins = pack.locations.find(location => location.routeId === 'ruins');
+  const warrens = pack.locations.find(location => location.routeId === 'warrens');
+  const necromancer = pack.bosses.find(boss => boss.routeId === 'necromancer');
+  const ruinsBosses = h.app.plannerBosses(ruins);
+  assert.ok(ruinsBosses.some(boss => boss.routeId === 'necromancer'));
+  assert.ok(!ruinsBosses.some(boss => boss.routeId === 'swine-prince'));
+  assert.ok(h.app.plannerBosses(warrens).some(boss => boss.routeId === 'swine-prince'));
+  const locationMarkup = h.app.renderPlannerRegionRecords(ruins);
+  assert.ok(locationMarkup.includes('#game/darkest-dungeon/bosses/necromancer'));
+  assert.ok(locationMarkup.includes('#game/darkest-dungeon/enemies/'));
+  assert.ok(locationMarkup.includes('#game/darkest-dungeon/curios/'));
+  assert.ok(locationMarkup.includes('Known provision interactions'));
+  const games = h.modules.get(resolve(root, 'dist/js/games.js')).namespace.games;
+  assert.ok(games['darkest-dungeon'].categories.some(category => category.id === 'expedition-planner' && category.view === 'expedition-planner'));
+  const regionSelect = { value: ruins.regionId };
+  const bossSelect = { value: '', disabled: true, innerHTML: '' };
+  const difficultySelect = { value: '', disabled: true, innerHTML: '' };
+  h.elements.set('planner-region', regionSelect);
+  h.elements.set('planner-boss', bossSelect);
+  h.elements.set('planner-difficulty', difficultySelect);
+  h.app.updateExpeditionPlannerOptions();
+  assert.equal(bossSelect.disabled, false);
+  assert.ok(bossSelect.innerHTML.includes(necromancer.id));
+  assert.ok(!bossSelect.innerHTML.includes('swine-prince'));
+  bossSelect.value = necromancer.id;
+  h.app.updateExpeditionPlannerOptions();
+  assert.equal(difficultySelect.disabled, false);
+  assert.ok(difficultySelect.innerHTML.includes('Apprentice'));
+  bossSelect.value = pack.bosses.find(boss => boss.routeId === 'swine-prince').id;
+  h.app.updateExpeditionPlannerOptions();
+  assert.equal(bossSelect.value, '', 'changing region should clear a now-unsupported boss');
+});
+
+test('expedition planner roster distinguishes unknown, available and missing heroes without hiding teams', async () => {
+  const local = await harness();
+  const swine = pack.bosses.find(boss => boss.routeId === 'swine-prince');
+  const team = { ...swine.counterTeams[0], boss: swine };
+  assert.equal(local.app.getExpeditionRoster(), null);
+  const unknownMarkup = local.app.renderPlannerTeam(team, local.app.getExpeditionRoster());
+  assert.ok(unknownMarkup.includes('Roster availability unknown'));
+  assert.ok(unknownMarkup.includes(`#game/darkest-dungeon/teams/${team.id}`));
+  const partialRoster = { initialized: true, heroIds: ['arbalest', 'hellion'] };
+  assert.equal(local.app.saveExpeditionRoster(partialRoster), true);
+  assert.ok(local.storedValues.has('bm-gaming-wiki-available-heroes'));
+  const partialMarkup = local.app.renderPlannerTeam(team, local.app.getExpeditionRoster());
+  assert.ok(partialMarkup.includes('Missing 2 marked heroes'));
+  assert.ok(partialMarkup.includes('Occultist'));
+  assert.ok(partialMarkup.includes('Houndmaster'));
+  assert.ok(partialMarkup.includes(`#game/darkest-dungeon/teams/${team.id}`), 'partial roster must not hide a useful team guide');
+  local.app.saveExpeditionRoster({ initialized: true, heroIds: [] });
+  assert.notEqual(local.app.getExpeditionRoster(), null, 'an explicitly empty roster is different from unknown');
+  assert.ok(local.app.renderPlannerTeam(team, local.app.getExpeditionRoster()).includes('Missing 4 marked heroes'));
+  const complete = { initialized: true, heroIds: team.members.map(member => member.heroRouteId) };
+  local.app.saveExpeditionRoster(complete);
+  assert.ok(local.app.renderPlannerTeam(team, local.app.getExpeditionRoster()).includes('All required heroes marked available'));
+  local.app.saveExpeditionRoster({ initialized: true, heroIds: ['stale-hero-id'] });
+  assert.deepEqual(Array.from(local.app.getExpeditionRoster().heroIds), []);
+});
+
+test('expedition planner filters related teams by supported boss and provides fallback artwork', async () => {
+  const local = await harness();
+  const region = pack.locations.find(location => location.routeId === 'ruins');
+  const necromancer = pack.bosses.find(boss => boss.routeId === 'necromancer');
+  local.elements.set('planner-region', { value: region.regionId });
+  local.elements.set('planner-boss', { value: necromancer.id });
+  local.elements.set('planner-difficulty', { value: 'Apprentice' });
+  const result = local.app.renderExpeditionPlannerResults();
+  assert.ok(result.includes('Necromancer quick reminder'));
+  assert.ok(result.includes('Apprentice'));
+  assert.ok(result.includes(necromancer.counterTeams[0].name));
+  const swineTeamId = pack.bosses.find(boss => boss.routeId === 'swine-prince').counterTeams[0].id;
+  assert.ok(!result.includes(swineTeamId), 'a boss outside this selected association must not appear as a team recommendation');
+  assert.ok(result.includes('Equipment Readiness') || result.includes('recommended trinkets marked owned'));
+  assert.ok(result.includes('No local image') || result.includes('data-art-kind="locations"'), 'region art must retain its local image or designed fallback');
+  local.elements.set('planner-boss', { value: '' });
+  const regionTeams = local.app.renderExpeditionPlannerResults();
+  assert.ok(regionTeams.includes(necromancer.counterTeams[0].id));
+  assert.ok(!regionTeams.includes(swineTeamId), 'region-only recommendations must follow that region’s recorded boss associations');
+  const swineWarning = local.app.renderPage(local.app.readRoute('#game/darkest-dungeon/expedition-planner'));
+  assert.ok(swineWarning.includes('Choose a region'));
+  const swine = pack.bosses.find(boss => boss.routeId === 'swine-prince');
+  local.elements.set('planner-region', { value: pack.locations.find(location => location.routeId === 'warrens').regionId });
+  local.elements.set('planner-boss', { value: swine.id });
+  local.elements.set('planner-difficulty', { value: 'Champion' });
+  const swineResult = local.app.renderExpeditionPlannerResults();
+  assert.ok(swineResult.includes('Do not damage Wilbur before defeating the Swine Prince.'));
+  assert.ok(swineResult.includes('Wilbur'));
+  const swineTeam = { ...swine.counterTeams[0], boss: swine };
+  const reminder = local.app.renderPlannerTeam(swineTeam, null);
+  assert.ok(reminder.includes('View full team guide'));
+});
+
+test('expedition roster storage handles blocked localStorage in the current session', async () => {
+  for (const mode of ['missing', 'inaccessible']) {
+    const local = await harness(null, mode);
+    assert.equal(local.app.getExpeditionRoster(), null);
+    assert.equal(local.app.saveExpeditionRoster({ initialized: true, heroIds: ['hellion'] }), false);
+    assert.deepEqual(Array.from(local.app.getExpeditionRoster().heroIds), ['hellion']);
+    assert.equal(local.app.saveExpeditionRoster(null), false);
+    assert.equal(local.app.getExpeditionRoster(), null);
   }
 });
 
