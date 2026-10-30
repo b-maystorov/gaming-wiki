@@ -615,35 +615,39 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 @media (max-width: 1050px) { .boss-counter-teams { grid-template-columns: 1fr; } }
 
 /* Boss-specific team previews stay brief; dedicated guides use the full game-content column. */
-.boss-counter-teams { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
-.boss-counter-preview { display: flex; min-width: 0; flex-direction: column; }
-.boss-counter-preview h3 { margin: .45rem 0 .8rem; color: #f0ded4; font: 1.2rem/1.3 Georgia, serif; }
-.boss-counter-preview > p:not(.eyebrow) { color: var(--text-secondary); font-size: .85rem; line-height: 1.5; }
-.counter-preview-party { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .35rem; padding: 0; margin: 0 0 .8rem; list-style: none; }
-.counter-preview-party li { display: grid; justify-items: center; align-content: start; gap: .3rem; min-width: 0; margin: 0; padding: .4rem .2rem; border: 1px solid #49363b; text-align: center; font-size: .68rem; }
-.counter-preview-party .team-art { height: 62px; overflow: hidden; }
-.counter-preview-party .entry-art-heroes.entry-art-thumbnail { height: 62px; }
-.counter-preview-party .entry-art img { max-height: 62px; }
+.boss-team-intro { max-width: 72ch; margin: -.35rem 0 1.1rem; color: var(--text-secondary); line-height: 1.6; }
+.boss-counter-teams { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; gap: 1.15rem; }
+.boss-counter-preview { display: flex; min-width: 0; flex-direction: column; padding: clamp(1rem, 1.6vw, 1.4rem); border-color: #604047; background: radial-gradient(ellipse at 50% 0, #742a3528, transparent 60%), linear-gradient(155deg, #241a1e, #151416 78%); transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
+.boss-counter-preview:hover, .boss-counter-preview:focus-within { border-color: #a6535b; box-shadow: 0 0 20px #9d2b3733; transform: translateY(-2px); }
+.boss-counter-preview h3 { margin: .45rem 0 .8rem; color: #f0ded4; font: 1.3rem/1.3 Georgia, serif; letter-spacing: .015em; }
+.boss-counter-preview > p:not(.eyebrow) { color: var(--text-secondary); font-size: .9rem; line-height: 1.6; }
+.counter-preview-party { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; padding: 0; margin: 0 0 .9rem; list-style: none; }
+.counter-preview-party li { display: grid; justify-items: center; align-content: start; gap: .35rem; min-width: 0; margin: 0; padding: .5rem .2rem; border: 1px solid #50383e; border-radius: 2px; background: linear-gradient(180deg, #211a1d, #171517); text-align: center; font-size: .68rem; }
+.counter-preview-party .team-art { height: 78px; overflow: hidden; }
+.counter-preview-party .entry-art-heroes.entry-art-thumbnail { height: 78px; }
+.counter-preview-party .entry-art [data-art-visual] > :is(img, svg) { object-fit: contain; object-position: center 38%; }
+.counter-preview-party .entry-art img { max-height: 78px; }
 .counter-preview-party strong { font-size: .68rem; }
-.boss-counter-preview .team-details-link { margin-top: auto; padding-top: .8rem; }
+.boss-counter-preview .team-details-link { width: fit-content; margin-top: auto; padding: .65rem .8rem; border: 1px solid #75424a; background: #281a1e; color: #f0c7c2; text-decoration: none; }
+.boss-counter-preview .team-details-link:hover, .boss-counter-preview .team-details-link:focus-visible { border-color: #bd6a70; background: #351d23; box-shadow: 0 0 14px #a1273533; outline: 2px solid transparent; }
 .boss-team-guide-intro { padding-block: 1.4rem 1.8rem; border-bottom: 1px solid #573d40; }
 .boss-team-guide-intro h1 { max-width: 24ch; }
 .team-guide-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; margin-block: 1.5rem 2rem; }
-.team-guide-overview > div { min-width: 0; padding: 1.3rem; border: 1px solid #49373c; background: linear-gradient(140deg, #21191d, #151416); }
+.team-guide-overview > div { min-width: 0; padding: clamp(1.1rem, 2vw, 1.55rem); border: 1px solid #523940; background: radial-gradient(ellipse at 0 0, #742a3518, transparent 55%), linear-gradient(140deg, #21191d, #151416); }
 .team-guide-overview h2, .team-guide-formation h2, .team-guide-builds > h2, .team-guide-notes h2 { margin-bottom: .8rem; font: 1.55rem Georgia, serif; color: #f0ded4; }
 .team-guide-overview p { margin-top: .65rem; color: var(--text-secondary); line-height: 1.65; }
 .team-guide-overview a, .team-guide-navigation a { color: #efc2bd; }
 .team-guide-formation { margin-block: 1.5rem 2rem; }
 .team-guide-party { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; padding: 0; margin: 0; list-style: none; }
-.team-guide-party li { display: grid; justify-items: center; align-content: start; gap: .55rem; min-width: 0; margin: 0; padding: .9rem; border: 1px solid #553a40; background: linear-gradient(145deg, #20191c, #151416); text-align: center; }
+.team-guide-party li { display: grid; justify-items: center; align-content: start; gap: .65rem; min-width: 0; margin: 0; padding: 1rem; border: 1px solid #604047; background: radial-gradient(ellipse at 50% 0, #742a3518, transparent 60%), linear-gradient(145deg, #20191c, #151416); text-align: center; }
 .team-guide-party .team-art { display: grid; place-items: center; height: clamp(190px, 22vw, 310px); overflow: hidden; }
 .team-guide-party .entry-art-heroes.entry-art-thumbnail { width: 100%; height: 100%; }
-.team-guide-party .entry-art img { max-height: 100%; }
+.team-guide-party .entry-art [data-art-visual] > :is(img, svg) { max-height: 100%; object-fit: contain; object-position: center 36%; }
 .team-guide-party > li > span:last-child { color: var(--muted); font-size: .85rem; }
 .team-guide-party a, .counter-guide-hero a { color: #efc2bd; }
 .team-guide-builds { margin-block: 1.5rem 2rem; }
 .team-guide-build-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.counter-guide-hero { min-width: 0; padding: clamp(1rem, 2vw, 1.5rem); border-color: #51363c; }
+.counter-guide-hero { min-width: 0; padding: clamp(1rem, 2vw, 1.5rem); border-color: #51363c; background: linear-gradient(145deg, #20191c, #151416 72%); }
 .counter-guide-hero-heading { display: grid; grid-template-columns: auto 92px minmax(0, 1fr); align-items: center; gap: .8rem; }
 .counter-guide-rank { color: #e8b6b4; font: 1rem Georgia, serif; }
 .counter-guide-hero-heading .team-art { height: 100px; overflow: hidden; }
@@ -662,7 +666,8 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 .team-guide-navigation { display: flex; flex-wrap: wrap; gap: .8rem; margin-block: 1.5rem; padding-block: 1rem; border-block: 1px solid #49373c; }
 .team-guide-navigation a { padding: .55rem .75rem; border: 1px solid #553a40; background: #1d181a; text-decoration: none; }
 .team-guide-navigation a:hover, .team-guide-navigation a:focus-visible { border-color: #a6535b; box-shadow: 0 0 12px #9d2b3733; }
-@media (max-width: 1050px) { .boss-counter-teams { grid-template-columns: 1fr; } .team-guide-party { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1050px) { .boss-counter-teams { grid-template-columns: 1fr; } .counter-preview-party .team-art, .counter-preview-party .entry-art-heroes.entry-art-thumbnail { height: 92px; } .counter-preview-party .entry-art img { max-height: 92px; } .team-guide-party { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 720px) { .team-guide-overview, .team-guide-build-grid { grid-template-columns: 1fr; } .team-guide-party .team-art { height: 220px; } }
 @media (max-width: 480px) { .team-guide-party { grid-template-columns: 1fr 1fr; gap: .45rem; } .team-guide-party li { padding: .5rem; } .team-guide-party .team-art { height: 160px; } .counter-guide-hero-heading { grid-template-columns: auto 68px minmax(0, 1fr); gap: .5rem; } .counter-guide-hero-heading .team-art, .counter-guide-hero-heading .entry-art-heroes.entry-art-thumbnail { height: 78px; } }
 @media (prefers-reduced-motion: reduce) { .team-guide-navigation a { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .boss-counter-preview { transition: none; } .boss-counter-preview:hover, .boss-counter-preview:focus-within { transform: none; } }

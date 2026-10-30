@@ -43,6 +43,8 @@ def build():
                 for field in ('sourceRelativePath', 'sourceContent', 'sourceSha256', 'imageWidth', 'imageHeight', 'frame'):
                     if prior and field in prior:
                         slots[slot][field] = prior[field]
+                if prior and prior.get('missingReason') and not slots[slot]['exists']:
+                    slots[slot]['missingReason'] = prior['missingReason']
                 if slots[slot]['exists'] and slots[slot].get('sourceSha256'):
                     asset_bytes = (ROOT / 'dist' / path).read_bytes()
                     assert hashlib.sha256(asset_bytes).hexdigest() == slots[slot]['sourceSha256'], f'{path}: checksum mismatch'
@@ -57,6 +59,12 @@ def build():
                             frame_width, frame_height = frame_height, frame_width
                         assert frame['x'] + frame_width <= width and frame['y'] + frame_height <= height, f'{path}: atlas bounds mismatch'
             legacy = record.get('assetPath') or ''
+            if category == 'heroes' and record['routeId'] == 'shieldbreaker' and not slots['primary']['exists']:
+                slots['primary']['missingReason'] = (
+                    'No verified Shieldbreaker portrait is present in the private local asset set. '
+                    'The inspected installation did not include Shieldbreaker DLC artwork; the '
+                    'existing legacy portrait is origin-unverified and remains fallback-only.'
+                )
             rows.append(dict(category=category, recordId=record['id'], recordName=record['name'],
                 **slots, legacyAssets=[dict(path=legacy, exists=(ROOT / 'dist' / legacy).is_file(),
                     currentlyReferenced=True, verifiedAuthentic=False,

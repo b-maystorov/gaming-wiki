@@ -219,6 +219,10 @@ test('manifest covers every requested record without certifying legacy art', () 
     assert.ok(entry.primary.path.startsWith(`assets/games/darkest-dungeon-1/private/${entry.category}/`));
     assert.ok(entry.legacyAssets.every(asset => !asset.verifiedAuthentic));
   }
+  const shieldbreaker = artworkManifest.records.find(row => row.recordId === 'darkest-dungeon-1:hero:shieldbreaker');
+  assert.equal(shieldbreaker.primary.exists, false);
+  assert.equal(shieldbreaker.primary.verifiedAuthentic, false);
+  assert.match(shieldbreaker.primary.missingReason, /Shieldbreaker DLC artwork/);
 });
 
 test('verified slots render through real collection and detail routes', () => {
@@ -325,6 +329,7 @@ test('Necromancer team IDs route to full guides and connect boss, hero, trinket 
   }
   const bossHtml = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/bosses/necromancer'));
   assert.equal((bossHtml.match(/boss-counter-preview/g) || []).length, 3);
+  assert.match(bossHtml, /Each guide includes rank-specific skills, trinkets and encounter notes/);
   assert.ok(bossHtml.includes('View full team guide'));
   assert.ok(!bossHtml.includes('Skills and trinkets by hero'));
   const index = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams'));

@@ -28,6 +28,7 @@ Each slot contains:
 - `verifiedAuthentic`: explicit authenticity decision, initially false.
 - `verificationSource`: required evidence when authenticity is true; use a non-private source description, not personal installation paths.
 - `alt`: accessible description of the image.
+- `missingReason` (optional): reason a specifically expected private asset is unavailable; this does not change fallback behavior.
 
 Legacy assets separately record file existence, current references, unknown
 origin, false authenticity, and replacement intent. The Highwayman guide/team
@@ -146,6 +147,7 @@ No missing DLC image is certified or replaced with base-game artwork.
 Remaining blockers:
 
 - Flagellant and Shieldbreaker: their DLC artwork is not installed.
+- Shieldbreaker has no verified private portrait in the imported set. The inspected installation did not include its DLC artwork. Its existing legacy portrait is origin-unverified and remains fallback-only until an authentic local replacement is available; this reason is recorded on its manifest `primary` slot and preserved by regeneration.
 - All other missing records except Cultist Witch require absent Crimson Court,
   Shieldbreaker, or Color of Madness artwork. Their existing record requirements
   remain the source of DLC classification.

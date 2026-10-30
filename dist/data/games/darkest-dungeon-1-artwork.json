@@ -3181,7 +3181,8 @@
         "currentlyReferenced": true,
         "verifiedAuthentic": false,
         "verificationSource": "",
-        "alt": "Shieldbreaker — Darkest Dungeon I"
+        "alt": "Shieldbreaker — Darkest Dungeon I",
+        "missingReason": "No verified Shieldbreaker portrait is present in the private local asset set. The inspected installation did not include Shieldbreaker DLC artwork; the existing legacy portrait is origin-unverified and remains fallback-only."
       },
       "thumbnail": null,
       "banner": null,

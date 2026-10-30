@@ -472,7 +472,7 @@ function renderBossCounterPreview(team) {
     const name = hero?.name || member.heroRouteId;
     return `<li><span>Rank ${member.position}</span>${renderTeamPortrait(name)}<strong>${renderHeroName(name)}</strong></li>`;
   }).join('');
-  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide →</a></article>`;
+  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a></article>`;
 }
 
 function renderBossCounterGuide(team) {
@@ -491,7 +491,7 @@ function renderBossCounterGuide(team) {
 
 function renderRelatedBossTeams(boss) {
   const bossTeams = boss.counterTeams || [];
-  if (bossTeams.length) return `<div class="boss-counter-teams">${bossTeams.map(renderBossCounterPreview).join('')}</div>`;
+  if (bossTeams.length) return `<p class="boss-team-intro">Choose a plan that fits your roster. Each guide includes rank-specific skills, trinkets and encounter notes.</p><div class="boss-counter-teams">${bossTeams.map(renderBossCounterPreview).join('')}</div>`;
   const teams = getTeams().filter(team => (boss.relatedCompositionIds || []).includes(team.id));
   return teams.length ? `<div class="team-list">${teams.map(renderTeamCard).join('')}</div>` : `<p class="guide-development-note">No boss-specific team compositions are documented yet. <a href="#game/darkest-dungeon/teams">Browse existing compositions</a> (not assessed for this encounter).</p>`;
 }
