@@ -298,8 +298,35 @@ test('Necromancer page renders three complete counter teams with valid ranks, sk
   assert.equal((html.match(/data-counter-team=/g) || []).length, 3);
   for (const team of teams) {
     assert.ok(html.includes(team.name));
-    assert.ok(html.includes('Skills and trinkets by hero'));
-    for (const member of team.members) assert.ok(html.includes(`Position ${member.position}`));
+    assert.ok(html.includes('View full team guide'));
+    assert.ok(!html.includes('Skills and trinkets by hero'));
+    for (const member of team.members) assert.ok(html.includes(`Rank ${member.position}`));
   }
   assert.ok(html.includes('shieldbreaker.png') || html.includes('shieldbreaker-portrait.png'));
+});
+
+test('Necromancer team IDs route to full guides and connect boss, hero, trinket and team navigation', () => {
+  const boss = pack.bosses.find(record => record.routeId === 'necromancer');
+  for (const team of boss.counterTeams) {
+    const hash = `#game/darkest-dungeon/teams/${team.id}`;
+    const route = h.app.readRoute(hash);
+    assert.equal(route.view, 'team-detail');
+    assert.equal(route.team.id, team.id);
+    const html = h.app.renderPage(route);
+    assert.ok(html.includes('boss-team-guide-intro'), `${route.view} ${route.team?.id} boss=${Boolean(route.team?.boss)} ${html.slice(html.indexOf('game-content'), html.indexOf('game-content') + 700)}`);
+    assert.ok(html.includes(`href="#game/darkest-dungeon/bosses/${boss.routeId}"`));
+    assert.ok(html.includes('class="team-guide-party"'));
+    assert.ok(html.includes('class="team-guide-build-grid"'));
+    assert.ok(html.includes('#game/darkest-dungeon/teams'));
+    for (const member of team.members) {
+      assert.ok(html.includes(`href="#hero/${member.heroRouteId}/`));
+      for (const trinketId of member.trinketIds) assert.ok(html.includes(`href="#game/darkest-dungeon/trinkets/${trinketId}"`));
+    }
+  }
+  const bossHtml = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/bosses/necromancer'));
+  assert.equal((bossHtml.match(/boss-counter-preview/g) || []).length, 3);
+  assert.ok(bossHtml.includes('View full team guide'));
+  assert.ok(!bossHtml.includes('Skills and trinkets by hero'));
+  const index = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams'));
+  for (const team of boss.counterTeams) assert.ok(index.includes(`href="#game/darkest-dungeon/teams/${team.id}"`));
 });

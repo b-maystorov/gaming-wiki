@@ -193,6 +193,14 @@ function getTeams() {
   return heroes.flatMap(hero => hero.guide ? hero.guide.teams.map(team => ({ ...team, hero })) : []);
 }
 
+function getBossCounterTeams() {
+  return (structuredGameContent?.bosses || []).flatMap(boss => (boss.counterTeams || []).map(team => ({ ...team, boss })));
+}
+
+function findBossCounterTeam(id) {
+  return getBossCounterTeams().find(team => team.id === id);
+}
+
 function getTrinkets() {
   return heroes.flatMap(hero => hero.guide ? hero.guide.trinkets.map(trinket => {
     const record = structuredGameContent?.trinkets.find(item => item.routeId === trinket.routeId);
@@ -348,6 +356,10 @@ function renderSearchResults(query) {
       results.push({ title: team.name, kind: 'Team composition', href: `#game/darkest-dungeon/teams/${team.id}` });
     }
   });
+  getBossCounterTeams().forEach(team => {
+    const text = `${team.name} ${team.purpose} ${team.openingStrategy} ${team.members.map(member => `${member.heroRouteId} ${member.role}`).join(' ')}`.toLowerCase();
+    if (text.includes(normalizedQuery)) results.push({ title: team.name, kind: 'Boss team guide', href: `#game/darkest-dungeon/teams/${team.id}` });
+  });
   structuredGameContent?.bosses.filter(boss => `${boss.name} ${(boss.aliases || []).join(' ')} ${boss.summary} ${boss.regionLabel}`.toLowerCase().includes(normalizedQuery)).forEach(boss => {
     results.push({ title: boss.name, kind: boss.guideStatus === 'available' ? 'Boss guide' : 'Boss · In development', href: `#game/darkest-dungeon/bosses/${boss.routeId}` });
   });
@@ -371,7 +383,7 @@ function renderCollection(kind) {
     <h1 id="page-title" tabindex="-1">${title}</h1><p class="lede">${note}</p></section>
     <section class="collection-group" aria-label="Available ${title.toLowerCase()}"><div class="section-heading"><h2>Current entries</h2><span>Collected from implemented guides</span></div>
       ${isTeams ? `<div class="composition-search"><label for="team-search-input">Find a composition</label><input id="team-search-input" type="search" autocomplete="off" placeholder="Search names, heroes, or strategy"><p id="team-search-status" class="search-status" aria-live="polite">${getTeams().length} compositions available.</p></div>` : ''}
-      <div class="${isTeams ? 'team-list' : 'two-columns'}">${(isTeams ? getTeams() : getTrinkets()).map(entry => isTeams ? renderTeamCard(entry) : renderer(entry)).join('')}</div></section>`;
+      <div class="${isTeams ? 'team-list' : 'two-columns'}">${(isTeams ? getTeams().map(renderTeamCard).join('') + getBossCounterTeams().map(renderBossCounterPreview).join('') : getTrinkets().map(renderer).join(''))}${isTeams ? getBossCounterTeams().map(renderBossCounterPreview).join('') : ''}</div></section>`;
 }
 
 function bossCategoryName(categoryId) {
@@ -454,19 +466,32 @@ function renderRelatedBossHeroes(boss) {
   return `<ul class="boss-related-links">${related.map(hero => `<li><a href="#hero/${escapeHtml(hero.id)}/${hero.guide ? 'overview' : 'abilities'}">${escapeHtml(hero.name)} <span aria-hidden="true">→</span></a></li>`).join('')}</ul><p class="guide-data-note">These links provide hero background only; they are not a boss ranking or guaranteed counter list.</p>`;
 }
 
-function renderBossCounterTeam(team) {
-  const positions = team.members.map(member => `<li><span>Position ${member.position}</span>${renderTeamPortrait(heroes.find(hero => hero.id === member.heroRouteId)?.name || member.heroRouteId)}<strong>${renderHeroName(heroes.find(hero => hero.id === member.heroRouteId)?.name || member.heroRouteId)}</strong><span class="counter-team-role">${escapeHtml(member.role)}</span></li>`).join('');
-  const details = team.members.map(member => {
+function renderBossCounterPreview(team) {
+  const positions = team.members.map(member => {
     const hero = heroes.find(entry => entry.id === member.heroRouteId);
-    const trinkets = member.trinketIds.map(id => structuredGameContent.trinkets.find(item => item.routeId === id)).filter(Boolean);
-    return `<section class="counter-team-build"><h4>Position ${member.position}: <a href="#hero/${escapeHtml(member.heroRouteId)}/abilities">${escapeHtml(hero?.name || member.heroRouteId)}</a></h4><p><strong>Role:</strong> ${escapeHtml(member.role)}</p><p><strong>Skills:</strong> ${member.skills.map(skill => escapeHtml(skill.name)).join(' · ')}</p><p><strong>Trinkets:</strong> ${trinkets.map(item => `${escapeHtml(item.name)} (${escapeHtml(item.effects.map(effect => effect.text).join('; '))})`).join(' · ') || 'No verified trinkets recorded'}</p></section>`;
+    const name = hero?.name || member.heroRouteId;
+    return `<li><span>Rank ${member.position}</span>${renderTeamPortrait(name)}<strong>${renderHeroName(name)}</strong></li>`;
   }).join('');
-  return `<article class="panel boss-counter-team" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.difficultyRecommendations)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><p>${escapeHtml(team.purpose)}</p><ol class="counter-team-party" aria-label="Formation, position 4 to position 1">${positions}</ol><p class="counter-team-plan"><strong>Opening:</strong> ${escapeHtml(team.openingStrategy)}</p><p class="counter-team-plan"><strong>Summons:</strong> ${escapeHtml(team.skeletonStrategy)}</p><p class="counter-team-plan"><strong>Alternatives:</strong> ${escapeHtml(team.alternatives)}</p><details><summary>Skills and trinkets by hero</summary>${details}</details></article>`;
+  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide →</a></article>`;
+}
+
+function renderBossCounterGuide(team) {
+  const boss = team.boss;
+  const members = team.members.map(member => {
+    const hero = heroes.find(entry => entry.id === member.heroRouteId);
+    const heroName = hero?.name || member.heroRouteId;
+    const heroHref = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`;
+    const trinkets = member.trinketIds.map(id => structuredGameContent.trinkets.find(item => item.routeId === id)).filter(Boolean);
+    const skills = member.skills.map(skill => `<li><strong>${escapeHtml(skill.name)}</strong><span>Usable from rank ${member.position}; target: ${escapeHtml(skill.target)}.</span></li>`).join('');
+    return `<article class="panel counter-guide-hero"><div class="counter-guide-hero-heading"><span class="counter-guide-rank">Rank ${member.position}</span>${renderTeamPortrait(heroName)}<div><h3><a href="${heroHref}">${escapeHtml(heroName)}</a></h3><p>${escapeHtml(member.role)}</p></div></div><h4>Selected combat skills</h4><ul class="counter-guide-skills">${skills}</ul><h4>Recommended trinkets</h4><ul class="counter-guide-trinkets">${trinkets.map(item => `<li><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(item.effects.map(effect => effect.text).join('; '))}</span></li>`).join('')}</ul><p class="guide-data-note">Keep this hero in rank ${member.position} for the listed skill set.</p></article>`;
+  }).join('');
+  const otherTeams = getBossCounterTeams().filter(other => other.boss.id === boss.id && other.id !== team.id);
+  return `<a class="back-link" href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">← Back to ${escapeHtml(boss.name)}</a><header class="page-intro boss-team-guide-intro"><p class="eyebrow">${escapeHtml(boss.regionLabel)} · ${escapeHtml(team.difficultyRecommendations)} · ${requirementLabel(team.requirements)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(team.name)}</h1><p class="lede">${escapeHtml(team.purpose)}</p></header><section class="team-guide-overview"><div><h2>Team overview</h2><p>${escapeHtml(team.openingStrategy)}</p><p><strong>Boss:</strong> <a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">${escapeHtml(boss.name)}</a> · ${escapeHtml(boss.regionLabel)}</p><p><strong>Requirements:</strong> ${requirementLabel(team.requirements)}</p></div><div><h2>Combat approach</h2><p>${escapeHtml(team.skeletonStrategy)}</p><p>${escapeHtml(team.alternatives)}</p></div></section><section class="team-guide-formation"><h2>Party formation · rank 4 → rank 1</h2><ol class="team-guide-party">${team.members.map(member => { const hero = heroes.find(entry => entry.id === member.heroRouteId); const name = hero?.name || member.heroRouteId; const href = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`; return `<li><span>Rank ${member.position}</span>${renderTeamPortrait(name)}<strong><a href="${href}">${escapeHtml(name)}</a></strong><span>${escapeHtml(member.role)}</span></li>`; }).join('')}</ol></section><section class="team-guide-builds"><h2>Hero builds</h2><div class="team-guide-build-grid">${members}</div></section><section class="team-guide-notes"><h2>Before the fight</h2><ul><li>Equip the listed skills before entering the Ruins boss encounter; keep each hero in the listed rank.</li><li>Favor direct damage into the Necromancer instead of spending turns clearing every summon.</li><li>Use healing to recover meaningful damage and stress pressure; no fixed provision count is asserted here.</li></ul><h2>Retreats, summons and Guard</h2><p>The Necromancer moves back and summons as it attacks. Keep attacks that reach the rear ranks available, and continue focusing the boss. Summoned enemies are removed when the boss dies.</p><p>At higher difficulty, Bone Soldiers may begin stealthed and Bone Defenders can Guard. Wait out Stealth or use an available stealth counter; this team’s confirmed Guard response is described above where applicable. Avoid wasting focused attacks into an active Guard.</p><h2>Common mistakes and limits</h2><ul><li>Do not build the whole plan around repeatedly stunning the Necromancer; its Stun resistance is high.</li><li>Do not assume every attack can reach the boss after it retreats. The selected skills list their valid hero ranks and targets.</li><li>Damage, speed order and status success vary with upgrades, trinkets and difficulty; no exact turn outcome is guaranteed.</li></ul><p><strong>Alternatives:</strong> ${escapeHtml(team.alternatives)}</p></section><nav class="team-guide-navigation" aria-label="Related team guides"><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">Back to Necromancer</a><a href="#game/darkest-dungeon/teams">All team compositions</a>${otherTeams.map(other => `<a href="#game/darkest-dungeon/teams/${escapeHtml(other.id)}">${escapeHtml(other.name)}</a>`).join('')}</nav>`;
 }
 
 function renderRelatedBossTeams(boss) {
   const bossTeams = boss.counterTeams || [];
-  if (bossTeams.length) return `<div class="boss-counter-teams">${bossTeams.map(renderBossCounterTeam).join('')}</div>`;
+  if (bossTeams.length) return `<div class="boss-counter-teams">${bossTeams.map(renderBossCounterPreview).join('')}</div>`;
   const teams = getTeams().filter(team => (boss.relatedCompositionIds || []).includes(team.id));
   return teams.length ? `<div class="team-list">${teams.map(renderTeamCard).join('')}</div>` : `<p class="guide-development-note">No boss-specific team compositions are documented yet. <a href="#game/darkest-dungeon/teams">Browse existing compositions</a> (not assessed for this encounter).</p>`;
 }
@@ -832,7 +857,7 @@ function readRoute(hash) {
     if (boss) return { view: 'boss-detail', boss, game: true };
   }
   if (parts[0] === 'game' && parts[1] === 'darkest-dungeon' && parts[2] === 'teams' && parts.length === 4) {
-    const team = getTeams().find(entry => entry.id === parts[3]);
+    const team = findBossCounterTeam(parts[3]) || getTeams().find(entry => entry.id === parts[3]);
     if (team) return { view: 'team-detail', team, game: true };
   }
   if (parts[0] === 'hero' && parts.length <= 3) {
@@ -879,7 +904,7 @@ function renderPage(route) {
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), trinkets: () => renderEncyclopediaCollection('trinkets'),
     enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests') };
-  const content = route.hero ? renderHeroPage(route.hero) : route.boss ? renderBossDetail(route.boss) : route.kind && route.record ? renderEncyclopediaDetail(route.kind, route.record) : route.view === 'team-detail' ? renderTeamDetail(route.team) : views[route.view] ? views[route.view]() :
+  const content = route.hero ? renderHeroPage(route.hero) : route.boss ? renderBossDetail(route.boss) : route.kind && route.record ? renderEncyclopediaDetail(route.kind, route.record) : route.view === 'team-detail' ? (route.team.boss ? renderBossCounterGuide(route.team) : renderTeamDetail(route.team)) : views[route.view] ? views[route.view]() :
     '<section class="empty-state"><h1 id="page-title" tabindex="-1">Page not found</h1><p>This page is not available.</p><a href="#home">Return home</a></section>';
   const page = renderBreadcrumbs(route) + (!structuredGameContent && route.game ? '<p class="guide-data-note" role="status">Encyclopedia data is unavailable. Some records and item details cannot be shown. Reload the page to try again.</p>' : '') + content;
   if (!route.game) return page;
@@ -910,7 +935,7 @@ function showRoute() {
     main.innerHTML = renderPage(route);
     currentView = viewKey;
   }
-  document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Gaming Wiki` :
+  document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Team Guide · BM Gaming Wiki` :
     route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view] || 'Encyclopedia unavailable'} · Gaming Wiki`;
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
