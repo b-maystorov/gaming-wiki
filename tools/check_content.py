@@ -393,7 +393,7 @@ def check_pack(pack):
                     f"boss {boss['id']}: counter-team ID is invalid or duplicated: {team.get('id')!r}")
             boss_team_ids.add(team["id"])
             require(team["id"].startswith("darkest-dungeon-1:boss-team:"), f"boss {boss['id']}: counter-team ID does not use the stable team namespace")
-            require(team.get("category") in {"beginner", "balanced", "specialized"}, f"boss {boss['id']}: invalid counter-team category")
+            require(team.get("category") in {"beginner", "balanced", "offensive", "specialized"}, f"boss {boss['id']}: invalid counter-team category")
             team_requirements = team.get("requirements", {})
             require(isinstance(team_requirements.get("dlc"), list) and isinstance(team_requirements.get("mods"), list), f"team {team['id']}: DLC and mod requirements must be separate")
             team_dlc_ids = set(team_requirements.get("dlc", []))

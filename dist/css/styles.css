@@ -943,3 +943,88 @@ body { background: radial-gradient(ellipse at 82% 8%, #80513a0b, transparent 34%
 @media (max-width: 1050px) { .team-index-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); } .team-index-controls .composition-search { grid-column: 1 / -1; } .team-card-grid { grid-template-columns: 1fr; } }
 @media (max-width: 700px) { .team-index-controls { grid-template-columns: 1fr; } .team-index-controls .composition-search, .team-index-controls .search-status { grid-column: auto; } }
 @media (max-width: 520px) { .counter-preview-party .team-art { height: 76px; } .counter-preview-party .entry-art img { max-height: 72px; } .encyclopedia-grid-enemies .encyclopedia-card { grid-template-columns: 76px minmax(0, 1fr); } .encyclopedia-grid-enemies .encyclopedia-card > .entry-art, .encyclopedia-grid-enemies .encyclopedia-mark { min-height: 96px; } .encyclopedia-grid-locations .encyclopedia-card { grid-template-columns: 116px minmax(0, 1fr); } .encyclopedia-grid-curios .encyclopedia-card, .encyclopedia-grid-items .encyclopedia-card, .encyclopedia-grid-trinkets .encyclopedia-card { grid-template-columns: 104px minmax(0, 1fr); } .encyclopedia-grid-curios .encyclopedia-card > .entry-art, .encyclopedia-grid-items .encyclopedia-card > .entry-art, .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art { width: 104px; min-height: 104px; } .encyclopedia-grid-curios .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg), .encyclopedia-grid-items .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg), .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg) { max-height: 104px; } }
+
+/* Location records are grouped for expedition planning without implying encounter frequency. */
+.location-guide-overview { padding: 1.1rem 1.25rem; border: 1px solid #594943; background: linear-gradient(120deg, #241b1b, #171617 75%); }
+.location-guide-overview > p:last-child { margin-bottom: 0; }
+.location-roster { border: 1px solid #4d3d37; background: linear-gradient(135deg, #1d1918, #151416); }
+.location-roster summary { padding: .85rem 1rem; color: #e4c99e; cursor: pointer; font: 1rem Georgia, serif; }
+.location-roster-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; padding: 0 1rem 1rem; margin: 0; list-style: none; }
+.location-roster-entry { min-width: 0; padding: .7rem .8rem; border: 1px solid #403633; background: #111113aa; }
+.location-roster-entry > a { font-weight: 650; }
+.location-roster-entry > span { margin-left: .55rem; color: #d2b78d; font-size: .75rem; }
+.location-roster-entry p { margin: .4rem 0 0; color: var(--text-secondary); font-size: .85rem; line-height: 1.5; }
+.location-related-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.location-related-card { min-width: 0; padding: 1rem; border: 1px solid #4f4039; background: linear-gradient(145deg, #211b1a, #151416 80%); box-shadow: inset 0 1px #d2b78d12; }
+.location-related-card h3 { margin: .25rem 0 .45rem; font: 1.2rem Georgia, serif; }
+.location-related-card p { margin: .35rem 0; color: var(--text-secondary); line-height: 1.5; }
+.location-related-card .eyebrow { color: #d1b487; font-size: .7rem; }
+.location-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.location-team-grid .counter-preview-party .team-art { height: 76px; }
+.location-team-grid .counter-preview-party .entry-art img { max-height: 72px; }
+.trinket-rarity-group { margin-top: 1.6rem; }
+.trinket-rarity-group > .section-heading { padding: .65rem .9rem; border-left: 2px solid #92734c; background: linear-gradient(90deg, #362820aa, transparent); }
+.trinket-rarity-group > .section-heading h2 { color: #e4c99e; }
+@media (max-width: 700px) {
+  .location-roster-list, .location-related-grid, .location-team-grid { grid-template-columns: 1fr; }
+  .location-roster-entry > span { display: block; margin: .2rem 0 0; }
+}
+/* Slightly enlarge encyclopedia thumbnails while leaving hero galleries and region banners untouched. */
+.encyclopedia-grid-enemies .encyclopedia-card { grid-template-columns: 104px minmax(0, 1fr); }
+.encyclopedia-grid-enemies .encyclopedia-card > .entry-art,
+.encyclopedia-grid-enemies .encyclopedia-mark { min-height: 128px; }
+.boss-card-grid .boss-card { grid-template-columns: minmax(110px, 34%) minmax(0, 1fr); }
+.encyclopedia-grid-locations .encyclopedia-card { grid-template-columns: minmax(170px, .78fr) minmax(0, 1fr); }
+.encyclopedia-grid-curios .encyclopedia-card,
+.encyclopedia-grid-items .encyclopedia-card,
+.encyclopedia-grid-trinkets .encyclopedia-card { grid-template-columns: 150px minmax(0, 1fr); }
+.encyclopedia-grid-curios .encyclopedia-card > .entry-art,
+.encyclopedia-grid-items .encyclopedia-card > .entry-art,
+.encyclopedia-grid-trinkets .encyclopedia-card > .entry-art { width: 150px; min-height: 150px; }
+.encyclopedia-grid-curios .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg),
+.encyclopedia-grid-items .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg),
+.encyclopedia-grid-trinkets .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg) { max-height: 150px; }
+@media (max-width: 520px) {
+  .encyclopedia-grid-enemies .encyclopedia-card { grid-template-columns: 88px minmax(0, 1fr); }
+  .encyclopedia-grid-enemies .encyclopedia-card > .entry-art,
+  .encyclopedia-grid-enemies .encyclopedia-mark { min-height: 108px; }
+  .encyclopedia-grid-locations .encyclopedia-card { grid-template-columns: 132px minmax(0, 1fr); }
+  .encyclopedia-grid-curios .encyclopedia-card,
+  .encyclopedia-grid-items .encyclopedia-card,
+  .encyclopedia-grid-trinkets .encyclopedia-card { grid-template-columns: 120px minmax(0, 1fr); }
+  .encyclopedia-grid-curios .encyclopedia-card > .entry-art,
+  .encyclopedia-grid-items .encyclopedia-card > .entry-art,
+  .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art { width: 120px; min-height: 120px; }
+  .encyclopedia-grid-curios .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg),
+  .encyclopedia-grid-items .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg),
+  .encyclopedia-grid-trinkets .encyclopedia-card > .entry-art [data-art-visual] > :is(img, svg) { max-height: 120px; }
+}
+.boss-critical-warning { margin: 1.1rem 0; padding: 1rem 1.2rem; border: 1px solid #9a3e42; border-left: 4px solid #c54e52; background: linear-gradient(115deg, #3a171b, #1d1517 70%); box-shadow: 0 8px 24px #0005, inset 0 0 18px #8e22221a; }
+.boss-critical-warning > strong { color: #ffd9c8; font: 1.25rem Georgia, serif; }
+.boss-critical-warning p { max-width: 78ch; margin: .5rem 0; color: #e5d5ca; line-height: 1.55; }
+.boss-critical-warning details { margin-top: .65rem; color: #d8be9b; }
+.boss-critical-warning summary { cursor: pointer; }
+.boss-counter-teams-rich { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.location-boss-card, .location-curio-card { display: grid; grid-template-columns: 88px minmax(0, 1fr); align-items: center; gap: .85rem; }
+.location-boss-card > .entry-art, .location-curio-card > .entry-art { width: 88px; min-height: 100px; border: 1px solid #665348; background: radial-gradient(ellipse, #45352c, #171517 76%); }
+.location-boss-card > .entry-art [data-art-visual] > :is(img, svg), .location-curio-card > .entry-art [data-art-visual] > :is(img, svg) { max-width: 100%; max-height: 100px; object-fit: contain; }
+.location-boss-fallback, .location-curio-fallback { min-height: 100px; border: 0; background: transparent; color: #ddc19a; font: 1.4rem Georgia, serif; }
+.location-boss-card h3, .location-curio-card h3 { margin-top: .2rem; }
+.location-boss-card .eyebrow, .location-curio-card .eyebrow { font-size: .68rem; }
+.equipment-recommendations { display: grid; gap: .75rem; }
+.equipment-tier { min-width: 0; padding: .7rem; border: 1px solid #43363a; background: linear-gradient(135deg, #1c191a, #151416 75%); }
+.equipment-tier h5 { margin: 0 0 .45rem; color: #dfc59f; font: 1rem Georgia, serif; }
+.equipment-tier > p { margin: .3rem 0 .6rem; color: var(--text-secondary); font-size: .76rem; line-height: 1.45; }
+.equipment-tier .counter-guide-trinkets { grid-template-columns: 1fr; }
+.equipment-tier .counter-guide-trinket { grid-template-columns: 42px minmax(0, 1fr) !important; }
+.equipment-budget-fallback { margin: 0; padding: .65rem .75rem; border-left: 2px solid #a34449; background: #2b171aaa; color: #e4d6c8; font-size: .8rem; line-height: 1.5; }
+.counter-guide-trinket[data-owned="true"] { border-color: #ad8151; background: linear-gradient(120deg, #392c1f, #191719) !important; box-shadow: inset 0 0 12px #b68c4122; }
+.trinket-owned-toggle { display: inline-flex; width: fit-content; align-items: center; gap: .35rem; margin-top: .25rem; color: #d8c19f; font-size: .7rem; cursor: pointer; }
+.trinket-owned-toggle input { accent-color: #a2444c; }
+@media (max-width: 680px) {
+  .boss-counter-teams-rich { grid-template-columns: 1fr; }
+  .location-boss-card, .location-curio-card { grid-template-columns: 72px minmax(0, 1fr); }
+  .location-boss-card > .entry-art, .location-curio-card > .entry-art,
+  .location-boss-fallback, .location-curio-fallback { width: 72px; min-height: 84px; }
+  .location-boss-card > .entry-art [data-art-visual] > :is(img, svg), .location-curio-card > .entry-art [data-art-visual] > :is(img, svg) { max-height: 84px; }
+}

@@ -197,7 +197,7 @@ function getBossCounterTeams() {
   return (structuredGameContent?.bosses || []).flatMap(boss => (boss.counterTeams || []).map(team => ({ ...team, boss })));
 }
 
-const teamCategoryLabels = { beginner: 'Beginner', balanced: 'Balanced', specialized: 'Specialized', unassessed: 'Unassessed' };
+const teamCategoryLabels = { beginner: 'Beginner', balanced: 'Balanced', offensive: 'Offensive', specialized: 'Specialized', unassessed: 'Unassessed' };
 
 function teamMatchesFilters(team, filters = {}) {
   const matches = (key, value) => !value || value === 'all' || team[key] === value;
@@ -244,7 +244,7 @@ function renderTeamCompositionGroups() {
   ];
   const bossOptions = [...new Map(bossTeams.map(team => [team.boss.id, [team.boss.id, team.boss.name]])).values()];
   const categories = [...new Set([...generalTeams.map(() => 'unassessed'), ...bossTeams.map(team => team.category)])];
-  const categoryOptions = ['beginner', 'balanced', 'specialized', 'unassessed'].filter(category => categories.includes(category))
+  const categoryOptions = ['beginner', 'balanced', 'offensive', 'specialized', 'unassessed'].filter(category => categories.includes(category))
     .map(category => [category, teamCategoryLabels[category] || category]);
   return { markup: groups.join(''), count: generalTeams.length + bossTeams.length, regionOptions, bossOptions, categoryOptions };
 }
@@ -356,17 +356,25 @@ function renderEncyclopediaCollection(kind) {
   const filterValues = isRegionFilter
     ? structuredGameContent.regions.map(region => [region.id, region.name])
     : [...new Set(records.map(record => kind === 'trinkets' ? record.rarity : kind === 'items' ? record.category : record.category))].map(value => [value, value]);
+  const trinketSourceLabel = record => {
+    const sourceNames = (record.verification?.sourceIds || []).map(id => structuredGameContent.sources.find(source => source.id === id)?.title).filter(Boolean);
+    return sourceNames.length ? `Sources: ${sourceNames.join(', ')}` : 'Source details not recorded';
+  };
+  const trinketSummary = record => `${record.effects?.length ? record.effects.map(effect => effect.text).join(' · ') : 'Effects are not recorded.'} · ${verificationLabel('trinkets', record)}`;
+  const renderTrinketCard = record => renderEncyclopediaCard('trinkets', record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).filter(Boolean).join(', '), trinketSourceLabel(record)], trinketSummary(record));
   const cards = records.map(record => {
     if (kind === 'enemies') return renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary);
-    if (kind === 'trinkets') return renderEncyclopediaCard(kind, record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).join(', ')], record.effects.map(effect => effect.text).join(' · '));
-    if (kind === 'items') return renderEncyclopediaCard(kind, record, record.category, record.purpose);
+    if (kind === 'trinkets') {
+      return renderTrinketCard(record);
+    }
+    if (kind === 'items') return renderEncyclopediaCard(kind, record, [record.category, requirementLabel(record.requirements), verificationLabel(kind, record)], record.purpose || 'Usage information is not recorded.');
     if (kind === 'curios') {
       const visibleInteractions = record.interactions.slice(0, 2);
       const interactionRows = visibleInteractions.map(interaction => {
         const item = interaction.itemId && structuredGameContent.items.find(entry => entry.id === interaction.itemId);
         return `<span><strong>${escapeHtml(item?.name || 'Unassisted')}</strong><span>${escapeHtml(interaction.outcome)}</span></span>`;
       }).join('');
-      return renderEncyclopediaCard(kind, record, [...record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean), requirementLabel(record.requirements)], record.whereFound, `<span class="curio-card-outcomes" aria-label="Example interaction outcomes">${interactionRows}</span>`);
+      return renderEncyclopediaCard(kind, record, [...record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean), requirementLabel(record.requirements), verificationLabel(kind, record)], record.whereFound || 'Where found is not recorded.', `<span class="curio-card-outcomes" aria-label="Example interaction outcomes">${interactionRows || '<span><strong>Interactions</strong><span>Not recorded</span></span>'}</span>`);
     }
     if (kind === 'locations') return renderEncyclopediaCard(kind, record, requirementLabel(record.requirements), record.summary);
     return renderEncyclopediaCard(kind, record, record.category, record.summary);
@@ -375,7 +383,9 @@ function renderEncyclopediaCollection(kind) {
   const groupedCards = kind === 'enemies' ? [
     ['Shared and wandering enemies', records.filter(record => record.regionIds.length > 1)],
     ...structuredGameContent.regions.map(region => [region.name, records.filter(record => record.regionIds.length === 1 && record.regionIds[0] === region.id)])
-  ].filter(([, entries]) => entries.length).map(([name, entries]) => `<section class="encyclopedia-group" data-encyclopedia-group><div class="section-heading"><h2>${escapeHtml(name)}</h2><span>${entries.length} entries</span></div><div class="encyclopedia-grid encyclopedia-grid-enemies">${entries.map(record => renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary)).join('')}</div></section>`).join('') : `<div class="encyclopedia-grid encyclopedia-grid-${kind}">${cards}</div>`;
+  ].filter(([, entries]) => entries.length).map(([name, entries]) => `<section class="encyclopedia-group" data-encyclopedia-group><div class="section-heading"><h2>${escapeHtml(name)}</h2><span>${entries.length} entries</span></div><div class="encyclopedia-grid encyclopedia-grid-enemies">${entries.map(record => renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary)).join('')}</div></section>`).join('') : kind === 'trinkets'
+    ? ['Common', 'Uncommon', 'Rare', 'Very rare', 'Ancestral', 'Trophy', 'Crimson Court'].map(rarity => [rarity, records.filter(record => record.rarity === rarity)]).filter(([, entries]) => entries.length).map(([rarity, entries]) => `<section class="encyclopedia-group trinket-rarity-group" data-encyclopedia-group data-trinket-rarity="${escapeHtml(rarity)}"><div class="section-heading"><h2>${escapeHtml(rarity)}</h2><span>${entries.length} ${entries.length === 1 ? 'trinket' : 'trinkets'}</span></div><div class="encyclopedia-grid encyclopedia-grid-trinkets">${entries.map(renderTrinketCard).join('')}</div></section>`).join('')
+    : `<div class="encyclopedia-grid encyclopedia-grid-${kind}">${cards}</div>`;
   return `<section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / Field encyclopedia</p><h1 id="page-title" tabindex="-1">${config.title}</h1><p class="lede">${config.intro}</p>${kind === 'enemies' ? '<p class="guide-data-note">Minibosses and bosses are listed separately in the <a href="#game/darkest-dungeon/bosses">Bosses encyclopedia</a>.</p>' : ''}</section>
     <section class="encyclopedia-controls" aria-label="Filter ${config.title}"><div><label for="encyclopedia-search">Search ${config.title.toLowerCase()}</label><input id="encyclopedia-search" type="search" placeholder="${config.search}" autocomplete="off"></div><div><label for="encyclopedia-filter">Filter by ${config.filter.toLowerCase()}</label><select id="encyclopedia-filter"><option value="all">All ${config.filter.toLowerCase()}s</option>${filterValues.map(([value,label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div>${moreFilters}<p id="encyclopedia-status" role="status" aria-live="polite">${records.length} ${config.title.toLowerCase()} entries.</p></section>
     ${groupedCards}<p id="encyclopedia-empty" class="panel" hidden>No entries match these filters. Try another search.</p>`;
@@ -399,7 +409,7 @@ function renderEncyclopediaDetail(kind, record) {
     const enemyLinks=record.enemyIds.map(id=>structuredGameContent.enemies.find(e=>e.id===id)).filter(Boolean);
     const bossLinks=record.bossIds.map(id=>structuredGameContent.bosses.find(b=>b.id===id)).filter(Boolean);
     const curioLinks=record.curioIds.map(id=>structuredGameContent.curios.find(c=>c.id===id)).filter(Boolean);
-    sections = `<section class="encyclopedia-section"><h2>Regional records</h2>${linkedList(enemyLinks,'enemies')}${linkedList(bossLinks,'bosses')}${linkedList(curioLinks,'curios')}</section><section class="encyclopedia-section"><h2>Special mechanics</h2>${record.specialMechanics?.length ? `<ul>${record.specialMechanics.map(item=>`<li>${escapeHtml(item)}</li>`).join('')}</ul>` : '<p>No regional mechanics are recorded yet.</p>'}</section><section class="encyclopedia-section"><h2>Expedition notes</h2><p>Provision requirements and encounter frequencies vary by quest and party. No universal quantities or optimal team are asserted here.</p><p><a href="#game/darkest-dungeon/teams">Browse existing team compositions</a> · Regional suitability has not been assessed.</p></section>`;
+    sections = renderLocationGuideSections(record, enemyLinks, bossLinks, curioLinks);
   } else {
     sections = `<section class="encyclopedia-section"><h2>Expedition context</h2><p>${escapeHtml(record.summary)}</p>${record.specialMechanics?.length?`<ul>${record.specialMechanics.map(item=>`<li>${escapeHtml(item)}</li>`).join('')}</ul>`:''}<p>${record.spoilerSensitive?'Spoilers are minimized by default; this entry contains a high-level description only.':'This record covers a named or format-level quest, not generated objectives.'}</p></section>`;
   }
@@ -412,9 +422,33 @@ function renderEncyclopediaDetail(kind, record) {
   return `<a class="back-link" href="${back}">← All ${collectionConfig[kind].title.toLowerCase()}</a><section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">${escapeHtml(meta)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)}</h1><p class="lede">${escapeHtml(record.summary || record.purpose || record.whereFound || '')}</p><span class="boss-status">${escapeHtml(verificationLabel(kind, record))}</span></section>${artwork}${sections}<section class="encyclopedia-section"><h2>Sources & verification</h2><p>${escapeHtml(verificationLabel(kind, record))}. ${structuredGameContent.game.versionContext.verifiedAgainstInstalledBuild ? 'See the recorded game-version context for testing scope.' : 'Not tested against an installed game patch.'}</p><ul>${sources.map(source=>`<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)} ↗</a></li>`).join('')}</ul></section>`;
 }
 
-function linkedList(records, kind) {
-  if (!records.length) return '';
-  return `<ul class="record-link-list">${records.map(record=>`<li><a href="${kind==='bosses'?`#game/darkest-dungeon/bosses/${record.routeId}`:encyclopediaHref(kind,record)}">${escapeHtml(record.name)}</a></li>`).join('')}</ul>`;
+function renderLocationGuideSections(locationRecord, enemies, bosses, curios) {
+  const sourceStatus = verificationLabel('locations', locationRecord);
+  const enemyCards = enemies.map(enemy => `<li class="location-roster-entry"><a href="${encyclopediaHref('enemies', enemy)}">${escapeHtml(enemy.name)}</a><span>${escapeHtml([enemy.enemyType, enemy.encounterClass].filter(Boolean).join(' · ') || 'Enemy')}</span><p>${escapeHtml(enemy.summary || 'Threat details are not recorded.')}</p>${enemy.mechanics?.length ? `<ul>${enemy.mechanics.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</li>`).join('');
+  const bossCards = bosses.map(boss => `<article class="location-related-card location-boss-card">${renderEntryArtwork('bosses', boss, 'thumbnail', `<span class="encyclopedia-mark location-boss-fallback" role="img" aria-label="${escapeHtml(boss.name)} portrait unavailable"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3))}</span><small>No local art</small></span>`)}<div><p class="eyebrow">${escapeHtml(boss.regionLabel || 'Encounter')} · ${escapeHtml(requirementLabel(boss.requirements))}</p><h3><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">${escapeHtml(boss.name)}</a></h3><p>${escapeHtml(boss.summary || 'Boss overview is incomplete.')}</p><span class="boss-status">${escapeHtml(boss.guideStatus || 'Coverage not recorded')}</span></div></article>`).join('');
+  const curioCards = curios.map(curio => `<article class="location-related-card location-curio-card">${renderEntryArtwork('curios', curio, 'thumbnail', `<span class="encyclopedia-mark location-curio-fallback" role="img" aria-label="${escapeHtml(curio.name)} icon unavailable"><span aria-hidden="true">${escapeHtml(curio.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3))}</span></span>`)}<div><p class="eyebrow">${escapeHtml(curio.whereFound || 'Where found not recorded')} · ${escapeHtml(requirementLabel(curio.requirements))}</p><h3><a href="${encyclopediaHref('curios', curio)}">${escapeHtml(curio.name)}</a></h3><p>${curio.interactions.length} recorded ${curio.interactions.length === 1 ? 'interaction' : 'interactions'} · ${escapeHtml(verificationLabel('curios', curio))}</p></div></article>`).join('');
+  const interactionRows = curios.flatMap(curio => curio.interactions.map(interaction => {
+    const item = interaction.itemId && structuredGameContent.items.find(entry => entry.id === interaction.itemId);
+    const itemLink = item ? `<a href="${encyclopediaHref('items', item)}">${escapeHtml(item.name)}</a>` : 'No provision specified';
+    const chance = interaction.chance || 'Not recorded';
+    const certainty = interaction.certainty || 'Not recorded';
+    return `<tr><td>${itemLink}</td><td><a href="${encyclopediaHref('curios', curio)}">${escapeHtml(curio.name)}</a></td><td>${escapeHtml(interaction.outcome)}</td><td>${escapeHtml(chance)} · ${escapeHtml(certainty)}</td></tr>`;
+  })).join('');
+  const relatedTeams = [...new Map(bosses.flatMap(boss => (boss.counterTeams || []).map(team => [team.id, { ...team, boss }]))).values()];
+  const teamMarkup = relatedTeams.length
+    ? `<div class="boss-counter-teams location-team-grid">${relatedTeams.map(renderBossCounterPreview).join('')}</div>`
+    : '<p>No boss-specific teams are recorded for this region yet. <a href="#game/darkest-dungeon/teams">Browse all teams</a>; general-purpose compositions remain unassessed for regional suitability.</p>';
+  const regionTrinkets = structuredGameContent.trinkets.filter(trinket => (trinket.regionIds || []).includes(locationRecord.regionId));
+  const relatedItems = [...new Map(curios.flatMap(curio => curio.interactions.map(interaction => interaction.itemId && structuredGameContent.items.find(item => item.id === interaction.itemId)).filter(Boolean).map(item => [item.id, item]))).values()];
+  const relatedEquipment = [...regionTrinkets.map(trinket => `<a href="${encyclopediaHref('trinkets', trinket)}">${escapeHtml(trinket.name)} trinket</a>`), ...relatedItems.map(item => `<a href="${encyclopediaHref('items', item)}">${escapeHtml(item.name)}</a>`)];
+  return `<section class="encyclopedia-section location-guide-overview"><h2>Region overview</h2><p class="guide-data-note">Coverage: ${escapeHtml(sourceStatus)}. The linked roster reflects recorded regional associations; it is not an encounter-frequency ranking.</p><p><a href="#game/darkest-dungeon/enemies">Browse all enemies</a> · <a href="#game/darkest-dungeon/bosses">Browse all bosses</a> · <a href="#game/darkest-dungeon/curios">Browse all curios</a></p></section>
+    <section class="encyclopedia-section"><h2>Main enemies & threats</h2>${enemyCards ? `<details class="location-roster"><summary>${enemies.length} recorded regional enemies</summary><ul class="location-roster-list">${enemyCards}</ul></details>` : '<p>No regional enemies are recorded.</p>'}</section>
+    <section class="encyclopedia-section"><h2>Available bosses</h2>${bossCards ? `<div class="location-related-grid">${bossCards}</div>` : '<p>No bosses are recorded for this region.</p>'}</section>
+    <section class="encyclopedia-section"><h2>Relevant curios</h2>${curioCards ? `<div class="location-related-grid location-curio-grid">${curioCards}</div>` : '<p>No curios are recorded for this region.</p>'}</section>
+    <section class="encyclopedia-section"><h2>Useful provisions & interactions</h2>${interactionRows ? `<p>These are recorded curio interactions, not a universal shopping list. Check each linked entry for its outcome warning.</p><div class="table-scroll"><table><thead><tr><th>Provision</th><th>Curio</th><th>Recorded outcome</th><th>Chance / certainty</th></tr></thead><tbody>${interactionRows}</tbody></table></div>` : '<p>No provision interactions are recorded for the listed curios.</p>'}</section>
+    <section class="encyclopedia-section"><h2>Special mechanics</h2>${locationRecord.specialMechanics?.length ? `<ul>${locationRecord.specialMechanics.map(item=>`<li>${escapeHtml(item)}</li>`).join('')}</ul>` : '<p>No regional mechanics are recorded yet.</p>'}</section>
+    <section class="encyclopedia-section"><h2>Related team compositions</h2>${teamMarkup}</section>
+    <section class="encyclopedia-section"><h2>Expedition preparation</h2><ul><li>Review the linked enemy roster and boss guide for the planned quest; this index is not an encounter-frequency ranking.</li><li>Use recorded curio interactions as reference only. The actual curio and outcome depend on the expedition.</li><li>Provision needs vary by quest and party; no universal quantities are asserted.</li></ul>${relatedEquipment.length ? `<p class="location-related-links"><strong>Related records:</strong> ${relatedEquipment.join(' · ')}</p>` : '<p>No region-linked trinkets or provision interactions are recorded here yet.</p>'}<p><a href="#game/darkest-dungeon/teams">Browse team compositions</a></p></section>`;
 }
 
 function renderSearchResults(query) {
@@ -592,13 +626,51 @@ function renderCounterGuideSkills(member) {
   }).join('')}</ul>`;
 }
 
+const OWNED_TRINKETS_STORAGE_KEY = 'bm-gaming-wiki-owned-trinkets';
+
+function getOwnedTrinketIds() {
+  try {
+    if (typeof localStorage === 'undefined') return [];
+    const parsed = JSON.parse(localStorage.getItem(OWNED_TRINKETS_STORAGE_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.filter(id => structuredGameContent.trinkets.some(item => item.routeId === id)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setOwnedTrinket(id, owned) {
+  if (!structuredGameContent.trinkets.some(item => item.routeId === id)) return getOwnedTrinketIds();
+  const ids = new Set(getOwnedTrinketIds());
+  if (owned) ids.add(id);
+  else ids.delete(id);
+  try {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(OWNED_TRINKETS_STORAGE_KEY, JSON.stringify([...ids]));
+  } catch { /* A blocked browser storage API should not block the guide. */ }
+  return [...ids];
+}
+
 function renderCounterGuideTrinkets(member) {
-  return `<ul class="counter-guide-trinkets">${member.trinketIds.map(id => {
+  const ownedTrinkets = new Set(getOwnedTrinketIds());
+  const trinketUseNote = item => ({
+    'focus-ring': 'Improves attack accuracy and critical chance; its Dodge penalty is the tradeoff.',
+    'reckless-charm': 'Adds a modest accuracy boost; the Dodge penalty means it favors reliable actions over evasion.',
+    'damage-stone': 'Raises direct damage, but lowers Dodge; choose it to shorten exposure rather than for defense.',
+    'quick-draw-charm': 'Supports first-round action order and critical chance; its Speed penalty applies after the opening round.',
+    'fusemans-matchstick': 'Supports ranged attacks with Speed, damage and critical chance; this trophy is earned from the Champion Brigand Pounder quest.',
+    'man-slayer-ring': 'Its bonus applies against Human enemies only; confirm the encounter type before relying on it.',
+    'sun-ring': 'Its damage and accuracy benefits require Torchlight above 75 and come with a Stress penalty.'
+  })[item.routeId] || 'Check the linked record for this item’s documented effects and encounter limits.';
+  const renderOption = id => {
     const item = structuredGameContent.trinkets.find(trinket => trinket.routeId === id);
-    if (!item) return `<li class="counter-guide-trinket-missing"><span class="trinket-icon-fallback" aria-hidden="true">◇</span><span>Unresolved trinket: ${escapeHtml(id)}</span></li>`;
+    if (!item) return `<li class="counter-guide-trinket-missing">Unresolved trinket: ${escapeHtml(id)}</li>`;
     const effects = item.effects.map(effect => effect.text).join(' · ');
-    return `<li class="counter-guide-trinket"><a class="counter-guide-trinket-icon" href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}" aria-label="${escapeHtml(item.name)}">${renderEntryArtwork('trinkets', item, 'thumbnail', `<span class="trinket-icon-fallback" aria-hidden="true">◇</span>`)}</a><div><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(effects)}</span><small>Recommended pairing for the ${escapeHtml(member.role.toLowerCase())} role.</small></div></li>`;
-  }).join('')}</ul>`;
+    const acquisition = item.acquisition?.text || 'Acquisition method is not recorded; availability is not guaranteed.';
+    const checked = ownedTrinkets.has(item.routeId) ? ' checked' : '';
+    return `<li class="counter-guide-trinket" data-trinket-option data-owned="${checked ? 'true' : 'false'}"><a class="counter-guide-trinket-icon" href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}" aria-label="Open ${escapeHtml(item.name)} entry">${renderEntryArtwork('trinkets', item, 'thumbnail', `<span class="trinket-icon-fallback" aria-hidden="true">◇</span>`)}</a><div><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(effects || 'Effects are not recorded.')}</span><small>${escapeHtml(trinketUseNote(item))}</small><small>${escapeHtml(item.rarity)} · ${escapeHtml(requirementLabel(item.requirements))}</small><small>${escapeHtml(acquisition)}</small><label class="trinket-owned-toggle"><input type="checkbox" data-owned-trinket="${escapeHtml(item.routeId)}" aria-label="I own ${escapeHtml(item.name)}"${checked}> I own this</label></div></li>`;
+  };
+  const ideal = member.trinketIds.map(renderOption).join('');
+  const alternatives = (member.alternativeTrinketIds || []).map(renderOption).join('');
+  return `<div class="equipment-recommendations"><section class="equipment-tier"><h5>Recommended</h5><p>${escapeHtml(member.equipmentRationale || `The listed pairing supports ${member.role.toLowerCase()}.`)}</p><ul class="counter-guide-trinkets">${ideal}</ul></section>${alternatives ? `<section class="equipment-tier"><h5>Alternative options</h5><p>Rarity is shown as recorded; an acquisition route may be unknown, so availability is not assumed.</p><ul class="counter-guide-trinkets">${alternatives}</ul></section>` : '<section class="equipment-tier"><h5>Alternative options</h5><p>No verified named alternative is recorded for this role. Use the attribute priorities below.</p></section>'}<p class="equipment-budget-fallback"><strong>Budget fallback:</strong> ${escapeHtml(member.budgetPriorities || 'Use the relevant combat stats for this hero; specific priorities are not recorded.')}</p></div>`;
 }
 
 function renderCounterGuideBuild(member) {
@@ -658,7 +730,7 @@ function renderBossCounterGuide(team) {
 
 function renderRelatedBossTeams(boss) {
   const bossTeams = boss.counterTeams || [];
-  if (bossTeams.length) return `<p class="boss-team-intro">Choose a plan that fits your roster. Each guide includes rank-specific skills, trinkets and encounter notes.</p><div class="boss-counter-teams">${bossTeams.map(team => renderBossCounterPreview({ ...team, boss })).join('')}</div>`;
+  if (bossTeams.length) return `<p class="boss-team-intro">Choose a plan that fits your roster. Each guide includes rank-specific skills, trinkets and encounter notes.</p><div class="boss-counter-teams${bossTeams.length >= 4 ? ' boss-counter-teams-rich' : ''}">${bossTeams.map(team => renderBossCounterPreview({ ...team, boss })).join('')}</div>`;
   const teams = getTeams().filter(team => (boss.relatedCompositionIds || []).includes(team.id));
   return teams.length ? `<div class="team-list">${teams.map(renderTeamCard).join('')}</div>` : `<p class="guide-development-note">No boss-specific team compositions are documented yet. <a href="#game/darkest-dungeon/teams">Browse existing compositions</a> (not assessed for this encounter).</p>`;
 }
@@ -680,16 +752,18 @@ function renderBossSequence(boss) {
 function renderBossDetail(boss) {
   const available = boss.guideStatus === 'available';
   const regionNames = boss.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean);
+  const commonMistakes = boss.commonMistakes?.length ? `<section class="boss-detail-section" aria-labelledby="boss-mistakes-heading"><div class="section-heading"><h2 id="boss-mistakes-heading">Common mistakes to avoid</h2><span>Encounter-specific</span></div>${renderBossFactList(boss.commonMistakes, 'boss-mistake-list')}</section>` : '';
   const detail = available ? `<section class="boss-detail-section" aria-labelledby="boss-mechanics-heading"><div class="section-heading"><h2 id="boss-mechanics-heading">Verified mechanics</h2><span>Reference-checked facts</span></div>${renderBossFactList(boss.mechanics)}</section>
     <section class="boss-detail-section" aria-labelledby="boss-difficulty-heading"><div class="section-heading"><h2 id="boss-difficulty-heading">Difficulty, variants & resistances</h2><span>Published campaign values</span></div>${renderBossVariants(boss)}</section>
     <section class="boss-detail-section" aria-labelledby="boss-attacks-heading"><div class="section-heading"><h2 id="boss-attacks-heading">Important attacks</h2><span>Selected encounter moves</span></div>${renderBossFactList(boss.attacks, 'boss-attack-list')}</section>
-    <section class="boss-detail-section" aria-labelledby="boss-tactics-heading"><div class="section-heading"><h2 id="boss-tactics-heading">Tactical considerations</h2><span>Editorial · source-informed</span></div>${renderBossFactList(boss.tacticalConsiderations, 'boss-tactics-list')}</section>`
+    <section class="boss-detail-section" aria-labelledby="boss-tactics-heading"><div class="section-heading"><h2 id="boss-tactics-heading">Tactical considerations</h2><span>Editorial · source-informed</span></div>${renderBossFactList(boss.tacticalConsiderations, 'boss-tactics-list')}</section>${commonMistakes}`
     : `<section class="boss-detail-section"><div class="section-heading"><h2>Encounter guide</h2><span>In development</span></div><p class="panel guide-development-note">This entry currently records the boss identity, category, location, and requirements. Mechanics, variants, attacks, resistances, and tactics have not yet been researched for this guide.</p></section>`;
   const dlcLabel = requirementLabel(boss.requirements);
   const titleCategory = boss.categoryIds.map(bossCategoryName).join(' · ');
+  const swineWarning = boss.routeId === 'swine-prince' ? `<aside class="boss-critical-warning" role="note" aria-label="Critical Swine Prince warning"><strong>Do not damage Wilbur before defeating the Swine Prince.</strong><p>A damaging hit triggers Enraged Destruction against the whole party. Killing Wilbur first makes the Prince repeat that attack. Keep attacks and automatic Riposte effects on the Prince.</p><details><summary>Advanced exception</summary><p>Some non-damaging control skills can stun Wilbur without triggering retaliation, including Bounty Hunter’s Flashbang and Plague Doctor’s Blinding Gas. This is optional advanced control; the safer default remains focusing the Prince. Rallying Flare clears Mark and Stun from other party members, but not the Arbalest herself.</p></details></aside>` : '';
   return `<a class="back-link" href="#game/darkest-dungeon/bosses">← All bosses</a>
     <header class="boss-detail-hero"><div class="boss-detail-copy"><p class="eyebrow">${escapeHtml(titleCategory)} · ${escapeHtml(dlcLabel)}</p><h1 id="page-title" tabindex="-1">${escapeHtml(boss.name)}</h1>${boss.aliases?.length ? `<p class="boss-aliases">Also known as ${escapeHtml(boss.aliases.join(', '))}</p>` : ''}<p class="lede">${escapeHtml(boss.summary)}</p><span class="boss-status ${available ? 'is-available' : ''}">${available ? 'Detailed guide available' : 'Guide in development'}</span></div>${renderEntryArtwork('bosses', boss, 'primary', `<div class="boss-artwork boss-detail-art" data-boss-theme="${escapeHtml(boss.categoryIds[0]?.split(':').at(-1) || 'ruins')}" role="img" aria-label="Atmospheric placeholder for ${escapeHtml(boss.name)}; no local portrait available"><span aria-hidden="true">${escapeHtml(boss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3).toUpperCase())}</span><small>No local portrait · CSS artwork placeholder</small></div>`)}${renderEntryArtwork('bosses', boss, 'banner')}</header>
-    <section class="boss-detail-section" aria-labelledby="boss-context-heading"><div class="section-heading"><h2 id="boss-context-heading">Region & encounter context</h2><span>${escapeHtml(boss.regionLabel)}</span></div><div class="boss-context-grid"><article class="panel"><h3>Encounter location</h3><p>${regionNames.length ? escapeHtml(regionNames.join(' · ')) : escapeHtml(boss.regionLabel)}</p></article><article class="panel"><h3>Requirements</h3><p>${escapeHtml(dlcLabel)}</p></article><article class="panel"><h3>Version and source status</h3><p>Campaign reference · not tested against an installed patch</p></article></div></section>
+    ${swineWarning}<section class="boss-detail-section" aria-labelledby="boss-context-heading"><div class="section-heading"><h2 id="boss-context-heading">Region & encounter context</h2><span>${escapeHtml(boss.regionLabel)}</span></div><div class="boss-context-grid"><article class="panel"><h3>Encounter location</h3><p>${regionNames.length ? escapeHtml(regionNames.join(' · ')) : escapeHtml(boss.regionLabel)}</p></article><article class="panel"><h3>Requirements</h3><p>${escapeHtml(dlcLabel)}</p></article><article class="panel"><h3>Version and source status</h3><p>Campaign reference · not tested against an installed patch</p></article></div></section>
     ${detail}
     <section class="boss-detail-section" aria-labelledby="boss-heroes-heading"><div class="section-heading"><h2 id="boss-heroes-heading">Related hero guides</h2><span>Links for further reading</span></div>${renderRelatedBossHeroes(boss)}</section>
     <section class="boss-detail-section" aria-labelledby="boss-teams-heading"><div class="section-heading"><h2 id="boss-teams-heading">Related team compositions</h2><span>Boss-specific relationship only</span></div>${renderRelatedBossTeams(boss)}</section>
@@ -1177,6 +1251,18 @@ document.addEventListener('input', event => {
   document.getElementById('game-search-results').innerHTML = results.markup;
 });
 document.addEventListener('change', event => {
+  if (event.target.matches('[data-owned-trinket]')) {
+    const id = event.target.dataset.ownedTrinket;
+    const owned = event.target.checked;
+    setOwnedTrinket(id, owned);
+    document.querySelectorAll('[data-owned-trinket]').forEach(input => {
+      if (input.dataset.ownedTrinket !== id) return;
+      input.checked = owned;
+      const option = input.closest('[data-trinket-option]');
+      if (option) option.dataset.owned = String(owned);
+    });
+    return;
+  }
   if (event.target.id === 'boss-region-filter') filterBossCollection();
   if (event.target.id === 'encyclopedia-filter' || event.target.matches('[data-encyclopedia-filter]')) filterEncyclopedia();
   if (['team-region-filter', 'team-boss-filter', 'team-category-filter'].includes(event.target.id)) filterTeamCompositions();

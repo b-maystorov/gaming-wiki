@@ -226,6 +226,13 @@
       "url": "https://darkestdungeon.wiki.gg/wiki/Cove",
       "kind": "community-wiki",
       "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-wilbur",
+      "title": "Wilbur marks, Stun and retaliation mechanics",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Wilbur",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked"
     }
   ],
   "heroes": [
@@ -2899,7 +2906,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance to preserve healing turns, then healing effectiveness; Accuracy is secondary for Judgement.",
+              "equipmentRationale": "The listed pairing supports party healer with emergency recovery; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 3,
@@ -2943,7 +2955,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and Speed to preserve control turns; do not count on Stuns landing consistently against the Prince.",
+              "equipmentRationale": "The listed pairing supports back-rank blight and control; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 2,
@@ -2990,7 +3007,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage; avoid Riposte skills that can retaliate against Wilbur.",
+              "equipmentRationale": "The listed pairing supports flexible damage and riposte; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 1,
@@ -3034,7 +3056,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage for focused attacks; Stun resistance helps prevent losing a turn while Wilbur is applying pressure.",
+              "equipmentRationale": "The listed pairing supports front-line damage with back-rank reach; compare the canonical effects and requirements below before choosing alternatives."
             }
           ],
           "openingStrategy": "Keep the skeletons alive unless they block a needed target or threaten a hero. Concentrate Hellion and ranged pressure on the Necromancer as he retreats; Vestal heals only when needed. Blinding Gas can stun the rear skeletons, but the boss has high Stun resistance.",
@@ -3107,7 +3134,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance to preserve healing turns, then healing effectiveness; Accuracy is secondary for Judgement.",
+              "equipmentRationale": "The listed pairing supports party healer with emergency recovery; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 3,
@@ -3152,7 +3184,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and Speed to preserve control turns; do not count on Stuns landing consistently against the Prince.",
+              "equipmentRationale": "The listed pairing supports back-rank blight and control; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 2,
@@ -3199,7 +3236,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage for the selected direct attacks; Stun resistance helps maintain the damage plan.",
+              "equipmentRationale": "The listed pairing supports mobile damage and blight; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 1,
@@ -3243,7 +3285,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage for focused attacks; Stun resistance helps prevent losing a turn while Wilbur is applying pressure.",
+              "equipmentRationale": "The listed pairing supports front-line damage with back-rank reach; compare the canonical effects and requirements below before choosing alternatives."
             }
           ],
           "openingStrategy": "Open with Plague Grenade and rear-rank attacks while the boss is reachable. Use Iron Swan and Thrown Dagger after his retreats. Save healing for meaningful damage; summoned enemies disappear when the Necromancer dies.",
@@ -3318,7 +3365,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Stun resistance helps preserve her chance to act on Rallying Flare; then prioritize Accuracy for Sniper Shot and damage for a faster kill.",
+              "equipmentRationale": "The listed pairing supports back-line damage and marking; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 3,
@@ -3368,7 +3420,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and Accuracy; damage supports Hound’s Rush, while guarding a marked ally is the defensive fallback.",
+              "equipmentRationale": "The listed pairing supports mark support and flexible attacks; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 2,
@@ -3416,7 +3473,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy for setup and attacks, then Stun resistance; damage is useful when Collect Bounty can hit a marked target.",
+              "equipmentRationale": "The listed pairing supports marked-target damage and control; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 1,
@@ -3460,7 +3522,12 @@
               "trinketIds": [
                 "damage-stone",
                 "quick-draw-charm"
-              ]
+              ],
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage for direct attacks; this boss has no Guard mechanic that requires Puncture.",
+              "equipmentRationale": "The listed pairing supports armor-piercing attacks and guard counter; compare the canonical effects and requirements below before choosing alternatives."
             }
           ],
           "openingStrategy": "Mark the Necromancer with Arbalest or Houndmaster, then focus Arbalest and Bounty Hunter attacks on him. At Champion, use Shieldbreaker’s Puncture to break a Bone Defender’s Guard and pull through protection; attack the boss directly whenever possible. Stealth removal is not assigned here, so let higher-tier Bone Soldiers lose Stealth before targeting them.",
@@ -3505,14 +3572,16 @@
         "status": "reference-checked",
         "sourceIds": [
           "wiki-swine-prince",
-          "hintbook-swine-prince"
+          "hintbook-swine-prince",
+          "wiki-wilbur"
         ]
       },
       "verification": {
         "status": "reference-checked",
         "sourceIds": [
           "wiki-swine-prince",
-          "hintbook-swine-prince"
+          "hintbook-swine-prince",
+          "wiki-wilbur"
         ]
       },
       "mechanics": [
@@ -3523,7 +3592,8 @@
             "status": "reference-checked",
             "sourceIds": [
               "wiki-swine-prince",
-              "hintbook-swine-prince"
+              "hintbook-swine-prince",
+              "wiki-wilbur"
             ]
           }
         },
@@ -3534,7 +3604,8 @@
             "status": "reference-checked",
             "sourceIds": [
               "wiki-swine-prince",
-              "hintbook-swine-prince"
+              "hintbook-swine-prince",
+              "wiki-wilbur"
             ]
           }
         },
@@ -3545,7 +3616,8 @@
             "status": "reference-checked",
             "sourceIds": [
               "wiki-swine-prince",
-              "hintbook-swine-prince"
+              "hintbook-swine-prince",
+              "wiki-wilbur"
             ]
           }
         }
@@ -3932,6 +4004,18 @@
               "hintbook-swine-prince"
             ]
           }
+        },
+        {
+          "text": "Editorial: at Champion, favor Accuracy on the heroes expected to deal damage and Stun resistance on support heroes who need to act through Wilbur’s added Stun pressure. The Prince has higher health and Bleed/Blight resistance at higher tiers, so neither damage-over-time nor Stun should be treated as guaranteed.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "wiki-wilbur",
+              "hintbook-swine-prince"
+            ]
+          }
         }
       ],
       "relatedHeroRouteIds": [
@@ -3942,7 +4026,8 @@
         "status": "reference-checked",
         "sourceIds": [
           "wiki-swine-prince",
-          "hintbook-swine-prince"
+          "hintbook-swine-prince",
+          "wiki-wilbur"
         ]
       },
       "counterTeams": [
@@ -3999,10 +4084,15 @@
                 }
               ],
               "trinketIds": [
-                "fusemans-matchstick",
-                "focus-ring"
+                "damage-stone",
+                "reckless-charm"
               ],
-              "tacticalPriority": "Read Wilbur’s marks each round. Use Rallying Flare to clear party Marks and Stun; otherwise use Sniper Shot on the Prince, never Wilbur."
+              "tacticalPriority": "Read Wilbur’s marks each round. Use Rallying Flare to clear party Marks and Stun; otherwise use Sniper Shot on the Prince, never Wilbur.",
+              "alternativeTrinketIds": [
+                "quick-draw-charm"
+              ],
+              "budgetPriorities": "Stun resistance helps preserve her chance to act on Rallying Flare; then prioritize Accuracy for Sniper Shot and damage for a faster kill.",
+              "equipmentRationale": "Damage Stone favors stronger direct shots and Reckless Charm adds Accuracy; both trade away Dodge, so this is an aggressive common-rarity pairing rather than a guaranteed early-game drop."
             },
             {
               "position": 3,
@@ -4050,10 +4140,15 @@
                 }
               ],
               "trinketIds": [
-                "focus-ring",
-                "damage-stone"
+                "damage-stone",
+                "reckless-charm"
               ],
-              "tacticalPriority": "Weakening Curse reduces the Prince’s damage; Vulnerability Hex or direct attacks can contribute when the danger is controlled."
+              "tacticalPriority": "Weakening Curse reduces the Prince’s damage; Vulnerability Hex or direct attacks can contribute when the danger is controlled.",
+              "alternativeTrinketIds": [
+                "quick-draw-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance so the damage-reduction/debuff turn remains available, then Accuracy for offensive skills; healing support has no guaranteed result.",
+              "equipmentRationale": "Reckless Charm supports the accuracy of offensive/debuff actions; Damage Stone only helps direct damage, not Wyrd Reconstruction. Prioritize the stated Stun-resistance fallback if available."
             },
             {
               "position": 2,
@@ -4101,9 +4196,14 @@
               ],
               "trinketIds": [
                 "damage-stone",
-                "focus-ring"
+                "reckless-charm"
               ],
-              "tacticalPriority": "Target Whistle sets up the Prince for Hound’s Rush; Guard Dog can protect a hero who remains marked."
+              "tacticalPriority": "Target Whistle sets up the Prince for Hound’s Rush; Guard Dog can protect a hero who remains marked.",
+              "alternativeTrinketIds": [
+                "quick-draw-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and Accuracy; damage supports Hound’s Rush, while guarding a marked ally is the defensive fallback.",
+              "equipmentRationale": "Damage Stone supports direct attacks and Reckless Charm supports accuracy; both reduce Dodge, so use them only if the lower evasion is acceptable for this hero."
             },
             {
               "position": 1,
@@ -4146,9 +4246,14 @@
               ],
               "trinketIds": [
                 "damage-stone",
-                "focus-ring"
+                "reckless-charm"
               ],
-              "tacticalPriority": "Spend attacks on the Prince’s ranks 1–3. Keep all targeting away from Wilbur until the Prince is defeated."
+              "tacticalPriority": "Spend attacks on the Prince’s ranks 1–3. Keep all targeting away from Wilbur until the Prince is defeated.",
+              "alternativeTrinketIds": [
+                "quick-draw-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage for focused attacks; Stun resistance helps prevent losing a turn while Wilbur is applying pressure.",
+              "equipmentRationale": "Damage Stone supports direct attacks and Reckless Charm supports accuracy; both reduce Dodge, so use them only if the lower evasion is acceptable for this hero."
             }
           ],
           "openingStrategy": "Target the Swine Prince in enemy ranks 1–3. Use Target Whistle to mark the Prince for Houndmaster’s Hound’s Rush; the Arbalest can use Sniper Shot or Rallying Flare depending on whether Wilbur has marked or stunned the party.",
@@ -4168,13 +4273,821 @@
             "status": "reference-checked",
             "sourceIds": [
               "wiki-swine-prince",
-              "hintbook-swine-prince"
+              "hintbook-swine-prince",
+              "wiki-wilbur"
             ]
           },
           "strategySourceIds": [
             "wiki-swine-prince",
-            "hintbook-swine-prince"
+            "hintbook-swine-prince",
+            "wiki-wilbur"
           ]
+        },
+        {
+          "id": "darkest-dungeon-1:boss-team:swine-prince-mark-guard",
+          "name": "Mark Control · guard and recover",
+          "category": "balanced",
+          "purpose": "A base-game safety plan with a dedicated Vestal heal, Arbalest mark removal and two selectable Guard options.",
+          "difficultyRecommendations": "Apprentice and Veteran; Champion remains usable with upgraded skills, but this composition has not been tested in-game.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "arbalest",
+              "role": "Mark removal, ranged pressure and single-target recovery",
+              "skills": [
+                {
+                  "name": "Rallying Flare",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All enemies"
+                },
+                {
+                  "name": "Sniper Shot",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Battlefield Bandage",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Sniper’s Mark",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "tacticalPriority": "Use Rallying Flare when Wilbur has marked or stunned other party members; it does not clear the Arbalest herself.",
+              "alternativeTrinketIds": [
+                "quick-draw-charm"
+              ],
+              "budgetPriorities": "Stun resistance helps preserve her chance to act on Rallying Flare; then prioritize Accuracy for Sniper Shot and damage for a faster kill.",
+              "equipmentRationale": "The listed pairing supports mark removal, ranged pressure and single-target recovery; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 3,
+              "heroRouteId": "vestal",
+              "role": "Dedicated healing with backup stun and ranged damage",
+              "skills": [
+                {
+                  "name": "Judgement",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Divine Grace",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Divine Comfort",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "All allies"
+                },
+                {
+                  "name": "Dazzling Light",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Keep the party alive through Wilbur’s marks; save a heal for a marked hero if the Arbalest cannot act.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance to preserve healing turns, then healing effectiveness; Accuracy is secondary for Judgement.",
+              "equipmentRationale": "The listed pairing supports dedicated healing with backup stun and ranged damage; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 2,
+              "heroRouteId": "houndmaster",
+              "role": "Boss damage, mark setup and Guard Dog protection",
+              "skills": [
+                {
+                  "name": "Hound’s Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Target Whistle",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Guard Dog",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Lick Wounds",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Use Guard Dog on a marked hero when Flare is unavailable or the Arbalest is disabled; direct attacks stay on the Prince.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and Accuracy; damage supports Hound’s Rush, while guarding a marked ally is the defensive fallback.",
+              "equipmentRationale": "The listed pairing supports boss damage, mark setup and guard dog protection; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 1,
+              "heroRouteId": "man-at-arms",
+              "role": "Front-line Guard and party support",
+              "skills": [
+                {
+                  "name": "Crush",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3"
+                },
+                {
+                  "name": "Defender",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Bolster",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All allies"
+                },
+                {
+                  "name": "Command",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All allies"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Defender can protect a marked ally; do not equip Retribution here because a Riposte may hit Wilbur.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and survivability so Defender remains available; Accuracy matters less when using Guard and party buffs.",
+              "equipmentRationale": "The listed pairing supports front-line guard and party support; compare the canonical effects and requirements below before choosing alternatives."
+            }
+          ],
+          "openingStrategy": "Start by checking Wilbur’s marks. Rallying Flare can clear marks and Stun from the other heroes; otherwise heal or Guard the marked target and focus the Prince. Use Hound’s Rush on the boss, not Wilbur.",
+          "alternatives": "The Arbalest can be replaced by the Musketeer only if its DLC requirement is acceptable; confirm the equivalent Skeet Shot skill is equipped. Keep at least one healer and one Guard action.",
+          "battlePlan": {
+            "beforeEntering": "Equip the listed rank-compatible skills. This team has direct healing plus two Guard options; its trinket acquisition records are incomplete, so do not assume the named items are owned.",
+            "openingTurns": "The Prince occupies enemy ranks 1–3. Attack it directly. If Wilbur marks someone, clear the mark and any Stun on allies with Rallying Flare, or guard/heal the target if the Arbalest cannot act.",
+            "bossMechanic": "Never use damaging attacks on Wilbur while the Prince lives. Rallying Flare does not clear the Arbalest herself; Vestal healing and the two Guard skills cover that gap.",
+            "guardAndControl": "The Prince’s Mark bonus is avoided when marks are cleared; without a Mark it uses Wild Flailing. Do not rely on Dazzling Light to stun the Prince at higher tiers, where its Stun resistance is high.",
+            "recoveryAndLimits": "Vestal is the reliable healer. If she is stunned, use Arbalest Bandage for one ally and protect the endangered hero with Houndmaster or Man-at-Arms. Do not let recovery delay focused damage."
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince",
+              "wiki-wilbur"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-swine-prince",
+            "hintbook-swine-prince",
+            "wiki-wilbur"
+          ]
+        },
+        {
+          "id": "darkest-dungeon-1:boss-team:swine-prince-fast-kill",
+          "name": "Fast Kill · mark and bleed pressure",
+          "category": "offensive",
+          "purpose": "A riskier base-game attack plan: Jester improves party tempo while Bounty Hunter cashes in a mark and Hellion adds direct and Bleed pressure.",
+          "difficultyRecommendations": "Apprentice and Veteran; Champion suitability is untested and the team has no dedicated healer.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "arbalest",
+              "role": "Mark removal and ranged damage",
+              "skills": [
+                {
+                  "name": "Rallying Flare",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All enemies"
+                },
+                {
+                  "name": "Sniper Shot",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Battlefield Bandage",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Sniper’s Mark",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "tacticalPriority": "Keep Rallying Flare available as an emergency answer to Wilbur’s marks or Stun; do not spend every turn marking if a clear is needed.",
+              "alternativeTrinketIds": [
+                "quick-draw-charm"
+              ],
+              "budgetPriorities": "Stun resistance helps preserve her chance to act on Rallying Flare; then prioritize Accuracy for Sniper Shot and damage for a faster kill.",
+              "equipmentRationale": "The listed pairing supports mark removal and ranged damage; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 3,
+              "heroRouteId": "jester",
+              "role": "Party accuracy/speed support and stress recovery",
+              "skills": [
+                {
+                  "name": "Battle Ballad",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "All allies"
+                },
+                {
+                  "name": "Harvest",
+                  "heroPositions": [
+                    3,
+                    2
+                  ],
+                  "target": "2 + 3"
+                },
+                {
+                  "name": "Slice Off",
+                  "heroPositions": [
+                    3,
+                    2
+                  ],
+                  "target": "2,3"
+                },
+                {
+                  "name": "Inspiring Tune",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Battle Ballad supports the party’s attacks; use a bleed attack when support is not the immediate need and Inspiring Tune for stress.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Speed to establish Battle Ballad early, then Stun resistance so support turns are less likely to be lost.",
+              "equipmentRationale": "The listed pairing supports party accuracy/speed support and stress recovery; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 2,
+              "heroRouteId": "bounty-hunter",
+              "role": "Marked-target burst with front-rank control",
+              "skills": [
+                {
+                  "name": "Collect Bounty",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Mark for Death",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Finish Him",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3"
+                },
+                {
+                  "name": "Uppercut",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Collect Bounty gains damage against a marked target. Uppercut is a situational stun, not a reliable plan against the Prince’s high Stun resistance.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy for setup and attacks, then Stun resistance; damage is useful when Collect Bounty can hit a marked target.",
+              "equipmentRationale": "The listed pairing supports marked-target burst with front-rank control; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 1,
+              "heroRouteId": "hellion",
+              "role": "Front-line burst and Bleed",
+              "skills": [
+                {
+                  "name": "Wicked Hack",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Bleed Out",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "1"
+                },
+                {
+                  "name": "If It Bleeds",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "2,3"
+                },
+                {
+                  "name": "Adrenaline Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Bleed Out pressures the front boss rank; use If It Bleeds only when the Prince occupies a rank it can target. Adrenaline Rush improves self-sustain and accuracy.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage for focused attacks; Stun resistance helps prevent losing a turn while Wilbur is applying pressure.",
+              "equipmentRationale": "The listed pairing supports front-line burst and bleed; compare the canonical effects and requirements below before choosing alternatives."
+            }
+          ],
+          "openingStrategy": "If turn order allows, use Battle Ballad and Mark for Death before Bounty Hunter attacks; otherwise deal direct damage and set up the mark on a later turn. Aim all damaging effects at the Prince and keep Rallying Flare for danger.",
+          "alternatives": "This team trades dedicated healing and Guard for attack tempo. A Vestal can replace Jester only after rebuilding the skills for rank 3; a Man-at-Arms can replace Bounty Hunter only if you accept less mark burst and use Defender.",
+          "battlePlan": {
+            "beforeEntering": "This is the offensive option, not the forgiving one. Equip Rallying Flare, Battlefield Bandage, and the listed hero skills; consider this only when you can manage the fight without a dedicated healer.",
+            "openingTurns": "The Jester can use Battle Ballad and Bounty Hunter can Mark for Death, but turn order varies. If the mark is already active before the Bounty Hunter acts, use Collect Bounty; otherwise hit the Prince directly rather than wasting a turn waiting for perfect setup.",
+            "bossMechanic": "The Arbalest can clear Wilbur’s marks and Stun from other allies. She cannot clear herself, and this party has no Guard, so prioritize keeping her able to act when the team needs Rallying Flare.",
+            "guardAndControl": "Do not damage Wilbur. Bleed Out, If It Bleeds, Collect Bounty, and Sniper Shot should target the Prince’s occupied ranks. Do not use a multi-target or automatic counter if it could hit Wilbur.",
+            "recoveryAndLimits": "There is no dedicated healer. Arbalest Bandage heals one ally and Hellion can use Adrenaline Rush on herself; neither replaces party healing. Retreat from a deteriorating expedition rather than treating the fast-kill plan as guaranteed."
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince",
+              "wiki-wilbur"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-swine-prince",
+            "hintbook-swine-prince",
+            "wiki-wilbur"
+          ]
+        },
+        {
+          "id": "darkest-dungeon-1:boss-team:swine-prince-mark-transfer",
+          "name": "Mark Transfer · bleed and protection",
+          "category": "specialized",
+          "purpose": "A Crimson Court specialist using Arbalest mark removal, Flagellant’s Suffer as a single-hero backup, Man-at-Arms protection, and Leper’s self-sustain.",
+          "difficultyRecommendations": "Veteran and Champion; Crimson Court DLC required for Flagellant. This advanced plan is source-informed, not in-game tested.",
+          "requirements": {
+            "baseGame": false,
+            "dlc": [
+              "darkest-dungeon-1:dlc:crimson-court"
+            ],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "arbalest",
+              "role": "Primary mark/Stun removal and ranged pressure",
+              "skills": [
+                {
+                  "name": "Rallying Flare",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All enemies"
+                },
+                {
+                  "name": "Sniper Shot",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Battlefield Bandage",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Sniper’s Mark",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "tacticalPriority": "Use Flare to clear marks/Stun from the other heroes; reserve Suffer for a turn when the Arbalest is disabled or an individual clear is needed.",
+              "alternativeTrinketIds": [
+                "quick-draw-charm"
+              ],
+              "budgetPriorities": "Stun resistance helps preserve her chance to act on Rallying Flare; then prioritize Accuracy for Sniper Shot and damage for a faster kill.",
+              "equipmentRationale": "The listed pairing supports primary mark/stun removal and ranged pressure; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 3,
+              "heroRouteId": "man-at-arms",
+              "role": "Protective Guard and party buffs",
+              "skills": [
+                {
+                  "name": "Defender",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Bellow",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1 + 2 + 3 + 4"
+                },
+                {
+                  "name": "Command",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All allies"
+                },
+                {
+                  "name": "Rampart",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Use Defender on a dangerous marked target, especially if Flagellant uses Suffer and takes the mark. Rampart is a situational control option, not a guaranteed stun.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and survivability so Defender remains available; Accuracy matters less when using Guard and party buffs.",
+              "equipmentRationale": "The listed pairing supports protective guard and party buffs; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 2,
+              "heroRouteId": "flagellant",
+              "role": "Bleed pressure, healing and emergency mark transfer",
+              "skills": [
+                {
+                  "name": "Punish",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Redeem",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Suffer",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Reclaim",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Use Suffer only as an emergency single-target clear because it transfers the Mark to Flagellant. Punish targets the Prince’s front ranks; Redeem is conditional on Flagellant being at low health.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance to keep Suffer/Recovery available, then Bleed skill chance for the Prince; avoid relying only on damage-over-time at higher tiers.",
+              "equipmentRationale": "The listed pairing supports bleed pressure, healing and emergency mark transfer; compare the canonical effects and requirements below before choosing alternatives."
+            },
+            {
+              "position": 1,
+              "heroRouteId": "leper",
+              "role": "Durable front-line damage and self-recovery",
+              "skills": [
+                {
+                  "name": "Chop",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Intimidate",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Withstand",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                },
+                {
+                  "name": "Solemnity",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "focus-ring",
+                "damage-stone"
+              ],
+              "tacticalPriority": "Use Intimidate only on the Swine Prince: it deals damage and can target Wilbur’s rank 4, so never select Wilbur. Withstand deliberately marks Leper; use that trade only when its protection and resist gains suit the current pressure.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy to make his front-rank attacks connect, then Stun resistance and damage; Solemnity provides self-recovery.",
+              "equipmentRationale": "The listed pairing supports durable front-line damage and self-recovery; compare the canonical effects and requirements below before choosing alternatives."
+            }
+          ],
+          "openingStrategy": "Focus on the Prince from the first action. Keep Rallying Flare ready; use Defender for a marked hero if Flare cannot resolve the danger. Flagellant’s Suffer is a backup clear that transfers the Mark to himself.",
+          "alternatives": "Flagellant is the DLC requirement. For a base-game variant, use the existing Mark Control · guard and recover composition; the current data does not document an equivalent Flagellant replacement with the same mark-transfer role.",
+          "battlePlan": {
+            "beforeEntering": "This team requires the Crimson Court DLC and Flagellant. Check the party order: Arbalest 4, Man-at-Arms 3, Flagellant 2, Leper 1. Named trinket acquisition may be unknown.",
+            "openingTurns": "Attack the Prince, not Wilbur. Keep Rallying Flare ready to clear Mark and Stun from allies; use the Man-at-Arms to Guard the person most at risk when the Arbalest cannot act.",
+            "bossMechanic": "Suffer can clear one ally’s Mark but transfers it to Flagellant and cures that ally’s bleed/blight. This is an emergency single-target tool, not a free party clear; protect Flagellant before the Prince resolves a marked attack.",
+            "guardAndControl": "Do not damage Wilbur. Bleed can contribute against the Prince, but tier resistances increase; do not rely on it alone. Stuns are not the plan because Prince Stun resistance is high, especially at Champion.",
+            "recoveryAndLimits": "Flagellant has conditional low-health recovery skills but this loadout uses Reclaim, not an unconditional full-party heal. Leper’s Solemnity is self-only. The party relies on preventing marked hits and protecting targets; it has no Vestal-style party heal."
+          },
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "hintbook-swine-prince",
+              "wiki-wilbur"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-swine-prince",
+            "hintbook-swine-prince",
+            "wiki-wilbur"
+          ]
+        }
+      ],
+      "commonMistakes": [
+        {
+          "name": "Damage Wilbur before the Prince is dead",
+          "text": "Any damaging hit on Wilbur triggers Enraged Destruction against the whole party. Killing Wilbur first makes the Prince repeat it each round.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "wiki-wilbur",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "name": "Let an automatic Riposte hit Wilbur",
+          "text": "Do not activate Riposte while Wilbur is alive unless you can guarantee it will not target him; an automatic damaging counter can trigger the same retaliation.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "wiki-wilbur",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "name": "Assume Rallying Flare clears the Arbalest herself",
+          "text": "Rallying Flare clears Mark and Stun from the other party members, not the Arbalest. Keep her protected and use healing or Guard if she is disabled.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "wiki-wilbur",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "name": "Build the plan around stunning the Prince",
+          "text": "The Prince’s Stun resistance rises with campaign tier and reaches immunity in the recorded variants. Treat Stun as optional control for Wilbur, not the core answer to the Prince.",
+          "kind": "editorial",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "wiki-wilbur",
+              "hintbook-swine-prince"
+            ]
+          }
+        },
+        {
+          "name": "Keep fighting after the Prince is defeated",
+          "text": "The boss quest objective completes when the Prince dies. Wilbur is not required for the objective; decide whether cleanup is safe before spending turns on him.",
+          "kind": "mechanic",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-swine-prince",
+              "wiki-wilbur",
+              "hintbook-swine-prince"
+            ]
+          }
         }
       ]
     },
@@ -4706,7 +5619,13 @@
                 "man-slayer-ring",
                 "focus-ring"
               ],
-              "tacticalPriority": "Use Abyssal Artillery while the Hag occupies the rear ranks; keep Weakening Curse and Wyrd Reconstruction available when damage pressure rises."
+              "tacticalPriority": "Use Abyssal Artillery while the Hag occupies the rear ranks; keep Weakening Curse and Wyrd Reconstruction available when damage pressure rises.",
+              "alternativeTrinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance so the damage-reduction/debuff turn remains available, then Accuracy for offensive skills; healing support has no guaranteed result.",
+              "equipmentRationale": "The listed pairing supports back-rank debuff, mark and emergency healing; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 3,
@@ -4757,7 +5676,13 @@
                 "man-slayer-ring",
                 "focus-ring"
               ],
-              "tacticalPriority": "Use Hound’s Rush against the Hag; reserve Guard Dog for a vulnerable ally if the pot and repeated Hag actions create danger."
+              "tacticalPriority": "Use Hound’s Rush against the Hag; reserve Guard Dog for a vulnerable ally if the pot and repeated Hag actions create danger.",
+              "alternativeTrinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and Accuracy; damage supports Hound’s Rush, while guarding a marked ally is the defensive fallback.",
+              "equipmentRationale": "The listed pairing supports rank-flexible damage, mark support and guard; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 2,
@@ -4806,7 +5731,13 @@
                 "man-slayer-ring",
                 "focus-ring"
               ],
-              "tacticalPriority": "Pistol Shot and Tracking Shot can reach the Hag from this starting position; reassess after the party shifts."
+              "tacticalPriority": "Pistol Shot and Tracking Shot can reach the Hag from this starting position; reassess after the party shifts.",
+              "alternativeTrinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage; avoid Riposte skills that can retaliate against Wilbur.",
+              "equipmentRationale": "The listed pairing supports flexible direct attacks into the rear ranks; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 1,
@@ -4850,7 +5781,13 @@
                 "man-slayer-ring",
                 "focus-ring"
               ],
-              "tacticalPriority": "Iron Swan is the selected rank 4 attack from the front; do not spend the turn attacking the empty cauldron."
+              "tacticalPriority": "Iron Swan is the selected rank 4 attack from the front; do not spend the turn attacking the empty cauldron.",
+              "alternativeTrinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Accuracy and damage for focused attacks; Stun resistance helps prevent losing a turn while Wilbur is applying pressure.",
+              "equipmentRationale": "The listed pairing supports front-line damage with iron swan reach; compare the canonical effects and requirements below before choosing alternatives."
             }
           ],
           "openingStrategy": "Attack the Hag in enemy ranks 3–4 immediately. The Occultist and Houndmaster can mark her for follow-up attacks; use Weakening Curse when reducing incoming pressure is more useful than another attack.",
@@ -5409,7 +6346,13 @@
                 "focus-ring",
                 "quick-draw-charm"
               ],
-              "tacticalPriority": "The Antiquarian is a likely charm target because of low Debuff resistance, not a guaranteed one. Keep her equipped actions low-threat and avoid using dangerous damage into allies if she is controlled."
+              "tacticalPriority": "The Antiquarian is a likely charm target because of low Debuff resistance, not a guaranteed one. Keep her equipped actions low-threat and avoid using dangerous damage into allies if she is controlled.",
+              "alternativeTrinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and survivability; her role is utility, so do not spend the full equipment plan on damage.",
+              "equipmentRationale": "The listed pairing supports low-threat support and likely charm bait; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 3,
@@ -5455,7 +6398,13 @@
                 "fusemans-matchstick",
                 "focus-ring"
               ],
-              "tacticalPriority": "Use Sniper Shot to keep direct pressure on the Siren. Rallying Flare can clear party Mark and Stun; Battlefield Bandage provides one-target recovery."
+              "tacticalPriority": "Use Sniper Shot to keep direct pressure on the Siren. Rallying Flare can clear party Mark and Stun; Battlefield Bandage provides one-target recovery.",
+              "alternativeTrinketIds": [
+                "damage-stone",
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Stun resistance helps preserve her chance to act on Rallying Flare; then prioritize Accuracy for Sniper Shot and damage for a faster kill.",
+              "equipmentRationale": "The listed pairing supports direct back-rank pressure and party recovery; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 2,
@@ -5505,7 +6454,12 @@
                 "damage-stone",
                 "focus-ring"
               ],
-              "tacticalPriority": "Guard Dog can protect one chosen hero from charm. If the Houndmaster is charmed, he may use that skill on the Siren, so maintain control and avoid assuming Guard is permanent."
+              "tacticalPriority": "Guard Dog can protect one chosen hero from charm. If the Houndmaster is charmed, he may use that skill on the Siren, so maintain control and avoid assuming Guard is permanent.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and Accuracy; damage supports Hound’s Rush, while guarding a marked ally is the defensive fallback.",
+              "equipmentRationale": "The listed pairing supports single-target damage and flexible guard; compare the canonical effects and requirements below before choosing alternatives."
             },
             {
               "position": 1,
@@ -5554,7 +6508,12 @@
                 "damage-stone",
                 "focus-ring"
               ],
-              "tacticalPriority": "Use Defender to guard a chosen ally. Rampart only reaches enemy ranks 1–2 from this position, so use it on a Pelagic Guardian there if it is guarding the Siren."
+              "tacticalPriority": "Use Defender to guard a chosen ally. Rampart only reaches enemy ranks 1–2 from this position, so use it on a Pelagic Guardian there if it is guarding the Siren.",
+              "alternativeTrinketIds": [
+                "reckless-charm"
+              ],
+              "budgetPriorities": "Prioritize Stun resistance and survivability so Defender remains available; Accuracy matters less when using Guard and party buffs.",
+              "equipmentRationale": "The listed pairing supports front-line pressure and a second guard option; compare the canonical effects and requirements below before choosing alternatives."
             }
           ],
           "openingStrategy": "Use direct attacks on the Siren rather than spending repeated turns marking her; she acts twice per round, so debuffs and marks need frequent upkeep. Keep Houndmaster’s and Man-at-Arms’s Guard actions available for a hero you need to protect.",

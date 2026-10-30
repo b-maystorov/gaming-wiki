@@ -12,10 +12,12 @@ const pack = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-du
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
 async function harness(failure = null) {
   const elements = new Map();
+  const storedValues = new Map();
   let cards = [];
   let extraFilters = [];
   const context = createContext({ console: { error() {} }, URL,
     location: { hash: '' },
+    localStorage: { getItem: key => storedValues.get(key) ?? null, setItem: (key, value) => storedValues.set(key, String(value)) },
     document: {
       querySelector: () => ({ addEventListener() {} }),
       getElementById: id => elements.get(id),
@@ -37,7 +39,7 @@ async function harness(failure = null) {
     let source = await readFile(path, 'utf8');
     if (path.endsWith('/app.js')) {
       source = source.slice(0, source.indexOf("document.querySelector('.skip-link')"));
-      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters };';
+      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket };';
     }
     const module = new SourceTextModule(source, { context, identifier: path,
       initializeImportMeta: meta => { meta.url = `file://${path}`; } });
@@ -47,7 +49,7 @@ async function harness(failure = null) {
   }
   const app = await load(resolve(root, 'dist/js/app.js'));
   await app.evaluate();
-  return { app: app.namespace, modules, context,
+  return { app: app.namespace, modules, context, storedValues,
     filter(kind, value, records, extras = []) {
       context.location.hash = `#game/darkest-dungeon/${kind}`;
       elements.set('encyclopedia-filter', { value });
@@ -106,7 +108,7 @@ test('collection and both global searches include relationships and every intera
 test('location details use one main artwork and refreshed collections retain visible record data', () => {
   const ruins = pack.locations.find(record => record.routeId === 'ruins');
   const locationHtml = h.app.renderEncyclopediaDetail('locations', ruins);
-  assert.equal((locationHtml.match(/data-entry-art/g) || []).length, 1, 'location detail should render one artwork frame');
+  assert.equal((locationHtml.match(/entry-art-locations/g) || []).length, 1, 'location detail should render one location artwork frame');
   assert.ok(locationHtml.includes('entry-art-locations entry-art-banner'));
   assert.ok(locationHtml.includes('location-art-fallback'));
 
@@ -119,6 +121,63 @@ test('location details use one main artwork and refreshed collections retain vis
   assert.ok(trinketHtml.includes('encyclopedia-grid-trinkets'));
   assert.ok(trinketHtml.includes('Very rare'));
   assert.ok(trinketHtml.includes('+10 ACC'));
+});
+
+test('location guides organize linked expedition records and preserve recorded item and team links', () => {
+  const ruins = pack.locations.find(record => record.routeId === 'ruins');
+  const html = h.app.renderEncyclopediaDetail('locations', ruins);
+  for (const heading of ['Region overview', 'Main enemies & threats', 'Available bosses', 'Relevant curios', 'Useful provisions & interactions', 'Special mechanics', 'Related team compositions', 'Expedition preparation']) {
+    assert.ok(html.includes(heading), `Ruins guide should include ${heading}`);
+  }
+  for (const [kind, routeId] of [['enemies', 'bone-soldier'], ['bosses', 'necromancer'], ['curios', 'alchemy-table'], ['items', 'medicinal-herbs']]) {
+    assert.ok(html.includes(`#game/darkest-dungeon/${kind}/${routeId}`), `Ruins guide should link ${kind}/${routeId}`);
+  }
+  const associatedTeams = pack.bosses.find(boss => boss.routeId === 'necromancer').counterTeams;
+  for (const team of associatedTeams) assert.ok(html.includes(`#game/darkest-dungeon/teams/${team.id}`));
+  assert.ok(!html.includes('No boss-specific teams are recorded'), 'a region with supported boss teams should show those teams');
+  assert.ok(html.includes('location-boss-card') && html.includes('location-curio-card'));
+  assert.ok(html.includes('location-boss-fallback') && html.includes('location-curio-fallback'));
+
+  const courtyard = pack.locations.find(record => record.routeId === 'courtyard');
+  const courtyardHtml = h.app.renderEncyclopediaDetail('locations', courtyard);
+  assert.ok(courtyardHtml.includes('DLC: The Crimson Court'));
+  assert.ok(courtyardHtml.includes('general-purpose compositions remain unassessed'));
+});
+
+test('trinket index groups existing rarity metadata and shows verification and source status', () => {
+  const html = h.app.renderEncyclopediaCollection('trinkets');
+  const rarities = [...new Set(pack.trinkets.map(record => record.rarity))];
+  for (const rarity of rarities) {
+    assert.ok(html.includes(`data-trinket-rarity="${rarity}"`), `missing rarity group ${rarity}`);
+  }
+  assert.ok(html.includes('Sources: Trinkets (Darkest Dungeon)'));
+  assert.ok(html.includes('Reference-checked'));
+  assert.ok(html.includes('DLC: The Crimson Court'));
+});
+
+test('team build alternatives resolve to compatible canonical trinkets and ownership stays local', () => {
+  const trinketRoutes = new Set(pack.trinkets.map(item => item.routeId));
+  const teams = pack.bosses.flatMap(boss => boss.counterTeams || []);
+  for (const team of teams) for (const member of team.members) {
+    assert.ok(member.budgetPriorities?.length, `${team.id}/${member.heroRouteId} needs an equipment fallback`);
+    for (const id of member.alternativeTrinketIds || []) {
+      assert.ok(trinketRoutes.has(id), `${team.id}: unknown alternative ${id}`);
+      const trinket = pack.trinkets.find(item => item.routeId === id);
+      assert.ok(!trinket.classRestrictionHeroRouteIds?.length || trinket.classRestrictionHeroRouteIds.includes(member.heroRouteId));
+      assert.ok(!member.trinketIds.includes(id), 'alternative should not duplicate recommended equipment');
+    }
+  }
+  const page = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams/darkest-dungeon-1:boss-team:swine-prince-mark-removal'));
+  assert.ok(page.includes('Alternative options'));
+  assert.ok(page.includes('Budget fallback'));
+  assert.match(page, /aria-label="I own Damage Stone"(?! checked)/);
+  h.app.setOwnedTrinket('damage-stone', true);
+  assert.ok(h.app.getOwnedTrinketIds().includes('damage-stone'));
+  assert.ok(h.storedValues.has('bm-gaming-wiki-owned-trinkets'));
+  const ownedPage = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams/darkest-dungeon-1:boss-team:swine-prince-mark-removal'));
+  assert.match(ownedPage, /aria-label="I own Damage Stone" checked/);
+  h.app.setOwnedTrinket('damage-stone', false);
+  assert.ok(!h.app.getOwnedTrinketIds().includes('damage-stone'));
 });
 
 test('team composition index presents each boss guide once and keeps it searchable', () => {
@@ -384,7 +443,8 @@ test('Necromancer team IDs route to full guides and connect boss, hero, trinket 
     assert.ok(html.includes('href="#strategy"'));
     assert.equal((html.match(/class="team-formation-card/g) || []).length, 4);
     assert.equal((html.match(/class="counter-guide-skill"/g) || []).length, 16);
-    assert.equal((html.match(/class="counter-guide-trinket"/g) || []).length, 8);
+    assert.equal((html.match(/class="counter-guide-trinket"/g) || []).length,
+      team.members.reduce((count, member) => count + member.trinketIds.length + (member.alternativeTrinketIds || []).length, 0));
     assert.ok(html.includes(`href="#game/darkest-dungeon/bosses/${boss.routeId}"`));
     assert.ok(html.includes('class="team-guide-party"'));
     assert.ok(html.includes('class="team-guide-build-grid"'));
@@ -454,11 +514,31 @@ test('boss coverage and all counter-team routes, links, ranks and restrictions s
       }
     }
   }
-  assert.equal(teamCount, 6);
-  for (const routeId of ['hag', 'siren', 'swine-prince']) {
+  assert.equal(teamCount, 9);
+  for (const routeId of ['hag', 'siren']) {
     const boss = pack.bosses.find(row => row.routeId === routeId);
     assert.equal(boss.counterTeams.length, 1);
     const page = h.app.renderPage(h.app.readRoute(`#game/darkest-dungeon/bosses/${routeId}`));
     assert.ok(page.includes('View full team guide'));
+  }
+  const swine = pack.bosses.find(row => row.routeId === 'swine-prince');
+  assert.equal(swine.counterTeams.length, 4);
+  assert.equal(new Set(swine.counterTeams.map(team => team.id)).size, 4);
+  assert.deepEqual(swine.variants.map(variant => variant.name), ['Swine Prince', 'Swine King', 'Swine God']);
+  assert.ok(swine.mechanics.some(mechanic => mechanic.text.includes('Wilbur') && mechanic.text.includes('Enraged Destruction')));
+  assert.equal(swine.commonMistakes.length, 5);
+  assert.ok(swine.verification.sourceIds.includes('wiki-wilbur'));
+  assert.ok(swine.counterTeams[0].members.every(member => !member.trinketIds.includes('fusemans-matchstick')),
+    'beginner loadout should not depend on the Champion Brigand Pounder trophy');
+  const advanced = swine.counterTeams.find(team => team.id.endsWith(':swine-prince-mark-transfer'));
+  assert.ok(advanced.requirements.dlc.includes('darkest-dungeon-1:dlc:crimson-court'));
+  assert.ok(advanced.members.find(member => member.heroRouteId === 'flagellant').skills.every(skill => skill.name !== 'Rain of Sorrows'));
+  const swinePage = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/bosses/swine-prince'));
+  assert.ok(swinePage.includes('Do not damage Wilbur before defeating the Swine Prince.'));
+  assert.ok(swinePage.includes('Common mistakes to avoid'));
+  assert.ok(swinePage.includes('Champion, favor Accuracy'));
+  for (const team of swine.counterTeams) {
+    assert.ok(swinePage.includes(`#game/darkest-dungeon/teams/${team.id}`));
+    assert.ok(h.app.readRoute(`#game/darkest-dungeon/teams/${team.id}`).team);
   }
 });
