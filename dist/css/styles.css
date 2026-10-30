@@ -594,3 +594,22 @@ a.navigation-card:hover .card-action, a.navigation-card:focus-visible .card-acti
 .team-art .entry-art-heroes.entry-art-thumbnail { height: 76px; min-height: 0; }
 .team-art .entry-art img { width: auto; max-height: 72px; max-width: 100%; }
 .trinket-heading > .entry-art { width: 88px; flex-shrink: 0; }
+
+.boss-counter-teams { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.boss-counter-team { min-width: 0; border-color: #583940; background: linear-gradient(150deg, #21191c, #151416 72%); }
+.boss-counter-team h3 { margin-block: .5rem; font: 1.25rem Georgia, serif; color: #f0ded4; }
+.counter-team-party { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .3rem; padding: 0; margin: .8rem 0; list-style: none; }
+.counter-team-party li { display: grid; align-content: start; justify-items: center; gap: .3rem; min-width: 0; margin: 0; padding: .4rem .2rem; border: 1px solid #473338; text-align: center; font-size: .65rem; }
+.counter-team-party .team-art { height: 58px; overflow: hidden; }
+.counter-team-party .entry-art-heroes.entry-art-thumbnail { height: 58px; }
+.counter-team-party .entry-art img { max-height: 58px; }
+.counter-team-party strong { font-size: .7rem; }
+.counter-team-role { color: var(--muted); line-height: 1.35; }
+.counter-team-plan { margin-top: .7rem; color: var(--text-secondary); font-size: .82rem; line-height: 1.55; }
+.boss-counter-team details { margin-top: .8rem; padding-top: .6rem; border-top: 1px solid #49373b; }
+.boss-counter-team summary { cursor: pointer; color: #e8b6b4; }
+.counter-team-build { padding-top: .55rem; }
+.counter-team-build h4 { margin-block: .45rem .25rem; }
+.counter-team-build p { color: var(--text-secondary); font-size: .78rem; line-height: 1.5; }
+.counter-team-build a { color: #efc2bd; }
+@media (max-width: 1050px) { .boss-counter-teams { grid-template-columns: 1fr; } }

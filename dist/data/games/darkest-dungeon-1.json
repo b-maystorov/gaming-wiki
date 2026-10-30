@@ -3,7 +3,10 @@
   "game": {
     "id": "darkest-dungeon-1",
     "name": "Darkest Dungeon I",
-    "mechanics": ["ranked-combat", "camping"],
+    "mechanics": [
+      "ranked-combat",
+      "camping"
+    ],
     "versionContext": {
       "id": "darkest-dungeon-1:campaign:reference-context",
       "mode": "single-player campaign",
@@ -125,8 +128,7 @@
       "url": "https://darkestdungeon.wiki.gg/wiki/8_pounder",
       "kind": "community-wiki",
       "verificationStatus": "reference-checked"
-    }
-  ,
+    },
     {
       "id": "wiki-enemies-dd1",
       "title": "Enemies (Darkest Dungeon)",
@@ -224,18 +226,31 @@
       "url": "https://darkestdungeon.wiki.gg/wiki/Cove",
       "kind": "community-wiki",
       "verificationStatus": "reference-checked"
-    }],
+    }
+  ],
   "heroes": [
     {
       "id": "darkest-dungeon-1:crusader",
       "routeId": "crusader",
       "name": "Crusader",
-      "requirements": { "baseGame": true, "dlc": [], "mods": [] },
-      "roleTags": ["Damage", "Stress relief"],
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "roleTags": [
+        "Damage",
+        "Stress relief"
+      ],
       "role": "Frontline damage · Stun · Recovery",
       "summary": "A durable frontline fighter who can strike, stun, protect himself, and provide small health and stress recovery.",
-      "preferredPositions": [1, 2],
-      "alternativePositions": [3],
+      "preferredPositions": [
+        1,
+        2
+      ],
+      "alternativePositions": [
+        3
+      ],
       "overview": {
         "positions": "Ranks 1 and 2 keep Smite and Stunning Blow available. Rank 3 is a situational alternative for Holy Lance, which advances the Crusader when used.",
         "strengths": [
@@ -251,18 +266,84 @@
       },
       "baseStats": {
         "status": "not-recorded",
-        "verification": { "status": "missing", "sourceIds": [] },
+        "verification": {
+          "status": "missing",
+          "sourceIds": []
+        },
         "values": {
-          "health": { "value": null, "unit": "hp", "verification": { "status": "missing", "sourceIds": [] } },
-          "dodge": { "value": null, "unit": "points", "verification": { "status": "missing", "sourceIds": [] } },
-          "speed": { "value": null, "unit": "points", "verification": { "status": "missing", "sourceIds": [] } },
+          "health": {
+            "value": null,
+            "unit": "hp",
+            "verification": {
+              "status": "missing",
+              "sourceIds": []
+            }
+          },
+          "dodge": {
+            "value": null,
+            "unit": "points",
+            "verification": {
+              "status": "missing",
+              "sourceIds": []
+            }
+          },
+          "speed": {
+            "value": null,
+            "unit": "points",
+            "verification": {
+              "status": "missing",
+              "sourceIds": []
+            }
+          },
           "resistances": {
-            "stun": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
-            "blight": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
-            "bleed": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
-            "debuff": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
-            "move": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } },
-            "trap": { "value": null, "unit": "percent", "verification": { "status": "missing", "sourceIds": [] } }
+            "stun": {
+              "value": null,
+              "unit": "percent",
+              "verification": {
+                "status": "missing",
+                "sourceIds": []
+              }
+            },
+            "blight": {
+              "value": null,
+              "unit": "percent",
+              "verification": {
+                "status": "missing",
+                "sourceIds": []
+              }
+            },
+            "bleed": {
+              "value": null,
+              "unit": "percent",
+              "verification": {
+                "status": "missing",
+                "sourceIds": []
+              }
+            },
+            "debuff": {
+              "value": null,
+              "unit": "percent",
+              "verification": {
+                "status": "missing",
+                "sourceIds": []
+              }
+            },
+            "move": {
+              "value": null,
+              "unit": "percent",
+              "verification": {
+                "status": "missing",
+                "sourceIds": []
+              }
+            },
+            "trap": {
+              "value": null,
+              "unit": "percent",
+              "verification": {
+                "status": "missing",
+                "sourceIds": []
+              }
+            }
           }
         }
       },
@@ -277,7 +358,10 @@
       },
       "verification": {
         "status": "reference-checked",
-        "sourceIds": ["dd1-crusader-wiki", "dd1-crusader-strategy"]
+        "sourceIds": [
+          "dd1-crusader-wiki",
+          "dd1-crusader-strategy"
+        ]
       }
     }
   ],
@@ -287,16 +371,83 @@
       "heroId": "darkest-dungeon-1:crusader",
       "name": "Smite",
       "category": "Melee attack",
-      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "choose-one", "ranks": [1, 2] } },
-      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
-      "level1": {
-        "damageModifier": { "value": 0, "unit": "percent", "sign": "always", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "accuracy": { "value": 85, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "criticalModifier": { "value": 0, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "effects": [{ "text": "+15% damage vs unholy.", "kind": "damage-bonus", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } }],
-        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      "rankRules": {
+        "heroPositions": [
+          2,
+          1
+        ],
+        "target": {
+          "side": "enemy",
+          "mode": "choose-one",
+          "ranks": [
+            1,
+            2
+          ]
+        }
       },
-      "progression": { "status": "not-recorded", "levels": [] },
+      "movement": {
+        "status": "not-applicable",
+        "verification": {
+          "status": "not-applicable",
+          "sourceIds": []
+        }
+      },
+      "level1": {
+        "damageModifier": {
+          "value": 0,
+          "unit": "percent",
+          "sign": "always",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "accuracy": {
+          "value": 85,
+          "unit": "points",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "criticalModifier": {
+          "value": 0,
+          "unit": "percent",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "effects": [
+          {
+            "text": "+15% damage vs unholy.",
+            "kind": "damage-bonus",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          }
+        ],
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-gamefaqs",
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "progression": {
+        "status": "not-recorded",
+        "levels": []
+      },
       "editorial": {
         "description": "A direct frontline strike that deals bonus damage to Unholy enemies.",
         "whenToUse": "Use against a priority enemy in rank 1 or 2, especially if it is Unholy."
@@ -307,16 +458,82 @@
       "heroId": "darkest-dungeon-1:crusader",
       "name": "Zealous Accusation",
       "category": "Ranged attack",
-      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "simultaneous", "ranks": [1, 2] } },
-      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
-      "level1": {
-        "damageModifier": { "value": -40, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "accuracy": { "value": 85, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "unavailable", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "effects": [{ "text": "Attack both front enemy ranks.", "kind": "targeting", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }],
-        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      "rankRules": {
+        "heroPositions": [
+          2,
+          1
+        ],
+        "target": {
+          "side": "enemy",
+          "mode": "simultaneous",
+          "ranks": [
+            1,
+            2
+          ]
+        }
       },
-      "progression": { "status": "not-recorded", "levels": [] },
+      "movement": {
+        "status": "not-applicable",
+        "verification": {
+          "status": "not-applicable",
+          "sourceIds": []
+        }
+      },
+      "level1": {
+        "damageModifier": {
+          "value": -40,
+          "unit": "percent",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "accuracy": {
+          "value": 85,
+          "unit": "points",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "criticalModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "unavailable",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "effects": [
+          {
+            "text": "Attack both front enemy ranks.",
+            "kind": "targeting",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-wiki"
+              ]
+            }
+          }
+        ],
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-gamefaqs",
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "progression": {
+        "status": "not-recorded",
+        "levels": []
+      },
       "editorial": {
         "description": "A ranged attack that hits both front enemy ranks at the same time.",
         "whenToUse": "Use when both front ranks are worth damaging. This splits damage, so focus fire may be better when removing one enemy would prevent its next action."
@@ -327,16 +544,82 @@
       "heroId": "darkest-dungeon-1:crusader",
       "name": "Stunning Blow",
       "category": "Melee attack · Stun",
-      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "choose-one", "ranks": [1, 2] } },
-      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
-      "level1": {
-        "damageModifier": { "value": -50, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "accuracy": { "value": 90, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "unavailable", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "effects": [{ "text": "Stun.", "kind": "status", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }],
-        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      "rankRules": {
+        "heroPositions": [
+          2,
+          1
+        ],
+        "target": {
+          "side": "enemy",
+          "mode": "choose-one",
+          "ranks": [
+            1,
+            2
+          ]
+        }
       },
-      "progression": { "status": "not-recorded", "levels": [] },
+      "movement": {
+        "status": "not-applicable",
+        "verification": {
+          "status": "not-applicable",
+          "sourceIds": []
+        }
+      },
+      "level1": {
+        "damageModifier": {
+          "value": -50,
+          "unit": "percent",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "accuracy": {
+          "value": 90,
+          "unit": "points",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "criticalModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "unavailable",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "effects": [
+          {
+            "text": "Stun.",
+            "kind": "status",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-wiki"
+              ]
+            }
+          }
+        ],
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-gamefaqs",
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "progression": {
+        "status": "not-recorded",
+        "levels": []
+      },
       "editorial": {
         "description": "A frontline strike that can stun one enemy, making it lose its next turn if the stun succeeds.",
         "whenToUse": "Use to delay a dangerous front enemy. Stun resistance can prevent the effect."
@@ -347,22 +630,115 @@
       "heroId": "darkest-dungeon-1:crusader",
       "name": "Bulwark of Faith",
       "category": "Self buff · Defense",
-      "rankRules": { "heroPositions": [2, 1], "target": { "side": "self", "mode": "self", "ranks": [] } },
-      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
-      "level1": {
-        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "accuracy": { "value": null, "unit": "points", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "effects": [
-          { "text": "+20% PROT", "kind": "buff", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-          { "text": "mark self", "kind": "mark", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-          { "text": "torch +24.", "kind": "torch", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-          { "text": "The PROT bonus and self-mark last 1 battle.", "kind": "duration", "presentationGroup": "detail", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } },
-          { "text": "Limited to 1 use per battle.", "kind": "limitation", "presentationGroup": "detail", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }
+      "rankRules": {
+        "heroPositions": [
+          2,
+          1
         ],
-        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+        "target": {
+          "side": "self",
+          "mode": "self",
+          "ranks": []
+        }
       },
-      "progression": { "status": "not-recorded", "levels": [] },
+      "movement": {
+        "status": "not-applicable",
+        "verification": {
+          "status": "not-applicable",
+          "sourceIds": []
+        }
+      },
+      "level1": {
+        "damageModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "accuracy": {
+          "value": null,
+          "unit": "points",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "criticalModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "effects": [
+          {
+            "text": "+20% PROT",
+            "kind": "buff",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          },
+          {
+            "text": "mark self",
+            "kind": "mark",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          },
+          {
+            "text": "torch +24.",
+            "kind": "torch",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          },
+          {
+            "text": "The PROT bonus and self-mark last 1 battle.",
+            "kind": "duration",
+            "presentationGroup": "detail",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-wiki"
+              ]
+            }
+          },
+          {
+            "text": "Limited to 1 use per battle.",
+            "kind": "limitation",
+            "presentationGroup": "detail",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-wiki"
+              ]
+            }
+          }
+        ],
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-gamefaqs",
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "progression": {
+        "status": "not-recorded",
+        "levels": []
+      },
       "editorial": {
         "description": "Hardens the Crusader and marks him, drawing attacks toward him for a short time.",
         "whenToUse": "Use when the Crusader can take the incoming hits and you want to protect a more vulnerable ally."
@@ -373,16 +749,80 @@
       "heroId": "darkest-dungeon-1:crusader",
       "name": "Battle Heal",
       "category": "Ally heal",
-      "rankRules": { "heroPositions": [4, 3, 2, 1], "target": { "side": "ally", "mode": "choose-one", "ranks": [4, 3, 2, 1] } },
-      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
-      "level1": {
-        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "accuracy": { "value": null, "unit": "points", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "effects": [{ "text": "Heal 2–3.", "kind": "heal", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } }],
-        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+      "rankRules": {
+        "heroPositions": [
+          4,
+          3,
+          2,
+          1
+        ],
+        "target": {
+          "side": "ally",
+          "mode": "choose-one",
+          "ranks": [
+            4,
+            3,
+            2,
+            1
+          ]
+        }
       },
-      "progression": { "status": "not-recorded", "levels": [] },
+      "movement": {
+        "status": "not-applicable",
+        "verification": {
+          "status": "not-applicable",
+          "sourceIds": []
+        }
+      },
+      "level1": {
+        "damageModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "accuracy": {
+          "value": null,
+          "unit": "points",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "criticalModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "effects": [
+          {
+            "text": "Heal 2–3.",
+            "kind": "heal",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          }
+        ],
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-gamefaqs",
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "progression": {
+        "status": "not-recorded",
+        "levels": []
+      },
       "editorial": {
         "description": "Restores a small amount of health to one ally in any party position.",
         "whenToUse": "Use to stabilize a wounded ally when the Crusader does not need to attack."
@@ -393,19 +833,98 @@
       "heroId": "darkest-dungeon-1:crusader",
       "name": "Holy Lance",
       "category": "Melee attack · Movement",
-      "rankRules": { "heroPositions": [2, 1], "target": { "side": "enemy", "mode": "choose-one", "ranks": [2, 3, 4] } },
-      "movement": { "status": "reference-checked", "actor": "hero", "direction": "forward", "ranks": 1, "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } },
-      "level1": {
-        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "unavailable", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "accuracy": { "value": 85, "unit": "points", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "criticalModifier": { "value": 7.5, "unit": "percent", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-        "effects": [
-          { "text": "+15% damage vs unholy", "kind": "damage-bonus", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-          { "text": "move forward 1.", "kind": "movement", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-wiki"] } }
+      "rankRules": {
+        "heroPositions": [
+          2,
+          1
         ],
-        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+        "target": {
+          "side": "enemy",
+          "mode": "choose-one",
+          "ranks": [
+            2,
+            3,
+            4
+          ]
+        }
       },
-      "progression": { "status": "not-recorded", "levels": [] },
+      "movement": {
+        "status": "reference-checked",
+        "actor": "hero",
+        "direction": "forward",
+        "ranks": 1,
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "level1": {
+        "damageModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "unavailable",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "accuracy": {
+          "value": 85,
+          "unit": "points",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "criticalModifier": {
+          "value": 7.5,
+          "unit": "percent",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "dd1-crusader-gamefaqs"
+            ]
+          }
+        },
+        "effects": [
+          {
+            "text": "+15% damage vs unholy",
+            "kind": "damage-bonus",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          },
+          {
+            "text": "move forward 1.",
+            "kind": "movement",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-wiki"
+              ]
+            }
+          }
+        ],
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-gamefaqs",
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "progression": {
+        "status": "not-recorded",
+        "levels": []
+      },
       "editorial": {
         "description": "A lunging strike that reaches the enemy back ranks and moves the Crusader forward.",
         "whenToUse": "Use after the Crusader has been pushed back, or when the enemy back line is the priority. Check the party formation after he advances."
@@ -416,20 +935,100 @@
       "heroId": "darkest-dungeon-1:crusader",
       "name": "Inspiring Cry",
       "category": "Party support · Heal and stress relief",
-      "rankRules": { "heroPositions": [4, 3, 2, 1], "target": { "side": "ally", "mode": "all", "ranks": [4, 3, 2, 1] } },
-      "movement": { "status": "not-applicable", "verification": { "status": "not-applicable", "sourceIds": [] } },
-      "level1": {
-        "damageModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "accuracy": { "value": null, "unit": "points", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "criticalModifier": { "value": null, "unit": "percent", "verification": { "status": "not-applicable", "sourceIds": [] } },
-        "effects": [
-          { "text": "Heal 1", "kind": "heal", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-          { "text": "heal 5 stress", "kind": "stress-heal", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } },
-          { "text": "torch +5.", "kind": "torch", "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs"] } }
+      "rankRules": {
+        "heroPositions": [
+          4,
+          3,
+          2,
+          1
         ],
-        "verification": { "status": "reference-checked", "sourceIds": ["dd1-crusader-gamefaqs", "dd1-crusader-wiki"] }
+        "target": {
+          "side": "ally",
+          "mode": "all",
+          "ranks": [
+            4,
+            3,
+            2,
+            1
+          ]
+        }
       },
-      "progression": { "status": "not-recorded", "levels": [] },
+      "movement": {
+        "status": "not-applicable",
+        "verification": {
+          "status": "not-applicable",
+          "sourceIds": []
+        }
+      },
+      "level1": {
+        "damageModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "accuracy": {
+          "value": null,
+          "unit": "points",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "criticalModifier": {
+          "value": null,
+          "unit": "percent",
+          "verification": {
+            "status": "not-applicable",
+            "sourceIds": []
+          }
+        },
+        "effects": [
+          {
+            "text": "Heal 1",
+            "kind": "heal",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          },
+          {
+            "text": "heal 5 stress",
+            "kind": "stress-heal",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          },
+          {
+            "text": "torch +5.",
+            "kind": "torch",
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "dd1-crusader-gamefaqs"
+              ]
+            }
+          }
+        ],
+        "verification": {
+          "status": "reference-checked",
+          "sourceIds": [
+            "dd1-crusader-gamefaqs",
+            "dd1-crusader-wiki"
+          ]
+        }
+      },
+      "progression": {
+        "status": "not-recorded",
+        "levels": []
+      },
       "editorial": {
         "description": "Gives every party member a small heal and reduces stress, while raising the torchlight.",
         "whenToUse": "Use when the party needs a little recovery or the torchlight needs a boost."
@@ -565,7 +1164,9 @@
       "heroRouteIds": [
         "highwayman"
       ],
-      "classRestrictionHeroRouteIds": ["highwayman"]
+      "classRestrictionHeroRouteIds": [
+        "highwayman"
+      ]
     },
     {
       "id": "darkest-dungeon-1:trinket:reckless-charm",
@@ -1046,7 +1647,9 @@
       "heroRouteIds": [
         "highwayman"
       ],
-      "classRestrictionHeroRouteIds": ["highwayman"],
+      "classRestrictionHeroRouteIds": [
+        "highwayman"
+      ],
       "requirements": {
         "baseGame": false,
         "dlc": [
@@ -1096,7 +1699,9 @@
       "heroRouteIds": [
         "highwayman"
       ],
-      "classRestrictionHeroRouteIds": ["highwayman"],
+      "classRestrictionHeroRouteIds": [
+        "highwayman"
+      ],
       "requirements": {
         "baseGame": false,
         "dlc": [
@@ -1157,7 +1762,9 @@
       "heroRouteIds": [
         "crusader"
       ],
-      "classRestrictionHeroRouteIds": ["crusader"],
+      "classRestrictionHeroRouteIds": [
+        "crusader"
+      ],
       "requirements": {
         "baseGame": false,
         "dlc": [
@@ -1229,7 +1836,9 @@
       "heroRouteIds": [
         "crusader"
       ],
-      "classRestrictionHeroRouteIds": ["crusader"],
+      "classRestrictionHeroRouteIds": [
+        "crusader"
+      ],
       "requirements": {
         "baseGame": false,
         "dlc": [
@@ -2233,7 +2842,643 @@
           "wiki-necromancer",
           "hintbook-necromancer"
         ]
-      }
+      },
+      "counterTeams": [
+        {
+          "id": "darkest-dungeon-1:boss-team:necromancer-beginner",
+          "name": "Beginner · reliable back-line pressure",
+          "category": "beginner",
+          "purpose": "Accessible base-game team with direct damage, blight and strong recovery.",
+          "difficultyRecommendations": "Apprentice; remains usable on Veteran.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "vestal",
+              "role": "Party healer with emergency recovery",
+              "skills": [
+                {
+                  "name": "Judgement",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Divine Grace",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Divine Comfort",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "All allies"
+                },
+                {
+                  "name": "Dazzling Light",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 3,
+              "heroRouteId": "plague-doctor",
+              "role": "Back-rank blight and control",
+              "skills": [
+                {
+                  "name": "Noxious Blast",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Plague Grenade",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "3 + 4"
+                },
+                {
+                  "name": "Blinding Gas",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "3 + 4"
+                },
+                {
+                  "name": "Battlefield Medicine",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 2,
+              "heroRouteId": "highwayman",
+              "role": "Flexible damage and Riposte",
+              "skills": [
+                {
+                  "name": "Wicked Slice",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Pistol Shot",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Duelist’s Advance",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3"
+                },
+                {
+                  "name": "Open Vein",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 1,
+              "heroRouteId": "hellion",
+              "role": "Front-line damage with back-rank reach",
+              "skills": [
+                {
+                  "name": "Wicked Hack",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Iron Swan",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "4"
+                },
+                {
+                  "name": "Barbaric YAWP!",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1 + 2"
+                },
+                {
+                  "name": "Adrenaline Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            }
+          ],
+          "openingStrategy": "Keep the skeletons alive unless they block a needed target or threaten a hero. Concentrate Hellion and ranged pressure on the Necromancer as he retreats; Vestal heals only when needed. Blinding Gas can stun the rear skeletons, but the boss has high Stun resistance.",
+          "skeletonStrategy": "Summons are life-linked to the boss and disappear when he dies. Prioritize boss damage over clearing every skeleton; stun can prevent a summon, but the Necromancer has high Stun resistance.",
+          "alternatives": "If a listed hero is unavailable, choose a replacement with a verified attack that reaches enemy rank 4; recheck all four equipped skills against the replacement’s chosen position.",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-necromancer",
+            "hintbook-necromancer"
+          ]
+        },
+        {
+          "id": "darkest-dungeon-1:boss-team:necromancer-balanced",
+          "name": "Balanced · blight and recovery",
+          "category": "balanced",
+          "purpose": "A forgiving core with reliable healing and a Grave Robber who can reach deep ranks.",
+          "difficultyRecommendations": "Apprentice and Veteran.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "vestal",
+              "role": "Party healer with emergency recovery",
+              "skills": [
+                {
+                  "name": "Judgement",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Divine Grace",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "One ally"
+                },
+                {
+                  "name": "Divine Comfort",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "All allies"
+                },
+                {
+                  "name": "Dazzling Light",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 3,
+              "heroRouteId": "plague-doctor",
+              "role": "Back-rank blight and control",
+              "skills": [
+                {
+                  "name": "Noxious Blast",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Plague Grenade",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "3 + 4"
+                },
+                {
+                  "name": "Blinding Gas",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "3 + 4"
+                },
+                {
+                  "name": "Disorienting Blast",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "2,3,4"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 2,
+              "heroRouteId": "grave-robber",
+              "role": "Mobile damage and blight",
+              "skills": [
+                {
+                  "name": "Pick to the Face",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Flashing Daggers",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "2 + 3"
+                },
+                {
+                  "name": "Thrown Dagger",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Poison Dart",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3,4"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 1,
+              "heroRouteId": "hellion",
+              "role": "Front-line damage with back-rank reach",
+              "skills": [
+                {
+                  "name": "Wicked Hack",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Iron Swan",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "4"
+                },
+                {
+                  "name": "Barbaric YAWP!",
+                  "heroPositions": [
+                    2,
+                    1
+                  ],
+                  "target": "1 + 2"
+                },
+                {
+                  "name": "Adrenaline Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "Self"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            }
+          ],
+          "openingStrategy": "Open with Plague Grenade and rear-rank attacks while the boss is reachable. Use Iron Swan and Thrown Dagger after his retreats. Save healing for meaningful damage; summoned enemies disappear when the Necromancer dies.",
+          "skeletonStrategy": "Summons are life-linked to the boss and disappear when he dies. Prioritize boss damage over clearing every skeleton; stun can prevent a summon, but the Necromancer has high Stun resistance.",
+          "alternatives": "If a listed hero is unavailable, choose a replacement with a verified attack that reaches enemy rank 4; recheck all four equipped skills against the replacement’s chosen position.",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-necromancer",
+            "hintbook-necromancer"
+          ]
+        },
+        {
+          "id": "darkest-dungeon-1:boss-team:necromancer-specialized",
+          "name": "Specialized · mark and Guard counter",
+          "category": "specialized",
+          "purpose": "A back-line mark team with Shieldbreaker Puncture to break Guard and reach protected targets.",
+          "difficultyRecommendations": "Veteran and Champion; Champion Guard counter is the specialist purpose.",
+          "requirements": {
+            "baseGame": true,
+            "dlc": [
+              "shieldbreaker"
+            ],
+            "mods": []
+          },
+          "members": [
+            {
+              "position": 4,
+              "heroRouteId": "arbalest",
+              "role": "Back-line damage and marking",
+              "skills": [
+                {
+                  "name": "Sniper Shot",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Sniper’s Mark",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "2,3,4"
+                },
+                {
+                  "name": "Bola",
+                  "heroPositions": [
+                    4,
+                    3
+                  ],
+                  "target": "1 + 2"
+                },
+                {
+                  "name": "Rallying Flare",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "All enemies"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 3,
+              "heroRouteId": "houndmaster",
+              "role": "Mark support and flexible attacks",
+              "skills": [
+                {
+                  "name": "Hound’s Rush",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Target Whistle",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Hound’s Harry",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1 + 2 + 3 + 4"
+                },
+                {
+                  "name": "Guard Dog",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "One ally"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 2,
+              "heroRouteId": "bounty-hunter",
+              "role": "Marked-target damage and control",
+              "skills": [
+                {
+                  "name": "Collect Bounty",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Mark for Death",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Finish Him",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3"
+                },
+                {
+                  "name": "Caltrops",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2
+                  ],
+                  "target": "3,4"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            },
+            {
+              "position": 1,
+              "heroRouteId": "shieldbreaker",
+              "role": "Armor-piercing attacks and Guard counter",
+              "skills": [
+                {
+                  "name": "Pierce",
+                  "heroPositions": [
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Puncture",
+                  "heroPositions": [
+                    4,
+                    3,
+                    2,
+                    1
+                  ],
+                  "target": "1,2,3,4"
+                },
+                {
+                  "name": "Adder’s Kiss",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "1,2"
+                },
+                {
+                  "name": "Impale",
+                  "heroPositions": [
+                    1
+                  ],
+                  "target": "1 + 2 + 3 + 4"
+                }
+              ],
+              "trinketIds": [
+                "damage-stone",
+                "quick-draw-charm"
+              ]
+            }
+          ],
+          "openingStrategy": "Mark the Necromancer with Arbalest or Houndmaster, then focus Arbalest and Bounty Hunter attacks on him. At Champion, use Shieldbreaker’s Puncture to break a Bone Defender’s Guard and pull through protection; attack the boss directly whenever possible. Stealth removal is not assigned here, so let higher-tier Bone Soldiers lose Stealth before targeting them.",
+          "skeletonStrategy": "Summons are life-linked to the boss and disappear when he dies. Prioritize boss damage over clearing every skeleton; stun can prevent a summon, but the Necromancer has high Stun resistance.",
+          "alternatives": "If a listed hero is unavailable, choose a replacement with a verified attack that reaches enemy rank 4; recheck all four equipped skills against the replacement’s chosen position.",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-necromancer",
+              "hintbook-necromancer"
+            ]
+          },
+          "strategySourceIds": [
+            "wiki-necromancer",
+            "hintbook-necromancer"
+          ]
+        }
+      ]
     },
     {
       "id": "darkest-dungeon-1:boss:swine-prince",
@@ -6651,8 +7896,7 @@
     }
   ],
   "teamCompositions": [],
-  "strategyRecommendations": []
-,
+  "strategyRecommendations": [],
   "dlcs": [
     {
       "id": "darkest-dungeon-1:dlc:crimson-court",
@@ -6679,8 +7923,7 @@
           "dd1-boss-index"
         ]
       }
-    }
-  ,
+    },
     {
       "id": "darkest-dungeon-1:dlc:shieldbreaker",
       "name": "The Shieldbreaker",
@@ -6693,7 +7936,8 @@
           "wiki-shieldbreaker-dlc"
         ]
       }
-    }],
+    }
+  ],
   "regions": [
     {
       "id": "darkest-dungeon-1:region:ruins",
@@ -6891,9 +8135,8 @@
       "name": "Darkest Dungeon · spoilers",
       "order": 10
     }
-  ]
-,
-  "trinketSets":   [
+  ],
+  "trinketSets": [
     {
       "id": "darkest-dungeon-1:trinket-set:highwayman",
       "name": "Highwayman set",
@@ -6937,7 +8180,7 @@
       }
     }
   ],
-  "items":   [
+  "items": [
     {
       "id": "darkest-dungeon-1:item:food",
       "routeId": "food",
@@ -7491,7 +8734,7 @@
       "assetPath": null
     }
   ],
-  "curios":   [
+  "curios": [
     {
       "id": "darkest-dungeon-1:curio:alchemy-table",
       "routeId": "alchemy-table",
@@ -8243,7 +9486,7 @@
       "assetPath": null
     }
   ],
-  "locations":   [
+  "locations": [
     {
       "id": "darkest-dungeon-1:location:ruins",
       "routeId": "ruins",
@@ -8602,7 +9845,7 @@
       }
     }
   ],
-  "quests":   [
+  "quests": [
     {
       "id": "darkest-dungeon-1:quest:short-expedition",
       "routeId": "short-expedition",

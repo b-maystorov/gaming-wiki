@@ -264,3 +264,42 @@ test('a checkout without private assets keeps legacy artwork and usable routes',
     assert.ok(hero.includes('assets/images/darkest-dungeon/crusader-portrait.png'));
   } finally { artwork.setArtworkManifest(artworkManifest); }
 });
+
+test('Necromancer page renders three complete counter teams with valid ranks, skills and trinkets', () => {
+  const boss = pack.bosses.find(record => record.routeId === 'necromancer');
+  const teams = boss.counterTeams || [];
+  assert.deepEqual(teams.map(team => team.category), ['beginner', 'balanced', 'specialized']);
+  const legacyHeroes = h.modules.get(resolve(root, 'dist/js/heroes.js')).namespace.heroes;
+  const abilityData = h.modules.get(resolve(root, 'dist/js/hero-abilities.js')).namespace.heroAbilities;
+  for (const team of teams) {
+    assert.equal(team.members.length, 4);
+    assert.deepEqual(team.members.map(member => member.position), [4, 3, 2, 1]);
+    for (const member of team.members) {
+      assert.ok(legacyHeroes.some(hero => hero.id === member.heroRouteId), member.heroRouteId);
+      assert.equal(member.skills.length, 4);
+      const available = abilityData[member.heroRouteId]?.skills || [];
+      for (const skill of member.skills) {
+        const record = available.find(entry => entry[0] === skill.name);
+        assert.ok(record, `${member.heroRouteId}: ${skill.name}`);
+        assert.ok(record[1].split(',').includes(String(member.position)), `${member.heroRouteId}/${skill.name} at ${member.position}`);
+        assert.deepEqual(skill.heroPositions, record[1].split(',').map(Number));
+        for (const target of record[2].matchAll(/\d/g)) assert.ok(Number(target[0]) >= 1 && Number(target[0]) <= 4);
+      }
+      assert.equal(member.trinketIds.length, 2);
+      for (const routeId of member.trinketIds) {
+        const item = pack.trinkets.find(trinket => trinket.routeId === routeId);
+        assert.ok(item, routeId);
+        assert.ok(!(item.classRestrictionHeroRouteIds || []).length || item.classRestrictionHeroRouteIds.includes(member.heroRouteId));
+        assert.ok(item.requirements.baseGame || item.requirements.dlc.length);
+      }
+    }
+  }
+  const html = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/bosses/necromancer'));
+  assert.equal((html.match(/data-counter-team=/g) || []).length, 3);
+  for (const team of teams) {
+    assert.ok(html.includes(team.name));
+    assert.ok(html.includes('Skills and trinkets by hero'));
+    for (const member of team.members) assert.ok(html.includes(`Position ${member.position}`));
+  }
+  assert.ok(html.includes('shieldbreaker.png') || html.includes('shieldbreaker-portrait.png'));
+});

@@ -375,6 +375,17 @@ def check_pack(pack):
             require(hero_route_id in hero_route_ids, f"boss {boss['id']}: unknown hero route {hero_route_id!r}")
         for composition_id in boss.get("relatedCompositionIds", []):
             require(composition_id in composition_ids, f"boss {boss['id']}: unknown composition {composition_id!r}")
+        for team in boss.get("counterTeams", []):
+            require(len(team.get("members", [])) == 4, f"boss {boss['id']}: counter team must contain four heroes")
+            require([member.get("position") for member in team["members"]] == [4, 3, 2, 1], f"boss {boss['id']}: counter team positions must be 4→1")
+            for member in team["members"]:
+                require(member.get("heroRouteId") in hero_route_ids, f"boss {boss['id']}: unknown counter-team hero")
+                require(len(member.get("skills", [])) == 4, f"boss {boss['id']}: each counter-team hero needs four skills")
+                require(all(isinstance(skill.get("heroPositions"), list) and member["position"] in skill["heroPositions"] for skill in member["skills"]), f"boss {boss['id']}: counter-team skill is invalid for assigned rank")
+                for route_id in member.get("trinketIds", []):
+                    trinket = next((item for item in pack["trinkets"] if item["routeId"] == route_id), None)
+                    require(trinket is not None, f"boss {boss['id']}: unknown counter-team trinket {route_id}")
+                    require(not trinket.get("classRestrictionHeroRouteIds") or member["heroRouteId"] in trinket["classRestrictionHeroRouteIds"], f"boss {boss['id']}: counter-team trinket restricted from hero")
         if boss["guideStatus"] == "available":
             require(bool(boss.get("guideVerification")), f"boss {boss['id']}: available guide requires guideVerification")
             require(all(isinstance(boss.get(field), list) and boss[field] for field in ("mechanics", "variants", "attacks", "tacticalConsiderations")), f"boss {boss['id']}: available guide is missing detail sections")

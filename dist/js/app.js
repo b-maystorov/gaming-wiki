@@ -454,7 +454,19 @@ function renderRelatedBossHeroes(boss) {
   return `<ul class="boss-related-links">${related.map(hero => `<li><a href="#hero/${escapeHtml(hero.id)}/${hero.guide ? 'overview' : 'abilities'}">${escapeHtml(hero.name)} <span aria-hidden="true">→</span></a></li>`).join('')}</ul><p class="guide-data-note">These links provide hero background only; they are not a boss ranking or guaranteed counter list.</p>`;
 }
 
+function renderBossCounterTeam(team) {
+  const positions = team.members.map(member => `<li><span>Position ${member.position}</span>${renderTeamPortrait(heroes.find(hero => hero.id === member.heroRouteId)?.name || member.heroRouteId)}<strong>${renderHeroName(heroes.find(hero => hero.id === member.heroRouteId)?.name || member.heroRouteId)}</strong><span class="counter-team-role">${escapeHtml(member.role)}</span></li>`).join('');
+  const details = team.members.map(member => {
+    const hero = heroes.find(entry => entry.id === member.heroRouteId);
+    const trinkets = member.trinketIds.map(id => structuredGameContent.trinkets.find(item => item.routeId === id)).filter(Boolean);
+    return `<section class="counter-team-build"><h4>Position ${member.position}: <a href="#hero/${escapeHtml(member.heroRouteId)}/abilities">${escapeHtml(hero?.name || member.heroRouteId)}</a></h4><p><strong>Role:</strong> ${escapeHtml(member.role)}</p><p><strong>Skills:</strong> ${member.skills.map(skill => escapeHtml(skill.name)).join(' · ')}</p><p><strong>Trinkets:</strong> ${trinkets.map(item => `${escapeHtml(item.name)} (${escapeHtml(item.effects.map(effect => effect.text).join('; '))})`).join(' · ') || 'No verified trinkets recorded'}</p></section>`;
+  }).join('');
+  return `<article class="panel boss-counter-team" data-counter-team="${escapeHtml(team.category)}"><p class="eyebrow">${escapeHtml(team.difficultyRecommendations)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><p>${escapeHtml(team.purpose)}</p><ol class="counter-team-party" aria-label="Formation, position 4 to position 1">${positions}</ol><p class="counter-team-plan"><strong>Opening:</strong> ${escapeHtml(team.openingStrategy)}</p><p class="counter-team-plan"><strong>Summons:</strong> ${escapeHtml(team.skeletonStrategy)}</p><p class="counter-team-plan"><strong>Alternatives:</strong> ${escapeHtml(team.alternatives)}</p><details><summary>Skills and trinkets by hero</summary>${details}</details></article>`;
+}
+
 function renderRelatedBossTeams(boss) {
+  const bossTeams = boss.counterTeams || [];
+  if (bossTeams.length) return `<div class="boss-counter-teams">${bossTeams.map(renderBossCounterTeam).join('')}</div>`;
   const teams = getTeams().filter(team => (boss.relatedCompositionIds || []).includes(team.id));
   return teams.length ? `<div class="team-list">${teams.map(renderTeamCard).join('')}</div>` : `<p class="guide-development-note">No boss-specific team compositions are documented yet. <a href="#game/darkest-dungeon/teams">Browse existing compositions</a> (not assessed for this encounter).</p>`;
 }
