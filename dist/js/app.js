@@ -304,7 +304,11 @@ function encyclopediaHref(kind, record) {
 function renderEncyclopediaCard(kind, record, meta, summary, extraMarkup = '') {
   const label = Array.isArray(meta) ? meta.join(' · ') : meta;
   const title = record.name;
-  return `<a class="encyclopedia-card encyclopedia-card-${kind}" data-encyclopedia-card data-search-text="${escapeHtml(`${title} ${label} ${summary} ${encyclopediaSearchText(kind, record, structuredGameContent, heroes)}`.toLowerCase())}" data-region-ids="${escapeHtml((record.regionIds || []).join(' '))}" href="${escapeHtml(encyclopediaHref(kind, record))}">
+  const cardData = `data-encyclopedia-card data-route-id="${escapeHtml(record.routeId)}" data-search-text="${escapeHtml(`${title} ${label} ${summary} ${encyclopediaSearchText(kind, record, structuredGameContent, heroes)}`.toLowerCase())}" data-region-ids="${escapeHtml((record.regionIds || []).join(' '))}"`;
+  const href = escapeHtml(encyclopediaHref(kind, record));
+  if (kind === 'trinkets') return `<article class="encyclopedia-card encyclopedia-card-trinkets" ${cardData}>
+    <a class="encyclopedia-card-art-link" href="${href}" tabindex="-1" aria-hidden="true">${renderEntryArtwork(kind, record, 'thumbnail')}</a><a class="encyclopedia-card-copy" href="${href}"><small>${escapeHtml(label)}</small><strong>${escapeHtml(title)}</strong><span>${escapeHtml(summary)}</span><em>Open entry →</em></a>${extraMarkup}</article>`;
+  return `<a class="encyclopedia-card encyclopedia-card-${kind}" ${cardData} href="${href}">
     ${renderEntryArtwork(kind, record, 'thumbnail')}<span class="encyclopedia-card-copy"><small>${escapeHtml(label)}</small><strong>${escapeHtml(title)}</strong><span>${escapeHtml(summary)}</span>${extraMarkup}<em>Open entry →</em></span></a>`;
 }
 
@@ -325,7 +329,7 @@ function filterEncyclopedia() {
   const kind = location.hash.replace(/^#game\/darkest-dungeon\//, '').split('/')[0];
   let visible = 0;
   for (const card of cards) {
-    const record = collectionRecords(kind).find(entry => card.href.endsWith(`/${entry.routeId}`));
+    const record = collectionRecords(kind).find(entry => entry.routeId === card.dataset.routeId || card.href?.endsWith(`/${entry.routeId}`));
     const matchText = card.dataset.searchText.includes(query);
     let matchFilter = matchesCollectionFilter(kind, record, filter);
     if (record) for (const [field, value] of extraFilters) {
@@ -361,7 +365,7 @@ function renderEncyclopediaCollection(kind) {
     return sourceNames.length ? `Sources: ${sourceNames.join(', ')}` : 'Source details not recorded';
   };
   const trinketSummary = record => `${record.effects?.length ? record.effects.map(effect => effect.text).join(' · ') : 'Effects are not recorded.'} · ${verificationLabel('trinkets', record)}`;
-  const renderTrinketCard = record => renderEncyclopediaCard('trinkets', record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).filter(Boolean).join(', '), trinketSourceLabel(record)], trinketSummary(record));
+  const renderTrinketCard = record => renderEncyclopediaCard('trinkets', record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).filter(Boolean).join(', '), trinketSourceLabel(record)], trinketSummary(record), renderTrinketOwnershipControl(record, 'trinket-card-owned'));
   const cards = records.map(record => {
     if (kind === 'enemies') return renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary);
     if (kind === 'trinkets') {
@@ -386,8 +390,9 @@ function renderEncyclopediaCollection(kind) {
   ].filter(([, entries]) => entries.length).map(([name, entries]) => `<section class="encyclopedia-group" data-encyclopedia-group><div class="section-heading"><h2>${escapeHtml(name)}</h2><span>${entries.length} entries</span></div><div class="encyclopedia-grid encyclopedia-grid-enemies">${entries.map(record => renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary)).join('')}</div></section>`).join('') : kind === 'trinkets'
     ? ['Common', 'Uncommon', 'Rare', 'Very rare', 'Ancestral', 'Trophy', 'Crimson Court'].map(rarity => [rarity, records.filter(record => record.rarity === rarity)]).filter(([, entries]) => entries.length).map(([rarity, entries]) => `<section class="encyclopedia-group trinket-rarity-group" data-encyclopedia-group data-trinket-rarity="${escapeHtml(rarity)}"><div class="section-heading"><h2>${escapeHtml(rarity)}</h2><span>${entries.length} ${entries.length === 1 ? 'trinket' : 'trinkets'}</span></div><div class="encyclopedia-grid encyclopedia-grid-trinkets">${entries.map(renderTrinketCard).join('')}</div></section>`).join('')
     : `<div class="encyclopedia-grid encyclopedia-grid-${kind}">${cards}</div>`;
+  const ownershipTools = kind === 'trinkets' ? `<div class="trinket-collection-tools"><button type="button" class="clear-owned-trinkets" data-clear-owned-trinkets>Clear owned list</button><p data-ownership-storage-status role="status" aria-live="polite">Ownership is stored only in this browser. Copies are not counted.</p></div>` : '';
   return `<section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / Field encyclopedia</p><h1 id="page-title" tabindex="-1">${config.title}</h1><p class="lede">${config.intro}</p>${kind === 'enemies' ? '<p class="guide-data-note">Minibosses and bosses are listed separately in the <a href="#game/darkest-dungeon/bosses">Bosses encyclopedia</a>.</p>' : ''}</section>
-    <section class="encyclopedia-controls" aria-label="Filter ${config.title}"><div><label for="encyclopedia-search">Search ${config.title.toLowerCase()}</label><input id="encyclopedia-search" type="search" placeholder="${config.search}" autocomplete="off"></div><div><label for="encyclopedia-filter">Filter by ${config.filter.toLowerCase()}</label><select id="encyclopedia-filter"><option value="all">All ${config.filter.toLowerCase()}s</option>${filterValues.map(([value,label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div>${moreFilters}<p id="encyclopedia-status" role="status" aria-live="polite">${records.length} ${config.title.toLowerCase()} entries.</p></section>
+    <section class="encyclopedia-controls" aria-label="Filter ${config.title}"><div><label for="encyclopedia-search">Search ${config.title.toLowerCase()}</label><input id="encyclopedia-search" type="search" placeholder="${config.search}" autocomplete="off"></div><div><label for="encyclopedia-filter">Filter by ${config.filter.toLowerCase()}</label><select id="encyclopedia-filter"><option value="all">All ${config.filter.toLowerCase()}s</option>${filterValues.map(([value,label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div>${moreFilters}<p id="encyclopedia-status" role="status" aria-live="polite">${records.length} ${config.title.toLowerCase()} entries.</p></section>${ownershipTools}
     ${groupedCards}<p id="encyclopedia-empty" class="panel" hidden>No entries match these filters. Try another search.</p>`;
 }
 
@@ -400,7 +405,7 @@ function renderEncyclopediaDetail(kind, record) {
   } else if (kind === 'trinkets') {
     const set = structuredGameContent.trinketSets.find(entry => entry.id === record.setId);
     const associatedBoss = record.bossId && structuredGameContent.bosses.find(boss => boss.id === record.bossId);
-    sections = `<section class="encyclopedia-section"><h2>Effects</h2><ul>${record.effects.map(effect => `<li><strong>${effect.polarity === 'negative' ? 'Drawback' : 'Benefit'}:</strong> ${escapeHtml(effect.text)}${effect.condition ? ` <small>(${escapeHtml(effect.condition)})</small>` : ''}</li>`).join('')}</ul></section><section class="encyclopedia-section"><h2>Availability</h2><p>${escapeHtml(requirementLabel(record.requirements))} · ${escapeHtml(record.rarity)}. ${escapeHtml(record.acquisition?.text || 'Acquisition details are not yet recorded.')}</p>${associatedBoss ? `<p>Associated encounter: <a href="#game/darkest-dungeon/bosses/${escapeHtml(associatedBoss.routeId)}">${escapeHtml(associatedBoss.name)}</a>.</p>` : ''}${set ? `<p><strong>${escapeHtml(set.name)} set bonus:</strong> ${escapeHtml(set.bonus.join('; '))} when both class set trinkets are equipped.</p>` : ''}</section>`;
+    sections = `<section class="encyclopedia-section trinket-collection-detail"><h2>My collection</h2>${renderTrinketOwnershipControl(record, 'trinket-detail-owned')}<p data-ownership-storage-status role="status" aria-live="polite">Ownership is stored only in this browser. Copies are not counted.</p></section><section class="encyclopedia-section"><h2>Effects</h2><ul>${record.effects.map(effect => `<li><strong>${effect.polarity === 'negative' ? 'Drawback' : 'Benefit'}:</strong> ${escapeHtml(effect.text)}${effect.condition ? ` <small>(${escapeHtml(effect.condition)})</small>` : ''}</li>`).join('')}</ul></section><section class="encyclopedia-section"><h2>Availability</h2><p>${escapeHtml(requirementLabel(record.requirements))} · ${escapeHtml(record.rarity)}. ${escapeHtml(record.acquisition?.text || 'Acquisition details are not yet recorded.')}</p>${associatedBoss ? `<p>Associated encounter: <a href="#game/darkest-dungeon/bosses/${escapeHtml(associatedBoss.routeId)}">${escapeHtml(associatedBoss.name)}</a>.</p>` : ''}${set ? `<p><strong>${escapeHtml(set.name)} set bonus:</strong> ${escapeHtml(set.bonus.join('; '))} when both class set trinkets are equipped.</p>` : ''}</section>`;
   } else if (kind === 'items') {
     sections = `<section class="encyclopedia-section"><h2>Purpose & limitations</h2><p>${escapeHtml(record.purpose)}</p><p>${escapeHtml(record.usage)}</p><p>${escapeHtml(record.limitations)}</p>${record.effects?.length ? `<ul>${record.effects.map(effect=>`<li>${escapeHtml(effect.text)}</li>`).join('')}</ul>` : ''}<p><strong>Acquisition:</strong> ${escapeHtml(record.acquisition.text)}${record.acquisition.cost !== null ? ` Cost ${record.acquisition.cost} gold · stack ${record.acquisition.stackSize}.` : record.acquisition.stackSize ? ` Stack ${record.acquisition.stackSize}.` : ''}</p></section><section class="encyclopedia-section"><h2>Related curios</h2>${record.relatedCurioIds?.length ? `<ul>${record.relatedCurioIds.map(id=>{const c=structuredGameContent.curios.find(x=>x.id===id);return c?`<li><a href="${encyclopediaHref('curios',c)}">${escapeHtml(c.name)}</a></li>`:''}).join('')}</ul>`:'<p>No curio interactions are recorded for this item.</p>'}</section>`;
   } else if (kind === 'curios') {
@@ -594,7 +599,8 @@ function renderBossCounterPreview(team) {
   }).join('');
   const searchText = `${team.name} ${team.category} ${team.boss.name} ${team.boss.regionLabel} ${requirementLabel(team.requirements)} ${team.requirements.dlc.join(' ')} ${team.purpose} ${team.members.map(member => `${member.heroRouteId} ${member.role}`).join(' ')}`;
   const category = teamCategoryLabels[team.category] || team.category;
-  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}" data-team-id="${escapeHtml(team.id)}" data-team-region="${escapeHtml(regionId)}" data-team-boss="${escapeHtml(team.boss.id)}" data-team-category="${escapeHtml(team.category)}" data-composition-card data-search-text="${escapeHtml(searchText.toLowerCase())}"><p class="eyebrow">${escapeHtml(category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><p class="team-card-association"><a href="#game/darkest-dungeon/bosses/${escapeHtml(team.boss.routeId)}">${escapeHtml(team.boss.name)}</a><span>${escapeHtml(team.boss.regionLabel)}</span></p><p class="team-card-tier"><strong>Recommended tiers:</strong> ${escapeHtml(team.difficultyRecommendations || 'Not recorded')}</p><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p class="preview-tactical-edge"><strong>Why this team works</strong>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a></article>`;
+  const readiness = getTeamEquipmentStats(team);
+  return `<article class="panel boss-counter-preview" data-counter-team="${escapeHtml(team.category)}" data-team-id="${escapeHtml(team.id)}" data-team-region="${escapeHtml(regionId)}" data-team-boss="${escapeHtml(team.boss.id)}" data-team-category="${escapeHtml(team.category)}" data-composition-card data-search-text="${escapeHtml(searchText.toLowerCase())}"><p class="eyebrow">${escapeHtml(category)} · ${requirementLabel(team.requirements)}</p><h3>${escapeHtml(team.name)}</h3><p class="team-card-association"><a href="#game/darkest-dungeon/bosses/${escapeHtml(team.boss.routeId)}">${escapeHtml(team.boss.name)}</a><span>${escapeHtml(team.boss.regionLabel)}</span></p><p class="team-card-tier"><strong>Recommended tiers:</strong> ${escapeHtml(team.difficultyRecommendations || 'Not recorded')}</p><ol class="counter-preview-party" aria-label="Formation, rank 4 to rank 1">${positions}</ol><p class="boss-team-equipment-summary" data-team-equipment-summary="${escapeHtml(team.id)}">Equipment checklist: ${readiness.owned}/${readiness.total} recommended trinkets marked owned</p><p class="preview-tactical-edge"><strong>Why this team works</strong>${escapeHtml(team.purpose)}</p><a class="team-details-link" href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">View full team guide <span aria-hidden="true">→</span></a></article>`;
 }
 
 function teamQuickFacts(team) {
@@ -627,26 +633,117 @@ function renderCounterGuideSkills(member) {
 }
 
 const OWNED_TRINKETS_STORAGE_KEY = 'bm-gaming-wiki-owned-trinkets';
+let memoryOwnedTrinketIds = [];
+
+function normalizeOwnedTrinketId(value) {
+  const trinket = structuredGameContent?.trinkets.find(item => item.id === value || item.routeId === value);
+  return trinket?.id || '';
+}
+
+function saveOwnedTrinketIds(ids) {
+  try {
+    if (typeof localStorage === 'undefined') return false;
+    localStorage.setItem(OWNED_TRINKETS_STORAGE_KEY, JSON.stringify(ids));
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function getOwnedTrinketIds() {
   try {
-    if (typeof localStorage === 'undefined') return [];
+    if (typeof localStorage === 'undefined') return [...memoryOwnedTrinketIds];
     const parsed = JSON.parse(localStorage.getItem(OWNED_TRINKETS_STORAGE_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed.filter(id => structuredGameContent.trinkets.some(item => item.routeId === id)) : [];
+    if (!Array.isArray(parsed)) return [...memoryOwnedTrinketIds];
+    const normalized = [...new Set(parsed.map(normalizeOwnedTrinketId).filter(Boolean))];
+    memoryOwnedTrinketIds = normalized;
+    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) saveOwnedTrinketIds(normalized);
+    return [...normalized];
   } catch {
-    return [];
+    return [...memoryOwnedTrinketIds];
   }
 }
 
 function setOwnedTrinket(id, owned) {
-  if (!structuredGameContent.trinkets.some(item => item.routeId === id)) return getOwnedTrinketIds();
+  const stableId = normalizeOwnedTrinketId(id);
+  if (!stableId) return { ids: getOwnedTrinketIds(), persisted: false };
   const ids = new Set(getOwnedTrinketIds());
-  if (owned) ids.add(id);
-  else ids.delete(id);
-  try {
-    if (typeof localStorage !== 'undefined') localStorage.setItem(OWNED_TRINKETS_STORAGE_KEY, JSON.stringify([...ids]));
-  } catch { /* A blocked browser storage API should not block the guide. */ }
-  return [...ids];
+  if (owned) ids.add(stableId);
+  else ids.delete(stableId);
+  memoryOwnedTrinketIds = [...ids];
+  return { ids: [...ids], persisted: saveOwnedTrinketIds(memoryOwnedTrinketIds) };
+}
+
+function clearOwnedTrinkets() {
+  memoryOwnedTrinketIds = [];
+  return { ids: [], persisted: saveOwnedTrinketIds([]) };
+}
+
+function renderTrinketOwnershipControl(trinket, className = '') {
+  const owned = getOwnedTrinketIds().includes(trinket.id);
+  return `<label class="trinket-owned-control ${className}" data-owned-control data-owned="${owned}" title="Saved in this browser only"><input type="checkbox" data-owned-trinket="${escapeHtml(trinket.id)}" aria-label="Mark ${escapeHtml(trinket.name)} as owned"${owned ? ' checked' : ''}><span>Owned</span><small data-owned-state>${owned ? 'Marked owned' : 'Not marked owned'}</small></label>`;
+}
+
+function ownershipStorageNotice(persisted) {
+  return persisted ? 'Saved in this browser only.' : 'Browser storage is unavailable; this selection will last only for this open session.';
+}
+
+function updateOwnershipControls(trinketId, owned) {
+  document.querySelectorAll('[data-owned-trinket]').forEach(input => {
+    if (input.dataset.ownedTrinket !== trinketId) return;
+    input.checked = owned;
+    const control = input.closest('[data-owned-control]');
+    if (!control) return;
+    control.dataset.owned = String(owned);
+    const status = control.querySelector('[data-owned-state]');
+    if (status) status.textContent = owned ? 'Marked owned' : 'Not marked owned';
+    const option = input.closest('[data-trinket-option]');
+    if (option) option.dataset.owned = String(owned);
+  });
+}
+
+function refreshTeamEquipmentReadiness() {
+  document.querySelectorAll('[data-team-equipment-readiness]').forEach(section => {
+    const team = findBossCounterTeam(section.dataset.teamId);
+    if (team) section.innerHTML = renderTeamEquipmentReadinessContent(team);
+  });
+  document.querySelectorAll('[data-team-equipment-summary]').forEach(summary => {
+    const team = findBossCounterTeam(summary.dataset.teamEquipmentSummary);
+    if (team) {
+      const stats = getTeamEquipmentStats(team);
+      summary.textContent = `Equipment checklist: ${stats.owned}/${stats.total} recommended trinkets marked owned`;
+    }
+  });
+}
+
+function getTeamEquipmentStats(team) {
+  const owned = new Set(getOwnedTrinketIds());
+  const recommended = team.members.flatMap(member => member.trinketIds || []);
+  return { owned: recommended.filter(routeId => {
+    const item = structuredGameContent.trinkets.find(trinket => trinket.routeId === routeId);
+    return item && owned.has(item.id);
+  }).length, total: recommended.length };
+}
+
+function renderTeamEquipmentReadinessContent(team) {
+  const owned = new Set(getOwnedTrinketIds());
+  const entries = team.members.flatMap(member => (member.trinketIds || []).map(routeId => ({ member, item: structuredGameContent.trinkets.find(trinket => trinket.routeId === routeId) }))).filter(entry => entry.item);
+  const ownedEntries = entries.filter(({ item }) => owned.has(item.id));
+  const missingEntries = entries.filter(({ item }) => !owned.has(item.id));
+  const heroName = routeId => heroes.find(hero => hero.id === routeId)?.name || routeId;
+  const list = (items, empty, showAlternatives = false) => items.length ? `<ul>${items.map(({ member, item }) => {
+    const alternatives = showAlternatives ? (member.alternativeTrinketIds || []).map(routeId => structuredGameContent.trinkets.find(trinket => trinket.routeId === routeId)).filter(Boolean) : [];
+    const fallback = showAlternatives ? (alternatives.length
+      ? `<small class="readiness-alternatives">Alternatives: ${alternatives.map(alternative => `<a href="#game/darkest-dungeon/trinkets/${escapeHtml(alternative.routeId)}">${escapeHtml(alternative.name)}</a> <span>(${escapeHtml(requirementLabel(alternative.requirements))})</span>`).join(' · ')}</small>`
+      : `<small class="readiness-alternatives">No verified named alternative recorded. Priorities: ${escapeHtml(member.budgetPriorities || 'Not recorded.')}</small>`) : '';
+    return `<li><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(heroName(member.heroRouteId))} · ${escapeHtml(requirementLabel(item.requirements))}</span>${fallback}</li>`;
+  }).join('')}</ul>` : `<p>${empty}</p>`;
+  const alternativeCount = team.members.reduce((count, member) => count + (member.alternativeTrinketIds || []).filter(id => structuredGameContent.trinkets.some(item => item.routeId === id)).length, 0);
+  return `<div class="team-equipment-columns"><section><h3>Marked owned (${ownedEntries.length})</h3>${list(ownedEntries, 'No recommended trinkets marked owned yet.')}</section><section><h3>Not marked owned (${missingEntries.length})</h3>${list(missingEntries, 'All listed recommendations are marked owned.', true)}</section></div><p class="team-equipment-note">${alternativeCount ? `${alternativeCount} verified named alternatives are listed for this composition.` : 'No verified named alternatives are recorded; attribute priorities are shown instead.'} Missing equipment does not make this team unusable. This checklist records ownership only; it does not count copies or rate team power.</p><p data-ownership-storage-status role="status" aria-live="polite">Ownership is stored only in this browser.</p>`;
+}
+
+function renderTeamEquipmentReadiness(team) {
+  return `<section class="team-equipment-readiness" id="equipment-readiness" data-team-equipment-readiness data-team-id="${escapeHtml(team.id)}"><div class="guide-section-heading"><p class="eyebrow">Personal checklist · local to this browser</p><h2>Equipment Readiness</h2><p>Use this list to plan around what you have. The party and build recommendations remain unchanged.</p></div>${renderTeamEquipmentReadinessContent(team)}</section>`;
 }
 
 function renderCounterGuideTrinkets(member) {
@@ -665,8 +762,8 @@ function renderCounterGuideTrinkets(member) {
     if (!item) return `<li class="counter-guide-trinket-missing">Unresolved trinket: ${escapeHtml(id)}</li>`;
     const effects = item.effects.map(effect => effect.text).join(' · ');
     const acquisition = item.acquisition?.text || 'Acquisition method is not recorded; availability is not guaranteed.';
-    const checked = ownedTrinkets.has(item.routeId) ? ' checked' : '';
-    return `<li class="counter-guide-trinket" data-trinket-option data-owned="${checked ? 'true' : 'false'}"><a class="counter-guide-trinket-icon" href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}" aria-label="Open ${escapeHtml(item.name)} entry">${renderEntryArtwork('trinkets', item, 'thumbnail', `<span class="trinket-icon-fallback" aria-hidden="true">◇</span>`)}</a><div><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(effects || 'Effects are not recorded.')}</span><small>${escapeHtml(trinketUseNote(item))}</small><small>${escapeHtml(item.rarity)} · ${escapeHtml(requirementLabel(item.requirements))}</small><small>${escapeHtml(acquisition)}</small><label class="trinket-owned-toggle"><input type="checkbox" data-owned-trinket="${escapeHtml(item.routeId)}" aria-label="I own ${escapeHtml(item.name)}"${checked}> I own this</label></div></li>`;
+    const checked = ownedTrinkets.has(item.id);
+    return `<li class="counter-guide-trinket" data-trinket-option data-owned="${checked}"><a class="counter-guide-trinket-icon" href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}" aria-label="Open ${escapeHtml(item.name)} entry">${renderEntryArtwork('trinkets', item, 'thumbnail', `<span class="trinket-icon-fallback" aria-hidden="true">◇</span>`)}</a><div><a href="#game/darkest-dungeon/trinkets/${escapeHtml(item.routeId)}">${escapeHtml(item.name)}</a><span>${escapeHtml(effects || 'Effects are not recorded.')}</span><small>${escapeHtml(trinketUseNote(item))}</small><small>${escapeHtml(item.rarity)} · ${escapeHtml(requirementLabel(item.requirements))}</small><small>${escapeHtml(acquisition)}</small>${renderTrinketOwnershipControl(item, 'trinket-build-owned')}</div></li>`;
   };
   const ideal = member.trinketIds.map(renderOption).join('');
   const alternatives = (member.alternativeTrinketIds || []).map(renderOption).join('');
@@ -718,14 +815,14 @@ function renderBossCounterGuide(team) {
   const facts = teamQuickFacts(team);
   const otherTeams = getBossCounterTeams().filter(other => other.boss.id === boss.id && other.id !== team.id);
   const difficulty = team.category === 'beginner' ? 'Beginner' : team.category === 'balanced' ? 'Intermediate' : 'Advanced';
-  const teamNav = `<nav class="team-guide-navigation" aria-label="On this team guide"><a href="#team-overview">Overview</a><a href="#formation">Party formation</a><a href="#builds">Hero builds</a><a href="#strategy">Battle strategy</a><a href="#sources">Sources</a></nav>`;
+  const teamNav = `<nav class="team-guide-navigation" aria-label="On this team guide"><a href="#team-overview">Overview</a><a href="#formation">Party formation</a><a href="#equipment-readiness">Equipment</a><a href="#builds">Hero builds</a><a href="#strategy">Battle strategy</a><a href="#sources">Sources</a></nav>`;
   const formation = team.members.map(member => {
     const hero = heroes.find(entry => entry.id === member.heroRouteId);
     const name = hero?.name || member.heroRouteId;
     const href = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`;
     return `<li class="team-formation-card"><span class="formation-rank">Rank ${member.position}</span>${renderTeamPortrait(name)}<strong><a href="${href}">${escapeHtml(name)}</a></strong><span class="formation-role">${escapeHtml(member.role)}</span></li>`;
   }).join('');
-  return `<header class="team-guide-hero" id="team-overview"><a class="team-boss-return" href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">← ${escapeHtml(boss.name)} boss guide</a><p class="eyebrow">${escapeHtml(boss.regionLabel)} · Boss counter-team guide</p><h1 id="page-title" tabindex="-1">${escapeHtml(team.name)}</h1><p class="team-guide-lede">${escapeHtml(team.purpose)}</p><div class="team-guide-badges"><span>${escapeHtml(team.category)} team · ${difficulty}</span><span>Recommended: ${escapeHtml(team.difficultyRecommendations)}</span><span>${requirementLabel(team.requirements)}</span><span>${escapeHtml(boss.name)} · ${escapeHtml(boss.regionLabel)}</span></div><dl class="team-quick-facts"><div><dt>Team focus</dt><dd>${escapeHtml(facts.focus)}</dd></div><div><dt>Damage profile</dt><dd>${escapeHtml(facts.damage)}</dd></div><div><dt>Survivability</dt><dd>${escapeHtml(facts.survivability)}</dd></div><div><dt>Guide level</dt><dd>${difficulty}</dd></div></dl></header>${teamNav}<section class="team-guide-formation" id="formation"><div class="guide-section-heading"><p class="eyebrow">Party order · rear to front</p><h2>Party Formation</h2><p>Rank 4 → Rank 1. Keep these positions for the skill selections below.</p></div><ol class="team-guide-party">${formation}</ol></section><section class="team-guide-builds" id="builds"><div class="guide-section-heading"><p class="eyebrow">Skills · trinkets · role</p><h2>Hero Builds</h2></div><div class="team-guide-build-grid">${team.members.map(renderCounterGuideBuild).join('')}</div></section>${renderCounterGuideBattlePlan(team)}${renderCounterGuideSources(team)}<section class="team-guide-related" aria-label="Related guides"><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">${escapeHtml(boss.name)} boss guide</a><a href="#game/darkest-dungeon/teams">All team compositions</a>${otherTeams.map(other => `<a href="#game/darkest-dungeon/teams/${escapeHtml(other.id)}">${escapeHtml(other.name)}</a>`).join('')}</section>`;
+  return `<header class="team-guide-hero" id="team-overview"><a class="team-boss-return" href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">← ${escapeHtml(boss.name)} boss guide</a><p class="eyebrow">${escapeHtml(boss.regionLabel)} · Boss counter-team guide</p><h1 id="page-title" tabindex="-1">${escapeHtml(team.name)}</h1><p class="team-guide-lede">${escapeHtml(team.purpose)}</p><div class="team-guide-badges"><span>${escapeHtml(team.category)} team · ${difficulty}</span><span>Recommended: ${escapeHtml(team.difficultyRecommendations)}</span><span>${requirementLabel(team.requirements)}</span><span>${escapeHtml(boss.name)} · ${escapeHtml(boss.regionLabel)}</span></div><dl class="team-quick-facts"><div><dt>Team focus</dt><dd>${escapeHtml(facts.focus)}</dd></div><div><dt>Damage profile</dt><dd>${escapeHtml(facts.damage)}</dd></div><div><dt>Survivability</dt><dd>${escapeHtml(facts.survivability)}</dd></div><div><dt>Guide level</dt><dd>${difficulty}</dd></div></dl></header>${teamNav}${renderTeamEquipmentReadiness(team)}<section class="team-guide-formation" id="formation"><div class="guide-section-heading"><p class="eyebrow">Party order · rear to front</p><h2>Party Formation</h2><p>Rank 4 → Rank 1. Keep these positions for the skill selections below.</p></div><ol class="team-guide-party">${formation}</ol></section><section class="team-guide-builds" id="builds"><div class="guide-section-heading"><p class="eyebrow">Skills · trinkets · role</p><h2>Hero Builds</h2></div><div class="team-guide-build-grid">${team.members.map(renderCounterGuideBuild).join('')}</div></section>${renderCounterGuideBattlePlan(team)}${renderCounterGuideSources(team)}<section class="team-guide-related" aria-label="Related guides"><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">${escapeHtml(boss.name)} boss guide</a><a href="#game/darkest-dungeon/teams">All team compositions</a>${otherTeams.map(other => `<a href="#game/darkest-dungeon/teams/${escapeHtml(other.id)}">${escapeHtml(other.name)}</a>`).join('')}</section>`;
 }
 
 function renderRelatedBossTeams(boss) {
@@ -1196,6 +1293,23 @@ document.querySelector('.skip-link').addEventListener('click', event => {
 });
 
 window.addEventListener('hashchange', showRoute);
+window.addEventListener('storage', event => {
+  if (event.key !== OWNED_TRINKETS_STORAGE_KEY) return;
+  memoryOwnedTrinketIds = getOwnedTrinketIds();
+  document.querySelectorAll('[data-owned-trinket]').forEach(input => {
+    const owned = memoryOwnedTrinketIds.includes(normalizeOwnedTrinketId(input.dataset.ownedTrinket));
+    input.checked = owned;
+    const control = input.closest('[data-owned-control]');
+    if (control) {
+      control.dataset.owned = String(owned);
+      const state = control.querySelector('[data-owned-state]');
+      if (state) state.textContent = owned ? 'Marked owned' : 'Not marked owned';
+    }
+    const option = input.closest('[data-trinket-option]');
+    if (option) option.dataset.owned = String(owned);
+  });
+  refreshTeamEquipmentReadiness();
+});
 // Native buttons provide Tab, Enter, Space, and touch selection; mouse hover previews too.
 document.addEventListener('pointerover', event => {
   const button = event.target.closest('[data-preview-game]');
@@ -1206,6 +1320,24 @@ document.addEventListener('focusin', event => {
   if (button) selectPortalGame(button);
 });
 document.addEventListener('click', event => {
+  const clearOwnedButton = event.target.closest('[data-clear-owned-trinkets]');
+  if (clearOwnedButton) {
+    const result = clearOwnedTrinkets();
+    document.querySelectorAll('[data-owned-trinket]').forEach(input => {
+      input.checked = false;
+      const control = input.closest('[data-owned-control]');
+      if (control) {
+        control.dataset.owned = 'false';
+        const state = control.querySelector('[data-owned-state]');
+        if (state) state.textContent = 'Not marked owned';
+      }
+      const option = input.closest('[data-trinket-option]');
+      if (option) option.dataset.owned = 'false';
+    });
+    refreshTeamEquipmentReadiness();
+    document.querySelectorAll('[data-ownership-storage-status]').forEach(status => { status.textContent = `${ownershipStorageNotice(result.persisted)} Owned list cleared.`; });
+    return;
+  }
   const previewButton = event.target.closest('[data-preview-game]');
   if (previewButton) {
     selectPortalGame(previewButton);
@@ -1254,13 +1386,10 @@ document.addEventListener('change', event => {
   if (event.target.matches('[data-owned-trinket]')) {
     const id = event.target.dataset.ownedTrinket;
     const owned = event.target.checked;
-    setOwnedTrinket(id, owned);
-    document.querySelectorAll('[data-owned-trinket]').forEach(input => {
-      if (input.dataset.ownedTrinket !== id) return;
-      input.checked = owned;
-      const option = input.closest('[data-trinket-option]');
-      if (option) option.dataset.owned = String(owned);
-    });
+    const result = setOwnedTrinket(id, owned);
+    updateOwnershipControls(id, owned);
+    refreshTeamEquipmentReadiness();
+    document.querySelectorAll('[data-ownership-storage-status]').forEach(status => { status.textContent = ownershipStorageNotice(result.persisted); });
     return;
   }
   if (event.target.id === 'boss-region-filter') filterBossCollection();

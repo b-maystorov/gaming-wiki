@@ -10,14 +10,13 @@ const pack = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-du
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
-async function harness(failure = null) {
+async function harness(failure = null, storageMode = 'available') {
   const elements = new Map();
   const storedValues = new Map();
   let cards = [];
   let extraFilters = [];
-  const context = createContext({ console: { error() {} }, URL,
+  const globals = { console: { error() {} }, URL,
     location: { hash: '' },
-    localStorage: { getItem: key => storedValues.get(key) ?? null, setItem: (key, value) => storedValues.set(key, String(value)) },
     document: {
       querySelector: () => ({ addEventListener() {} }),
       getElementById: id => elements.get(id),
@@ -32,14 +31,17 @@ async function harness(failure = null) {
         return failure === 'shape' ? {} : structuredClone(pack);
       } };
     }
-  });
+  };
+  if (storageMode === 'available') globals.localStorage = { getItem: key => storedValues.get(key) ?? null, setItem: (key, value) => storedValues.set(key, String(value)) };
+  if (storageMode === 'inaccessible') globals.localStorage = { getItem() { throw new Error('Storage denied'); }, setItem() { throw new Error('Storage denied'); } };
+  const context = createContext(globals);
   const modules = new Map();
   async function load(path) {
     if (modules.has(path)) return modules.get(path);
     let source = await readFile(path, 'utf8');
     if (path.endsWith('/app.js')) {
       source = source.slice(0, source.indexOf("document.querySelector('.skip-link')"));
-      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket };';
+      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent };';
     }
     const module = new SourceTextModule(source, { context, identifier: path,
       initializeImportMeta: meta => { meta.url = `file://${path}`; } });
@@ -170,14 +172,73 @@ test('team build alternatives resolve to compatible canonical trinkets and owner
   const page = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams/darkest-dungeon-1:boss-team:swine-prince-mark-removal'));
   assert.ok(page.includes('Alternative options'));
   assert.ok(page.includes('Budget fallback'));
-  assert.match(page, /aria-label="I own Damage Stone"(?! checked)/);
-  h.app.setOwnedTrinket('damage-stone', true);
-  assert.ok(h.app.getOwnedTrinketIds().includes('damage-stone'));
+  assert.ok(page.includes('Equipment Readiness'));
+  assert.ok(page.includes('Missing equipment does not make this team unusable'));
+  assert.match(page, /aria-label="Mark Damage Stone as owned"(?! checked)/);
+  h.app.setOwnedTrinket('darkest-dungeon-1:trinket:damage-stone', true);
+  assert.ok(h.app.getOwnedTrinketIds().includes('darkest-dungeon-1:trinket:damage-stone'));
   assert.ok(h.storedValues.has('bm-gaming-wiki-owned-trinkets'));
+  assert.deepEqual(JSON.parse(h.storedValues.get('bm-gaming-wiki-owned-trinkets')), ['darkest-dungeon-1:trinket:damage-stone']);
   const ownedPage = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/teams/darkest-dungeon-1:boss-team:swine-prince-mark-removal'));
-  assert.match(ownedPage, /aria-label="I own Damage Stone" checked/);
-  h.app.setOwnedTrinket('damage-stone', false);
-  assert.ok(!h.app.getOwnedTrinketIds().includes('damage-stone'));
+  assert.match(ownedPage, /aria-label="Mark Damage Stone as owned" checked/);
+  assert.match(ownedPage, /data-team-equipment-readiness[^]*?Damage Stone/);
+  const bossPage = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon/bosses/swine-prince'));
+  assert.match(bossPage, /Equipment checklist: \d+\/\d+ recommended trinkets marked owned/);
+  h.app.setOwnedTrinket('darkest-dungeon-1:trinket:damage-stone', false);
+  assert.ok(!h.app.getOwnedTrinketIds().includes('darkest-dungeon-1:trinket:damage-stone'));
+});
+
+test('trinket collection and detail pages expose ownership controls keyed by canonical IDs', () => {
+  const first = pack.trinkets[0];
+  const collection = h.app.renderEncyclopediaCollection('trinkets');
+  assert.ok(collection.includes(`data-owned-trinket="${first.id}"`));
+  assert.ok(collection.includes('data-clear-owned-trinkets'));
+  const detail = h.app.renderEncyclopediaDetail('trinkets', first);
+  assert.ok(detail.includes(`data-owned-trinket="${first.id}"`));
+  assert.ok(detail.includes('Ownership is stored only in this browser'));
+});
+
+test('ownership loads, toggles, clears, migrates route IDs, and drops stale IDs', async () => {
+  const local = await harness();
+  const id = pack.trinkets[0].id;
+  local.storedValues.set('bm-gaming-wiki-owned-trinkets', JSON.stringify(['focus-ring', 'stale-trinket-id']));
+  assert.deepEqual(Array.from(local.app.getOwnedTrinketIds()), [id]);
+  assert.deepEqual(JSON.parse(local.storedValues.get('bm-gaming-wiki-owned-trinkets')), [id]);
+  assert.deepEqual(Array.from(local.app.setOwnedTrinket(id, true).ids), [id]);
+  assert.deepEqual(Array.from(local.app.setOwnedTrinket(id, false).ids), []);
+  local.app.setOwnedTrinket(id, true);
+  const cleared = local.app.clearOwnedTrinkets();
+  assert.deepEqual({ ...cleared, ids: Array.from(cleared.ids) }, { ids: [], persisted: true });
+  assert.deepEqual(Array.from(local.app.getOwnedTrinketIds()), []);
+  assert.deepEqual(Array.from(local.app.setOwnedTrinket('not-a-trinket', true).ids), []);
+});
+
+test('ownership remains usable when browser storage is missing or inaccessible', async () => {
+  for (const mode of ['missing', 'inaccessible']) {
+    const local = await harness(null, mode);
+    const id = pack.trinkets[0].id;
+    assert.doesNotThrow(() => local.app.getOwnedTrinketIds());
+    assert.equal(local.app.setOwnedTrinket(id, true).persisted, false);
+    assert.deepEqual(Array.from(local.app.getOwnedTrinketIds()), [id]);
+    assert.equal(local.app.clearOwnedTrinkets().persisted, false);
+    assert.deepEqual(Array.from(local.app.getOwnedTrinketIds()), []);
+  }
+});
+
+test('team readiness links only recorded alternatives and does not invent fallback trinkets', () => {
+  const teams = pack.bosses.flatMap(boss => (boss.counterTeams || []).map(team => ({ ...team, boss })));
+  for (const team of teams) for (const member of team.members) {
+    const html = h.app.renderTeamEquipmentReadinessContent(team);
+    const alternatives = member.alternativeTrinketIds || [];
+    for (const routeId of alternatives) {
+      const record = pack.trinkets.find(item => item.routeId === routeId);
+      assert.ok(record, `${team.id}: alternative must resolve from canonical data`);
+      assert.ok(html.includes(`#game/darkest-dungeon/trinkets/${routeId}`), `${team.id}: recorded alternative should be linked by the build`);
+    }
+    assert.ok(html.includes('Missing equipment does not make this team unusable'));
+    assert.ok(html.includes('rate team power'));
+    assert.ok(member.budgetPriorities, `${team.id}/${member.heroRouteId}: attribute fallback remains explicit`);
+  }
 });
 
 test('team composition index presents each boss guide once and keeps it searchable', () => {

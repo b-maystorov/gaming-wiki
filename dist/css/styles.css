@@ -1021,6 +1021,36 @@ body { background: radial-gradient(ellipse at 82% 8%, #80513a0b, transparent 34%
 .counter-guide-trinket[data-owned="true"] { border-color: #ad8151; background: linear-gradient(120deg, #392c1f, #191719) !important; box-shadow: inset 0 0 12px #b68c4122; }
 .trinket-owned-toggle { display: inline-flex; width: fit-content; align-items: center; gap: .35rem; margin-top: .25rem; color: #d8c19f; font-size: .7rem; cursor: pointer; }
 .trinket-owned-toggle input { accent-color: #a2444c; }
+.trinket-collection-tools { display:flex; flex-wrap:wrap; align-items:center; gap:.7rem 1rem; margin:.75rem 0 1.25rem; padding:.7rem .85rem; border:1px solid #493b36; background:#171516; }
+.trinket-collection-tools p { margin:0; color:var(--muted); font-size:.78rem; }
+.clear-owned-trinkets { padding:.45rem .7rem; border:1px solid #79504a; background:#261719; color:#ead8c2; font:inherit; cursor:pointer; }
+.clear-owned-trinkets:hover,.clear-owned-trinkets:focus-visible { border-color:#c18d60; background:#38201f; }
+.trinket-owned-control { display:flex; width:fit-content; flex-wrap:wrap; align-items:center; gap:.3rem .45rem; padding:.3rem .45rem; border:1px solid #4a3c38; background:#171516; color:#d8c19f; font-size:.72rem; line-height:1.25; cursor:pointer; }
+.trinket-owned-control[data-owned="true"] { border-color:#98744d; background:#2b221b; color:#f0d5a8; }
+.trinket-owned-control input { accent-color:#a2444c; }
+.trinket-owned-control small { color:var(--muted); }
+.encyclopedia-card-trinkets { grid-template-columns:150px minmax(0,1fr); grid-template-rows:1fr auto; }
+.encyclopedia-card-trinkets > .encyclopedia-card-art-link { grid-column:1; grid-row:1 / span 2; display:block; min-width:0; }
+.encyclopedia-card-trinkets > .encyclopedia-card-art-link > .entry-art { width:100%; height:100%; min-height:134px; border:1px solid #665348; background:radial-gradient(ellipse at center,#49382b,#171517 74%); }
+.encyclopedia-card-trinkets > .encyclopedia-card-art-link img { width:100%; height:100%; max-height:150px; object-fit:contain; }
+.encyclopedia-card-trinkets > .encyclopedia-card-copy { color:inherit; text-decoration:none; }
+.encyclopedia-card-trinkets > .encyclopedia-card-copy:focus-visible { outline:2px solid var(--focus-ring); outline-offset:2px; }
+.encyclopedia-card-trinkets > .trinket-card-owned { grid-column:2; align-self:end; }
+.encyclopedia-card-trinkets:focus-within { border-color:#a27c54; box-shadow:0 0 18px #a1273533,inset 0 0 12px #6c182222; }
+.team-equipment-readiness { margin:1.3rem 0; padding:1rem 1.1rem; border:1px solid #59483c; background:linear-gradient(130deg,#251d1a,#171619 75%); }
+.team-equipment-readiness .guide-section-heading { margin-bottom:.75rem; }
+.team-equipment-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; }
+.team-equipment-columns > section { min-width:0; padding:.75rem; border:1px solid #43383a; background:#141315; }
+.team-equipment-columns h3 { margin:.1rem 0 .5rem; color:#e2c49a; font:1.05rem Georgia,serif; }
+.team-equipment-columns ul { display:grid; gap:.4rem; margin:0; padding:0; list-style:none; }
+.team-equipment-columns li { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.25rem .7rem; padding:.35rem 0; border-bottom:1px solid #302a2a; }
+.team-equipment-columns li > a { font-weight:600; }
+.team-equipment-columns .readiness-alternatives { flex:1 0 100%; color:#c6b49f; line-height:1.45; }
+.team-equipment-columns .readiness-alternatives a { color:#e5c797; }
+.team-equipment-columns li span,.team-equipment-note,[data-ownership-storage-status] { color:var(--text-secondary); font-size:.78rem; line-height:1.45; }
+.team-equipment-note { margin:.7rem 0 .3rem; }
+.boss-team-equipment-summary { margin:.3rem 0; color:#d8c19f; font-size:.76rem; }
+@media(max-width:640px) { .encyclopedia-card-trinkets { grid-template-columns:104px minmax(0,1fr); } .encyclopedia-card-trinkets > .encyclopedia-card-art-link > .entry-art { min-height:104px; } .encyclopedia-card-trinkets > .encyclopedia-card-art-link img { max-height:120px; } .team-equipment-columns { grid-template-columns:1fr; } }
 @media (max-width: 680px) {
   .boss-counter-teams-rich { grid-template-columns: 1fr; }
   .location-boss-card, .location-curio-card { grid-template-columns: 72px minmax(0, 1fr); }
