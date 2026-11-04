@@ -1,3 +1,4 @@
+import { createCustomTeamBuilder, copyQuantity, quantityStore } from './custom-team.js';
 import { loadArtworkManifest, renderEntryArtwork, handleArtworkError } from './artwork.js';
 import { matchesCollectionFilter, encyclopediaSearchText, verificationLabel } from './encyclopedia.js';
 import { heroes, sources } from './heroes.js';
@@ -168,25 +169,30 @@ function selectPortalGame(button) {
 
 function renderGameLanding() {
   const game = games['darkest-dungeon'];
-  const guideCount = heroes.filter(hero => hero.guide).length;
-  const teams = getTeams();
-  const categoryCards = game.categories.filter(category => category.id !== 'overview')
-    .map(category => category.comingSoon
-      ? `<article class="navigation-card coming-soon"><span class="status-label">Coming soon</span><h3>${escapeHtml(category.label)}</h3><p>Entries are not available yet.</p></article>`
-      : `<a class="navigation-card" href="#game/darkest-dungeon/${category.view}"><span class="status-label">Available</span><h3>${escapeHtml(category.label)}</h3><p>${escapeHtml(category.description)}</p><span class="card-action">Browse ${escapeHtml(category.label)} <span aria-hidden="true">→</span></span></a>`).join('');
-  return `<section class="game-welcome" aria-labelledby="page-title"><div><p class="eyebrow">Original game / Campaign</p>
-    <h1 id="page-title" tabindex="-1">Darkest Dungeon</h1><p class="lede">Campaign guides, party plans, and equipment notes. Current entries cover the base game.</p></div>
-    <span class="welcome-mark" aria-hidden="true">DD I</span></section>
-    <section class="game-search" aria-labelledby="search-title"><label for="game-search-input" id="search-title">Search this guide</label>
-      <input id="game-search-input" type="search" autocomplete="off" placeholder="Hero, build, composition, or trinket">
-      <p id="game-search-status" class="search-status" aria-live="polite">Search current guides, teams, builds, and trinkets.</p><div id="game-search-results" class="search-results"></div></section>
-    <section aria-labelledby="begin-heading"><div class="section-heading"><h2 id="begin-heading">Where to begin</h2><span>Browse available guides or see what is planned</span></div>
-      <div class="landing-grid">${categoryCards}</div></section>
-    <section aria-labelledby="featured-teams-heading"><div class="section-heading"><h2 id="featured-teams-heading">Featured Team Compositions</h2><a href="#game/darkest-dungeon/teams">All compositions →</a></div>
-      <p class="section-intro">${teams.length} editorial example parties · no tier rating or dungeon suitability has been assigned.</p>
-      <div class="team-list">${teams.map(renderTeamCard).join('')}</div></section>
-    <section aria-labelledby="featured-heroes-heading"><div class="section-heading"><h2 id="featured-heroes-heading">Hero Guides</h2><a href="#game/darkest-dungeon/heroes">All heroes →</a></div>
-      <div class="featured-hero-list">${heroes.filter(hero => hero.guide).map(hero => `<a class="featured-hero panel" href="#hero/${escapeHtml(hero.id)}/overview">${renderTeamPortrait(hero.name)}<span><strong>${escapeHtml(hero.name)}</strong><small>${escapeHtml(hero.role)}</small></span><span class="card-action">Read guide →</span></a>`).join('')}</div></section>`;
+  const categories = ['heroes', 'bosses', 'enemies', 'trinkets', 'items', 'curios', 'teams', 'locations'];
+  const categoryCards = categories.map(id => game.categories.find(category => category.id === id)).filter(Boolean)
+    .map(category => `<a class="overview-directory-card" href="#game/darkest-dungeon/${category.view}"><span class="overview-directory-icon" aria-hidden="true">${escapeHtml(category.icon)}</span><span class="overview-directory-copy"><strong>${escapeHtml(category.label)}</strong><small>${escapeHtml(category.description)}</small></span><span class="overview-directory-arrow" aria-hidden="true">↗</span></a>`).join('');
+  const darkestRegion = structuredGameContent?.locations.find(location => location.routeId === 'darkest-dungeon');
+  const cinematicFallback = `<span class="overview-scene-fallback" role="img" aria-label="Darkest Dungeon region artwork unavailable"><span aria-hidden="true">DD</span><small>Local region artwork unavailable</small></span>`;
+  const featuredBoss = [...(structuredGameContent?.bosses || [])]
+    .filter(boss => boss.guideStatus === 'available' && boss.counterTeams?.length)
+    .sort((left, right) => right.counterTeams.length - left.counterTeams.length)[0];
+  const featuredTeams = (featuredBoss?.counterTeams || []).slice(0, 3);
+  const featuredArt = featuredBoss ? renderEntryArtwork('bosses', featuredBoss, 'primary', `<span class="overview-boss-fallback" role="img" aria-label="${escapeHtml(featuredBoss.name)} artwork unavailable">${escapeHtml(featuredBoss.name.split(/\s+/).map(word => word[0]).join('').slice(0, 3))}</span>`) : '';
+  return `<div class="dd-overview">
+    <section class="overview-cinematic" aria-labelledby="page-title">
+      <div class="overview-cinematic-art" aria-hidden="true">${darkestRegion ? renderEntryArtwork('locations', darkestRegion, 'primary', cinematicFallback) : cinematicFallback}</div>
+      <div class="overview-cinematic-content"><p class="eyebrow">BM Gaming Wiki · Darkest Dungeon I field guide</p><h1 id="page-title" tabindex="-1">Enter the <em>Darkest Dungeon</em></h1>
+        <p class="overview-lede">Prepare a party, study the threats ahead, and keep practical encounter guides close at hand. This encyclopedia brings together hero builds, boss strategies, equipment references, and expedition notes.</p>
+        <div class="overview-actions"><a class="overview-primary-action" href="#game/darkest-dungeon/expedition-planner">Prepare an Expedition <span aria-hidden="true">→</span></a><a class="overview-secondary-action" href="#game/darkest-dungeon/bosses">Explore Boss Guides</a></div>
+        <p class="overview-cinematic-foot">A campaign companion built from recorded guides and local game references</p>
+      </div>
+    </section>
+    <section class="overview-section" aria-labelledby="directory-heading"><div class="overview-section-heading"><p class="eyebrow">The encyclopedia</p><h2 id="directory-heading">Choose your next field of study</h2><p>Find a hero, check a regional threat, or look up the tools that can turn a hard expedition.</p></div><div class="overview-directory-grid">${categoryCards}</div></section>
+    ${featuredBoss ? `<section class="overview-featured" aria-labelledby="featured-strategy-heading"><div class="overview-section-heading"><p class="eyebrow">Featured encounter</p><h2 id="featured-strategy-heading">A plan for the ${escapeHtml(featuredBoss.name)}</h2><p>Start with the encounter guide, then choose a recorded counter-team for the approach that suits your roster.</p></div><article class="overview-featured-card"><div class="overview-featured-art">${featuredArt}</div><div class="overview-featured-copy"><p class="overview-featured-region">${escapeHtml(featuredBoss.regionLabel || 'Boss strategy')} · ${escapeHtml(requirementLabel(featuredBoss.requirements))}</p><h3>${escapeHtml(featuredBoss.name)}</h3><p>${escapeHtml(featuredBoss.summary)}</p><div class="overview-featured-links"><a href="#game/darkest-dungeon/bosses/${escapeHtml(featuredBoss.routeId)}">Read the boss guide <span aria-hidden="true">→</span></a><div><strong>Recommended teams</strong>${featuredTeams.map(team => `<a href="#game/darkest-dungeon/teams/${escapeHtml(team.id)}">${escapeHtml(team.name)} <span aria-hidden="true">↗</span></a>`).join('')}</div></div></div></article></section>` : ''}
+    <section class="overview-additional" aria-labelledby="additional-links-heading"><div><p class="eyebrow">At your service</p><h2 id="additional-links-heading">Useful campaign tools</h2></div><div class="overview-utility-links"><a href="#game/darkest-dungeon/expedition-planner">Expedition Planner <span aria-hidden="true">→</span></a><a href="#game/darkest-dungeon/quests">Quests & expeditions <span aria-hidden="true">→</span></a><a href="#game/darkest-dungeon/heroes">All hero guides <span aria-hidden="true">→</span></a></div></section>
+    <section class="overview-search" aria-labelledby="search-title"><div><p class="eyebrow">Looking for something specific?</p><h2 id="search-title">Search the field guide</h2><p>Search current guides, teams, builds, and trinkets.</p></div><div><label class="visually-hidden" for="game-search-input">Search Darkest Dungeon guides</label><input id="game-search-input" type="search" autocomplete="off" placeholder="Hero, boss, composition, or trinket"><p id="game-search-status" class="search-status" aria-live="polite"></p><div id="game-search-results" class="search-results"></div></div></section>
+  </div>`;
 }
 
 function getTeams() {
@@ -390,7 +396,7 @@ function renderEncyclopediaCollection(kind) {
   ].filter(([, entries]) => entries.length).map(([name, entries]) => `<section class="encyclopedia-group" data-encyclopedia-group><div class="section-heading"><h2>${escapeHtml(name)}</h2><span>${entries.length} entries</span></div><div class="encyclopedia-grid encyclopedia-grid-enemies">${entries.map(record => renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary)).join('')}</div></section>`).join('') : kind === 'trinkets'
     ? ['Common', 'Uncommon', 'Rare', 'Very rare', 'Ancestral', 'Trophy', 'Crimson Court'].map(rarity => [rarity, records.filter(record => record.rarity === rarity)]).filter(([, entries]) => entries.length).map(([rarity, entries]) => `<section class="encyclopedia-group trinket-rarity-group" data-encyclopedia-group data-trinket-rarity="${escapeHtml(rarity)}"><div class="section-heading"><h2>${escapeHtml(rarity)}</h2><span>${entries.length} ${entries.length === 1 ? 'trinket' : 'trinkets'}</span></div><div class="encyclopedia-grid encyclopedia-grid-trinkets">${entries.map(renderTrinketCard).join('')}</div></section>`).join('')
     : `<div class="encyclopedia-grid encyclopedia-grid-${kind}">${cards}</div>`;
-  const ownershipTools = kind === 'trinkets' ? `<div class="trinket-collection-tools"><button type="button" class="clear-owned-trinkets" data-clear-owned-trinkets>Clear owned list</button><p data-ownership-storage-status role="status" aria-live="polite">Ownership is stored only in this browser. Copies are not counted.</p></div>` : '';
+  const ownershipTools = kind === 'trinkets' ? `<div class="trinket-collection-tools"><button type="button" class="clear-owned-trinkets" data-clear-owned-trinkets>Clear owned list</button><p data-ownership-storage-status role="status" aria-live="polite">Ownership is stored only in this browser. Owned items count as one copy unless you record more in the Custom Team Builder.</p></div>` : '';
   return `<section class="page-intro" aria-labelledby="page-title"><p class="eyebrow">Darkest Dungeon / Field encyclopedia</p><h1 id="page-title" tabindex="-1">${config.title}</h1><p class="lede">${config.intro}</p>${kind === 'enemies' ? '<p class="guide-data-note">Minibosses and bosses are listed separately in the <a href="#game/darkest-dungeon/bosses">Bosses encyclopedia</a>.</p>' : ''}</section>
     <section class="encyclopedia-controls" aria-label="Filter ${config.title}"><div><label for="encyclopedia-search">Search ${config.title.toLowerCase()}</label><input id="encyclopedia-search" type="search" placeholder="${config.search}" autocomplete="off"></div><div><label for="encyclopedia-filter">Filter by ${config.filter.toLowerCase()}</label><select id="encyclopedia-filter"><option value="all">All ${config.filter.toLowerCase()}s</option>${filterValues.map(([value,label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('')}</select></div>${moreFilters}<p id="encyclopedia-status" role="status" aria-live="polite">${records.length} ${config.title.toLowerCase()} entries.</p></section>${ownershipTools}
     ${groupedCards}<p id="encyclopedia-empty" class="panel" hidden>No entries match these filters. Try another search.</p>`;
@@ -405,7 +411,7 @@ function renderEncyclopediaDetail(kind, record) {
   } else if (kind === 'trinkets') {
     const set = structuredGameContent.trinketSets.find(entry => entry.id === record.setId);
     const associatedBoss = record.bossId && structuredGameContent.bosses.find(boss => boss.id === record.bossId);
-    sections = `<section class="encyclopedia-section trinket-collection-detail"><h2>My collection</h2>${renderTrinketOwnershipControl(record, 'trinket-detail-owned')}<p data-ownership-storage-status role="status" aria-live="polite">Ownership is stored only in this browser. Copies are not counted.</p></section><section class="encyclopedia-section"><h2>Effects</h2><ul>${record.effects.map(effect => `<li><strong>${effect.polarity === 'negative' ? 'Drawback' : 'Benefit'}:</strong> ${escapeHtml(effect.text)}${effect.condition ? ` <small>(${escapeHtml(effect.condition)})</small>` : ''}</li>`).join('')}</ul></section><section class="encyclopedia-section"><h2>Availability</h2><p>${escapeHtml(requirementLabel(record.requirements))} · ${escapeHtml(record.rarity)}. ${escapeHtml(record.acquisition?.text || 'Acquisition details are not yet recorded.')}</p>${associatedBoss ? `<p>Associated encounter: <a href="#game/darkest-dungeon/bosses/${escapeHtml(associatedBoss.routeId)}">${escapeHtml(associatedBoss.name)}</a>.</p>` : ''}${set ? `<p><strong>${escapeHtml(set.name)} set bonus:</strong> ${escapeHtml(set.bonus.join('; '))} when both class set trinkets are equipped.</p>` : ''}</section>`;
+    sections = `<section class="encyclopedia-section trinket-collection-detail"><h2>My collection</h2>${renderTrinketOwnershipControl(record, 'trinket-detail-owned')}<p data-ownership-storage-status role="status" aria-live="polite">Ownership is stored only in this browser. Owned items count as one copy unless you record more in the Custom Team Builder.</p></section><section class="encyclopedia-section"><h2>Effects</h2><ul>${record.effects.map(effect => `<li><strong>${effect.polarity === 'negative' ? 'Drawback' : 'Benefit'}:</strong> ${escapeHtml(effect.text)}${effect.condition ? ` <small>(${escapeHtml(effect.condition)})</small>` : ''}</li>`).join('')}</ul></section><section class="encyclopedia-section"><h2>Availability</h2><p>${escapeHtml(requirementLabel(record.requirements))} · ${escapeHtml(record.rarity)}. ${escapeHtml(record.acquisition?.text || 'Acquisition details are not yet recorded.')}</p>${associatedBoss ? `<p>Associated encounter: <a href="#game/darkest-dungeon/bosses/${escapeHtml(associatedBoss.routeId)}">${escapeHtml(associatedBoss.name)}</a>.</p>` : ''}${set ? `<p><strong>${escapeHtml(set.name)} set bonus:</strong> ${escapeHtml(set.bonus.join('; '))} when both class set trinkets are equipped.</p>` : ''}</section>`;
   } else if (kind === 'items') {
     sections = `<section class="encyclopedia-section"><h2>Purpose & limitations</h2><p>${escapeHtml(record.purpose)}</p><p>${escapeHtml(record.usage)}</p><p>${escapeHtml(record.limitations)}</p>${record.effects?.length ? `<ul>${record.effects.map(effect=>`<li>${escapeHtml(effect.text)}</li>`).join('')}</ul>` : ''}<p><strong>Acquisition:</strong> ${escapeHtml(record.acquisition.text)}${record.acquisition.cost !== null ? ` Cost ${record.acquisition.cost} gold · stack ${record.acquisition.stackSize}.` : record.acquisition.stackSize ? ` Stack ${record.acquisition.stackSize}.` : ''}</p></section><section class="encyclopedia-section"><h2>Related curios</h2>${record.relatedCurioIds?.length ? `<ul>${record.relatedCurioIds.map(id=>{const c=structuredGameContent.curios.find(x=>x.id===id);return c?`<li><a href="${encyclopediaHref('curios',c)}">${escapeHtml(c.name)}</a></li>`:''}).join('')}</ul>`:'<p>No curio interactions are recorded for this item.</p>'}</section>`;
   } else if (kind === 'curios') {
@@ -692,9 +698,17 @@ function selectExpeditionTeam(teamId) {
   return true;
 }
 
+let customTeamBuilder;
+function getCustomTeamBuilder() {
+  customTeamBuilder ||= createCustomTeamBuilder({ pack: structuredGameContent, heroes, abilities: heroAbilities,
+    escapeHtml, portrait: renderTeamPortrait, bossReminder: renderPlannerBossReminder, requirements: requirementLabel,
+    getOwned: getOwnedTrinketIds, getRoster: getExpeditionRoster, setOwned: setOwnedTrinket });
+  return customTeamBuilder;
+}
+
 function renderExpeditionPlanner() {
   const locations = structuredGameContent.locations;
-  return `<section class="page-intro planner-intro"><p class="eyebrow">Darkest Dungeon / Field preparation</p><h1 id="page-title" tabindex="-1">Expedition Planner</h1><p class="lede">Build a quick plan from recorded region, boss, team, and equipment data. All four steps stay on this page, so your selections remain in place.</p></section><nav class="planner-step-nav" aria-label="Expedition planner steps"><button type="button" data-planner-step="planner-step-expedition" aria-controls="planner-step-expedition"><span>01</span> Expedition</button><button type="button" data-planner-step="planner-step-party" aria-controls="planner-step-party"><span>02</span> Party</button><button type="button" data-planner-step="planner-step-equipment" aria-controls="planner-step-equipment"><span>03</span> Equipment</button><button type="button" data-planner-step="planner-step-battle" aria-controls="planner-step-battle"><span>04</span> Battle plan</button></nav><section class="planner-step" id="planner-step-expedition" tabindex="-1"><header class="planner-step-heading"><span>01</span><div><h2>Expedition</h2><p>Pick a region; boss and tier options follow recorded data.</p></div></header><section class="expedition-planner-controls" aria-label="Choose expedition"><div><label for="planner-region">Region</label><select id="planner-region"><option value="">Choose a region</option>${locations.map(location => `<option value="${escapeHtml(location.regionId)}"${expeditionSelection.regionId === location.regionId ? ' selected' : ''}>${escapeHtml(location.name)}</option>`).join('')}</select></div><div><label for="planner-boss">Boss (optional)</label><select id="planner-boss" disabled><option value="">Choose a region first</option></select></div><div><label for="planner-difficulty">Campaign difficulty</label><select id="planner-difficulty" disabled><option value="">Select a boss for supported tiers</option></select></div></section><div id="planner-region-content"><p class="panel planner-empty">Choose a region to see its overview.</p></div></section><section class="planner-step" id="planner-step-party" tabindex="-1"><header class="planner-step-heading"><span>02</span><div><h2>Party</h2><p>Mark expedition-available heroes, then compare supported team guides.</p></div></header>${renderExpeditionRosterControls()}<div id="planner-party-content"><p class="panel planner-empty">Choose a region to see matching teams.</p></div></section><section class="planner-step" id="planner-step-equipment" tabindex="-1"><header class="planner-step-heading"><span>03</span><div><h2>Equipment</h2><p>Choose a team to review recommendations by hero.</p></div></header><div id="planner-equipment-content"><div class="panel planner-empty">Select a team in Party to see its equipment.</div></div></section><section class="planner-step" id="planner-step-battle" tabindex="-1"><header class="planner-step-heading"><span>04</span><div><h2>Battle plan</h2><p>Keep the warning and opening plan close during the fight.</p></div></header><div id="planner-battle-content"><div class="panel planner-empty">Select a boss or a team for encounter reminders.</div></div></section>`;
+  return `<section class="page-intro planner-intro"><p class="eyebrow">Darkest Dungeon / Field preparation</p><h1 id="page-title" tabindex="-1">Expedition Planner</h1><p class="lede">Build a quick plan from recorded region, boss, team, and equipment data. All four steps stay on this page, so your selections remain in place.</p></section><details class="panel custom-builder-entry"><summary>Build My Own Team</summary><div id="custom-team-content">${getCustomTeamBuilder().render()}</div></details><nav class="planner-step-nav" aria-label="Expedition planner steps"><button type="button" data-planner-step="planner-step-expedition" aria-controls="planner-step-expedition"><span>01</span> Choose Expedition</button><button type="button" data-planner-step="planner-step-party" aria-controls="planner-step-party"><span>02</span> Choose Party</button><button type="button" data-planner-step="planner-step-equipment" aria-controls="planner-step-equipment"><span>03</span> Check Equipment</button><button type="button" data-planner-step="planner-step-battle" aria-controls="planner-step-battle"><span>04</span> Battle Plan</button></nav><section class="planner-step" id="planner-step-expedition" tabindex="-1"><header class="planner-step-heading"><span>01</span><div><h2>Choose Expedition</h2><p>Pick a region; boss and tier options follow recorded data.</p></div></header><section class="expedition-planner-controls" aria-label="Choose expedition"><div><label for="planner-region">Region</label><select id="planner-region"><option value="">Choose a region</option>${locations.map(location => `<option value="${escapeHtml(location.regionId)}"${expeditionSelection.regionId === location.regionId ? ' selected' : ''}>${escapeHtml(location.name)}</option>`).join('')}</select></div><div><label for="planner-boss">Boss (optional)</label><select id="planner-boss" disabled><option value="">Choose a region first</option></select></div><div><label for="planner-difficulty">Campaign difficulty</label><select id="planner-difficulty" disabled><option value="">Select a boss for supported tiers</option></select></div></section><div id="planner-region-content"><p class="panel planner-empty">Choose a region to see its overview.</p></div></section><section class="planner-step" id="planner-step-party" tabindex="-1"><header class="planner-step-heading"><span>02</span><div><h2>Choose Party</h2><p>Mark expedition-available heroes, then compare supported team guides.</p></div></header>${renderExpeditionRosterControls()}<div id="planner-party-content"><p class="panel planner-empty">Choose a region to see matching teams.</p></div></section><section class="planner-step" id="planner-step-equipment" tabindex="-1"><header class="planner-step-heading"><span>03</span><div><h2>Check Equipment</h2><p>Choose a team to review recommendations by hero.</p></div></header><div id="planner-equipment-content"><div class="panel planner-empty">Select a team in Party to see its equipment.</div></div></section><section class="planner-step" id="planner-step-battle" tabindex="-1"><header class="planner-step-heading"><span>04</span><div><h2>Battle Plan</h2><p>Keep the warning and opening plan close during the fight.</p></div></header><div id="planner-battle-content"><div class="panel planner-empty">Select a boss or a team for encounter reminders.</div></div></section>`;
 }
 
 function renderSearchResults(query) {
@@ -875,6 +889,7 @@ function renderCounterGuideSkills(member) {
 
 const OWNED_TRINKETS_STORAGE_KEY = 'bm-gaming-wiki-owned-trinkets';
 let memoryOwnedTrinketIds = [];
+let ownershipSessionOnly = false;
 
 function normalizeOwnedTrinketId(value) {
   const trinket = structuredGameContent?.trinkets.find(item => item.id === value || item.routeId === value);
@@ -882,9 +897,11 @@ function normalizeOwnedTrinketId(value) {
 }
 
 function saveOwnedTrinketIds(ids) {
+  ownershipSessionOnly = true;
   try {
     if (typeof localStorage === 'undefined') return false;
     localStorage.setItem(OWNED_TRINKETS_STORAGE_KEY, JSON.stringify(ids));
+    ownershipSessionOnly = false;
     return true;
   } catch {
     return false;
@@ -893,7 +910,7 @@ function saveOwnedTrinketIds(ids) {
 
 function getOwnedTrinketIds() {
   try {
-    if (typeof localStorage === 'undefined') return [...memoryOwnedTrinketIds];
+    if (ownershipSessionOnly || typeof localStorage === 'undefined') return [...memoryOwnedTrinketIds];
     const parsed = JSON.parse(localStorage.getItem(OWNED_TRINKETS_STORAGE_KEY) || '[]');
     if (!Array.isArray(parsed)) return [...memoryOwnedTrinketIds];
     const normalized = [...new Set(parsed.map(normalizeOwnedTrinketId).filter(Boolean))];
@@ -922,7 +939,7 @@ function clearOwnedTrinkets() {
 
 function renderTrinketOwnershipControl(trinket, className = '') {
   const owned = getOwnedTrinketIds().includes(trinket.id);
-  return `<label class="trinket-owned-control ${className}" data-owned-control data-owned="${owned}" title="Saved in this browser only"><input type="checkbox" data-owned-trinket="${escapeHtml(trinket.id)}" aria-label="Mark ${escapeHtml(trinket.name)} as owned"${owned ? ' checked' : ''}><span>Owned</span><small data-owned-state>${owned ? 'Marked owned' : 'Not marked owned'}</small></label>`;
+  return `<label class="trinket-owned-control ${className}" data-owned-control data-owned="${owned}" title="Saved in this browser only"><input type="checkbox" data-owned-trinket="${escapeHtml(trinket.id)}" aria-label="Mark ${escapeHtml(trinket.name)} as owned"${owned ? ' checked' : ''}><span>Owned</span><small data-owned-state>${owned ? 'Marked owned' : 'Not marked owned'}</small></label><label class="trinket-copy-control">Copies <input type="number" min="0" max="999" step="1" data-collection-quantity="${escapeHtml(trinket.id)}" aria-label="Owned copies of ${escapeHtml(trinket.name)}" value="${copyQuantity(trinket.id, getOwnedTrinketIds())}"></label>`;
 }
 
 function ownershipStorageNotice(persisted) {
@@ -930,6 +947,9 @@ function ownershipStorageNotice(persisted) {
 }
 
 function updateOwnershipControls(trinketId, owned) {
+  document.querySelectorAll('[data-collection-quantity]').forEach(input => {
+    if (input.dataset.collectionQuantity === trinketId) input.value = copyQuantity(trinketId, getOwnedTrinketIds());
+  });
   document.querySelectorAll('[data-owned-trinket]').forEach(input => {
     if (input.dataset.ownedTrinket !== trinketId) return;
     input.checked = owned;
@@ -1545,6 +1565,7 @@ document.querySelector('.skip-link').addEventListener('click', event => {
 
 window.addEventListener('hashchange', showRoute);
 window.addEventListener('storage', event => {
+  customTeamBuilder?.refresh();
   if (event.key === OWNED_TRINKETS_STORAGE_KEY) {
     if (event.newValue === null) memoryOwnedTrinketIds = [];
     memoryOwnedTrinketIds = getOwnedTrinketIds();
@@ -1582,6 +1603,7 @@ document.addEventListener('focusin', event => {
   if (button) selectPortalGame(button);
 });
 document.addEventListener('click', event => {
+  if (event.target.closest('[data-custom-action]')) { getCustomTeamBuilder().click(event); return; }
   const plannerStepButton = event.target.closest('[data-planner-step]');
   if (plannerStepButton) {
     const step = document.getElementById(plannerStepButton.dataset.plannerStep);
@@ -1650,6 +1672,7 @@ document.addEventListener('click', event => {
 });
 
 document.addEventListener('input', event => {
+  if (event.target.matches('[data-custom-name]')) getCustomTeamBuilder().change(event);
   if (event.target.id === 'encyclopedia-search') {
     filterEncyclopedia();
     return;
@@ -1668,6 +1691,19 @@ document.addEventListener('input', event => {
   document.getElementById('game-search-results').innerHTML = results.markup;
 });
 document.addEventListener('change', event => {
+  if (event.target.closest('#custom-team-content')) { getCustomTeamBuilder().change(event); return; }
+  if (event.target.matches('[data-collection-quantity]')) {
+    const count = Number(event.target.value);
+    if (!Number.isSafeInteger(count) || count < 0 || count > 999) { event.target.reportValidity(); return; }
+    const id = event.target.dataset.collectionQuantity;
+    const persisted = quantityStore.write({ ...quantityStore.read(), [id]: count });
+    const result = setOwnedTrinket(id, count > 0);
+    updateOwnershipControls(id, count > 0);
+    refreshTeamEquipmentReadiness();
+    document.querySelectorAll('[data-ownership-storage-status]').forEach(status => { status.textContent = ownershipStorageNotice(persisted && result.persisted); });
+    return;
+  }
+
   if (event.target.id === 'planner-region' || event.target.id === 'planner-boss') {
     updateExpeditionPlannerOptions();
     refreshExpeditionPlanner();
@@ -1687,6 +1723,7 @@ document.addEventListener('change', event => {
     const status = document.getElementById('planner-roster-status');
     if (status) status.textContent = persisted ? `${heroIds.size} heroes marked available. Roster is stored only in this browser.` : `${heroIds.size} heroes marked available for this session; browser storage is unavailable.`;
     refreshExpeditionPlanner();
+    customTeamBuilder?.refresh();
     return;
   }
   if (event.target.matches('[data-owned-trinket]')) {

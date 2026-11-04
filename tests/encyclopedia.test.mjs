@@ -249,9 +249,10 @@ test('expedition planner route and region boss choices use only recorded locatio
   assert.ok(page.includes('id="planner-region"'));
   assert.ok(page.includes('id="planner-boss"'));
   assert.ok(page.includes('data-reset-expedition-roster'));
-  for (const [id, label] of [['planner-step-expedition', 'Expedition'], ['planner-step-party', 'Party'], ['planner-step-equipment', 'Equipment'], ['planner-step-battle', 'Battle plan']]) {
+  for (const [id, label] of [['planner-step-expedition', 'Choose Expedition'], ['planner-step-party', 'Choose Party'], ['planner-step-equipment', 'Check Equipment'], ['planner-step-battle', 'Battle Plan']]) {
     assert.ok(page.includes(`id="${id}"`), `planner should include ${id}`);
     assert.ok(page.includes(`data-planner-step="${id}"`), `step navigation should include ${label}`);
+    assert.ok(page.includes(`<span>${String(['planner-step-expedition', 'planner-step-party', 'planner-step-equipment', 'planner-step-battle'].indexOf(id) + 1).padStart(2, '0')}</span> ${label}`));
   }
   const ruins = pack.locations.find(location => location.routeId === 'ruins');
   const warrens = pack.locations.find(location => location.routeId === 'warrens');
@@ -284,6 +285,32 @@ test('expedition planner route and region boss choices use only recorded locatio
   bossSelect.value = pack.bosses.find(boss => boss.routeId === 'swine-prince').id;
   h.app.updateExpeditionPlannerOptions();
   assert.equal(bossSelect.value, '', 'changing region should clear a now-unsupported boss');
+});
+
+test('Darkest Dungeon overview links all encyclopedia sections and derives a featured boss with its team guides', () => {
+  const page = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon'));
+  assert.ok(page.includes('Enter the <em>Darkest Dungeon</em>'));
+  assert.ok(page.includes('Prepare an Expedition'));
+  assert.ok(page.includes('Explore Boss Guides'));
+  assert.ok(page.includes('overview-cinematic-art'));
+  const games = h.modules.get(resolve(root, 'dist/js/games.js')).namespace.games;
+  for (const id of ['heroes', 'bosses', 'enemies', 'trinkets', 'items', 'curios', 'teams', 'locations']) {
+    const category = games['darkest-dungeon'].categories.find(entry => entry.id === id);
+    const href = `#game/darkest-dungeon/${category.view}`;
+    assert.ok(page.includes(`href="${href}"`), `overview should link to ${category.label}`);
+    assert.equal(h.app.readRoute(href).view, category.view, `${category.label} link should resolve`);
+  }
+  assert.equal(h.app.readRoute('#game/darkest-dungeon/expedition-planner').view, 'expedition-planner');
+  const featured = [...pack.bosses].filter(boss => boss.guideStatus === 'available' && boss.counterTeams?.length)
+    .sort((left, right) => right.counterTeams.length - left.counterTeams.length)[0];
+  assert.ok(page.includes(`A plan for the ${featured.name}`));
+  assert.ok(page.includes(`#game/darkest-dungeon/bosses/${featured.routeId}`));
+  for (const team of featured.counterTeams.slice(0, 3)) {
+    const href = `#game/darkest-dungeon/teams/${team.id}`;
+    assert.ok(page.includes(`href="${href}"`), `featured team ${team.id} should link to its guide`);
+    assert.equal(h.app.readRoute(href).view, 'team-detail');
+  }
+  assert.ok(page.includes('#game/darkest-dungeon/quests'));
 });
 
 test('expedition planner roster distinguishes unknown, available and missing heroes without hiding teams', async () => {
@@ -747,4 +774,97 @@ test('boss coverage and all counter-team routes, links, ranks and restrictions s
     assert.ok(swinePage.includes(`#game/darkest-dungeon/teams/${team.id}`));
     assert.ok(h.app.readRoute(`#game/darkest-dungeon/teams/${team.id}`).team);
   }
+});
+
+test('custom builder keeps four ranks, swaps whole loadouts and prevents duplicate selection', () => {
+  const custom = h.modules.get(resolve(root, 'dist/js/custom-team.js')).namespace;
+  const build = custom.emptyBuild();
+  ['vestal', 'plague-doctor', 'highwayman', 'crusader'].forEach((id, index) => custom.selectHero(build, index, id));
+  build.party[0].skills = ['test-skill'];
+  custom.selectHero(build, 3, 'vestal');
+  assert.equal(build.party.length, 4);
+  assert.equal(new Set(build.party.map(slot => slot.heroId)).size, 4);
+  assert.equal(build.party[3].skills[0], 'test-skill');
+  assert.equal(build.party[0].heroId, 'crusader');
+  custom.selectHero(build, 8, 'jester');
+  assert.equal(build.party.length, 4);
+});
+
+test('custom skill checks use recorded ranks, distinguish incomplete references and detect stale data', () => {
+  const custom = h.modules.get(resolve(root, 'dist/js/custom-team.js')).namespace;
+  const abilities = h.modules.get(resolve(root, 'dist/js/hero-abilities.js')).namespace.heroAbilities;
+  const heroes = h.modules.get(resolve(root, 'dist/js/heroes.js')).namespace.heroes;
+  const smite = custom.combatSkills('crusader', pack, abilities).find(skill => skill.name === 'Smite');
+  assert.equal(custom.skillWorks(smite, 1), true);
+  assert.equal(custom.skillWorks(smite, 4), false);
+  assert.equal(smite.verified, true);
+  const build = custom.emptyBuild();
+  custom.selectHero(build, 0, 'crusader');
+  build.party[0].skills = [smite.id, 'removed-skill'];
+  build.party[0].trinkets = ['removed-trinket', ''];
+  build.party[1].heroId = 'removed-hero';
+  build.bossId = 'removed-boss';
+  const warnings = custom.analyzeBuild(build, { heroes, abilities, pack, owned: [], quantities: {}, roster: { initialized: true, heroIds: [] } }).join(' ');
+  for (const message of ['cannot be used from rank 4', 'unavailable saved skill', 'unavailable saved trinket', 'saved hero may be missing', 'saved boss may be missing', 'not marked available']) assert.ok(warnings.includes(message), message);
+});
+
+test('custom trinket compatibility uses class restrictions, not guide associations, and counts physical copies', () => {
+  const custom = h.modules.get(resolve(root, 'dist/js/custom-team.js')).namespace;
+  const abilities = h.modules.get(resolve(root, 'dist/js/hero-abilities.js')).namespace.heroAbilities;
+  const heroes = h.modules.get(resolve(root, 'dist/js/heroes.js')).namespace.heroes;
+  const generic = pack.trinkets.find(item => item.routeId === 'focus-ring');
+  const restricted = pack.trinkets.find(item => item.classRestrictionHeroRouteIds?.length);
+  assert.equal(custom.compatibleTrinket(generic, 'crusader'), true);
+  assert.equal(custom.compatibleTrinket(restricted, restricted.classRestrictionHeroRouteIds[0]), true);
+  assert.equal(custom.compatibleTrinket(restricted, 'unknown-class'), false);
+  assert.equal(custom.copyQuantity(generic.id, [generic.id], {}), 1);
+  assert.equal(custom.copyQuantity(generic.id, [], { [generic.id]: 20 }), 0);
+  const build = custom.emptyBuild();
+  custom.selectHero(build, 0, 'highwayman'); custom.selectHero(build, 1, 'crusader');
+  build.party[0].trinkets[0] = generic.id; build.party[1].trinkets[0] = generic.id;
+  const context = { heroes, abilities, pack, owned: [generic.id], quantities: {}, roster: null };
+  assert.ok(custom.analyzeBuild(build, context).some(message => message.includes('Quantity conflict')));
+  context.quantities[generic.id] = 2;
+  assert.equal(custom.analyzeBuild(build, context).some(message => message.includes('Quantity conflict')), false);
+  context.quantities[generic.id] = 1;
+  assert.ok(custom.analyzeBuild(build, context).some(message => message.includes('Quantity conflict')));
+});
+
+test('custom build library saves stable IDs, edits, loads, deletes, and survives blocked writes', () => {
+  const custom = h.modules.get(resolve(root, 'dist/js/custom-team.js')).namespace;
+  const values = new Map();
+  let blocked = false;
+  const storage = { getItem: key => values.get(key), setItem(key, value) { if (blocked) throw new Error('Quota'); values.set(key, value); } };
+  const store = custom.personalStore('test-builds', [], () => storage);
+  const library = custom.buildLibrary(store, () => 'stable-test-id');
+  const draft = custom.emptyBuild(); draft.name = 'My party';
+  const saved = library.save(draft);
+  assert.equal(saved.persisted, true);
+  assert.equal(saved.record.id, 'stable-test-id');
+  saved.record.name = 'Edited party';
+  library.save(saved.record);
+  assert.equal(library.list().length, 1);
+  assert.equal(library.load(saved.record.id).name, 'Edited party');
+  blocked = true;
+  saved.record.name = 'Session edit';
+  assert.equal(library.save(saved.record).persisted, false);
+  assert.equal(library.load(saved.record.id).name, 'Session edit');
+  assert.equal(library.remove(saved.record.id), false);
+  assert.equal(library.list().length, 0);
+  const unavailable = custom.personalStore('denied', [], () => { throw new Error('Denied'); });
+  assert.equal(unavailable.write([saved.record]), false);
+  assert.equal(unavailable.read().length, 1);
+  const corrupt = custom.buildLibrary(custom.personalStore('bad', [], () => ({ getItem: () => '{bad json' })), () => 'new');
+  assert.equal(corrupt.list().length, 0);
+});
+
+test('custom builder renders inside planner and preserves boss and team routes', () => {
+  const markup = h.app.renderExpeditionPlanner();
+  for (const label of ['Build My Own Team', '1. Select Boss', '2. Select Four Heroes', '3. Choose Skills', '4. Equip Trinkets', '5. Review and Save', 'Swine God']) assert.ok(markup.includes(label), label);
+  assert.ok(markup.includes('planner-party-content'));
+  for (const boss of pack.bosses) {
+    assert.ok(h.app.renderPage(h.app.readRoute(`#game/darkest-dungeon/bosses/${boss.routeId}`)).includes(boss.name));
+    for (const team of boss.counterTeams || []) assert.ok(h.app.readRoute(`#game/darkest-dungeon/teams/${team.id}`).team);
+  }
+  assert.ok(h.app.renderEncyclopediaCollection('trinkets').includes('data-collection-quantity'));
 });
