@@ -48,55 +48,158 @@ export function selectHero(build, index, heroId) {
 export function combatSkills(heroId, pack, abilities) {
   const canonical = pack.heroes.find(hero => hero.routeId === heroId)?.id;
   const records = pack.combatSkills.filter(skill => skill.heroId === canonical);
-  if (records.length) return records.map(skill => ({ id: skill.id, name: skill.name, ranks: skill.rankRules.heroPositions,
-    target: `${skill.rankRules.target.side}: ${skill.rankRules.target.ranks?.join(', ') || skill.rankRules.target.mode}`,
-    effects: skill.level1.effects.map(effect => effect.text).join(' '), verified: skill.level1.verification?.status === 'reference-checked' }));
-  return (abilities[heroId]?.skills || []).map((row, index) => ({ id: `reference:${heroId}:${index}:${row[0]}`, name: row[0],
-    ranks: row[1] === 'Any' ? [4, 3, 2, 1] : row[1].split(',').map(Number), target: row[2], effects: row[6], verified: false }));
+  if (records.length) return records.map(skill => ({ id: skill.id, name: skill.name, ranks: skill.rankRules?.heroPositions || [], targetRules: skill.rankRules?.target, category: skill.category,
+    damaging: /attack/i.test(skill.category || '') && typeof skill.level1?.damageModifier?.value === 'number' && skill.level1.damageModifier.value > -100,
+    target: `${skill.rankRules?.target?.side || 'Unknown'}: ${skill.rankRules?.target?.ranks?.join(', ') || skill.rankRules?.target?.mode || 'Unknown'}`,
+    effects: (skill.level1?.effects || []).map(effect => effect.text).join(' '), verified: skill.level1?.verification?.status === 'reference-checked' }));
+  return (abilities[heroId]?.skills || []).map((row, index) => {
+    const detail = abilities[heroId]?.skillDetails?.[row[0]];
+    const numericTargets = /^[1-4](?:\s*[, +]\s*[1-4])*$/.test(row[2] || '');
+    const targetRules = numericTargets ? {
+      side: 'enemy', ranks: row[2].match(/[1-4]/g).map(Number),
+      mode: /random target/i.test(row[6] || '') ? 'random' : detail?.target?.mode || (row[2].includes('+') ? 'simultaneous' : 'choose-one')
+    } : detail?.target ? { ...detail.target, ranks: [] } : null;
+    return { id: `reference:${heroId}:${index}:${row[0]}`, name: row[0],
+      ranks: row[1] === 'Any' ? [4, 3, 2, 1] : String(row[1] || '').split(',').map(Number).filter(rank => rank >= 1 && rank <= 4),
+      target: row[2] || 'Unknown', targetRules, category: detail?.type,
+      damaging: numericTargets && (row[3] === '—' || Number.parseFloat(row[3]) > -100),
+      effects: row[6] || '', verified: false };
+  });
 }
 export function skillWorks(skill, rank) { return !!skill?.ranks?.includes(rank); }
-export function analyzeBuild(build, context) {
+export function reviewBuild(build, context) {
   const { heroes, pack, abilities, owned, quantities, roster } = context;
-  const warnings = [];
+  const groups = { critical: [], skills: [], equipment: [], missing: [], reminders: [] };
+  const add = (group, code, text, links = []) => groups[group].push({ code, text, links });
+  const heroLink = hero => ({ label: `${hero.name} skills`, href: `#hero/${hero.id}/abilities` });
+  const itemLink = item => ({ label: item.name, href: `#game/darkest-dungeon/trinkets/${item.routeId}` });
+  const boss = pack.bosses.find(boss => boss.id === build.bossId);
+  const bossLinks = boss ? [{ label: `${boss.name} guide`, href: `#game/darkest-dungeon/bosses/${boss.routeId}` }] : [];
   const used = new Map();
   const seen = new Set();
-  if (!pack.bosses.some(boss => boss.id === build.bossId)) warnings.push('Choose a boss; the saved boss may be missing.');
-  const boss = pack.bosses.find(boss => boss.id === build.bossId);
-  if (build.tier && !boss?.variants?.some(variant => variant.tier === build.tier)) warnings.push('Saved campaign difficulty is unavailable.');
+  const incomplete = [];
+  const emptyRanks = [];
+  const emptyEquipment = [];
+  const selected = [];
+  if (!boss) add('missing', 'boss-missing', 'Choose a boss; the saved boss may be missing.');
+  if (build.tier && !boss?.variants?.some(variant => variant.tier === build.tier)) add('missing', 'tier-missing', 'Saved campaign difficulty is unavailable.', bossLinks);
+
+  function alternatives(heroId) {
+    const ids = (boss?.counterTeams || []).flatMap(team => team.members.filter(member => member.heroRouteId === heroId).flatMap(member => member.alternativeTrinketIds || []));
+    return pack.trinkets.filter(item => ids.some(id => id === item.id || id === item.routeId) && compatibleTrinket(item, heroId) && item.verification?.status === 'reference-checked').map(item => ({ ...itemLink(item), label: `Documented alternative: ${item.name}` }));
+  }
   build.party.forEach((slot, index) => {
     const rank = 4 - index;
     const hero = heroes.find(hero => hero.id === slot.heroId);
-    if (!hero) { warnings.push(`Rank ${rank}: choose a hero; the saved hero may be missing.`); return; }
-    if (seen.has(hero.id)) warnings.push(`Duplicate hero: ${hero.name}.`);
-    seen.add(hero.id);
-    if (roster?.initialized && !roster.heroIds.includes(hero.id)) warnings.push(`${hero.name} is not marked available in your expedition roster.`);
-    const skills = combatSkills(hero.id, pack, abilities);
-    if (slot.skills.length !== 4) warnings.push(`${hero.name}: choose exactly four combat skills.`);
-    if (!skills.length || skills.some(skill => !skill.verified) || hero.id === 'abomination') warnings.push(`${hero.name}: skill coverage is incomplete or uses older reference data; this loadout is not fully validated${hero.id === 'abomination' ? ' (transformation/form rules are not modeled)' : ''}.`);
-    for (const id of slot.skills) {
-      const skill = skills.find(skill => skill.id === id);
-      if (!skill) warnings.push(`${hero.name}: unavailable saved skill ${id}.`);
-      else if (!skillWorks(skill, rank)) warnings.push(`${hero.name}: ${skill.name} cannot be used from rank ${rank}; requires ${skill.ranks.join(', ')}.`);
+    const name = hero?.name || `Rank ${rank} (${slot.heroId || 'no hero'})`;
+    const links = hero ? [heroLink(hero)] : [];
+    if (!hero) emptyRanks.push(`rank ${rank}${slot.heroId ? `: ${slot.heroId}` : ''}`);
+    else {
+      if (seen.has(hero.id)) add('skills', 'duplicate-hero', `Duplicate hero: ${name}.`, links);
+      seen.add(hero.id);
+      if (roster?.initialized && !roster.heroIds.includes(hero.id)) add('missing', 'roster', `${name} is not marked available in your expedition roster.`, links);
+      const skills = combatSkills(hero.id, pack, abilities);
+      if (slot.skills.length !== 4) add('skills', 'skill-count', `${name}: choose exactly four combat skills (${slot.skills.length} selected).`, links);
+      if (skills.length < 7 || skills.some(skill => !skill.verified || !skill.targetRules || !skill.ranks.length) || hero.id === 'abomination') incomplete.push(hero);
+      for (const id of slot.skills) {
+        const skill = skills.find(skill => skill.id === id);
+        if (!skill) add('missing', 'skill-missing', `${name}: unavailable saved skill ${id}.`, links);
+        else {
+          selected.push({ skill, hero, rank });
+          if (!skill.ranks.length) add('missing', 'ranks-missing', `${name}: ${skill.name} has no recorded usable ranks.`, links);
+          else if (!skillWorks(skill, rank)) add('skills', 'invalid-rank', `${name}: ${skill.name} cannot be used from rank ${rank}; requires ${skill.ranks.join(', ')}.${skill.verified ? '' : ' Older reference; confirm in the hero guide.'}`, links);
+        }
+      }
     }
-    if (slot.trinkets.filter(Boolean).length < 2) warnings.push(`${hero.name}: empty trinket slot.`);
-    if (slot.trinkets[0] && slot.trinkets[0] === slot.trinkets[1]) warnings.push(`${hero.name}: duplicate trinket in both slots; select distinct items.`);
+    if (hero && slot.trinkets.some(id => !id)) emptyEquipment.push(name);
+    if (slot.trinkets[0] && slot.trinkets[0] === slot.trinkets[1]) add('equipment', 'duplicate-item', `${name}: duplicate trinket in both slots; select distinct items.`, links);
     for (const id of slot.trinkets.filter(Boolean)) {
       const item = pack.trinkets.find(item => item.id === id);
-      if (!item) warnings.push(`${hero.name}: unavailable saved trinket ${id}.`);
-      else if (!compatibleTrinket(item, hero.id)) warnings.push(`${hero.name}: ${item.name} is restricted to another class.`);
-      used.set(id, (used.get(id) || 0) + 1);
+      if (!item) { add('equipment', 'item-missing', `${name}: unavailable saved trinket ${id}.`, [...links, ...alternatives(slot.heroId)]); continue; }
+      const references = [...links, itemLink(item), ...alternatives(slot.heroId).filter(link => link.href !== itemLink(item).href)];
+      if (hero && !compatibleTrinket(item, hero.id)) add('equipment', 'class-restriction', `${name}: ${item.name} is restricted to ${item.classRestrictionHeroRouteIds.map(id => heroes.find(entry => entry.id === id)?.name || id).join(', ')}.`, references);
+      const users = used.get(id) || []; users.push({ name, heroId: slot.heroId }); used.set(id, users);
+      const dlc = item.requirements?.dlc || [];
+      const mods = item.requirements?.mods || [];
+      if (dlc.length) add('missing', 'dlc-required', `${name} — ${item.name} requires DLC: ${dlc.map(id => pack.dlcs.find(entry => entry.id === id)?.name || id).join(', ')}. Active DLC is not recorded; confirm it is enabled.`, [itemLink(item)]);
+      if (mods.length) add('missing', 'mod-required', `${name} — ${item.name} requires mods: ${mods.join(', ')}. Active mods are not recorded.`, [itemLink(item)]);
     }
   });
-  for (const [id, count] of used) if (count > copyQuantity(id, owned, quantities)) warnings.push(`Quantity conflict: ${pack.trinkets.find(item => item.id === id)?.name || id} needs ${count} copies; recorded ${copyQuantity(id, owned, quantities)}.`);
-  if (boss?.routeId === 'necromancer') {
-    const reachesRear = build.party.some((slot, index) => combatSkills(slot.heroId, pack, abilities).some(skill => slot.skills.includes(skill.id) && skillWorks(skill, 4 - index) && !/ally|self/i.test(skill.target) && /4/.test(skill.target)));
-    if (!reachesRear) warnings.push('No selected rank-usable skill records enemy rank 4 reach. The Necromancer retreats behind summons; review the boss guide’s rear-rank advice.');
+  if (emptyRanks.length) add('missing', 'hero-missing', `Choose heroes for ${emptyRanks.join('; ')}; a saved hero may be missing.`);
+  if (emptyEquipment.length) add('missing', 'empty-equipment', `Empty trinket slots: ${emptyEquipment.join(', ')}. Equipment is optional; review before leaving.`);
+  if (incomplete.length) add('missing', 'incomplete-skills', `Incomplete skill validation: ${incomplete.map(hero => hero.name).join(', ')}. Older references or missing structured data limit coverage checks.${incomplete.some(hero => hero.id === 'abomination') ? ' Abomination form and transformation rules are not modeled.' : ''}`, incomplete.map(heroLink));
+  for (const [id, users] of used) {
+    const item = pack.trinkets.find(item => item.id === id);
+    const count = copyQuantity(id, owned, quantities);
+    if (users.length > count) add('equipment', 'quantity-conflict', `Quantity conflict: ${item.name} needs ${users.length} copies; recorded ${count}. Equipped by ${users.map(user => user.name).join(', ')}.`, [itemLink(item), ...new Map(users.flatMap(user => alternatives(user.heroId)).filter(link => link.href !== itemLink(item).href).map(link => [link.href, link])).values()]);
   }
-  const usableSkills = build.party.flatMap((slot, index) => combatSkills(slot.heroId, pack, abilities).filter(skill => slot.skills.includes(skill.id) && skillWorks(skill, 4 - index)));
-  if (!usableSkills.some(skill => /all(?:y|ies)/i.test(skill.target) && /heal/i.test(skill.effects))) warnings.push('No selected rank-usable ally healing skill is recorded. Review recovery coverage; this check does not measure healing strength.');
-  if (boss?.routeId === 'swine-prince' && usableSkills.some(skill => /riposte/i.test(skill.effects))) warnings.push('Selected Riposte can counter Wilbur. The recorded boss advice warns that damaging him can trigger retaliation while the Swine Prince is alive.');
-  return warnings;
+  reviewEncounter(boss, build.tier, selected, add, bossLinks, heroLink);
+  reviewCoverage(boss, selected, incomplete.length > 0 || emptyRanks.length > 0 || groups.missing.some(item => ['skill-missing', 'ranks-missing'].includes(item.code)), add, bossLinks, heroLink);
+  return groups;
 }
+
+function reviewEncounter(boss, tier, selected, add, bossLinks, heroLink) {
+  if (!boss) return;
+  const checked = item => item.verification?.status === 'reference-checked';
+  const mechanics = (boss.mechanics || []).filter(checked);
+  const advice = (boss.tacticalConsiderations || []).filter(checked);
+  if (!mechanics.length) add('missing', 'boss-coverage', 'Verified encounter mechanics are not recorded for this boss.', bossLinks);
+  if (boss.routeId === 'swine-prince') {
+    const retaliation = mechanics.find(item => /Damaging Wilbur/.test(item.text));
+    if (retaliation) add('critical', 'wilbur', `Do not damage Wilbur before defeating the Prince. ${retaliation.text}`, bossLinks);
+    // The recorded formation is used only for this encounter, never as a universal boss rank.
+    const formation = mechanics.some(item => /Wilbur stands in rank 4/.test(item.text));
+    const riposteAdvice = advice.some(item => /Riposte/.test(item.text));
+    for (const { skill, hero, rank } of selected) {
+      const references = [heroLink(hero), ...bossLinks];
+      const qualifier = skillWorks(skill, rank) ? '' : ' Not usable from the starting rank; this risk applies if repositioned.';
+      if (retaliation && riposteAdvice && /activate Riposte/i.test(skill.effects)) add('critical', 'wilbur-riposte', `${hero.name} — ${skill.name}: recorded Riposte can automatically counter Wilbur and trigger retaliation.${qualifier}`, references);
+      if (!retaliation || !formation || !skill.damaging || skill.targetRules?.side !== 'enemy' || !skill.targetRules.ranks?.includes(4)) continue;
+      const mode = skill.targetRules.mode;
+      if (mode === 'simultaneous' || mode === 'random') add('critical', 'wilbur-area', `${hero.name} — ${skill.name}: ${mode === 'random' ? 'random targeting can hit' : 'the recorded area includes'} Wilbur in rank 4. Damaging him while the Prince lives triggers retaliation.${qualifier}`, references);
+      else if (mode === 'choose-one') add('reminders', 'wilbur-aim', `${hero.name} — ${skill.name} can target rank 4. Aim at the Prince, not Wilbur; this is a chosen target, not an automatic hit.${qualifier}`, references);
+    }
+  }
+  // Keep sourced editorial guidance labeled as advice, not a validated custom-team counter.
+  for (const item of advice) {
+    if (boss.routeId === 'swine-prince' && (!/Champion/.test(item.text) || tier !== 'Champion')) continue;
+    add('reminders', 'boss-advice', item.text, bossLinks);
+  }
+}
+
+function reviewCoverage(boss, selected, incomplete, add, bossLinks, heroLink) {
+  const usable = selected.filter(({ skill, rank }) => skillWorks(skill, rank));
+  const coverage = usable.filter(({ skill }) => skill.targetRules && skill.category);
+  const heroIds = [...new Set(coverage.map(({ hero }) => hero.id))];
+  for (const id of heroIds) {
+    const entries = coverage.filter(({ hero }) => hero.id === id);
+    const hero = entries[0].hero;
+    const attacks = entries.filter(({ skill }) => skill.damaging && skill.targetRules.side === 'enemy');
+    const support = entries.filter(({ skill }) => /heal|defen|guard/i.test(skill.category));
+    const parts = [];
+    if (attacks.length) parts.push(`Enemy reach: ${attacks.map(({ skill }) => `${skill.name} → ${skill.targetRules.ranks.join(', ')}${skill.targetRules.mode === 'random' ? ' (random)' : ''}`).join('; ')}.`);
+    if (support.length) parts.push(`Recovery / defense selected: ${support.map(({ skill }) => skill.name).join(', ')}.`);
+    if (parts.length) add('reminders', 'coverage', `${hero.name} — ${parts.join(' ')}${entries.some(({ skill }) => !skill.verified) ? ' Reference data; not fully validated.' : ''} Starting ranks only; this does not measure effectiveness.`, [heroLink(hero)]);
+  }
+  if (boss?.routeId === 'necromancer' && boss.mechanics?.some(item => item.verification?.status === 'reference-checked' && /moves him back/.test(item.text))) {
+    const reachesRear = usable.some(({ skill }) => skill.damaging && skill.targetRules?.side === 'enemy' && skill.targetRules.ranks.includes(4));
+    if (!reachesRear && selected.length) add(incomplete ? 'missing' : 'skills', 'rear-reach', `No selected rank-usable attack records enemy rank 4 reach. The Necromancer retreats behind summons.${incomplete ? ' Incomplete data prevents confirming a coverage gap.' : ' Review the boss guide’s rear-rank advice.'}`, bossLinks);
+  }
+}
+
+// Retain the original plain-text analysis API for existing callers.
+export function analyzeBuild(build, context) {
+  return Object.values(reviewBuild(build, context)).flat().map(item => item.text);
+}
+
+export function renderTeamReview(review, escape) {
+  const labels = { critical: ['Warning', 'Critical encounter warnings'], skills: ['Check', 'Skill and position problems'], equipment: ['Conflict', 'Equipment conflicts'], missing: ['Info', 'Missing information'], reminders: ['Reference', 'Useful verified tactical reminders'] };
+  return `<div class="team-review" aria-labelledby="team-review-heading"><h4 id="team-review-heading">Review My Team</h4><p>Checks use recorded data and your starting formation. Collapse a group to reduce detail; its findings remain available.</p>${Object.entries(labels).filter(([key]) => review[key].length).map(([key, [severity, label]]) => {
+    const findings = review[key];
+    return `<details class="team-review-group team-review-${key}" data-review-group="${key}" data-review-signature="${escape(JSON.stringify(findings))}"${key !== 'reminders' ? ' open' : ''}><summary><span class="team-review-severity">${severity}</span> ${label} (${findings.length})</summary><ul>${findings.map(item => `<li><p>${escape(item.text)}</p>${item.links.length ? `<p class="team-review-links">${item.links.map(link => `<a href="${escape(link.href)}">${escape(link.label)}</a>`).join(' · ')}</p>` : ''}</li>`).join('')}</ul></details>`;
+  }).join('')}<p>No score or win guarantee. Skill unlocks, movement and conditional effects still need in-game review. Unfinished drafts can be saved.</p></div>`;
+}
+
 export function buildLibrary(store = personalStore('bm-gaming-wiki-custom-teams-v1', []), makeId = () => globalThis.crypto.randomUUID()) {
   const list = () => { const records = store.read(); return Array.isArray(records) ? records.filter(record => record && typeof record.id === 'string' && record.id).map(normalizeBuild) : []; };
   return { list, load: id => list().find(record => record.id === id),
@@ -151,7 +254,7 @@ export function createCustomTeamBuilder(options) {
     if (!pack) return '<p>Custom builder unavailable: game data failed to load.</p>';
     const boss = pack.bosses.find(boss => boss.id === build.bossId);
     const ctx = context();
-    const warnings = analyzeBuild(build, ctx);
+    const review = reviewBuild(build, ctx);
     return `<div class="custom-team-builder"><p>Plan a custom party independently of the recommended teams below. All five sections stay available.</p>
       <section><h3>1. Select Boss</h3><label>Boss<select data-custom-boss>${option('', 'Choose a boss', !boss)}${pack.bosses.map(item => option(item.id, `${item.name}${item.variants?.length ? ` / ${item.variants.map(variant => variant.name).join(' / ')}` : ''} · ${item.regionLabel}`, item.id === build.bossId)).join('')}</select></label><label>Campaign difficulty<select data-custom-tier>${option('', 'Not selected / not recorded', !build.tier)}${(boss?.variants || []).map(variant => option(variant.tier, `${variant.tier} · ${variant.name}`, variant.tier === build.tier)).join('')}</select></label>${boss ? `<p>${escape(boss.regionLabel)} · ${requirements(boss.requirements)}</p>${bossReminder(boss, build.tier)}<details><summary>All recorded tactical considerations</summary><ul>${(boss.tacticalConsiderations || []).map(item => `<li>${escape(item.text)} [${escape(item.verification?.status || 'unverified')}]</li>`).join('') || '<li>Not recorded.</li>'}</ul></details>` : ''}</section>
       <section><h3>2. Select Four Heroes</h3><p>Rear rank 4 → front rank 1. Choosing a hero already in the party swaps their positions and equipment. Unavailable heroes remain selectable.</p><div class="custom-party">${build.party.map((slot, index) => {
@@ -160,7 +263,7 @@ export function createCustomTeamBuilder(options) {
       }).join('')}</div></section>
       <section><h3>3. Choose Skills</h3><p>Choose four skills per hero. Values use the existing level-1 references; upgrade values and dynamic combat conditions are not simulated. Abomination form rules are not modeled.</p><div class="custom-build-grid">${build.party.map((slot, index) => slot.heroId ? renderSkills(slot, index) : '').join('')}</div></section>
       <section><h3>4. Equip Trinkets</h3><p>Previously owned items count as one copy unless you record more. Unowned and exhausted items can be viewed but cannot be equipped.</p><label><input type="checkbox" data-custom-all${showAll ? ' checked' : ''}> View other available trinkets</label><label><input type="checkbox" data-custom-compatible${compatibleOnly ? ' checked' : ''}> Filter by hero compatibility</label><details><summary>Manage collection copies</summary><p>Zero removes ownership. Counts are shared with your personal collection.</p><div class="custom-quantities">${pack.trinkets.map(item => `<label>${escape(item.name)} <a href="#game/darkest-dungeon/trinkets/${escape(item.routeId)}">Effects & restrictions</a><small>${escape(item.effects.map(effect => effect.text + (effect.condition ? ` (${effect.condition})` : '')).join('; '))} · ${escape(item.verification?.status || 'unverified')} · ${requirements(item.requirements)} · Class: ${escape(item.classRestrictionHeroRouteIds?.join(', ') || 'unrestricted')}</small><input type="number" min="0" step="1" max="999" data-custom-quantity="${escape(item.id)}" value="${copyQuantity(item.id, ctx.owned, ctx.quantities)}"></label>`).join('')}</div></details><div class="custom-build-grid">${build.party.map((slot, index) => slot.heroId ? renderEquipment(slot, index) : '').join('')}</div></section>
-      <section><h3>5. Review and Save</h3><ol class="custom-review">${build.party.map((slot, index) => `<li>${heroHeading(slot, index)}<p>Skills: ${escape(slot.skills.map(id => combatSkills(slot.heroId, pack, abilities).find(skill => skill.id === id)?.name || `Missing: ${id}`).join(', ') || 'None')}</p><p>Trinkets: ${escape(slot.trinkets.map(id => pack.trinkets.find(item => item.id === id)?.name || (id ? `Missing: ${id}` : 'Empty')).join(', '))}</p></li>`).join('')}</ol><div class="planner-empty"><h4>Build checks</h4><ul>${warnings.map(warning => `<li>${escape(warning)}</li>`).join('') || '<li>No recorded selection conflicts found.</li>'}</ul><p>These checks do not validate combat success. Missing coverage, skill unlocks, movement, healing needs and conditional effects still require review. You may save an unfinished draft.</p></div><label>Composition name<input data-custom-name maxlength="100" value="${escape(build.name)}"></label><div class="custom-actions"><button type="button" data-custom-action="save">${build.id ? 'Save changes' : 'Save composition'}</button><button type="button" data-custom-action="new">New composition</button></div><label>Saved compositions<select data-custom-saved>${option('', 'Select a saved composition', !build.id)}${library.list().map(record => option(record.id, record.name, record.id === build.id)).join('')}</select></label><div class="custom-actions"><button type="button" data-custom-action="load">Load selected</button><button type="button" data-custom-action="delete">Delete selected</button></div><p role="status" aria-live="polite" id="custom-build-status">${escape(notice || 'Personal builds are stored only in this browser.')}</p></section></div>`;
+      <section><h3>5. Review and Save</h3>${renderTeamReview(review, escape)}<details><summary>Selected party, skills and equipment</summary><ol class="custom-review">${build.party.map((slot, index) => `<li>${heroHeading(slot, index)}<p>Skills: ${escape(slot.skills.map(id => combatSkills(slot.heroId, pack, abilities).find(skill => skill.id === id)?.name || `Missing: ${id}`).join(', ') || 'None')}</p><p>Trinkets: ${escape(slot.trinkets.map(id => pack.trinkets.find(item => item.id === id)?.name || (id ? `Missing: ${id}` : 'Empty')).join(', '))}</p></li>`).join('')}</ol></details><label>Composition name<input data-custom-name maxlength="100" value="${escape(build.name)}"></label><div class="custom-actions"><button type="button" data-custom-action="save">${build.id ? 'Save changes' : 'Save composition'}</button><button type="button" data-custom-action="new">New composition</button></div><label>Saved compositions<select data-custom-saved>${option('', 'Select a saved composition', !build.id)}${library.list().map(record => option(record.id, record.name, record.id === build.id)).join('')}</select></label><div class="custom-actions"><button type="button" data-custom-action="load">Load selected</button><button type="button" data-custom-action="delete">Delete selected</button></div><p role="status" aria-live="polite" id="custom-build-status">${escape(notice || 'Personal builds are stored only in this browser.')}</p></section></div>`;
   }
   function refresh() {
     const target = document.getElementById('custom-team-content');
@@ -168,9 +271,14 @@ export function createCustomTeamBuilder(options) {
     // Preserve keyboard focus and open disclosure panels when controls are redrawn.
     const active = document.activeElement;
     const focusData = active?.dataset ? { ...active.dataset } : null;
-    const open = [...target.querySelectorAll('details')].map(element => element.open);
+    const open = [...target.querySelectorAll('details:not([data-review-group])')].map(element => element.open);
+    const reviewState = new Map([...target.querySelectorAll('[data-review-group]')].map(element => [element.dataset.reviewGroup, { open: element.open, signature: element.dataset.reviewSignature }]));
     target.innerHTML = render();
-    target.querySelectorAll('details').forEach((element, index) => { element.open = !!open[index]; });
+    target.querySelectorAll('details:not([data-review-group])').forEach((element, index) => { element.open = !!open[index]; });
+    target.querySelectorAll('[data-review-group]').forEach(element => {
+      const previous = reviewState.get(element.dataset.reviewGroup);
+      if (previous?.signature === element.dataset.reviewSignature) element.open = previous.open;
+    });
     if (focusData) [...target.querySelectorAll('input, select, button')].find(element => Object.keys(focusData).length && Object.entries(focusData).every(([key, value]) => element.dataset[key] === value))?.focus({ preventScroll: true });
   }
   function change(event) {

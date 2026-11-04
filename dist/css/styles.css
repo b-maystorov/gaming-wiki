@@ -1304,3 +1304,14 @@ body.has-back-to-top { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom,
 .back-to-top:hover { background: var(--accent-surface); border-color: var(--accent-hover); }
 .back-to-top:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .back-to-top { transition: none; } }
+
+/* Native disclosures keep review findings available when visually collapsed. */
+.team-review { margin-block: 1.5rem; padding: 1rem; background: var(--background); border: 1px solid var(--line); }
+.team-review > h4 { margin-top: 0; font-size: 1.3rem; }
+.team-review-group { margin-block: .8rem; border: 1px solid var(--line); border-radius: .3rem; padding: .8rem; }
+.team-review-group summary { cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
+.team-review-severity { display: inline-block; margin-right: .35rem; padding: .1rem .45rem; background: var(--accent-surface); color: var(--text); font-size: .8rem; }
+.team-review-critical { border-color: var(--accent-hover); }
+.team-review-group li + li { margin-top: 1rem; }
+.team-review-links { font-size: .85rem; }
+.team-review-group summary:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }

@@ -905,3 +905,159 @@ test('back-to-top follows scroll threshold and routes, with reduced-motion and f
   assert.ok(shell.includes('aria-label="Back to top"'));
   assert.equal(local.app.renderPage(bossRoute).includes('id="back-to-top"'), false);
 });
+
+function teamReviewFixture() {
+  const custom = h.modules.get(resolve(root, 'dist/js/custom-team.js')).namespace;
+  const abilities = h.modules.get(resolve(root, 'dist/js/hero-abilities.js')).namespace.heroAbilities;
+  const heroes = h.modules.get(resolve(root, 'dist/js/heroes.js')).namespace.heroes;
+  const build = custom.emptyBuild();
+  const context = { heroes, abilities, pack, owned: [], quantities: {}, roster: null };
+  const equipSkills = (index, heroId, names) => {
+    custom.selectHero(build, index, heroId);
+    build.party[index].skills = names.map(name => {
+      const skill = custom.combatSkills(heroId, pack, abilities).find(skill => skill.name === name);
+      assert.ok(skill, name);
+      return skill.id;
+    });
+  };
+  return { custom, build, context, equipSkills };
+}
+
+test('smart review groups exact rank problems with hero links and aggregates incomplete coverage', () => {
+  const { custom, build, context, equipSkills } = teamReviewFixture();
+  equipSkills(0, 'crusader', ['Smite']);
+  equipSkills(1, 'vestal', ['Divine Grace']);
+  equipSkills(2, 'jester', ['Dirk Stab']);
+  const review = custom.reviewBuild(build, context);
+  const issue = review.skills.find(item => item.code === 'invalid-rank');
+  assert.ok(issue.text.includes('Crusader: Smite cannot be used from rank 4; requires 2, 1'));
+  assert.equal(issue.links[0].href, '#hero/crusader/abilities');
+  assert.equal(review.missing.filter(item => item.code === 'incomplete-skills').length, 1);
+  assert.ok(review.missing.find(item => item.code === 'incomplete-skills').text.includes('Vestal, Jester'));
+  assert.equal(review.equipment.length, 0);
+});
+
+test('smart equipment review names users, class restrictions, verified alternatives and DLC uncertainty', () => {
+  const { custom, build, context, equipSkills } = teamReviewFixture();
+  equipSkills(0, 'arbalest', ['Sniper Shot']);
+  equipSkills(3, 'crusader', ['Smite']);
+  build.bossId = pack.bosses.find(boss => boss.routeId === 'swine-prince').id;
+  const focus = pack.trinkets.find(item => item.routeId === 'focus-ring');
+  const buckle = pack.trinkets.find(item => item.classRestrictionHeroRouteIds?.includes('highwayman') && !item.requirements.dlc.length);
+  build.party[0].trinkets = [focus.id, buckle.id];
+  build.party[3].trinkets = [focus.id, pack.trinkets.find(item => item.routeId === 'glittering-spaulders').id];
+  context.owned = [focus.id, buckle.id];
+  const original = JSON.stringify(build);
+  let review = custom.reviewBuild(build, context);
+  const quantity = review.equipment.find(item => item.code === 'quantity-conflict' && item.text.includes('Focus Ring'));
+  assert.ok(quantity.text.includes('Arbalest, Crusader'));
+  assert.ok(quantity.links.some(link => link.label.startsWith('Documented alternative:')));
+  assert.ok(review.equipment.some(item => item.code === 'class-restriction' && item.text.includes('Arbalest') && item.text.includes(buckle.name)));
+  assert.ok(review.missing.some(item => item.code === 'dlc-required' && item.text.includes('Glittering Spaulders') && item.text.includes('Active DLC is not recorded')));
+  context.quantities[focus.id] = 2;
+  review = custom.reviewBuild(build, context);
+  assert.equal(review.equipment.some(item => item.code === 'quantity-conflict' && item.text.includes('Focus Ring')), false);
+  assert.equal(JSON.stringify(build), original, 'review never changes equipment or saved selections');
+});
+
+test('smart review handles stale records and absent targeting without fabricating coverage', () => {
+  const { custom, build, context, equipSkills } = teamReviewFixture();
+  equipSkills(3, 'crusader', ['Smite']);
+  context.pack = structuredClone(pack);
+  const skill = context.pack.combatSkills.find(skill => skill.name === 'Smite');
+  delete skill.rankRules;
+  delete skill.level1;
+  build.party[3].skills.push('removed-skill');
+  build.party[3].trinkets[0] = 'removed-item';
+  build.party[0].heroId = 'removed-hero';
+  const review = custom.reviewBuild(build, context);
+  for (const code of ['skill-missing', 'ranks-missing', 'hero-missing', 'incomplete-skills']) assert.ok(review.missing.some(item => item.code === code), code);
+  assert.ok(review.equipment.some(item => item.code === 'item-missing'));
+  assert.equal(review.reminders.some(item => item.code === 'coverage'), false);
+});
+
+test('Swine God review flags documented Riposte, area and random hits but distinguishes chosen targets', () => {
+  const { custom, build, context, equipSkills } = teamReviewFixture();
+  build.bossId = pack.bosses.find(boss => boss.routeId === 'swine-prince').id;
+  build.tier = 'Champion';
+  equipSkills(0, 'arbalest', ['Blindfire', 'Sniper Shot', 'Rallying Flare']);
+  equipSkills(1, 'highwayman', ['Duelist’s Advance', 'Grapeshot Blast']);
+  equipSkills(2, 'man-at-arms', ['Retribution']);
+  equipSkills(3, 'flagellant', ['Rain of Sorrows']);
+  const review = custom.reviewBuild(build, context);
+  assert.ok(review.critical.some(item => item.code === 'wilbur' && item.text.includes('Enraged Destruction')));
+  assert.equal(review.critical.filter(item => item.code === 'wilbur-riposte').length, 2);
+  const area = review.critical.filter(item => item.code === 'wilbur-area');
+  assert.equal(area.length, 2);
+  assert.ok(area.some(item => item.text.includes('Blindfire')));
+  assert.ok(area.some(item => item.text.includes('Rain of Sorrows')));
+  assert.equal(review.critical.some(item => /Grapeshot Blast|Sniper Shot|Rallying Flare/.test(item.text)), false);
+  assert.ok(review.reminders.some(item => item.code === 'wilbur-aim' && item.text.includes('Sniper Shot')));
+  assert.ok(review.reminders.some(item => item.text.includes('Champion')));
+  build.bossId = pack.bosses.find(boss => boss.routeId === 'hag').id;
+  const hag = custom.reviewBuild(build, context);
+  assert.equal(hag.critical.length, 0);
+  assert.ok(hag.reminders.some(item => item.code === 'boss-advice' && item.text.includes('ranks 3–4')));
+});
+
+test('Wilbur skill warnings require recorded damage, targeting and verified encounter evidence', () => {
+  const { custom, build, context, equipSkills } = teamReviewFixture();
+  build.bossId = pack.bosses.find(boss => boss.routeId === 'swine-prince').id;
+  equipSkills(3, 'flagellant', ['Rain of Sorrows']);
+  context.abilities = structuredClone(context.abilities);
+  const row = context.abilities.flagellant.skills.find(row => row[0] === 'Rain of Sorrows');
+  row[2] = 'Unknown';
+  assert.equal(custom.reviewBuild(build, context).critical.some(item => item.code === 'wilbur-area'), false);
+  row[2] = '3 + 4'; row[3] = '-100%';
+  assert.equal(custom.reviewBuild(build, context).critical.some(item => item.code === 'wilbur-area'), false);
+  context.pack = structuredClone(pack);
+  context.pack.bosses.find(boss => boss.id === build.bossId).mechanics = [];
+  assert.equal(custom.reviewBuild(build, context).critical.length, 0);
+});
+
+test('structured coverage separates enemy reach from healing and defense and preserves v1 saves', () => {
+  const { custom, build, context, equipSkills } = teamReviewFixture();
+  equipSkills(3, 'crusader', ['Smite', 'Battle Heal', 'Bulwark of Faith', 'Inspiring Cry']);
+  build.id = 'v1-stable-id'; build.name = 'Existing personal build';
+  const original = JSON.stringify(build);
+  const store = custom.personalStore('v1-test', [], () => ({ getItem: () => `[${original}]` }));
+  const library = custom.buildLibrary(store);
+  const loaded = library.load(build.id);
+  const review = custom.reviewBuild(loaded, context);
+  const coverage = review.reminders.find(item => item.code === 'coverage');
+  assert.ok(coverage.text.includes('Smite → 1, 2'));
+  assert.ok(coverage.text.includes('Battle Heal, Bulwark of Faith, Inspiring Cry'));
+  assert.equal(coverage.text.includes('Battle Heal →'), false);
+  assert.equal(JSON.stringify(loaded), original);
+  assert.equal(JSON.stringify(library.load(build.id)), original);
+});
+
+test('team review renders only populated groups as accessible collapsible findings', () => {
+  const { custom, build, context } = teamReviewFixture();
+  const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
+  const review = custom.reviewBuild(build, context);
+  review.missing[0].text = '<script>unsafe</script>';
+  const html = custom.renderTeamReview(review, escape);
+  assert.ok(html.includes('Review My Team'));
+  assert.ok(html.includes('Missing information'));
+  assert.equal(html.includes('Equipment conflicts'), false);
+  assert.ok(html.includes('data-review-group="missing"'));
+  assert.ok(html.includes('&lt;script>'));
+  assert.equal(html.includes('<script>'), false);
+  assert.ok(h.app.renderExpeditionPlanner().includes('Review My Team'));
+});
+
+test('Necromancer rear coverage never mistakes ally targets for enemy reach', () => {
+  const { custom, build, context, equipSkills } = teamReviewFixture();
+  build.bossId = pack.bosses.find(boss => boss.routeId === 'necromancer').id;
+  equipSkills(3, 'crusader', ['Battle Heal']);
+  let review = custom.reviewBuild(build, context);
+  assert.ok(review.missing.some(item => item.code === 'rear-reach'), 'unfinished party makes coverage uncertain');
+  equipSkills(0, 'vestal', ['Divine Grace']);
+  review = custom.reviewBuild(build, context);
+  assert.ok(review.missing.some(item => item.code === 'rear-reach'));
+  equipSkills(2, 'highwayman', ['Pistol Shot']);
+  review = custom.reviewBuild(build, context);
+  assert.equal(Object.values(review).flat().some(item => item.code === 'rear-reach'), false);
+  assert.ok(review.reminders.some(item => item.code === 'boss-advice' && item.text.includes('retreats')));
+});
