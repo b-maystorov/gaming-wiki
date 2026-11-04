@@ -348,6 +348,19 @@ def check_pack(pack):
         require(all(record_id in enemy_ids for record_id in location["enemyIds"]), f"location {location['id']}: unknown enemy")
         require(all(record_id in boss_ids for record_id in location["bossIds"]), f"location {location['id']}: unknown boss")
         require(all(record_id in curio_ids for record_id in location["curioIds"]), f"location {location['id']}: unknown curio")
+        guide = location.get("regionalGuide")
+        if guide:
+            for key in ("introduction", "mainEnemyTypes", "dangers", "combatConsiderations", "coverageNote"):
+                require(isinstance(guide.get(key), str) and guide[key].strip(), f"location {location['id']}: missing regional {key}")
+            grouped = [enemy_id for group in guide["enemyGroups"] for enemy_id in group["enemyIds"]]
+            require(len(grouped) == len(set(grouped)) and set(grouped) == set(location["enemyIds"]), f"location {location['id']}: regional enemy groups must cover each enemy exactly once")
+            group_ids = [group["id"] for group in guide["enemyGroups"]]
+            require(len(group_ids) == len(set(group_ids)) and all(ID_PATTERN.fullmatch(value) for value in group_ids), f"location {location['id']}: invalid regional group IDs")
+            for entry in guide["preparation"]:
+                require(all(hero in hero_route_ids for hero in entry["heroRouteIds"]), f"location {location['id']}: unknown preparation hero")
+            for team_id in guide["generalTeamIds"]:
+                team = next((team for team in pack["teamCompositions"] if team["id"] == team_id), None)
+                require(team and location["regionId"] in team.get("regionIds", []) and team.get("verification", {}).get("status") == "reference-checked", f"location {location['id']}: unsupported regional team {team_id}")
     for collection in ("trinkets", "curios", "locations", "quests"):
         route_ids = [record["routeId"] for record in pack[collection]]
         require(all(ID_PATTERN.fullmatch(route_id) for route_id in route_ids), f"{collection}: invalid route ID")

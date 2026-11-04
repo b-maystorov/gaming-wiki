@@ -1,3 +1,4 @@
+import { renderRegionalGuide } from './region-guide.js';
 import { createCustomTeamBuilder, copyQuantity, quantityStore } from './custom-team.js';
 import { loadArtworkManifest, renderEntryArtwork, handleArtworkError } from './artwork.js';
 import { matchesCollectionFilter, encyclopediaSearchText, verificationLabel } from './encyclopedia.js';
@@ -403,6 +404,7 @@ function renderEncyclopediaCollection(kind) {
 }
 
 function renderEncyclopediaDetail(kind, record) {
+  if (kind === 'locations' && record.regionalGuide) return renderRegionalGuide(record, structuredGameContent, { escapeHtml, requirementLabel, renderBossCounterPreview, renderEntryArtwork });
   const back = `#game/darkest-dungeon/${kind}`;
   const regionName = id => structuredGameContent.regions.find(region => region.id === id)?.name || 'Unknown region';
   let sections = '';
@@ -1622,6 +1624,16 @@ document.addEventListener('focusin', event => {
   if (button) selectPortalGame(button);
 });
 document.addEventListener('click', event => {
+  const regionSection = event.target.closest('[data-region-section]');
+  if (regionSection) {
+    const target = document.getElementById(regionSection.dataset.regionSection);
+    if (target) {
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    }
+    return;
+  }
+
   if (event.target.closest('[data-custom-action]')) { getCustomTeamBuilder().click(event); return; }
   const plannerStepButton = event.target.closest('[data-planner-step]');
   if (plannerStepButton) {

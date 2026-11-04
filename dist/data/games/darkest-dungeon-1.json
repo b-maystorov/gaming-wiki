@@ -233,6 +233,38 @@
       "url": "https://darkestdungeon.wiki.gg/wiki/Wilbur",
       "kind": "community-wiki",
       "verificationStatus": "reference-checked"
+    },
+    {
+      "id": "wiki-ruins-guide-v2",
+      "title": "Ruins: regional mechanics and enemy roster",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Ruin",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "wiki-bone-bearer",
+      "title": "Bone Bearer: Champion spawn and abilities",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Bone_Bearer",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "wiki-curio-data",
+      "title": "Curio interaction data: Ruins",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Module:Curios/Data",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "wiki-pounder-region",
+      "title": "Brigand Pounder: Weald boss association",
+      "url": "https://darkestdungeon.wiki.gg/wiki/Pounder",
+      "kind": "community-wiki",
+      "verificationStatus": "reference-checked",
+      "checkedOn": "2026-11-04"
     }
   ],
   "heroes": [
@@ -6627,12 +6659,9 @@
         "darkest-dungeon-1:boss-category:region-quests"
       ],
       "regionIds": [
-        "darkest-dungeon-1:region:ruins",
-        "darkest-dungeon-1:region:warrens",
-        "darkest-dungeon-1:region:weald",
-        "darkest-dungeon-1:region:cove"
+        "darkest-dungeon-1:region:weald"
       ],
-      "regionLabel": "Region quest · all four core dungeons",
+      "regionLabel": "Weald",
       "requirements": {
         "baseGame": true,
         "dlc": [],
@@ -6641,7 +6670,7 @@
       "versionContextId": "darkest-dungeon-1:campaign:reference-context",
       "guideStatus": "in-development",
       "spoilerSensitive": false,
-      "summary": "The Brigand Pounder is the artillery centerpiece of a Brigand quest boss encounter. Its detailed mechanics and strategy have not yet been assessed for this guide.",
+      "summary": "A Weald quest boss built around a Brigand cannon. Detailed mechanics and strategy remain in development.",
       "summaryVerification": {
         "status": "reference-checked",
         "sourceIds": [
@@ -6651,7 +6680,8 @@
       "verification": {
         "status": "reference-checked",
         "sourceIds": [
-          "wiki-brigand-pounder"
+          "wiki-brigand-pounder",
+          "wiki-pounder-region"
         ]
       }
     },
@@ -7578,13 +7608,15 @@
         "dlc": [],
         "mods": []
       },
-      "summary": "A support skeleton that rallies its allies and should not be mistaken for a boss.",
+      "summary": "A Champion-only Ruins support enemy that strengthens allies and revives fallen enemies from corpses.",
       "mechanics": [
-        "Its drum abilities can strengthen or restore the enemy group."
+        "Its presence strengthens other enemies; Wicked Surge adds further buffs.",
+        "Unholy Rally revives corpses. Removing corpses prevents those corpses from being revived."
       ],
       "attacks": [
-        "Drums of Debilitation",
-        "Drums of Doom"
+        "Wicked Surge",
+        "Defend the Icon",
+        "Unholy Rally"
       ],
       "statusEffects": [],
       "stats": {},
@@ -7592,7 +7624,7 @@
       "verification": {
         "status": "reference-checked",
         "sourceIds": [
-          "wiki-regions-dd1"
+          "wiki-bone-bearer"
         ]
       }
     },
@@ -9941,7 +9973,9 @@
       "relatedCurioIds": [
         "darkest-dungeon-1:curio:barnacle-chest",
         "darkest-dungeon-1:curio:bas-relief",
-        "darkest-dungeon-1:curio:shallow-grave"
+        "darkest-dungeon-1:curio:shallow-grave",
+        "darkest-dungeon-1:curio:decorative-urn",
+        "darkest-dungeon-1:curio:locked-sarcophagus"
       ],
       "verification": {
         "status": "reference-checked",
@@ -9976,7 +10010,9 @@
         "dlc": [],
         "mods": []
       },
-      "relatedCurioIds": [],
+      "relatedCurioIds": [
+        "darkest-dungeon-1:curio:locked-sarcophagus"
+      ],
       "verification": {
         "status": "reference-checked",
         "sourceIds": [
@@ -10012,7 +10048,9 @@
       },
       "relatedCurioIds": [
         "darkest-dungeon-1:curio:altar-of-light",
-        "darkest-dungeon-1:curio:holy-fountain"
+        "darkest-dungeon-1:curio:holy-fountain",
+        "darkest-dungeon-1:curio:decorative-urn",
+        "darkest-dungeon-1:curio:confession-booth"
       ],
       "verification": {
         "status": "reference-checked",
@@ -10604,26 +10642,26 @@
       },
       "interactions": [
         {
-          "itemId": null,
-          "outcome": "Stress −10, cures status effects, heals 5 HP",
-          "chance": "50%",
-          "certainty": "random",
+          "itemId": "darkest-dungeon-1:item:holy-water",
+          "outcome": "Heal 12 HP, reduce stress by 20, and cure status effects.",
+          "chance": "100%",
+          "certainty": "documented",
           "verification": {
             "status": "reference-checked",
             "sourceIds": [
-              "wiki-curios-dd1"
+              "wiki-curio-data"
             ]
           }
         },
         {
-          "itemId": "darkest-dungeon-1:item:holy-water",
-          "outcome": "Documented interaction listed; exact outcome not recorded here",
-          "chance": null,
-          "certainty": "incomplete",
+          "itemId": null,
+          "outcome": "Heal 5 HP, reduce stress by 10, and cure status effects; or receive gold/gems.",
+          "chance": "50% / 50%",
+          "certainty": "random",
           "verification": {
             "status": "reference-checked",
             "sourceIds": [
-              "wiki-curios-dd1"
+              "wiki-curio-data"
             ]
           }
         }
@@ -10632,7 +10670,7 @@
       "verification": {
         "status": "reference-checked",
         "sourceIds": [
-          "wiki-curios-dd1"
+          "wiki-curio-data"
         ]
       },
       "assetPath": null
@@ -11146,6 +11184,246 @@
         ]
       },
       "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:decorative-urn",
+      "routeId": "decorative-urn",
+      "name": "Decorative Urn",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:holy-water",
+          "outcome": "Loot: gems / trinkets.",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        },
+        {
+          "itemId": "darkest-dungeon-1:item:shovel",
+          "outcome": "Gains Guilty Conscience.",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Possible loot, Blight, disease, or no effect.",
+          "chance": "Varies",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        }
+      ],
+      "warning": "Only listed interactions are assessed. Unlisted provisions have not been evaluated here.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curio-data"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:confession-booth",
+      "routeId": "confession-booth",
+      "name": "Confession Booth",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Corridors",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:holy-water",
+          "outcome": "Reduce stress by 30.",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Gain stress; receive loot; or remove a random negative quirk.",
+          "chance": "50% / 25% / 25%",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        }
+      ],
+      "warning": "Only listed interactions are assessed. Unlisted provisions have not been evaluated here.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curio-data"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:locked-sarcophagus",
+      "routeId": "locked-sarcophagus",
+      "name": "Locked Sarcophagus",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Curio rooms",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": "darkest-dungeon-1:item:skeleton-key",
+          "outcome": "Loot: gold, heirlooms and possible trinket.",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        },
+        {
+          "itemId": "darkest-dungeon-1:item:shovel",
+          "outcome": "Loot; a smaller recorded pool than using a key.",
+          "chance": "100%",
+          "certainty": "documented",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        },
+        {
+          "itemId": null,
+          "outcome": "Bleed or Blight.",
+          "chance": "50% / 50%",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        }
+      ],
+      "warning": "Only listed interactions are assessed. Unlisted provisions have not been evaluated here.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curio-data"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:sarcophagus",
+      "routeId": "sarcophagus",
+      "name": "Sarcophagus",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Curio rooms",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": null,
+          "outcome": "Loot; Thanatophobia; or no effect.",
+          "chance": "60% / 20% / 20%",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        }
+      ],
+      "warning": "Only listed interactions are assessed. Unlisted provisions have not been evaluated here.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curio-data"
+        ]
+      },
+      "assetPath": null
+    },
+    {
+      "id": "darkest-dungeon-1:curio:suit-of-armor",
+      "routeId": "suit-of-armor",
+      "name": "Suit of Armor",
+      "regionIds": [
+        "darkest-dungeon-1:region:ruins"
+      ],
+      "whereFound": "Curio rooms",
+      "requirements": {
+        "baseGame": true,
+        "dlc": [],
+        "mods": []
+      },
+      "interactions": [
+        {
+          "itemId": null,
+          "outcome": "Until camp: +15% PROT and +10 DODGE; or Ruins Adventurer; or Ruins Tactician.",
+          "chance": "75% / 12.5% / 12.5%",
+          "certainty": "random",
+          "verification": {
+            "status": "reference-checked",
+            "sourceIds": [
+              "wiki-curio-data"
+            ]
+          }
+        }
+      ],
+      "warning": "Only listed interactions are assessed. Unlisted provisions have not been evaluated here.",
+      "verification": {
+        "status": "reference-checked",
+        "sourceIds": [
+          "wiki-curio-data"
+        ]
+      },
+      "assetPath": null
     }
   ],
   "locations": [
@@ -11185,7 +11463,6 @@
       "bossIds": [
         "darkest-dungeon-1:boss:necromancer",
         "darkest-dungeon-1:boss:prophet",
-        "darkest-dungeon-1:boss:brigand-pounder",
         "darkest-dungeon-1:boss:shambler",
         "darkest-dungeon-1:boss:collector",
         "darkest-dungeon-1:boss:fanatic",
@@ -11196,7 +11473,12 @@
         "darkest-dungeon-1:curio:altar-of-light",
         "darkest-dungeon-1:curio:bookshelf",
         "darkest-dungeon-1:curio:iron-maiden",
-        "darkest-dungeon-1:curio:holy-fountain"
+        "darkest-dungeon-1:curio:holy-fountain",
+        "darkest-dungeon-1:curio:decorative-urn",
+        "darkest-dungeon-1:curio:confession-booth",
+        "darkest-dungeon-1:curio:locked-sarcophagus",
+        "darkest-dungeon-1:curio:sarcophagus",
+        "darkest-dungeon-1:curio:suit-of-armor"
       ],
       "specialMechanics": [
         "The region roster is primarily Unholy. Bone enemies resist Bleed heavily; Blight is generally more effective against them."
@@ -11205,8 +11487,116 @@
         "status": "reference-checked",
         "sourceIds": [
           "wiki-enemies-dd1",
-          "wiki-locations-dd1"
+          "wiki-locations-dd1",
+          "wiki-ruins-guide-v2",
+          "wiki-bone-bearer",
+          "wiki-curio-data",
+          "wiki-pounder-region"
         ]
+      },
+      "regionalGuide": {
+        "introduction": "Beneath the estate, broken halls and burial chambers shelter Unholy skeletons alongside cultists and other shared dungeon enemies. Prepare for stress pressure, protected frontliners and threats behind them.",
+        "mainEnemyTypes": "Unholy skeletons; shared Human cultists and brigands, Beasts, and Eldritch threats.",
+        "dangers": "Rear-rank stress attacks, formation disruption and protected enemies. Champion expeditions add the Bone Bearer’s buffs and resurrection.",
+        "combatConsiderations": "Bone enemies resist Bleed heavily. Blight and attacks that reach the back ranks are useful capabilities to consider; resistances vary by enemy and tier.",
+        "preparation": [
+          {
+            "title": "Reach the stress dealers",
+            "text": "Editorial: prepare back-rank damage or control for Bone Courtiers and Cultist Acolytes, so protected frontliners do not prevent you from addressing stress pressure.",
+            "heroRouteIds": [
+              "plague-doctor",
+              "highwayman"
+            ],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-ruins-guide-v2"
+              ]
+            }
+          },
+          {
+            "title": "Choose damage for the enemy",
+            "text": "Editorial: avoid relying only on Bleed against skeletons. Consider Blight against protected bone enemies and recorded bonuses against Unholy foes. Shared Human and Beast encounters still need their own assessment.",
+            "heroRouteIds": [
+              "plague-doctor",
+              "crusader"
+            ],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-ruins-guide-v2"
+              ]
+            }
+          },
+          {
+            "title": "Prepare for Champion support",
+            "text": "Editorial: account for the Bone Bearer. It strengthens allies and can resurrect corpses; corpse removal limits what it can revive.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-bone-bearer"
+              ]
+            }
+          },
+          {
+            "title": "Match supplies to interactions",
+            "text": "Medicinal Herbs have documented uses at the Alchemy Table and Iron Maiden. Holy Water and Skeleton Keys unlock other listed interactions below. Quantities depend on the actual quest; this is not a fixed shopping list.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-curios-dd1",
+                "wiki-curio-data"
+              ]
+            }
+          }
+        ],
+        "enemyGroups": [
+          {
+            "id": "priority",
+            "title": "Dangerous priority targets",
+            "note": "Editorial priorities based on recorded stress, marks and ranged pressure; target order depends on the encounter.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:bone-courtier",
+              "darkest-dungeon-1:enemy:bone-arbalist",
+              "darkest-dungeon-1:enemy:cultist-acolyte",
+              "darkest-dungeon-1:enemy:cultist-witch",
+              "darkest-dungeon-1:enemy:madman"
+            ]
+          },
+          {
+            "id": "elite",
+            "title": "Elite / Champion threats",
+            "note": "Bone Spearman and Bone Captain: Veteran or higher in the existing records. Bone Bearer: Champion only.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:bone-spearman",
+              "darkest-dungeon-1:enemy:bone-captain",
+              "darkest-dungeon-1:enemy:bone-bearer"
+            ]
+          },
+          {
+            "id": "common",
+            "title": "Common encounters and shared threats",
+            "note": "Other recorded regional enemies, including shared dungeon encounters. This grouping is not a spawn-frequency claim.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:bone-soldier",
+              "darkest-dungeon-1:enemy:bone-defender",
+              "darkest-dungeon-1:enemy:gargoyle",
+              "darkest-dungeon-1:enemy:cultist-brawler",
+              "darkest-dungeon-1:enemy:brigand-cutthroat",
+              "darkest-dungeon-1:enemy:brigand-fusilier",
+              "darkest-dungeon-1:enemy:brigand-bloodletter",
+              "darkest-dungeon-1:enemy:brigand-raider",
+              "darkest-dungeon-1:enemy:webber",
+              "darkest-dungeon-1:enemy:spitter",
+              "darkest-dungeon-1:enemy:maggot",
+              "darkest-dungeon-1:enemy:ghoul"
+            ]
+          }
+        ],
+        "generalTeamIds": [],
+        "coverageNote": "This is a curated regional reference, not a complete encounter table. Tier-specific enemy numbers, remaining shared curios and detailed Prophet / wandering-boss strategies are not yet recorded. Curio interactions not listed here are unknown, not automatically harmful."
       }
     },
     {
@@ -11245,7 +11635,6 @@
       "bossIds": [
         "darkest-dungeon-1:boss:swine-prince",
         "darkest-dungeon-1:boss:flesh",
-        "darkest-dungeon-1:boss:brigand-pounder",
         "darkest-dungeon-1:boss:shambler",
         "darkest-dungeon-1:boss:collector",
         "darkest-dungeon-1:boss:fanatic",
@@ -11356,7 +11745,6 @@
       ],
       "bossIds": [
         "darkest-dungeon-1:boss:siren",
-        "darkest-dungeon-1:boss:brigand-pounder",
         "darkest-dungeon-1:boss:drowned-crew",
         "darkest-dungeon-1:boss:shambler",
         "darkest-dungeon-1:boss:collector",

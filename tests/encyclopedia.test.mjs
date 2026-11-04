@@ -129,7 +129,7 @@ test('location guides organize linked expedition records and preserve recorded i
   const ruins = pack.locations.find(record => record.routeId === 'ruins');
   const html = h.app.renderEncyclopediaDetail('locations', ruins);
   for (const heading of ['Region overview', 'Main enemies & threats', 'Available bosses', 'Relevant curios', 'Useful provisions & interactions', 'Special mechanics', 'Related team compositions', 'Expedition preparation']) {
-    assert.ok(html.includes(heading), `Ruins guide should include ${heading}`);
+    assert.ok(html.replaceAll('&amp;', '&').includes(heading), `Ruins guide should include ${heading}`);
   }
   for (const [kind, routeId] of [['enemies', 'bone-soldier'], ['bosses', 'necromancer'], ['curios', 'alchemy-table'], ['items', 'medicinal-herbs']]) {
     assert.ok(html.includes(`#game/darkest-dungeon/${kind}/${routeId}`), `Ruins guide should link ${kind}/${routeId}`);
@@ -561,7 +561,7 @@ test('atlas poses use native SVG clipping, packing rotation and accessible label
 });
 
 test('manifest covers every requested record without certifying legacy art', () => {
-  assert.equal(artworkManifest.records.length, 170);
+  assert.equal(artworkManifest.records.length, 17 + ['bosses', 'enemies', 'trinkets', 'items', 'curios', 'locations'].reduce((total, kind) => total + pack[kind].length, 0));
   for (const category of ['bosses', 'enemies', 'trinkets', 'items', 'curios', 'locations']) {
     assert.deepEqual(artworkManifest.records.filter(row => row.category === category).map(row => row.recordId).sort(),
       pack[category].map(row => row.id).sort());
@@ -1060,4 +1060,94 @@ test('Necromancer rear coverage never mistakes ally targets for enemy reach', ()
   review = custom.reviewBuild(build, context);
   assert.equal(Object.values(review).flat().some(item => item.code === 'rear-reach'), false);
   assert.ok(review.reminders.some(item => item.code === 'boss-advice' && item.text.includes('retreats')));
+});
+
+test('Ruins v2 groups every recorded enemy once and preserves valid regional relationships', () => {
+  const ruins = pack.locations.find(record => record.routeId === 'ruins');
+  const grouped = ruins.regionalGuide.enemyGroups.flatMap(group => group.enemyIds);
+  assert.equal(new Set(grouped).size, grouped.length);
+  assert.deepEqual([...grouped].sort(), [...ruins.enemyIds].sort());
+  for (const [kind, ids] of [['enemies', ruins.enemyIds], ['curios', ruins.curioIds], ['bosses', ruins.bossIds]]) {
+    for (const id of ids) assert.ok(pack[kind].find(record => record.id === id).regionIds.includes(ruins.regionId), id);
+  }
+  const bearer = pack.enemies.find(enemy => enemy.routeId === 'bone-bearer');
+  assert.ok(bearer.summary.includes('Champion-only'));
+  assert.ok(bearer.attacks.includes('Unholy Rally'));
+  assert.ok(!bearer.attacks.includes('Drums of Doom'));
+  assert.ok(ruins.regionalGuide.enemyGroups.find(group => group.id === 'elite').enemyIds.includes(bearer.id));
+});
+
+test('Ruins boss associations distinguish local quest bosses from wandering and DLC encounters', () => {
+  const ruins = pack.locations.find(record => record.routeId === 'ruins');
+  const html = h.app.renderEncyclopediaDetail('locations', ruins);
+  const pounder = pack.bosses.find(boss => boss.routeId === 'brigand-pounder');
+  assert.deepEqual(pounder.regionIds, ['darkest-dungeon-1:region:weald']);
+  assert.equal(ruins.bossIds.includes(pounder.id), false);
+  assert.equal(h.app.plannerBosses(ruins).some(boss => boss.id === pounder.id), false);
+  assert.ok(html.includes('Regional quest bosses'));
+  for (const name of ['Necromancer', 'Prophet', 'Wandering and conditional encounters', 'Guide incomplete', 'DLC: The Crimson Court', 'DLC: The Color of Madness']) assert.ok(html.includes(name), name);
+});
+
+test('Ruins curio cards link valid provisions and preserve sourced and uncertain outcomes', () => {
+  const ruins = pack.locations.find(record => record.routeId === 'ruins');
+  const html = h.app.renderEncyclopediaDetail('locations', ruins);
+  for (const id of ruins.curioIds) {
+    const curio = pack.curios.find(record => record.id === id);
+    assert.ok(html.includes(`#game/darkest-dungeon/curios/${curio.routeId}`));
+    for (const entry of curio.interactions) {
+      if (entry.itemId) {
+        const item = pack.items.find(item => item.id === entry.itemId);
+        assert.ok(html.includes(`#game/darkest-dungeon/items/${item.routeId}`));
+        assert.ok(item.relatedCurioIds.includes(curio.id));
+      }
+    }
+  }
+  assert.ok(html.includes('unassessed, not automatically harmful'));
+  const fountain = pack.curios.find(record => record.routeId === 'holy-fountain');
+  assert.ok(fountain.interactions.some(entry => entry.itemId?.endsWith(':holy-water') && entry.outcome.includes('12 HP') && entry.chance === '100%'));
+  const changed = structuredClone(ruins);
+  const module = h.modules.get(resolve(root, 'dist/js/region-guide.js')).namespace;
+  const fakePack = structuredClone(pack);
+  fakePack.curios.find(curio => curio.id === ruins.curioIds[0]).interactions[0].certainty = 'incomplete';
+  const result = module.renderRegionalGuide(changed, fakePack, { escapeHtml: String, requirementLabel: () => 'Base game', renderBossCounterPreview: () => '', renderEntryArtwork: () => '' });
+  assert.ok(result.includes('Incomplete / unverified'));
+});
+
+test('regional team classification does not promote boss counters or unassessed teams', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/region-guide.js')).namespace;
+  const ruins = pack.locations.find(record => record.routeId === 'ruins');
+  const teams = module.regionalTeams(ruins, pack);
+  assert.equal(teams.general.length, 0);
+  assert.equal(teams.bossSpecific.length, 3);
+  assert.ok(teams.bossSpecific.every(team => team.boss.routeId === 'necromancer'));
+  const html = h.app.renderEncyclopediaDetail('locations', ruins);
+  assert.ok(html.includes('No verified general-purpose Ruins composition'));
+  assert.ok(html.includes('not recommendations for every expedition'));
+  assert.ok(html.includes('Starting strategy:'));
+  assert.ok(html.includes('DLC: The Shieldbreaker'));
+  for (const team of teams.bossSpecific) {
+    for (const member of team.members) assert.ok(html.includes(`Rank ${member.position}`));
+    assert.ok(html.includes(`#game/darkest-dungeon/teams/${team.id}`));
+  }
+  const candidate = { id: 'test-unassessed', regionIds: [], verification: { status: 'unverified' } };
+  const location = structuredClone(ruins); location.regionalGuide.generalTeamIds.push(candidate.id);
+  assert.equal(module.regionalTeams(location, { ...pack, teamCompositions: [candidate] }).general.length, 0);
+});
+
+test('regional artwork falls back without private images and section navigation avoids hash collisions', async () => {
+  const ruins = pack.locations.find(record => record.routeId === 'ruins');
+  const manifest = structuredClone(artworkManifest);
+  for (const entry of manifest.records) for (const slot of ['primary', 'thumbnail', 'banner']) if (entry[slot]) entry[slot].exists = false;
+  artwork.setArtworkManifest(manifest);
+  try {
+    const html = h.app.renderEncyclopediaDetail('locations', ruins);
+    assert.equal(html.includes('assets/games/darkest-dungeon-1/private/'), false);
+    for (const fallback of ['location-art-fallback', 'region-enemy-fallback', 'location-curio-fallback', 'location-boss-fallback']) assert.ok(html.includes(fallback));
+    for (const match of html.matchAll(/data-region-section="([^"]+)"/g)) assert.ok(html.includes(`id="${match[1]}"`));
+    assert.equal(html.includes('href="#region-'), false);
+    for (const match of html.matchAll(/href="(#(?:game|hero)\/[^"]+)"/g)) assert.notEqual(h.app.readRoute(match[1]).view, 'missing', match[1]);
+  } finally { artwork.setArtworkManifest(artworkManifest); }
+  const css = await readFile(resolve(root, 'dist/css/styles.css'), 'utf8');
+  assert.ok(css.includes('@media (max-width: 950px) { .region-card-grid, .region-overview-facts { grid-template-columns: 1fr; } }'));
+  assert.ok(css.includes('@media (prefers-reduced-motion: reduce) { .region-enemy-card'));
 });

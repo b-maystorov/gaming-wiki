@@ -4199,6 +4199,91 @@
       "thumbnail": null,
       "banner": null,
       "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:decorative-urn",
+      "recordName": "Decorative Urn",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/decorative-urn.png",
+        "exists": false,
+        "currentlyReferenced": false,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Decorative Urn — artwork unavailable",
+        "missingReason": "No approved local artwork mapped for this new record."
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:confession-booth",
+      "recordName": "Confession Booth",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/confession-booth.png",
+        "exists": false,
+        "currentlyReferenced": false,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Confession Booth — artwork unavailable",
+        "missingReason": "No approved local artwork mapped for this new record."
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:locked-sarcophagus",
+      "recordName": "Locked Sarcophagus",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/locked-sarcophagus.png",
+        "exists": false,
+        "currentlyReferenced": false,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Locked Sarcophagus — artwork unavailable",
+        "missingReason": "No approved local artwork mapped for this new record."
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:sarcophagus",
+      "recordName": "Sarcophagus",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/sarcophagus.png",
+        "exists": false,
+        "currentlyReferenced": false,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Sarcophagus — artwork unavailable",
+        "missingReason": "No approved local artwork mapped for this new record."
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
+    },
+    {
+      "category": "curios",
+      "recordId": "darkest-dungeon-1:curio:suit-of-armor",
+      "recordName": "Suit of Armor",
+      "primary": {
+        "path": "assets/games/darkest-dungeon-1/private/curios/suit-of-armor.png",
+        "exists": false,
+        "currentlyReferenced": false,
+        "verifiedAuthentic": false,
+        "verificationSource": "",
+        "alt": "Suit of Armor — artwork unavailable",
+        "missingReason": "No approved local artwork mapped for this new record."
+      },
+      "thumbnail": null,
+      "banner": null,
+      "legacyAssets": []
     }
   ]
 }
