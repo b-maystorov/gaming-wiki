@@ -11502,7 +11502,7 @@
         "preparation": [
           {
             "title": "Reach the stress dealers",
-            "text": "Editorial: prepare back-rank damage or control for Bone Courtiers and Cultist Acolytes, so protected frontliners do not prevent you from addressing stress pressure.",
+            "text": "prepare back-rank damage or control for Bone Courtiers and Cultist Acolytes, so protected frontliners do not prevent you from addressing stress pressure.",
             "heroRouteIds": [
               "plague-doctor",
               "highwayman"
@@ -11516,7 +11516,7 @@
           },
           {
             "title": "Choose damage for the enemy",
-            "text": "Editorial: avoid relying only on Bleed against skeletons. Consider Blight against protected bone enemies and recorded bonuses against Unholy foes. Shared Human and Beast encounters still need their own assessment.",
+            "text": "avoid relying only on Bleed against skeletons. Consider Blight against protected bone enemies and bonuses against Unholy foes. Shared Human and Beast encounters still need their own assessment.",
             "heroRouteIds": [
               "plague-doctor",
               "crusader"
@@ -11530,7 +11530,7 @@
           },
           {
             "title": "Prepare for Champion support",
-            "text": "Editorial: account for the Bone Bearer. It strengthens allies and can resurrect corpses; corpse removal limits what it can revive.",
+            "text": "account for the Bone Bearer. It strengthens allies and can resurrect corpses; corpse removal limits what it can revive.",
             "heroRouteIds": [],
             "verification": {
               "status": "reference-checked",
@@ -11541,7 +11541,7 @@
           },
           {
             "title": "Match supplies to interactions",
-            "text": "Medicinal Herbs have documented uses at the Alchemy Table and Iron Maiden. Holy Water and Skeleton Keys unlock other listed interactions below. Quantities depend on the actual quest; this is not a fixed shopping list.",
+            "text": "Medicinal Herbs have uses at the Alchemy Table and Iron Maiden. Holy Water and Skeleton Keys unlock other interactions below. Quantities depend on the actual quest; this is not a fixed shopping list.",
             "heroRouteIds": [],
             "verification": {
               "status": "reference-checked",
@@ -11556,7 +11556,7 @@
           {
             "id": "priority",
             "title": "Dangerous priority targets",
-            "note": "Editorial priorities based on recorded stress, marks and ranged pressure; target order depends on the encounter.",
+            "note": "Stress, marks and ranged attacks make these enemies worth watching. Target order depends on the fight.",
             "enemyIds": [
               "darkest-dungeon-1:enemy:bone-courtier",
               "darkest-dungeon-1:enemy:bone-arbalist",
@@ -11568,7 +11568,7 @@
           {
             "id": "elite",
             "title": "Elite / Champion threats",
-            "note": "Bone Spearman and Bone Captain: Veteran or higher in the existing records. Bone Bearer: Champion only.",
+            "note": "Bone Spearman and Bone Captain appear from Veteran onward. Bone Bearer appears only in Champion expeditions.",
             "enemyIds": [
               "darkest-dungeon-1:enemy:bone-spearman",
               "darkest-dungeon-1:enemy:bone-captain",
@@ -11578,7 +11578,7 @@
           {
             "id": "common",
             "title": "Common encounters and shared threats",
-            "note": "Other recorded regional enemies, including shared dungeon encounters. This grouping is not a spawn-frequency claim.",
+            "note": "Other enemies you may encounter here, including threats shared with other regions.",
             "enemyIds": [
               "darkest-dungeon-1:enemy:bone-soldier",
               "darkest-dungeon-1:enemy:bone-defender",
@@ -11596,7 +11596,7 @@
           }
         ],
         "generalTeamIds": [],
-        "coverageNote": "This is a curated regional reference, not a complete encounter table. Tier-specific enemy numbers, remaining shared curios and detailed Prophet / wandering-boss strategies are not yet recorded. Curio interactions not listed here are unknown, not automatically harmful."
+        "coverageNote": "Some shared curios, enemy resistance values and detailed Prophet tactics are still being added."
       }
     },
     {
@@ -11653,6 +11653,94 @@
           "wiki-enemies-dd1",
           "wiki-locations-dd1"
         ]
+      },
+      "regionalGuide": {
+        "introduction": "Swinefolk and scavengers crowd these foul tunnels. Disease, stress and attacks against marked heroes can wear down an unprepared party.",
+        "mainEnemyTypes": "Human / Beast Swinefolk, carrion eaters and shared dungeon enemies.",
+        "dangers": "Disease and stress from Swine Wretches, marks from support enemies, and knockback that disrupts your formation.",
+        "combatConsiderations": "Bleed is useful against many Swine enemies. Reach support enemies behind the front line and check each target’s resistance before relying on control.",
+        "coverageNote": "Some enemy resistances and boss strategies still need more detail.",
+        "preparation": [
+          {
+            "title": "Reach the support enemies",
+            "text": "Swine Wretches add disease and stress, while Drummers support the enemy party. Bring attacks that can reach them behind the front line.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-warrens-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Protect marked heroes",
+            "text": "Carrion eaters and other attackers can focus marked targets. Watch marks and keep recovery available rather than ignoring the supporting enemies.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-enemies-dd1",
+                "wiki-warrens-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Leave Wilbur alone",
+            "text": "Against the Swine Prince, damaging Wilbur before the Prince dies triggers retaliation. Read the boss guide before using Riposte or area attacks.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-swine-prince",
+                "wiki-wilbur"
+              ]
+            }
+          }
+        ],
+        "enemyGroups": [
+          {
+            "id": "priority",
+            "title": "Support and priority threats",
+            "note": "Watch enemies that support their allies or pressure your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:swine-wretch",
+              "darkest-dungeon-1:enemy:swine-drummer",
+              "darkest-dungeon-1:enemy:cultist-acolyte",
+              "darkest-dungeon-1:enemy:cultist-witch",
+              "darkest-dungeon-1:enemy:madman"
+            ]
+          },
+          {
+            "id": "heavy",
+            "title": "Heavy hitters and tougher foes",
+            "note": "Prepare for these enemies’ damage, protection or disruption.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:swinetaur",
+              "darkest-dungeon-1:enemy:swine-skiver",
+              "darkest-dungeon-1:enemy:large-carrion-eater"
+            ]
+          },
+          {
+            "id": "other",
+            "title": "Other enemies you may encounter",
+            "note": "Check each enemy’s attacks when preparing your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:cultist-brawler",
+              "darkest-dungeon-1:enemy:brigand-cutthroat",
+              "darkest-dungeon-1:enemy:brigand-fusilier",
+              "darkest-dungeon-1:enemy:brigand-bloodletter",
+              "darkest-dungeon-1:enemy:brigand-raider",
+              "darkest-dungeon-1:enemy:webber",
+              "darkest-dungeon-1:enemy:spitter",
+              "darkest-dungeon-1:enemy:maggot",
+              "darkest-dungeon-1:enemy:ghoul",
+              "darkest-dungeon-1:enemy:swine-chopper",
+              "darkest-dungeon-1:enemy:swine-slasher",
+              "darkest-dungeon-1:enemy:carrion-eater"
+            ]
+          }
+        ],
+        "generalTeamIds": []
       }
     },
     {
@@ -11709,6 +11797,92 @@
           "wiki-enemies-dd1",
           "wiki-locations-dd1"
         ]
+      },
+      "regionalGuide": {
+        "introduction": "Twisting woodland hides fungal creatures, beasts and human attackers. Marks, Blight and disrupted formations make it important to reach beyond the front line.",
+        "mainEnemyTypes": "Fungal creatures, beasts, human enemies and shared dungeon threats.",
+        "dangers": "Fungal Artillery marks heroes for Scratchers. Ectoplasms can multiply, while Unclean Giants threaten heavy damage and shuffles.",
+        "combatConsiderations": "Bring back-rank reach and ways to recover after movement. Do not let multiplying enemies turn a short fight into a long one.",
+        "coverageNote": "Detailed Pounder tactics and some enemy resistance values are still being added.",
+        "preparation": [
+          {
+            "title": "Break the mark pressure",
+            "text": "Fungal Artillery marks heroes and applies Blight; Fungal Scratchers punish marked targets. Plan to reach the artillery instead of attacking only the front.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-weald-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Recover your formation",
+            "text": "Unclean Giants can shuffle heroes, and the Hag removes a party member into her cauldron. Check which skills still work when the party’s positions change.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-weald-dd1",
+                "wiki-hag"
+              ]
+            }
+          },
+          {
+            "title": "Reach the Hag",
+            "text": "The Hag fights behind her cauldron. Prepare attacks that reach ranks 3–4 and recovery for a hero released at critical health.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-hag"
+              ]
+            }
+          }
+        ],
+        "enemyGroups": [
+          {
+            "id": "priority",
+            "title": "Support and priority threats",
+            "note": "Watch enemies that support their allies or pressure your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:fungal-artillery",
+              "darkest-dungeon-1:enemy:crone",
+              "darkest-dungeon-1:enemy:ectoplasm",
+              "darkest-dungeon-1:enemy:cultist-acolyte",
+              "darkest-dungeon-1:enemy:cultist-witch",
+              "darkest-dungeon-1:enemy:madman"
+            ]
+          },
+          {
+            "id": "heavy",
+            "title": "Heavy hitters and tougher foes",
+            "note": "Prepare for these enemies’ damage, protection or disruption.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:unclean-giant",
+              "darkest-dungeon-1:enemy:large-ectoplasm"
+            ]
+          },
+          {
+            "id": "other",
+            "title": "Other enemies you may encounter",
+            "note": "Check each enemy’s attacks when preparing your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:cultist-brawler",
+              "darkest-dungeon-1:enemy:brigand-cutthroat",
+              "darkest-dungeon-1:enemy:brigand-fusilier",
+              "darkest-dungeon-1:enemy:brigand-bloodletter",
+              "darkest-dungeon-1:enemy:brigand-raider",
+              "darkest-dungeon-1:enemy:webber",
+              "darkest-dungeon-1:enemy:spitter",
+              "darkest-dungeon-1:enemy:maggot",
+              "darkest-dungeon-1:enemy:ghoul",
+              "darkest-dungeon-1:enemy:rabid-gnasher",
+              "darkest-dungeon-1:enemy:fungal-scratcher"
+            ]
+          }
+        ],
+        "generalTeamIds": []
       }
     },
     {
@@ -11765,6 +11939,93 @@
           "wiki-enemies-dd1",
           "wiki-locations-dd1"
         ]
+      },
+      "regionalGuide": {
+        "introduction": "Fishfolk and Eldritch creatures defend the flooded coast. Guarded enemies, sudden pulls and heavy Bleed can quickly put a hero in danger.",
+        "mainEnemyTypes": "Fishfolk and Eldritch creatures, with shared dungeon encounters.",
+        "dangers": "Drowned Thralls explode if left alive. Uca Crushers cause heavy Bleed, and Pelagic Shamans heal and strengthen allies.",
+        "combatConsiderations": "Many fishfolk resist Bleed more than Blight. Prepare for Bleed on your own heroes and skills that remain useful after a pull or knockback.",
+        "coverageNote": "Detailed Drowned Crew tactics and some resistance values are still being added.",
+        "preparation": [
+          {
+            "title": "Stop the explosion",
+            "text": "A Drowned Thrall attacks before its delayed party-wide explosion. Address it quickly rather than treating it as a harmless frontliner.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-cove-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Plan for armor and Bleed",
+            "text": "Consider Blight against resistant fishfolk and protected enemies. Keep Bleed recovery in mind for Uca Crusher and Deep Stinger encounters.",
+            "heroRouteIds": [
+              "plague-doctor"
+            ],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-cove-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Expect a temporary ally loss",
+            "text": "The Siren can charm an equipped hero. Prepare to operate with three heroes and restore positions when the charmed hero returns at the back.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-siren"
+              ]
+            }
+          }
+        ],
+        "enemyGroups": [
+          {
+            "id": "priority",
+            "title": "Support and priority threats",
+            "note": "Watch enemies that support their allies or pressure your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:drowned-thrall",
+              "darkest-dungeon-1:enemy:pelagic-shaman",
+              "darkest-dungeon-1:enemy:cultist-acolyte",
+              "darkest-dungeon-1:enemy:cultist-witch",
+              "darkest-dungeon-1:enemy:madman"
+            ]
+          },
+          {
+            "id": "heavy",
+            "title": "Heavy hitters and tougher foes",
+            "note": "Prepare for these enemies’ damage, protection or disruption.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:uca-crusher",
+              "darkest-dungeon-1:enemy:pelagic-guardian",
+              "darkest-dungeon-1:enemy:sea-maggot"
+            ]
+          },
+          {
+            "id": "other",
+            "title": "Other enemies you may encounter",
+            "note": "Check each enemy’s attacks when preparing your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:cultist-brawler",
+              "darkest-dungeon-1:enemy:brigand-cutthroat",
+              "darkest-dungeon-1:enemy:brigand-fusilier",
+              "darkest-dungeon-1:enemy:brigand-bloodletter",
+              "darkest-dungeon-1:enemy:brigand-raider",
+              "darkest-dungeon-1:enemy:webber",
+              "darkest-dungeon-1:enemy:spitter",
+              "darkest-dungeon-1:enemy:maggot",
+              "darkest-dungeon-1:enemy:ghoul",
+              "darkest-dungeon-1:enemy:pelagic-grouper",
+              "darkest-dungeon-1:enemy:deep-stinger"
+            ]
+          }
+        ],
+        "generalTeamIds": []
       }
     },
     {
@@ -11808,6 +12069,62 @@
           "wiki-enemies-dd1",
           "wiki-crimson-court-context"
         ]
+      },
+      "regionalGuide": {
+        "introduction": "The Crimson Court’s overgrown grounds are home to Bloodsuckers and the Crimson Curse. This region requires The Crimson Court DLC.",
+        "mainEnemyTypes": "Bloodsuckers, including servants, courtiers and Chevaliers.",
+        "dangers": "Crimson Curse exposure, stress and Bleed. Courtesans add debuffs while Chevaliers apply Bleed pressure.",
+        "combatConsiderations": "Bloodsuckers resist Blight and are more vulnerable to Bleed. Keep recovery available for stress and Bleed rather than bringing a Blight-only plan.",
+        "coverageNote": "This guide covers only a small selection of Courtyard curios. Detailed boss tactics are not available yet.",
+        "preparation": [
+          {
+            "title": "Choose damage for Bloodsuckers",
+            "text": "Consider Bleed rather than relying on Blight against Bloodsuckers. Their Crimson Curse threat also deserves attention before you enter.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-crimson-court-context",
+                "wiki-enemies-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Check the encounter first",
+            "text": "Boss tactics for this region are still being added. Use the encounter links below to see what is known before committing a party.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-crimson-court-context"
+              ]
+            }
+          }
+        ],
+        "enemyGroups": [
+          {
+            "id": "priority",
+            "title": "Support and priority threats",
+            "note": "Watch enemies that support their allies or pressure your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:courtesan",
+              "darkest-dungeon-1:enemy:manservant",
+              "darkest-dungeon-1:enemy:chevalier"
+            ]
+          },
+          {
+            "id": "other",
+            "title": "Other enemies you may encounter",
+            "note": "Check each enemy’s attacks when preparing your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:esquire",
+              "darkest-dungeon-1:enemy:supplicant",
+              "darkest-dungeon-1:enemy:sycophant",
+              "darkest-dungeon-1:enemy:gatekeeper"
+            ]
+          }
+        ],
+        "generalTeamIds": []
       }
     },
     {
@@ -11848,6 +12165,60 @@
           "wiki-enemies-dd1",
           "wiki-color-madness-context"
         ]
+      },
+      "regionalGuide": {
+        "introduction": "The Color of Madness brings crystalline corruption to the Farmstead. Its endless expedition includes Husk enemies and returning threats from elsewhere.",
+        "mainEnemyTypes": "Husks and crystalline enemies, alongside returning enemies in the endless expedition.",
+        "dangers": "Farmhands apply Blight and stress, Scarecrows add ranged pressure, and Foremen support their allies.",
+        "combatConsiderations": "Prepare for changing enemy groups. Recovery matters alongside damage, but detailed resistance and control advice for this region is still being added.",
+        "coverageNote": "The full endless enemy pool and detailed Miller / Sleeper tactics are not available here yet.",
+        "preparation": [
+          {
+            "title": "Keep recovery in the plan",
+            "text": "Farmhands can inflict Blight and stress, while Foremen rally allies. Plan recovery alongside ways to address enemy support.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-color-madness-context",
+                "wiki-enemies-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Review the boss before entering",
+            "text": "The Miller and Sleeper have entries below, but detailed tactics are still being added. This guide does not yet provide a recommended Farmstead team.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-color-madness-context"
+              ]
+            }
+          }
+        ],
+        "enemyGroups": [
+          {
+            "id": "priority",
+            "title": "Support and priority threats",
+            "note": "Watch enemies that support their allies or pressure your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:foreman",
+              "darkest-dungeon-1:enemy:scarecrow"
+            ]
+          },
+          {
+            "id": "other",
+            "title": "Other enemies you may encounter",
+            "note": "Check each enemy’s attacks when preparing your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:farmhand",
+              "darkest-dungeon-1:enemy:plow-horse",
+              "darkest-dungeon-1:enemy:crystalline-aberration"
+            ]
+          }
+        ],
+        "generalTeamIds": []
       }
     },
     {
@@ -11892,6 +12263,74 @@
           "wiki-enemies-dd1",
           "wiki-locations-dd1"
         ]
+      },
+      "regionalGuide": {
+        "introduction": "The final region has its own enemies and quest rules. Spoilers follow: the galleries below reveal endgame enemies and bosses.",
+        "mainEnemyTypes": "Endgame cultists, Templars and hostile organisms.",
+        "dangers": "High stress pressure, powerful Templars, and displacement or teleportation in the third mission.",
+        "combatConsiderations": "Prepare for the specific mission rather than using a general dungeon party. Detailed damage and resistance advice is still incomplete.",
+        "coverageNote": "Mission-specific tactics, curio interactions and detailed endgame boss strategies are still being added.",
+        "preparation": [
+          {
+            "title": "Check the mission rules",
+            "text": "This region has unique quests and encounters. The guide is still incomplete, so review the relevant quest and boss entries before choosing your final loadout.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-locations-dd1",
+                "wiki-quests-dd1"
+              ]
+            }
+          },
+          {
+            "title": "Watch displacement in the third mission",
+            "text": "White Cell Stalks can heal and displace the party, including teleporting it to another room. Antibodies can stun heroes. Keep these threats in mind when reviewing the encounter.",
+            "heroRouteIds": [],
+            "verification": {
+              "status": "reference-checked",
+              "sourceIds": [
+                "wiki-enemies-dd1"
+              ]
+            }
+          }
+        ],
+        "enemyGroups": [
+          {
+            "id": "priority",
+            "title": "Support and priority threats",
+            "note": "Watch enemies that support their allies or pressure your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:white-cell-stalk",
+              "darkest-dungeon-1:enemy:antibody",
+              "darkest-dungeon-1:enemy:rapturous-cultist"
+            ]
+          },
+          {
+            "id": "heavy",
+            "title": "Heavy hitters and tougher foes",
+            "note": "Prepare for these enemies’ damage, protection or disruption.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:templar-gladiator",
+              "darkest-dungeon-1:enemy:templar-sniper"
+            ]
+          },
+          {
+            "id": "other",
+            "title": "Other enemies you may encounter",
+            "note": "Check each enemy’s attacks when preparing your party.",
+            "enemyIds": [
+              "darkest-dungeon-1:enemy:cultist-priest",
+              "darkest-dungeon-1:enemy:ascended-brawler",
+              "darkest-dungeon-1:enemy:ascended-witch",
+              "darkest-dungeon-1:enemy:malignant-growth",
+              "darkest-dungeon-1:enemy:defensive-growth",
+              "darkest-dungeon-1:enemy:polyp",
+              "darkest-dungeon-1:enemy:flesh-hound"
+            ]
+          }
+        ],
+        "generalTeamIds": []
       }
     }
   ],

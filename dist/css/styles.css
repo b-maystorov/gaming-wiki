@@ -1361,3 +1361,22 @@ body.has-back-to-top { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom,
 @media (max-width: 950px) { .region-card-grid, .region-overview-facts { grid-template-columns: 1fr; } }
 @media (max-width: 480px) { .region-enemy-card { grid-template-columns: 80px minmax(0,1fr); gap: .7rem; padding: .8rem; } .regional-guide .region-enemy-card > .entry-art { width: 80px; } }
 @media (prefers-reduced-motion: reduce) { .region-enemy-card { transition: none; } }
+
+/* Shared regional media sizes also apply when only primary art or a fallback exists. */
+.regional-guide .region-header-image > .location-art-fallback { min-height: clamp(180px, 28vw, 320px); border: 0; }
+.regional-guide .region-header-image .entry-art { aspect-ratio: auto; margin: 0; max-width: none; }
+.regional-guide .region-boss-card { grid-template-columns: 120px minmax(0, 1fr); align-items: start; }
+.regional-guide .region-boss-card > .entry-art,
+.regional-guide .region-boss-card > .location-boss-fallback { width: 120px; min-height: 140px; }
+.regional-guide .region-boss-card [data-art-visual] > :is(img, svg) { width: 100%; height: 140px; max-height: 140px; object-fit: contain; }
+.regional-guide .region-enemy-card > .region-enemy-fallback { width: 100px; min-height: 120px; }
+.regional-guide .region-curio-card header > .location-curio-fallback { width: 100px; min-height: 120px; }
+.region-enemy-card, .region-curio-card, .region-boss-card { box-shadow: 0 3px 12px #0003; }
+.regional-guide .region-section h2, .regional-guide .region-section h3 { color: #dfc394; }
+.region-curio-card:hover, .region-boss-card:hover { border-color: var(--accent-hover); }
+.region-related-guides { padding-block: 1rem; border-top: 1px solid var(--region-border); }
+@media (max-width: 480px) {
+  .regional-guide .region-boss-card { grid-template-columns: 90px minmax(0, 1fr); }
+  .regional-guide .region-boss-card > .entry-art, .regional-guide .region-boss-card > .location-boss-fallback { width: 90px; }
+  .regional-guide .region-enemy-card > .region-enemy-fallback { width: 80px; }
+}
