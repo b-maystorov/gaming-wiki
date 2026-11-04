@@ -1531,9 +1531,25 @@ function updateNavigation(route) {
   });
 }
 
+function updateBackToTop(route = readRoute(location.hash), scrollPosition = window.scrollY) {
+  const button = document.getElementById('back-to-top');
+  if (!button) return;
+  const eligible = Boolean(route.game) && !['game', 'expedition-planner', 'content-unavailable'].includes(route.view);
+  button.hidden = !eligible || scrollPosition < 500;
+  document.body.classList.toggle('has-back-to-top', eligible);
+}
+
+function scrollBackToTop() {
+  // Move keyboard focus off the control before scrolling hides it.
+  const heading = document.getElementById('page-title') || main;
+  heading.focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+}
+
 function showRoute() {
   commandCenter.close({ restoreFocus: false });
   const route = readRoute(location.hash);
+  updateBackToTop(route, 0);
   if (route.preview) selectedPortalGame = portalGames.indexOf(route.preview);
   document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview');
   const viewKey = route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.kind && route.record ? `${route.kind}/${route.record.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
@@ -1563,6 +1579,9 @@ document.querySelector('.skip-link').addEventListener('click', event => {
   main.scrollIntoView({ block: 'start' });
 });
 
+// One shell button and one listener survive all hash-route content replacements.
+document.getElementById('back-to-top').addEventListener('click', scrollBackToTop);
+window.addEventListener('scroll', () => updateBackToTop(), { passive: true });
 window.addEventListener('hashchange', showRoute);
 window.addEventListener('storage', event => {
   customTeamBuilder?.refresh();

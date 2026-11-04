@@ -41,7 +41,7 @@ async function harness(failure = null, storageMode = 'available') {
     let source = await readFile(path, 'utf8');
     if (path.endsWith('/app.js')) {
       source = source.slice(0, source.indexOf("document.querySelector('.skip-link')"));
-      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent, plannerBosses, updateExpeditionPlannerOptions, renderPlannerTeam, renderPlannerEquipmentStep, selectExpeditionTeam, sortedPlannerTeams, getExpeditionRoster, saveExpeditionRoster, renderExpeditionPlanner, renderPlannerRegionRecords, renderExpeditionPlannerResults };';
+      source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent, plannerBosses, updateExpeditionPlannerOptions, renderPlannerTeam, renderPlannerEquipmentStep, selectExpeditionTeam, sortedPlannerTeams, getExpeditionRoster, saveExpeditionRoster, renderExpeditionPlanner, renderPlannerRegionRecords, renderExpeditionPlannerResults, updateBackToTop, scrollBackToTop };';
     }
     const module = new SourceTextModule(source, { context, identifier: path,
       initializeImportMeta: meta => { meta.url = `file://${path}`; } });
@@ -867,4 +867,41 @@ test('custom builder renders inside planner and preserves boss and team routes',
     for (const team of boss.counterTeams || []) assert.ok(h.app.readRoute(`#game/darkest-dungeon/teams/${team.id}`).team);
   }
   assert.ok(h.app.renderEncyclopediaCollection('trinkets').includes('data-collection-quantity'));
+});
+
+
+test('back-to-top follows scroll threshold and routes, with reduced-motion and focus support', async () => {
+  const local = await harness();
+  const button = { hidden: true };
+  local.elements.set('back-to-top', button);
+  local.context.document.body = { classList: { toggle() {} } };
+  const bossRoute = local.app.readRoute('#game/darkest-dungeon/bosses/necromancer');
+  local.app.updateBackToTop(bossRoute, 499);
+  assert.equal(button.hidden, true);
+  local.app.updateBackToTop(bossRoute, 500);
+  assert.equal(button.hidden, false);
+  for (const hash of ['#home', '#game/darkest-dungeon', '#game/darkest-dungeon/expedition-planner', '#missing']) {
+    local.app.updateBackToTop(local.app.readRoute(hash), 900);
+    assert.equal(button.hidden, true, hash);
+  }
+  local.app.updateBackToTop(local.app.readRoute('#hero/crusader/abilities'), 600);
+  assert.equal(button.hidden, false);
+  local.app.updateBackToTop(bossRoute, 0);
+  assert.equal(button.hidden, true);
+  let reducedMotion = false;
+  let scroll;
+  let focused = false;
+  local.elements.set('page-title', { focus(options) { focused = options.preventScroll; } });
+  local.context.window = { matchMedia: () => ({ matches: reducedMotion }), scrollTo: options => { scroll = options; } };
+  local.app.scrollBackToTop();
+  assert.equal(scroll.top, 0);
+  assert.equal(scroll.behavior, 'smooth');
+  assert.equal(focused, true);
+  reducedMotion = true;
+  local.app.scrollBackToTop();
+  assert.equal(scroll.behavior, 'instant');
+  const shell = await readFile(resolve(root, 'dist/index.html'), 'utf8');
+  assert.equal((shell.match(/id="back-to-top"/g) || []).length, 1);
+  assert.ok(shell.includes('aria-label="Back to top"'));
+  assert.equal(local.app.renderPage(bossRoute).includes('id="back-to-top"'), false);
 });

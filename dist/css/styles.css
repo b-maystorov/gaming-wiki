@@ -1280,3 +1280,27 @@ body { background: radial-gradient(ellipse at 82% 8%, #80513a0b, transparent 34%
 .custom-team-builder p, .custom-team-builder li { overflow-wrap: anywhere; }
 @media (max-width: 850px) { .custom-party, .custom-quantities { grid-template-columns: repeat(2, minmax(0, 1fr)); } .custom-build-grid { grid-template-columns: 1fr; } }
 @media (max-width: 450px) { .custom-party, .custom-quantities { grid-template-columns: 1fr; } }
+
+
+/* Leave room below the footer so the floating control cannot trap its links. */
+body.has-back-to-top { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+.back-to-top {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right, 0px));
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--accent-fill);
+  border-radius: .35rem;
+  background: var(--background);
+  color: var(--text);
+  font: 1.4rem Georgia, serif;
+  cursor: pointer;
+  box-shadow: 0 3px 12px #0006;
+  transition: background-color .15s, border-color .15s;
+}
+.back-to-top[hidden] { display: none; }
+.back-to-top:hover { background: var(--accent-surface); border-color: var(--accent-hover); }
+.back-to-top:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .back-to-top { transition: none; } }
