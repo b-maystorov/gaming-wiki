@@ -8,7 +8,7 @@ import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
-import { renderWowPage, renderWowBuildResults } from './wow-forever.js';
+import { renderWowPage, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress } from './wow-forever.js';
 
 let structuredGameContent = null;
 try {
@@ -1431,7 +1431,7 @@ function readRoute(hash) {
   const parts = path.split('/');
   if (parts[0] === 'game' && parts[1] === 'world-of-warcraft') {
     if (parts.length === 2) return { view: 'wow-home' };
-    const categoryViews = { classes: 'wow-classes', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-upcoming-dungeons-raids', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
+    const categoryViews = { 'my-journey': 'wow-journey', classes: 'wow-classes', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-dungeons', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
     if (parts.length === 3 && categoryViews[parts[2]]) return { view: categoryViews[parts[2]] };
     if (parts.length === 5 && parts[2] === 'builds') {
       const classRecord = wowData?.classes.find(item => item.id === parts[3]);
@@ -1508,7 +1508,7 @@ function renderContentError(title = 'Encyclopedia unavailable') {
 
 function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
-  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
+  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile()) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), 'expedition-planner': renderExpeditionPlanner, trinkets: () => renderEncyclopediaCollection('trinkets'),
     enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests') };
@@ -1582,6 +1582,79 @@ document.querySelector('.skip-link').addEventListener('click', event => {
 
 // One shell button and one listener survive all hash-route content replacements.
 document.getElementById('back-to-top').addEventListener('click', scrollBackToTop);
+document.addEventListener?.('submit', event => {
+  const form = event.target.closest('[data-wow-character-form]');
+  if (!form) return;
+  event.preventDefault();
+  const profile = Object.fromEntries(new FormData(form));
+  const status = form.querySelector('[data-wow-profile-status]');
+  const selectedClass = wowData?.classes.find(item => item.id === profile.classId);
+  if (!selectedClass?.specializations.some(item => item.id === profile.specializationId)) profile.specializationId = selectedClass?.specializations[0]?.id || '';
+  const factionRaces = Object.entries(wowData?.raceCombinations?.[profile.faction] || {}).filter(([, classes]) => classes.includes(selectedClass?.name)).map(([race]) => race);
+  if (profile.race && !factionRaces.includes(profile.race)) profile.race = '';
+  if (saveWowProfile(profile)) {
+    main.innerHTML = renderPage(readRoute(location.hash));
+    const refreshedStatus = main.querySelector('[data-wow-profile-status]');
+    if (refreshedStatus) refreshedStatus.textContent = 'Character saved in this browser.';
+  } else status.textContent = 'Browser storage is unavailable or the level is invalid. Your details were not saved.';
+});
+document.addEventListener?.('click', event => {
+  const profileReset = event.target.closest('[data-wow-profile-reset]');
+  if (profileReset) {
+    let cleared = false;
+    try { localStorage.removeItem('bm-wow-forever-character-v1'); cleared = true; } catch {}
+    const route = readRoute(location.hash);
+    main.innerHTML = renderPage(route);
+    const status = document.querySelector('[data-wow-profile-status]');
+    if (status) status.textContent = cleared ? 'Profile cleared from this browser.' : 'Browser storage is unavailable; the saved profile could not be cleared.';
+    return;
+  }
+  const progressReset = event.target.closest('[data-wow-progress-reset]');
+  if (progressReset) {
+    const profile = loadWowProfile();
+    const prefix = `${profile.classId}:`;
+    const progress = loadWowGuideProgress();
+    Object.keys(progress).filter(id => id.startsWith(prefix)).forEach(id => delete progress[id]);
+    const saved = saveWowGuideProgress(progress);
+    const route = readRoute(location.hash);
+    main.innerHTML = renderPage(route);
+    const status = document.querySelector('[data-wow-progress-status]');
+    if (status) status.textContent = saved ? 'Checklist reset.' : 'Browser storage is unavailable; the checklist could not be reset.';
+    return;
+  }
+  const toggle = event.target.closest('[data-wow-play-mode-toggle]');
+  if (toggle) {
+    const compact = toggle.getAttribute('aria-expanded') !== 'true';
+    toggle.setAttribute('aria-expanded', String(compact));
+    toggle.textContent = compact ? 'Show full guide' : 'Switch to Play Mode';
+    const page = toggle.closest('.wow-build-page, .enhancement-guide');
+    page?.querySelector('[data-wow-play-mode]')?.toggleAttribute('hidden', !compact);
+    page?.querySelector('[data-wow-full-guide]')?.toggleAttribute('hidden', compact);
+  }
+});
+document.addEventListener?.('change', event => {
+  const checkbox = event.target.closest('[data-wow-progress-id]');
+  if (!checkbox) return;
+  const progress = loadWowGuideProgress();
+  progress[checkbox.dataset.wowProgressId] = checkbox.checked;
+  const status = document.querySelector('[data-wow-progress-status]');
+  status.textContent = saveWowGuideProgress(progress) ? 'Progress saved on this device.' : 'Progress could not be saved because browser storage is unavailable.';
+});
+document.addEventListener?.('change', event => {
+  const form = event.target.closest('[data-wow-character-form]');
+  if (!form || !event.target.matches('[data-wow-profile-class], [data-wow-profile-faction]')) return;
+  const faction = form.querySelector('[data-wow-profile-faction]').value;
+  const classRecord = wowData?.classes.find(item => item.id === form.querySelector('[data-wow-profile-class]').value);
+  const races = classRecord && faction ? Object.entries(wowData.raceCombinations?.[faction] || {}).filter(([, classes]) => classes.includes(classRecord.name)).map(([race]) => race) : [];
+  const raceSelect = form.querySelector('[data-wow-profile-race]');
+  const previousRace = raceSelect.value;
+  raceSelect.innerHTML = `<option value="">${races.length ? 'Choose race' : 'Choose faction and class first'}</option>${races.map(race => `<option>${escapeHtml(race)}</option>`).join('')}`;
+  if (races.includes(previousRace)) raceSelect.value = previousRace;
+  const specSelect = form.querySelector('[data-wow-profile-spec]');
+  const previousSpec = specSelect.value;
+  specSelect.innerHTML = `<option value="">Choose specialization</option>${(classRecord?.specializations || []).map(spec => `<option value="${escapeHtml(spec.id)}">${escapeHtml(spec.name)}</option>`).join('')}`;
+  if (classRecord?.specializations.some(spec => spec.id === previousSpec)) specSelect.value = previousSpec;
+});
 document.addEventListener?.('change', event => {
   if (event.target.matches('[data-enhancement-level]')) {
     const level = Number(event.target.value);

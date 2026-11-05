@@ -1161,7 +1161,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   const render = h.app.renderPage;
   assert.equal(route('#game/world-of-warcraft').view, 'wow-home');
   const landing = render(route('#game/world-of-warcraft'));
-  for (const destination of ['classes', 'build-finder', 'talent-planner', 'tier-lists', 'leveling', 'dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(landing.includes(`#game/world-of-warcraft/${destination}`));
+  for (const destination of ['my-journey', 'classes', 'build-finder', 'talent-planner', 'tier-lists', 'leveling', 'dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(landing.includes(`#game/world-of-warcraft/${destination}`));
   for (const item of wowPack.classes) {
     const classRoute = route(`#game/world-of-warcraft/classes/${item.id}`);
     assert.equal(classRoute.view, 'wow-class', item.id);
@@ -1181,6 +1181,8 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     assert.ok(svg.includes('<svg') && svg.includes('BM Gaming Wiki'));
     assert.ok(art.alt.includes('not official') && art.usage.includes('no Blizzard assets'));
     assert.ok(item.starterGuide.talentPriorities.every(name => classHtml.includes(name)));
+    assert.equal(item.starterGuide.levelingBands.length, 3, `${item.id} has three early leveling bands`);
+    for (const band of item.starterGuide.levelingBands) assert.ok(classHtml.includes(band.range));
     assert.ok(classHtml.includes('Race and faction options'));
     assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.sourceId).title));
     for (const specialization of item.specializations) {
@@ -1205,6 +1207,27 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.equal(wowModule.matchesWowZoneFilters(zephras, 'Alliance', 8), true);
   assert.equal(wowModule.matchesWowZoneFilters(zephras, 'Horde', 20), false);
   assert.equal(wowModule.matchesWowZoneFilters(riverglades, 'Alliance', 60), true, 'unknown ranges remain visible');
+  const memoryStorage = new Map();
+  const storage = { getItem: key => memoryStorage.get(key) ?? null, setItem: (key, value) => memoryStorage.set(key, String(value)), removeItem: key => memoryStorage.delete(key) };
+  const shamanProfile = { characterName: 'Mira', faction: 'Horde', race: 'Tauren', classId: 'shaman', specializationId: 'enhancement', currentLevel: 17, playstyle: 'solo-leveling', currentZone: 'the-barrens' };
+  assert.equal(wowModule.saveWowProfile(shamanProfile, storage), true);
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.loadWowProfile(storage))), shamanProfile);
+  assert.equal(wowModule.saveWowProfile({ ...shamanProfile, currentLevel: 61 }, storage), false);
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.loadWowProfile({ getItem() { throw new Error('blocked'); } }))), {});
+  const checks = { 'shaman:call-fire': true };
+  assert.equal(wowModule.saveWowGuideProgress(checks, storage), true);
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.loadWowGuideProgress(storage))), checks);
+  assert.equal(wowModule.saveWowGuideProgress(checks, { setItem() { throw new Error('blocked'); } }), false);
+  const dungeonSelection = wowModule.getWowDungeonSuggestions(wowPack.dungeons, 14);
+  assert.deepEqual(dungeonSelection.current.map(item => item.id), ['hall-of-thanes']);
+  assert.equal(wowModule.getWowDungeonSuggestions(wowPack.dungeons, 1).upcoming[0].id, 'hall-of-thanes');
+  const personalized = wowModule.renderWowPage({ view: 'wow-journey' }, wowPack, String, wowArtwork, shamanProfile, checks);
+  assert.ok(personalized.includes('Mira') && personalized.includes('Level 17'));
+  assert.ok(personalized.includes('Call of Fire') && personalized.includes('Tauren'));
+  assert.ok(personalized.includes('Hall of Thanes') && personalized.includes('Reset checklist'));
+  assert.ok(personalized.includes('data-wow-progress-id="shaman:call-fire" checked'));
+  const fallbackJourney = wowModule.renderWowPage({ view: 'wow-journey' }, wowPack, String, null, shamanProfile);
+  assert.ok(fallbackJourney.includes('wow-class-art-fallback'));
   assert.ok(render(route('#game/world-of-warcraft/tier-lists')).includes('Rankings under review'));
   assert.equal(route('#game/world-of-warcraft/build-finder').view, 'wow-build-finder');
   const finderModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
@@ -1222,7 +1245,15 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.ok(wowPack.talentSystem.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.ok(wowPack.classes.every(item => item.specializations.every(spec => wowPack.sources.some(source => source.id === spec.sourceId))));
   assert.ok(render(route('#game/world-of-warcraft/talent-planner')).includes('read-only'));
-  for (const category of ['dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(render(route(`#game/world-of-warcraft/${category}`)).includes('Guide in preparation'));
+  assert.ok(render(route('#game/world-of-warcraft/dungeons-raids')).includes('Hall of Thanes'));
+  assert.ok(render(route('#game/world-of-warcraft/dungeons-raids')).includes('13–18'));
+  assert.ok(render(route('#game/world-of-warcraft/dungeons-raids')).includes('Dungeons &amp; Raids') || render(route('#game/world-of-warcraft/dungeons-raids')).includes('Dungeons & Raids'));
+  assert.equal(wowPack.dungeons.length, 9);
+  assert.ok(wowPack.dungeons.every(dungeon => dungeon.minLevel >= 13 && dungeon.maxLevel <= 60 && wowPack.sources.some(source => source.id === dungeon.sourceId)));
+  for (const category of ['gear-professions', 'beginner-guides']) assert.ok(render(route(`#game/world-of-warcraft/${category}`)).includes('Guide in preparation'));
+  assert.equal(route('#game/world-of-warcraft/my-journey').view, 'wow-journey');
+  const journey = render(route('#game/world-of-warcraft/my-journey'));
+  assert.ok(journey.includes('Save my character') && journey.includes('Choose a class, faction and level above'));
   assert.equal(render(route('#game/world-of-warcraft/leveling')).includes('Levels null'), false);
 });
 
@@ -1232,12 +1263,13 @@ test('Enhancement Shaman has a sourced, playable guide with honest talent and ar
   assert.equal(route.classRecord.id, 'shaman');
   assert.equal(route.specialization.id, 'enhancement');
   const html = h.app.renderPage(route);
-  for (const section of ['Solo leveling', 'Talent milestones', 'Live combat reference', 'Totems & utility', 'Leveling stat guide', 'Shaman totem quests', 'Faction areas and dungeon options', 'Level 60 priority reference']) assert.ok(html.includes(section), section);
+  for (const section of ['Second-monitor reference', 'Switch to Play Mode', 'Enhancement at a glance', 'Solo leveling', 'Talent milestones', 'Live combat reference', 'Totems & utility', 'Leveling stat guide', 'Shaman totem quests', 'Faction areas and dungeon options', 'Level 60 priority reference']) assert.ok(html.includes(section), section);
   for (const talent of ['Shamanistic Focus', 'Stormstrike', 'Improved Stormstrike', 'Mindfulness', 'Water Shield', 'Maelstrom Weapon']) assert.ok(html.includes(talent), talent);
   for (const ability of ['Rockbiter Weapon', 'Windfury Weapon', 'Earth Shock', 'Fire Nova', 'Healing Wave', 'Totemic Recall']) assert.ok(html.includes(ability), ability);
   for (const milestone of wowPack.enhancementGuide.talentMilestones) assert.ok(html.includes(`data-enhancement-milestone="${milestone.level}"`));
   assert.ok(html.includes('Rank not specified in the source text'));
   assert.ok(html.includes('Provisional') && html.includes('beta testing ended at level 30'));
+  assert.ok(html.includes('data-wow-play-mode hidden') && html.includes('data-wow-play-mode-toggle'));
   assert.ok(html.includes('Call of Earth') && html.includes('Call of Fire') && html.includes('Call of Water') && html.includes('Call of Air'));
   assert.ok(html.includes('Ragefire Chasm') && html.includes('Hall of Thanes'));
   assert.ok(html.includes('Stormstrike anchors the rotation'));

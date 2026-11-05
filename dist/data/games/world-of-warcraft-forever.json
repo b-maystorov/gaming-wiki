@@ -142,7 +142,7 @@
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
       "status": "Forever-specific leveling guide; check the linked live guide for changes.",
-      "updatedDate": "2026-10-21",
+      "updatedDate": "2026-11-03",
       "accessed": "2026-11-05"
     },
     {
@@ -219,7 +219,7 @@
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
       "status": "Forever-specific leveling guide; check the linked live guide for changes.",
-      "updatedDate": "2026-10-21",
+      "updatedDate": "2026-11-03",
       "accessed": "2026-11-05"
     },
     {
@@ -230,8 +230,30 @@
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
       "status": "Forever-specific leveling guide; check the linked live guide for changes.",
-      "updatedDate": "2026-10-18",
+      "updatedDate": "2026-11-03",
       "accessed": "2026-11-05"
+    },
+    {
+      "id": "forever-new-dungeons",
+      "title": "Explore the New Dungeons of World of Warcraft: Forever",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24301455/explore-the-new-dungeons-of-world-of-warcraft-forever",
+      "publisher": "Blizzard Entertainment",
+      "published": "2026-10-20",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "high",
+      "status": "Official launch dungeon list with level ranges and locations."
+    },
+    {
+      "id": "icy-dungeons-index",
+      "title": "All Available Dungeons in WoW Forever",
+      "url": "https://www.icy-veins.com/wow-forever/dungeons-overview/",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-10-24",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Version-specific dungeon index; the source notes some quest/loot records await in-game discovery."
     }
   ],
   "classes": [
@@ -311,7 +333,34 @@
         ],
         "zoneAdvice": "Use the Alliance or Horde zones shown for your current bracket in the linked Forever guide; its route is level-sensitive.",
         "sourceId": "icy-warrior-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "dual-wield",
+            "level": 20,
+            "label": "Level 20: train Dual Wielding and keep both weapon skills current."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Use your best current weapon and avoid risky extra pulls while your recovery kit is limited.",
+            "survival": "Keep weapon skill moving with your equipment upgrades.",
+            "milestones": "No exact talent milestone recorded for this band."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Continue with your strongest weapon; the source recommends waiting on the two-weapon Fury setup until Dual Wield is trained.",
+            "survival": "Missed attacks mean less Rage, so weapon skill matters.",
+            "milestones": "No level-specific point path is reproduced here."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Train Dual Wield at 20. Fury becomes stronger as its key talents and two useful weapons come together.",
+            "survival": "Keep both weapons current; stance swaps can make Rage management tedious.",
+            "milestones": "Dual Wield training at level 20."
+          }
+        ]
       }
     },
     {
@@ -386,7 +435,39 @@
         ],
         "zoneAdvice": "At low levels the guide lists Loch Modan/Darkshore for Alliance and The Barrens for Horde; level-sensitive options appear in the source.",
         "sourceId": "icy-paladin-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "redemption",
+            "level": 12,
+            "label": "Level 12: the Redemption class quest becomes available."
+          },
+          {
+            "id": "paladin-weapon",
+            "level": 20,
+            "label": "Level 20: begin the faction-specific class weapon questline."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Learn the Seal and Judgement loop, and keep Mana available for healing.",
+            "survival": "Paladin leveling has limited mobility and little ranged tagging.",
+            "milestones": "No exact talent allocation recorded for this band."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Use defensive tools when a pull gets dangerous; the class quest guide lists Redemption at level 12.",
+            "survival": "Bring water so healing and combat spells do not leave you dry.",
+            "milestones": "Lay on Hands and Blessing of Protection at 10; Redemption quest at 12."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Begin the faction-specific weapon questline at 20; the leveling guide lists Consecration at 20 and Pursuit of Justice at 22.",
+            "survival": "Use Consecration when multiple enemies make its cost worthwhile.",
+            "milestones": "Faction weapon quest begins at 20; Repentance at 30."
+          }
+        ]
       }
     },
     {
@@ -459,7 +540,44 @@
         ],
         "zoneAdvice": "Use the guide’s faction and level filters; it recommends completing useful zone quest chains before travel.",
         "sourceId": "icy-hunter-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "pet-quest",
+            "level": 10,
+            "label": "Level 10: complete the pet class quest and learn to tame a pet."
+          },
+          {
+            "id": "aspect-cheetah",
+            "level": 20,
+            "label": "Level 20: train Aspect of the Cheetah."
+          },
+          {
+            "id": "feign-death",
+            "level": 30,
+            "label": "Level 30: train Feign Death."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Stay at range and use your bow; the pet power spike comes after completing the level-10 class quest.",
+            "survival": "Avoid letting several enemies reach melee range.",
+            "milestones": "No pre-pet talent allocation listed here."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Complete the pet quest, send the pet in first, and give it time to hold threat before your big hits.",
+            "survival": "Your pet can tank, but it does not have unlimited multi-target threat.",
+            "milestones": "Level 10 pet quest; Aspect of the Cheetah at 20 is the next milestone."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Train Aspect of the Cheetah at 20; the Forever guide lists Summon Hawk as a level-25 talent unlock and Feign Death at 30.",
+            "survival": "Use traps and threat control if an enemy peels off your pet.",
+            "milestones": "Aspect of the Cheetah 20; Summon Hawk talent 25; Feign Death 30."
+          }
+        ]
       }
     },
     {
@@ -535,7 +653,34 @@
         ],
         "zoneAdvice": "Use the source’s level slider for faction-appropriate zones and dungeon options.",
         "sourceId": "icy-rogue-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "riposte",
+            "level": 20,
+            "label": "Level 20: the Combat leveling guide identifies Riposte as a major talent breakpoint."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Use Stealth to choose encounters. Build Combo Points with Sinister Strike, then spend them with Eviscerate.",
+            "survival": "Rogue has strong single-target damage but limited consistent AoE and self-sustain.",
+            "milestones": "No exact talent milestone recorded for this band."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Keep fights deliberate; use your control tools and avoid spending every defensive cooldown on routine pulls.",
+            "survival": "The leveling source recommends choosing encounters with Stealth rather than taking every nearby mob.",
+            "milestones": "No exact talent milestone recorded for this band."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "The Combat guide calls out Riposte at 20 as a major breakpoint; it strikes after a parry and disarms the target.",
+            "survival": "Rogue has little self-sustain, so manage health between fights.",
+            "milestones": "Riposte level-20 talent milestone."
+          }
+        ]
       }
     },
     {
@@ -614,7 +759,39 @@
         ],
         "zoneAdvice": "Use the linked guide’s level slider for faction-specific zone brackets and quest rewards.",
         "sourceId": "icy-priest-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "priest-quest-10",
+            "level": 10,
+            "label": "Level 10: check the race-specific Priest quest route."
+          },
+          {
+            "id": "priest-quest-20",
+            "level": 20,
+            "label": "Level 20: check the second race-specific Priest quest route."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "A good wand matters: use a few spells, then let the wand finish the enemy to protect Mana.",
+            "survival": "Power Word: Shield helps prevent damage and spell pushback.",
+            "milestones": "Wand Specialization and Spirit Tap are the guide’s early talent priorities."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Continue the wand-and-Mana rhythm; check your race-specific Priest class quest at level 10.",
+            "survival": "Use the shield when solo enemies can interrupt your casts.",
+            "milestones": "Race-specific Priest quest at 10; Inner Fire at 12."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Mind Flay and Devouring Plague are listed at 20; Vampiric Embrace is a talent milestone at 25.",
+            "survival": "The guide recommends spending only the Mana needed, then finishing with your wand.",
+            "milestones": "Mind Flay and Devouring Plague 20; Vampiric Embrace talent 25."
+          }
+        ]
       }
     },
     {
@@ -694,7 +871,49 @@
         ],
         "zoneAdvice": "The source lists Alliance early routes through Loch Modan, Westfall and Darkshore; Horde through The Barrens and Silverpine. Use its live level-sensitive route.",
         "sourceId": "icy-shaman-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "call-earth",
+            "level": 4,
+            "label": "Call of Earth: level 4 details in the source are for Dwarf Shamans; other race routes differ."
+          },
+          {
+            "id": "call-fire",
+            "level": 10,
+            "label": "Call of Fire: pick up the Shaman quest for your Fire Totem."
+          },
+          {
+            "id": "call-water",
+            "level": 20,
+            "label": "Call of Water: the Water Totem quest opens at level 20."
+          },
+          {
+            "id": "call-air",
+            "level": null,
+            "label": "Call of Air: the route includes a Razorfen Kraul run; exact level varies by race route."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Use Rockbiter Weapon before level 30, keep Lightning Shield up between pulls, and let auto-attacks finish weak enemies.",
+            "survival": "Call of Earth level-4 details in the source are specific to Dwarf Shamans.",
+            "milestones": "Call of Earth quest route varies by race."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Pick up Call of Fire for the Fire Totem; drop useful totems before engaging rather than spending Mana mid-fight without a reason.",
+            "survival": "Mana is the early constraint; spending Mana pauses Spirit regeneration for five seconds.",
+            "milestones": "Call of Fire quest; Shamanistic Focus is recommended at 20."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Call of Water opens at 20. Stormstrike is a key level-25 build milestone; Windfury Weapon becomes available at 30.",
+            "survival": "Use Shocks selectively and keep your weapon upgraded.",
+            "milestones": "Shamanistic Focus 20; Stormstrike around 25; Windfury Weapon 30."
+          }
+        ]
       }
     },
     {
@@ -774,7 +993,39 @@
         ],
         "zoneAdvice": "The source provides level-sensitive zone and dungeon suggestions; choose the current faction and level there.",
         "sourceId": "icy-mage-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "arcane-blast",
+            "level": 20,
+            "label": "Level 20: Arcane Blast becomes available in the Forever Arcane leveling guide."
+          },
+          {
+            "id": "missile-barrage",
+            "level": 25,
+            "label": "Level 25: Missile Barrage is a listed Arcane milestone."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Play at range and avoid pulling more enemies than you can safely cast through. The Forever guide identifies Arcane as a redesigned leveling option.",
+            "survival": "Arcane is a caster path; bad proc luck or gear can increase downtime.",
+            "milestones": "No exact talent allocation is recorded for this band."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Use the spells you have trained and conserve Mana between pulls; do not import a Retail or other Classic rotation.",
+            "survival": "Arcane’s Forever changes make its own leveling guide the relevant reference.",
+            "milestones": "No exact talent milestone recorded before the new Arcane core."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Arcane Blast is listed at 20 and Missile Barrage at 25; use Arcane Missiles when the proc empowers it.",
+            "survival": "Arcane’s resource talents help sustain, but watch Mana during repeated casts.",
+            "milestones": "Arcane Blast 20; Missile Barrage 25; Arcane Explosion 14."
+          }
+        ]
       }
     },
     {
@@ -849,7 +1100,39 @@
         ],
         "zoneAdvice": "Collect flight paths and combine class-quest travel with nearby zone and trainer stops.",
         "sourceId": "icy-warlock-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "life-tap",
+            "level": 6,
+            "label": "Level 6: train Life Tap; balance its health cost with recovery."
+          },
+          {
+            "id": "rain-of-fire",
+            "level": 20,
+            "label": "Level 20: Rain of Fire adds a ranged area-damage option."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Life Tap is learned at 6; trade health for Mana carefully and use Drain Life or recovery between fights.",
+            "survival": "Keep an eye on Health before using Life Tap again.",
+            "milestones": "Life Tap 6; Immolate is available from level 1."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Use your demon and damage-over-time spells to manage pressure; train spell ranks and demon abilities at trainers.",
+            "survival": "Use Life Tap with recovery in mind, not as free Mana.",
+            "milestones": "Drain Life 14; guide lists Corruption ranks beginning at 4 and Shadow Bolt ranks at 1."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Rain of Fire is listed at 20; Shadow Bolt can gain instant-cast Nightfall procs from 25 in the guide’s build.",
+            "survival": "Area casts can spend resources quickly; avoid adding enemies just because an AoE spell is available.",
+            "milestones": "Rain of Fire 20; Nightfall talent procs from 25; Firestone is listed from 28."
+          }
+        ]
       }
     },
     {
@@ -922,7 +1205,39 @@
         ],
         "zoneAdvice": "Use the source’s live faction and level route; the linked guide includes Forever-specific dungeon and zone recommendations.",
         "sourceId": "icy-druid-leveling",
-        "confidence": "medium"
+        "confidence": "medium",
+        "journeySteps": [
+          {
+            "id": "bear-form",
+            "level": 10,
+            "label": "Level 10: Bear Form becomes available."
+          },
+          {
+            "id": "cat-form",
+            "level": 20,
+            "label": "Level 20: Cat Form becomes available."
+          }
+        ],
+        "levelingBands": [
+          {
+            "range": "Levels 1–9",
+            "combat": "Feral’s leveling pace improves after its forms unlock; use the class kit and avoid assuming the later Cat/Bear rhythm is already available.",
+            "survival": "The guide calls the pre-form stretch slower than later leveling.",
+            "milestones": "No exact talent allocation recorded for this band."
+          },
+          {
+            "range": "Levels 10–19",
+            "combat": "Bear Form becomes available at 10, adding the path’s tank-oriented form option.",
+            "survival": "Use the form that fits the pull rather than treating every fight as Cat play.",
+            "milestones": "Bear Form level 10."
+          },
+          {
+            "range": "Levels 20–30",
+            "combat": "Cat Form becomes available at 20; the Forever guide highlights Feral’s mobility and ability to shift between damage and tank roles.",
+            "survival": "The guide notes Cat Form has no AoE damage.",
+            "milestones": "Cat Form level 20."
+          }
+        ]
       }
     }
   ],
@@ -1413,5 +1728,97 @@
     "levelRangeDisclosure": "The linked leveling guide contains a faction- and level-sensitive zone/dungeon tool. Its exact slider output is not included in this record, so these area names are shown without assigning unsupported level bands.",
     "talentRankDisclosure": "The public guide text names recommended talents but does not expose all selected ranks or full point-by-point tree strings. Rank values are intentionally omitted; use the linked talent build for the current tree image.",
     "endgameDisclosure": "The talent source says beta testing ended at level 30; both level-60 loadouts and endgame stat ordering are provisional and may change after launch."
-  }
+  },
+  "dungeons": [
+    {
+      "id": "hall-of-thanes",
+      "name": "Hall of Thanes",
+      "minLevel": 13,
+      "maxLevel": 18,
+      "location": "Beneath Ironforge, Dun Morogh",
+      "continent": "Eastern Kingdoms",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "ruins-of-lordaeron",
+      "name": "Ruins of Lordaeron",
+      "minLevel": 15,
+      "maxLevel": 20,
+      "location": "Ruins above the Undercity, Tirisfal Glades",
+      "continent": "Eastern Kingdoms",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "excavation-site",
+      "name": "Excavation Site",
+      "minLevel": 24,
+      "maxLevel": 29,
+      "location": "Above Whelgar’s Excavation, Wetlands",
+      "continent": "Eastern Kingdoms",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "city-of-dalaran",
+      "name": "City of Dalaran",
+      "minLevel": 28,
+      "maxLevel": 33,
+      "location": "Alterac Mountains",
+      "continent": "Eastern Kingdoms",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "drowned-city",
+      "name": "The Drowned City",
+      "minLevel": 35,
+      "maxLevel": 40,
+      "location": "Off the coast of Stranglethorn Vale",
+      "continent": "Eastern Kingdoms",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "kroldok-stronghold",
+      "name": "Krol’dok Stronghold",
+      "minLevel": 40,
+      "maxLevel": 45,
+      "location": "Riverglades",
+      "continent": "Eastern Kingdoms",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "alcaz-prison",
+      "name": "Alcaz Prison",
+      "minLevel": 48,
+      "maxLevel": 53,
+      "location": "Alcaz Island, Dustwallow Marsh",
+      "continent": "Kalimdor",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "blackmaw-hold",
+      "name": "Blackmaw Hold",
+      "minLevel": 55,
+      "maxLevel": 60,
+      "location": "Azshara",
+      "continent": "Kalimdor",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    },
+    {
+      "id": "shapers-terrace",
+      "name": "Shaper’s Terrace",
+      "minLevel": 58,
+      "maxLevel": 60,
+      "location": "Northern hills of Un’Goro Crater",
+      "continent": "Kalimdor",
+      "isForeverNew": true,
+      "sourceId": "forever-new-dungeons"
+    }
+  ]
 }

@@ -91,6 +91,46 @@
       "loading": "lazy",
       "provenance": "Original vector illustration created for BM Gaming Wiki.",
       "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "zone-zephras-isle-original",
+      "kind": "zone",
+      "zoneId": "zephras-isle",
+      "src": "assets/images/wow-forever/zone-zephras-isle.svg",
+      "alt": "Original BM Gaming Wiki fantasy landscape for Zephras Isle; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "zone-riverglades-original",
+      "kind": "zone",
+      "zoneId": "riverglades",
+      "src": "assets/images/wow-forever/zone-riverglades.svg",
+      "alt": "Original BM Gaming Wiki fantasy landscape for Riverglades; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "zone-shendralas-original",
+      "kind": "zone",
+      "zoneId": "shendralas",
+      "src": "assets/images/wow-forever/zone-shendralas.svg",
+      "alt": "Original BM Gaming Wiki fantasy landscape for Shen'dralas; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "zone-mount-hyjal-original",
+      "kind": "zone",
+      "zoneId": "mount-hyjal",
+      "src": "assets/images/wow-forever/zone-mount-hyjal.svg",
+      "alt": "Original BM Gaming Wiki fantasy landscape for Mount Hyjal; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
     }
   ],
   "fallbacks": {
@@ -103,7 +143,7 @@
   "unavailableMappings": {
     "classes": [],
     "specs": "No redistributable in-game class or spell images located in approved local assets.",
-    "zones": "No redistributable WoW zone artwork located in approved local assets.",
+    "zones": "Most classic zone art has no approved local asset; original framed fallback is used. The four newly introduced zones have project-created SVG scenes.",
     "dungeons": "No redistributable WoW dungeon artwork located in approved local assets."
   }
 }
