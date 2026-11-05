@@ -133,6 +133,105 @@
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
       "status": "Forever-specific quest guide; some chains differ by faction and race."
+    },
+    {
+      "id": "icy-warrior-leveling",
+      "title": "Fury Warrior Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/fury-warrior-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-10-21",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-paladin-leveling",
+      "title": "Retribution Paladin Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/retribution-paladin-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-10-17",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-hunter-leveling",
+      "title": "Beast Mastery Hunter Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/beast-mastery-hunter-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-10-17",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-rogue-leveling",
+      "title": "Combat Rogue Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/combat-rogue-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-10-17",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-priest-leveling",
+      "title": "Shadow Priest Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/shadow-priest-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-11-02",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-shaman-leveling",
+      "title": "Enhancement Shaman Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-11-03",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-mage-leveling",
+      "title": "Arcane Mage Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/arcane-mage-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-10-16",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-warlock-leveling",
+      "title": "Affliction Warlock Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/affliction-warlock-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-10-21",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "icy-druid-leveling",
+      "title": "Feral Druid Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/feral-druid-leveling",
+      "publisher": "Icy Veins",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
+      "updatedDate": "2026-10-18",
+      "accessed": "2026-11-05"
     }
   ],
   "classes": [
@@ -188,7 +287,32 @@
         "Stances",
         "Taunt"
       ],
-      "sourceId": "classes-priest-warrior"
+      "sourceId": "classes-priest-warrior",
+      "starterGuide": {
+        "specialization": "Fury",
+        "reason": "A two-weapon path that grows stronger as its key talents come online; the guide notes slower early progress and stresses weapon upgrades.",
+        "combat": [
+          "Keep both weapon skills and weapons current; missed swings also mean less Rage.",
+          "Use Rage on the current target instead of swapping stances without a reason."
+        ],
+        "resource": "Rage comes from combat; missed attacks can slow your next ability choices.",
+        "classMilestones": "Keep an eye out for the class quest chain; the linked Forever leveling guide includes level-based milestones and zone/dungeon suggestions.",
+        "gear": "The guide prioritizes current weapons; Fury depends on two maintained weapons.",
+        "beginnerMistakes": [
+          "Fury is slower before key talents and strong weapons.",
+          "Frequent stance changes can complicate Rage management."
+        ],
+        "talentPriorities": [],
+        "quickAbilities": [
+          "Rage",
+          "Dual wielding",
+          "Flurry",
+          "Bloodthirst"
+        ],
+        "zoneAdvice": "Use the Alliance or Horde zones shown for your current bracket in the linked Forever guide; its route is level-sensitive.",
+        "sourceId": "icy-warrior-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "paladin",
@@ -238,7 +362,32 @@
         "Seals",
         "Judgements"
       ],
-      "sourceId": "classes-paladin"
+      "sourceId": "classes-paladin",
+      "starterGuide": {
+        "specialization": "Retribution",
+        "reason": "The Forever leveling guide describes Retribution as efficient, with strong single-target damage, self-healing and defensive tools.",
+        "combat": [
+          "Maintain your chosen Seal and use its Judgement when it is useful.",
+          "Use healing and defensive abilities to recover from a dangerous pull."
+        ],
+        "resource": "Healing and offensive spells share Mana; carry water and avoid spending Mana on low-risk overkill.",
+        "classMilestones": "A Paladin weapon questline opens at level 20; Alliance and Horde receive different weapon rewards. Redemption is listed as a level-12 class quest unlock.",
+        "gear": "Keep weapon DPS current; weapon speed influences which Seal the guide recommends.",
+        "beginnerMistakes": [
+          "Limited ranged tagging and no slow are listed weaknesses.",
+          "Health can be fine while Mana is too low to heal; bring water."
+        ],
+        "talentPriorities": [],
+        "quickAbilities": [
+          "Seals",
+          "Judgement",
+          "Consecration",
+          "Redemption"
+        ],
+        "zoneAdvice": "At low levels the guide lists Loch Modan/Darkshore for Alliance and The Barrens for Horde; level-sensitive options appear in the source.",
+        "sourceId": "icy-paladin-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "hunter",
@@ -286,7 +435,32 @@
         "Aimed Shot (baseline at level 20)",
         "Traps"
       ],
-      "sourceId": "classes-hunter-druid"
+      "sourceId": "classes-hunter-druid",
+      "starterGuide": {
+        "specialization": "Beast Mastery",
+        "reason": "The Forever guide describes the pet as a major leveling power increase after the level-10 pet quest, helping absorb pressure while you deal damage.",
+        "combat": [
+          "Complete the level-10 pet quest promptly, send your pet first, and keep its threat in mind.",
+          "Use traps and movement tools when a pull becomes unsafe."
+        ],
+        "resource": "Mana can run low during repeated ability use; use the pet and basic attacks to avoid needless casts.",
+        "classMilestones": "The level-10 class quest unlocks pets and is a major power milestone. The source also lists a level-50 gear quest, not an early unlock.",
+        "gear": "Keep your ranged weapon current; the guide recommends an early bow upgrade.",
+        "beginnerMistakes": [
+          "Pet abilities/ranks require learning from suitable tamed pets.",
+          "A critical hit can pull threat from your pet; use defensive tools and bring a loose enemy toward the group tank."
+        ],
+        "talentPriorities": [],
+        "quickAbilities": [
+          "Tame Beast",
+          "Growl",
+          "Auto Shot",
+          "Wing Clip"
+        ],
+        "zoneAdvice": "Use the guide’s faction and level filters; it recommends completing useful zone quest chains before travel.",
+        "sourceId": "icy-hunter-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "rogue",
@@ -332,7 +506,37 @@
         "Stealth",
         "Poisons"
       ],
-      "sourceId": "classes-rogue-warlock"
+      "sourceId": "classes-rogue-warlock",
+      "starterGuide": {
+        "specialization": "Combat",
+        "reason": "The Forever guide centers the leveling path on reliable single-target damage and gives access to Blade Flurry for multiple enemies.",
+        "combat": [
+          "Generate Combo Points with Sinister Strike, then spend them with Eviscerate.",
+          "Stealth lets you choose encounters; use it to avoid unnecessary fights."
+        ],
+        "resource": "Energy and Combo Points are your combat loop; avoid spending finishers with too few Combo Points when the target will survive.",
+        "classMilestones": "Check the class-quest guide for race-specific chains; no early unlock level is repeated here without verifying the player’s race.",
+        "gear": "Keep weapons current; consult the level-sensitive guide for the priority at your level.",
+        "beginnerMistakes": [
+          "The source notes limited AoE compared with other leveling classes.",
+          "Stealth helps choose fights but does not replace managing health between them."
+        ],
+        "talentPriorities": [
+          "Improved Sinister Strike",
+          "Precision",
+          "Riposte",
+          "Riposte (level 20 talent milestone)"
+        ],
+        "quickAbilities": [
+          "Stealth",
+          "Sinister Strike",
+          "Eviscerate",
+          "Blade Flurry"
+        ],
+        "zoneAdvice": "Use the source’s level slider for faction-appropriate zones and dungeon options.",
+        "sourceId": "icy-rogue-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "priest",
@@ -383,7 +587,35 @@
         "Penance (damage or healing)",
         "Power Word: Shield"
       ],
-      "sourceId": "classes-priest-warrior"
+      "sourceId": "classes-priest-warrior",
+      "starterGuide": {
+        "specialization": "Shadow",
+        "reason": "The Forever guide recommends wand damage and Spirit Tap to limit Mana downtime, with shield and healing spells as safety tools.",
+        "combat": [
+          "Use a small number of spells, then finish with your wand to conserve Mana.",
+          "Power Word: Shield can reduce incoming damage and spell pushback when solo."
+        ],
+        "resource": "Mana is tight early; a current wand is a major upgrade, and Spirit Tap rewards a killing blow.",
+        "classMilestones": "The guide lists race-specific Priest quests; consult the class quest route for the player’s race.",
+        "gear": "Upgrade your wand regularly; the source says wand auto-attacks make a large share of early damage.",
+        "beginnerMistakes": [
+          "Repeatedly casting every damage spell on every mob creates unnecessary Mana downtime.",
+          "Priest is less tanky and mobile than many classes; avoid extra pulls."
+        ],
+        "talentPriorities": [
+          "Wand Specialization",
+          "Spirit Tap"
+        ],
+        "quickAbilities": [
+          "Power Word: Shield",
+          "Shadow Word: Pain",
+          "Mind Blast",
+          "Wand"
+        ],
+        "zoneAdvice": "Use the linked guide’s level slider for faction-specific zone brackets and quest rewards.",
+        "sourceId": "icy-priest-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "shaman",
@@ -434,7 +666,36 @@
         "Totemic Projection",
         "Call spells"
       ],
-      "sourceId": "classes-mage-shaman"
+      "sourceId": "classes-mage-shaman",
+      "starterGuide": {
+        "specialization": "Enhancement",
+        "reason": "A melee path with strong burst, self-healing and Ghost Wolf mobility; its key limitation is early Mana pressure.",
+        "combat": [
+          "Before level 30, use Rockbiter Weapon; apply Lightning Shield between pulls.",
+          "At level 25, Stormstrike is a major milestone; use it when ready and spend shocks deliberately."
+        ],
+        "resource": "Auto-attacks can finish weak enemies without Mana. Spirit regeneration pauses for five seconds after spending Mana.",
+        "classMilestones": "Call of Fire should be completed promptly for the Fire Totem; Call of Water opens at 20. Other totem quests take travel, and Call of Air requires a Razorfen Kraul run.",
+        "gear": "Keep a slow two-handed weapon current; the guide prioritizes weapon DPS, then values Intellect for damage scaling and Mana.",
+        "beginnerMistakes": [
+          "Overcasting slows your pace through drinking.",
+          "Multiple enemies can overwhelm you; use self-healing and utility rather than assuming every pull is safe."
+        ],
+        "talentPriorities": [
+          "Shamanistic Focus (level 20 recommendation)",
+          "Stormstrike (available around level 25)",
+          "Improved Stormstrike (level 30 build milestone)"
+        ],
+        "quickAbilities": [
+          "Lightning Bolt",
+          "Lightning Shield",
+          "Earth Shock",
+          "Stormstrike"
+        ],
+        "zoneAdvice": "The source lists Alliance early routes through Loch Modan, Westfall and Darkshore; Horde through The Barrens and Silverpine. Use its live level-sensitive route.",
+        "sourceId": "icy-shaman-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "mage",
@@ -485,7 +746,36 @@
         "Polymorph",
         "Frostfire Bolt (learned at level 40)"
       ],
-      "sourceId": "classes-mage-shaman"
+      "sourceId": "classes-mage-shaman",
+      "starterGuide": {
+        "specialization": "Arcane",
+        "reason": "Forever’s Arcane tree is reworked around Arcane Blast and Missile Barrage, making it a supported leveling option rather than a generic Classic-era fallback.",
+        "combat": [
+          "Build damage with Arcane Blast and use Arcane Missiles when Missile Barrage procs.",
+          "Use crowd control and range to prevent enemies from interrupting casts."
+        ],
+        "resource": "Arcane talents improve Mana efficiency, but spell-heavy pulls still require watching your Mana and using conjured supplies.",
+        "classMilestones": "The linked Forever guide has level-based class milestones; no separate quest unlock is asserted here.",
+        "gear": "The source recommends keeping crafting gear in mind; specific stat priorities should follow the current guide.",
+        "beginnerMistakes": [
+          "Standing still to cast can be risky when enemies reach you.",
+          "Do not apply Retail or old Classic rotations to Forever’s Arcane changes."
+        ],
+        "talentPriorities": [
+          "Arcane Blast",
+          "Missile Barrage",
+          "Improved Channeling"
+        ],
+        "quickAbilities": [
+          "Arcane Blast",
+          "Arcane Missiles",
+          "Polymorph",
+          "Blink"
+        ],
+        "zoneAdvice": "The source provides level-sensitive zone and dungeon suggestions; choose the current faction and level there.",
+        "sourceId": "icy-mage-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "warlock",
@@ -535,7 +825,32 @@
         "Soul Fire",
         "Incinerate (31-point Destruction talent)"
       ],
-      "sourceId": "classes-rogue-warlock"
+      "sourceId": "classes-rogue-warlock",
+      "starterGuide": {
+        "specialization": "Affliction",
+        "reason": "A damage-over-time playstyle with a demon, drains and Life Tap; the Forever guide emphasizes planning health and Mana together.",
+        "combat": [
+          "Use your demon deliberately: Voidwalker offers safer solo pulls; keep pet commands easy to reach.",
+          "Apply damage-over-time spells, then use direct damage or drains as the situation allows."
+        ],
+        "resource": "Life Tap converts health into Mana; use Drain Life, food and bandages to manage the health cost.",
+        "classMilestones": "Warlock class quests involve travel and demon unlocks; pick up the chain before leaving town and consult the class quest guide for exact race/level steps.",
+        "gear": "The leveling guide values Spell Power and Shadow damage for its main spells; choose current upgrades rather than a fixed item list.",
+        "beginnerMistakes": [
+          "Life Tap at low health can leave you vulnerable.",
+          "Keep demon Grimoires trained; pet ability ranks are handled separately."
+        ],
+        "talentPriorities": [],
+        "quickAbilities": [
+          "Corruption",
+          "Shadow Bolt",
+          "Drain Life",
+          "Life Tap"
+        ],
+        "zoneAdvice": "Collect flight paths and combine class-quest travel with nearby zone and trainer stops.",
+        "sourceId": "icy-warlock-leveling",
+        "confidence": "medium"
+      }
     },
     {
       "id": "druid",
@@ -584,7 +899,31 @@
         "Druid forms",
         "Nature magic"
       ],
-      "sourceId": "classes-hunter-druid"
+      "sourceId": "classes-hunter-druid",
+      "starterGuide": {
+        "specialization": "Feral",
+        "reason": "The Forever guide highlights Feral’s flexibility between damage and tanking, mobility and self-healing. Bear and Cat forms arrive at levels 10 and 20.",
+        "combat": [
+          "Use the form suited to the task: Bear for durability, Cat for melee damage once available.",
+          "Expect a slower opening before the form unlocks; use healing tools between fights."
+        ],
+        "resource": "Shifting and healing have costs; avoid unnecessary form changes and keep recovery between pulls in mind.",
+        "classMilestones": "Form unlocks are major class milestones; the linked class-quest guide has race-specific quest steps.",
+        "gear": "Follow the source’s level-sensitive priorities; no single weapon/stat rule is assumed for all forms.",
+        "beginnerMistakes": [
+          "Feral’s full leveling rhythm changes at levels 10 and 20 as forms unlock.",
+          "Do not treat Bear and Cat as identical roles."
+        ],
+        "talentPriorities": [],
+        "quickAbilities": [
+          "Bear Form (level 10)",
+          "Cat Form (level 20)",
+          "Nature magic"
+        ],
+        "zoneAdvice": "Use the source’s live faction and level route; the linked guide includes Forever-specific dungeon and zone recommendations.",
+        "sourceId": "icy-druid-leveling",
+        "confidence": "medium"
+      }
     }
   ],
   "zones": [

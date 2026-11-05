@@ -1600,9 +1600,10 @@ document.addEventListener?.('change', event => {
   if (finder && result && wowData) result.innerHTML = renderWowBuildResults(wowData, Object.fromEntries(new FormData(finder)), escapeHtml);
 });
 document.addEventListener?.('change', event => {
-  if (!event.target.matches('[data-wow-faction-filter], [data-wow-level-filter]')) return;
+  if (!event.target.matches('[data-wow-faction-filter], [data-wow-level-filter], [data-wow-class-filter]')) return;
   const faction = document.querySelector('[data-wow-faction-filter]')?.value || 'all';
   const level = document.querySelector('[data-wow-level-filter]')?.value || '';
+  const classId = document.querySelector('[data-wow-class-filter]')?.value || '';
   document.querySelectorAll('[data-wow-zone-card]').forEach(card => {
     const minimum = Number(card.dataset.levelStart);
     const maximum = Number(card.dataset.levelEnd);
@@ -1610,6 +1611,11 @@ document.addEventListener?.('change', event => {
     const factionMatches = faction === 'all' || card.dataset.zoneFaction === 'Both' || card.dataset.zoneFaction === faction;
     card.hidden = !(levelMatches && factionMatches);
   });
+  const next = document.querySelector('[data-wow-leveling-next]');
+  const record = wowData?.classes?.find(item => item.id === classId);
+  if (next) next.innerHTML = record?.starterGuide
+    ? `<strong>${escapeHtml(record.name)} · ${escapeHtml(record.starterGuide.specialization)} · Level ${escapeHtml(String(level || '1'))}</strong><p>${escapeHtml(record.starterGuide.zoneAdvice)} ${escapeHtml(record.starterGuide.classMilestones)}</p><a href="#game/world-of-warcraft/classes/${escapeHtml(record.id)}">Open ${escapeHtml(record.name)} first-steps guide →</a>`
+    : '<strong>Start here</strong><p>Pick your class to see its current leveling recommendation. Zone suggestions stay tied to recorded faction and level data.</p>';
 });
 window.addEventListener('scroll', () => updateBackToTop(), { passive: true });
 window.addEventListener('hashchange', showRoute);

@@ -1,0 +1,109 @@
+{
+  "gameVersion": "World of Warcraft: Forever",
+  "records": [
+    {
+      "id": "enhancement-shaman-original",
+      "kind": "specialization",
+      "classId": "shaman",
+      "specializationId": "enhancement",
+      "src": "assets/images/wow-forever/enhancement-shaman.svg",
+      "alt": "Original BM Gaming Wiki storm illustration for Enhancement Shaman; not official in-game art.",
+      "loading": "eager",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "warrior-original",
+      "kind": "class",
+      "classId": "warrior",
+      "src": "assets/images/wow-forever/warrior.svg",
+      "alt": "Original BM Gaming Wiki Warrior fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "paladin-original",
+      "kind": "class",
+      "classId": "paladin",
+      "src": "assets/images/wow-forever/paladin.svg",
+      "alt": "Original BM Gaming Wiki Paladin fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "hunter-original",
+      "kind": "class",
+      "classId": "hunter",
+      "src": "assets/images/wow-forever/hunter.svg",
+      "alt": "Original BM Gaming Wiki Hunter fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "rogue-original",
+      "kind": "class",
+      "classId": "rogue",
+      "src": "assets/images/wow-forever/rogue.svg",
+      "alt": "Original BM Gaming Wiki Rogue fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "priest-original",
+      "kind": "class",
+      "classId": "priest",
+      "src": "assets/images/wow-forever/priest.svg",
+      "alt": "Original BM Gaming Wiki Priest fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "mage-original",
+      "kind": "class",
+      "classId": "mage",
+      "src": "assets/images/wow-forever/mage.svg",
+      "alt": "Original BM Gaming Wiki Mage fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "warlock-original",
+      "kind": "class",
+      "classId": "warlock",
+      "src": "assets/images/wow-forever/warlock.svg",
+      "alt": "Original BM Gaming Wiki Warlock fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "druid-original",
+      "kind": "class",
+      "classId": "druid",
+      "src": "assets/images/wow-forever/druid.svg",
+      "alt": "Original BM Gaming Wiki Druid fantasy illustration; not official game artwork.",
+      "loading": "lazy",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    }
+  ],
+  "fallbacks": {
+    "class": "Original class-themed SVG illustration; explicitly labeled as BM Gaming Wiki original art, not game art.",
+    "specialization": "CSS scene plus class sigil",
+    "ability": "Name badge; not a game icon",
+    "zone": "Region color and title frame",
+    "dungeon": "Dungeon name plate; not an in-game image"
+  },
+  "unavailableMappings": {
+    "classes": [],
+    "specs": "No redistributable in-game class or spell images located in approved local assets.",
+    "zones": "No redistributable WoW zone artwork located in approved local assets.",
+    "dungeons": "No redistributable WoW dungeon artwork located in approved local assets."
+  }
+}

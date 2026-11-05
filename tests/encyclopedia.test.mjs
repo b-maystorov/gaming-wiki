@@ -1156,7 +1156,7 @@ test('regional artwork falls back without private images and section navigation 
   assert.ok(css.includes('@media (prefers-reduced-motion: reduce) { .region-enemy-card'));
 });
 
-test('WoW: Forever landing, categories, nine classes, zones, and tier lists have working routes', () => {
+test('WoW: Forever landing, categories, nine classes, zones, and tier lists have working routes', async () => {
   const route = h.app.readRoute;
   const render = h.app.renderPage;
   assert.equal(route('#game/world-of-warcraft').view, 'wow-home');
@@ -1167,6 +1167,20 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     assert.equal(classRoute.view, 'wow-class', item.id);
     const classHtml = render(classRoute);
     assert.ok(classHtml.includes(`<h2>${item.name}</h2>`));
+    assert.ok(classHtml.includes('Starting your journey'));
+    assert.ok(classHtml.includes(item.starterGuide.specialization));
+    assert.ok(classHtml.includes(item.starterGuide.reason));
+    assert.ok(classHtml.includes('Quick combat reference'));
+    assert.ok(classHtml.includes('Beginner traps'));
+    assert.ok(classHtml.includes('Where to quest'));
+    assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.starterGuide.sourceId).url));
+    assert.ok(classHtml.includes('Original BM Gaming Wiki illustration'));
+    const art = wowArtwork.records.find(record => record.classId === item.id);
+    assert.ok(art, `missing local class illustration for ${item.id}`);
+    const svg = await readFile(resolve(root, 'dist', art.src), 'utf8');
+    assert.ok(svg.includes('<svg') && svg.includes('BM Gaming Wiki'));
+    assert.ok(art.alt.includes('not official') && art.usage.includes('no Blizzard assets'));
+    assert.ok(item.starterGuide.talentPriorities.every(name => classHtml.includes(name)));
     assert.ok(classHtml.includes('Race and faction options'));
     assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.sourceId).title));
     for (const specialization of item.specializations) {
@@ -1174,6 +1188,13 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
       assert.ok(classHtml.includes(href));
       assert.equal(route(href).view, 'wow-build-detail');
     }
+  }
+  assert.equal(wowPack.classes.length, 9);
+  for (const item of wowPack.classes) {
+    const levelingSource = wowPack.sources.find(source => source.id === item.starterGuide.sourceId);
+    assert.ok(levelingSource?.url.includes('/wow-forever/'), `non-Forever source for ${item.id}`);
+    assert.equal(levelingSource.gameVersion, 'World of Warcraft: Forever');
+    assert.ok(item.starterGuide.confidence && item.starterGuide.classMilestones && item.starterGuide.gear);
   }
   assert.equal(route('#game/world-of-warcraft/classes/nonexistent').view, 'missing');
   assert.ok(render(route('#game/world-of-warcraft/leveling')).includes('Zephras Isle'));
