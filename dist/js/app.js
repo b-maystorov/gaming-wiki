@@ -8,6 +8,7 @@ import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
+import { renderWowPage, renderWowBuildResults } from './wow-forever.js';
 
 let structuredGameContent = null;
 try {
@@ -25,6 +26,23 @@ try {
 }
 
 await loadArtworkManifest();
+
+let wowData = null;
+let wowArtwork = null;
+try {
+  const wowResponse = await fetch('./data/games/world-of-warcraft-forever.json');
+  if (!wowResponse.ok) throw new Error(`WoW data request failed: ${wowResponse.status}`);
+  wowData = await wowResponse.json();
+} catch (error) {
+  console.error('Could not load World of Warcraft: Forever data:', error);
+}
+try {
+  const artworkResponse = await fetch('./data/games/world-of-warcraft-forever-artwork.json');
+  if (!artworkResponse.ok) throw new Error(`WoW artwork manifest request failed: ${artworkResponse.status}`);
+  wowArtwork = await artworkResponse.json();
+} catch (error) {
+  console.error('Could not load WoW artwork manifest:', error);
+}
 
 const main = document.querySelector('main');
 main.addEventListener('error', handleArtworkError, true);
@@ -98,11 +116,11 @@ function renderList(items, ordered = false) {
 function renderHome() {
   return `<div class="portal">
     <section class="portal-hero" aria-labelledby="page-title">
-      <div class="portal-compass" aria-hidden="true"><span>✦</span></div>
+      <div class="portal-hero-vista" aria-hidden="true"><span></span><span></span><span></span><i></i></div>
       <div class="portal-hero-copy">
         <div class="portal-identity"><img src="assets/images/bm-mark.svg" width="112" height="112" alt=""><div><p class="portal-brand-name">BM Gaming Wiki</p><p class="portal-kicker">Your adventure, understood</p></div></div>
         <h1 id="page-title" tabindex="-1">Every game has a story.<br> <em>Master yours.</em></h1>
-        <p class="portal-intro">Find your way with game guides, hero builds, team compositions, equipment, and strategy help. Start with Darkest Dungeon. More worlds await.</p>
+        <p class="portal-intro">Explore Darkest Dungeon guides today, or step into World of Warcraft: Forever for class and leveling foundations. The field guide grows world by world.</p>
         <button class="portal-explore" type="button" data-explore-games>Explore Games <span aria-hidden="true">↓</span></button>
       </div>
       <div class="portal-hero-foot"><span>A personal field guide for the journey</span><span aria-hidden="true">01 — Choose your world</span></div>
@@ -1411,6 +1429,20 @@ function readRoute(hash) {
   // Preserve existing bookmarks without rewriting history entries.
   if (path === 'heroes') return { view: 'heroes', game: true };
   const parts = path.split('/');
+  if (parts[0] === 'game' && parts[1] === 'world-of-warcraft') {
+    if (parts.length === 2) return { view: 'wow-home' };
+    const categoryViews = { classes: 'wow-classes', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-upcoming-dungeons-raids', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
+    if (parts.length === 3 && categoryViews[parts[2]]) return { view: categoryViews[parts[2]] };
+    if (parts.length === 5 && parts[2] === 'builds') {
+      const classRecord = wowData?.classes.find(item => item.id === parts[3]);
+      const specialization = classRecord?.specializations.find(item => item.id === parts[4]);
+      if (classRecord && specialization) return { view: 'wow-build-detail', classRecord, specialization };
+    }
+    if (parts.length === 4 && parts[2] === 'classes') {
+      const classRecord = wowData?.classes.find(item => item.id === parts[3]);
+      if (classRecord) return { view: 'wow-class', classRecord };
+    }
+  }
   if (!structuredGameContent && parts[0] === 'game' && parts[1] === 'darkest-dungeon'
       && ['bosses', 'enemies', 'trinkets', 'items', 'curios', 'locations', 'quests', 'expedition-planner'].includes(parts[2])
       && parts.length <= 4) return { view: 'content-unavailable', game: true };
@@ -1476,6 +1508,7 @@ function renderContentError(title = 'Encyclopedia unavailable') {
 
 function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
+  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), 'expedition-planner': renderExpeditionPlanner, trinkets: () => renderEncyclopediaCollection('trinkets'),
     enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests') };
@@ -1487,7 +1520,7 @@ function renderPage(route) {
 }
 
 function updateNavigation(route) {
-  const activePage = route.game ? 'game' : route.preview || route.library ? 'universes' : route.view;
+  const activePage = route.game ? 'game' : route.view.startsWith('wow-') ? 'wow' : route.preview || route.library ? 'universes' : route.view;
   document.querySelectorAll('[data-site-page]').forEach(link => {
     const active = link.dataset.sitePage === activePage;
     if (active) link.setAttribute('aria-current', 'location');
@@ -1519,7 +1552,7 @@ function showRoute() {
   const route = readRoute(location.hash);
   updateBackToTop(route, 0);
   if (route.preview) selectedPortalGame = portalGames.indexOf(route.preview);
-  document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview');
+  document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview' || route.view.startsWith('wow-'));
   const viewKey = route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.kind && route.record ? `${route.kind}/${route.record.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
   const changed = viewKey !== currentView;
   if (changed) {
@@ -1530,7 +1563,7 @@ function showRoute() {
     updateExpeditionPlannerOptions();
     refreshExpeditionPlanner();
   }
-  document.title = route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Team Guide · BM Gaming Wiki` :
+  document.title = route.view.startsWith('wow-') ? `${route.classRecord?.name || 'World of Warcraft: Forever'} · BM Gaming Wiki` : route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Team Guide · BM Gaming Wiki` :
     route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view] || 'Encyclopedia unavailable'} · Gaming Wiki`;
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
@@ -1549,6 +1582,35 @@ document.querySelector('.skip-link').addEventListener('click', event => {
 
 // One shell button and one listener survive all hash-route content replacements.
 document.getElementById('back-to-top').addEventListener('click', scrollBackToTop);
+document.addEventListener?.('change', event => {
+  if (event.target.matches('[data-enhancement-level]')) {
+    const level = Number(event.target.value);
+    const milestones = [...document.querySelectorAll('[data-enhancement-milestone]')];
+    milestones.forEach(row => row.classList.toggle('is-upcoming', Number(row.dataset.enhancementMilestone) > level));
+    const next = milestones.find(row => Number(row.dataset.enhancementMilestone) > level);
+    const status = document.getElementById('enhancement-level-status');
+    const output = document.querySelector('[data-enhancement-level-output]');
+    if (output) output.value = String(level);
+    if (status) status.textContent = next ? `At level ${level}. Next listed milestone: level ${next.dataset.enhancementMilestone}, ${next.dataset.milestoneName}.` : `At level ${level}. You have passed the listed milestones; deeper point-by-point guidance is in the linked source.`;
+    return;
+  }
+  if (!event.target.closest('[data-wow-build-finder]')) return;
+  const finder = document.querySelector('[data-wow-build-finder]');
+  const result = document.getElementById('wow-build-results');
+  if (finder && result && wowData) result.innerHTML = renderWowBuildResults(wowData, Object.fromEntries(new FormData(finder)), escapeHtml);
+});
+document.addEventListener?.('change', event => {
+  if (!event.target.matches('[data-wow-faction-filter], [data-wow-level-filter]')) return;
+  const faction = document.querySelector('[data-wow-faction-filter]')?.value || 'all';
+  const level = document.querySelector('[data-wow-level-filter]')?.value || '';
+  document.querySelectorAll('[data-wow-zone-card]').forEach(card => {
+    const minimum = Number(card.dataset.levelStart);
+    const maximum = Number(card.dataset.levelEnd);
+    const levelMatches = !level || !card.dataset.levelStart || Number(level) >= minimum && Number(level) <= maximum;
+    const factionMatches = faction === 'all' || card.dataset.zoneFaction === 'Both' || card.dataset.zoneFaction === faction;
+    card.hidden = !(levelMatches && factionMatches);
+  });
+});
 window.addEventListener('scroll', () => updateBackToTop(), { passive: true });
 window.addEventListener('hashchange', showRoute);
 window.addEventListener('storage', event => {

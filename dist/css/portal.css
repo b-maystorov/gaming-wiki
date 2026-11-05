@@ -204,3 +204,201 @@ body.portal-page {
   .portal *, .portal *::before, .portal *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .portal-selector:hover, .portal-explore:hover { transform: none; }
 }
+
+/* WoW: Forever uses the shared portal frame with a distinct Azeroth palette. */
+body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620px at 82% 310px, #28567a35, transparent 72%), radial-gradient(ellipse 420px 540px at 8% 1000px, #8d70331b, transparent 70%), #090d13; }
+.wow-page { --wow-gold: #d5bc7d; --wow-blue: #75bce0; --wow-line: #6a8294; position: relative; isolation: isolate; padding-bottom: 2rem; }
+.wow-scene { position: absolute; z-index: -1; inset: 0 -7vw auto; height: 520px; overflow: hidden; pointer-events: none; background: radial-gradient(ellipse at 72% 21%, #9ac9e33d, transparent 35%), linear-gradient(180deg, #132336 0%, #101821b0 60%, transparent); }
+.wow-moon { position: absolute; width: 240px; aspect-ratio: 1; border: 1px solid #d2c18b65; border-radius: 50%; right: 18%; top: 35px; box-shadow: 0 0 90px #89c9ee38, inset 0 0 50px #c7b67522; background: radial-gradient(circle at 35% 35%, #9bc6d33a, transparent 68%); }
+.wow-spires { position: absolute; inset: auto 0 0; height: 280px; opacity: .8; background: linear-gradient(180deg, transparent, #09101ae8 88%), linear-gradient(115deg, transparent 46%, #42627a66 46.2% 47%, transparent 47.2%), linear-gradient(65deg, transparent 58%, #314a5b88 58.2% 59%, transparent 59.2%); clip-path: polygon(0 100%,0 72%,12% 72%,18% 32%,22% 69%,33% 69%,40% 18%,44% 69%,55% 69%,64% 0,69% 67%,78% 67%,85% 31%,91% 68%,100% 68%,100% 100%); }
+.wow-banner { min-height: 410px; padding: 4rem clamp(1rem, 5vw, 4.5rem) 2rem; border-bottom: 1px solid #53667755; position: relative; display: flex; flex-direction: column; justify-content: center; }
+.wow-eyebrow { color: var(--wow-gold); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; }
+.wow-eyebrow span { color: var(--wow-blue); margin-inline: .7rem; }
+.wow-banner h1 { max-width: 12ch; margin-top: 1rem; font: 500 clamp(2.8rem, 7vw, 5.6rem)/1.04 Georgia, serif; letter-spacing: -.035em; text-shadow: 0 4px 32px #000; }
+.wow-banner > p:not(.wow-eyebrow) { max-width: 54ch; margin-top: 1.1rem; color: #c6d0d8; line-height: 1.75; }
+.wow-nav { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.8rem; }
+.wow-nav a, .wow-back { display: inline-flex; min-height: 44px; align-items: center; padding: .55rem .9rem; border: 1px solid #57718a; color: #e8d8ae; text-decoration: none; background: #101925ad; transition: border-color 160ms, background 160ms; }
+.wow-nav a:hover, .wow-back:hover { border-color: var(--wow-gold); background: #27364a; }
+.wow-nav a:focus-visible, .wow-back:focus-visible, .wow-feature:focus-visible, .wow-class-card:focus-visible { outline: 2px solid #f4df9e; outline-offset: 3px; }
+.wow-feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 2rem 0; }
+.wow-feature { position: relative; min-height: 180px; padding: 1.4rem; border: 1px solid #536779; background: linear-gradient(145deg, #182736e8, #10151eee 75%); box-shadow: inset 0 1px #d7e9f012, 0 12px 24px #0003; text-decoration: none; transition: transform 180ms, border-color 180ms, background 180ms; }
+.wow-feature:hover { transform: translateY(-3px); border-color: var(--wow-gold); background: linear-gradient(145deg, #22384c, #111722 75%); }
+.wow-feature > span, .wow-tier-grid article > span { color: var(--wow-gold); font-size: .7rem; letter-spacing: .13em; }
+.wow-feature h2 { margin-top: 1rem; font: 500 1.3rem Georgia, serif; color: #f0e4c5; }
+.wow-feature p, .wow-note, .wow-zone p { margin-top: .65rem; color: #b6c3cc; font-size: .84rem; line-height: 1.65; }
+.wow-feature b { position: absolute; right: 1.3rem; bottom: 1.2rem; color: var(--wow-blue); }
+.wow-note { padding: 1rem 1.2rem; border-left: 2px solid var(--wow-gold); background: #17212bb8; }
+.wow-content { padding: 1.5rem 0 0; }
+.wow-content > h2 { margin: 1.3rem 0; color: #e9d8ad; font: 500 2rem Georgia, serif; }
+.wow-lede { max-width: 72ch; color: #c3cdd3; line-height: 1.75; }
+.wow-class-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1.4rem; }
+.wow-class-card { display: flex; align-items: center; gap: 1rem; min-height: 92px; padding: .9rem 1rem; border: 1px solid #526171; background: linear-gradient(120deg, #192330, #10151b); text-decoration: none; }
+.wow-class-card > span, .wow-class-hero > span { display: grid; flex: 0 0 48px; width: 48px; height: 48px; place-items: center; border: 1px solid var(--class-accent); color: var(--class-accent); font: 1.45rem Georgia, serif; background: color-mix(in srgb, var(--class-accent) 13%, #111); }
+.wow-class-card strong { color: #ede2c6; }
+.wow-class-card small { margin-left: auto; max-width: 11ch; text-align: right; color: #aebbc4; font-size: .68rem; }
+.wow-class-hero { display: flex; align-items: center; gap: 1.2rem; padding: 1.4rem; border: 1px solid #556d80; background: linear-gradient(120deg, #203044, #121821); }
+.wow-class-hero > span { flex-basis: 76px; width: 76px; height: 76px; font-size: 2rem; }
+.wow-class-hero h2 { margin-top: .3rem; color: #eee1c4; font: 500 2.1rem Georgia, serif; }
+.wow-class-hero p:last-child { margin-top: .4rem; color: #c1ccd3; }
+.wow-detail-grid, .wow-tier-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem 1.5rem; }
+.wow-detail-grid article, .wow-tier-grid article, .wow-zone { padding: 1.2rem; border: 1px solid #465968; background: #131a22dc; }
+.wow-detail-grid h3 { color: var(--wow-gold); font: 500 1.15rem Georgia, serif; }
+.wow-detail-grid p, .wow-tier-grid p { margin-top: .55rem; color: #d0d5d8; line-height: 1.6; }
+.wow-detail-grid small, .wow-zone small { display: block; margin-top: .6rem; color: #9eacb7; line-height: 1.5; }
+.wow-zone-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1rem; }
+.wow-zone h2, .wow-tier-grid h2 { color: #e6d9ba; font: 500 1.2rem Georgia, serif; }
+.wow-zone > div { display: flex; align-items: start; justify-content: space-between; gap: .7rem; }
+.wow-tag { color: #9dd5ee; font-size: .62rem; text-align: right; text-transform: uppercase; letter-spacing: .08em; }
+@media(max-width: 760px) { .wow-feature-grid, .wow-class-grid, .wow-zone-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wow-banner { min-height: 370px; } }
+@media(max-width: 500px) { .wow-feature-grid, .wow-class-grid, .wow-zone-grid, .wow-detail-grid, .wow-tier-grid { grid-template-columns: 1fr; } .wow-banner { min-height: 350px; padding: 2.6rem .2rem 1.5rem; } .wow-class-card small { max-width: 15ch; } .wow-scene { inset-inline: -20px; } }
+@media(prefers-reduced-motion: reduce) { .wow-page *, .wow-page *::before, .wow-page *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } .wow-feature:hover { transform: none; } }
+/* A layered, CSS-only gateway gives the homepage a scene without relying on unapproved game art. */
+.portal-hero-vista { position: absolute; z-index: 0; pointer-events: none; width: min(43vw, 500px); height: 420px; right: 0; top: 25px; opacity: .85; overflow: hidden; background: radial-gradient(ellipse at 56% 50%, #d99a6426, transparent 48%), radial-gradient(ellipse at 60% 86%, #aa303631, transparent 64%); mask-image: linear-gradient(90deg, transparent, #000 25% 90%, transparent); }
+.portal-hero-vista::before { content: ''; position: absolute; width: 205px; height: 340px; left: 43%; top: 25px; border: 1px solid #c9856d9c; border-bottom: 0; border-radius: 52% 52% 0 0; box-shadow: 0 0 0 14px #572c3324, 0 0 0 15px #c9856d4c, 0 0 55px #df765433, inset 0 0 34px #df76541c; background: linear-gradient(90deg, #100d13, #9f46332b 48%, #100d13); }
+.portal-hero-vista::after { content: ''; position: absolute; inset: auto 0 0; height: 47%; background: linear-gradient(0deg, #0b0c0f 5%, transparent), linear-gradient(90deg, transparent 15%, #281923 15.2% 21%, transparent 21.2% 76%, #251820 76.2% 82%, transparent 82.2%); clip-path: polygon(0 100%,0 62%,10% 62%,10% 33%,19% 33%,19% 70%,30% 70%,30% 48%,40% 48%,40% 100%,66% 100%,66% 52%,76% 52%,76% 24%,84% 24%,84% 66%,100% 66%,100% 100%); }
+.portal-hero-vista span { position: absolute; z-index: 1; bottom: 16%; height: 26%; width: 7%; border-top: 1px solid #d39a795e; background: repeating-linear-gradient(90deg, #c88d7130 0 1px, transparent 1px 12px), #110f14aa; }
+.portal-hero-vista span:nth-child(1) { left: 7%; height: 35%; }
+.portal-hero-vista span:nth-child(2) { left: 28%; height: 48%; }
+.portal-hero-vista span:nth-child(3) { right: 7%; height: 39%; }
+.portal-hero-vista i { position: absolute; z-index: 1; left: 48%; bottom: 0; width: 24%; height: 33%; border: 1px solid #d2a37975; border-bottom: 0; border-radius: 55% 55% 0 0; background: linear-gradient(90deg, #17151b, #4b2e2d, #111117); box-shadow: 0 -8px 30px #e28e4f21; }
+.portal-hero-copy { max-width: 790px; }
+.portal-hero h1 { text-shadow: 0 5px 36px #0b0c0f; }
+@media(max-width: 900px) { .portal-hero-vista { right: -70px; opacity: .55; } }
+@media(max-width: 560px) { .portal-hero-vista { width: 85vw; height: 310px; top: 35px; right: -34vw; opacity: .38; } .portal-hero-copy { max-width: 100%; } }
+
+.wow-class-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.wow-class-card { position: relative; flex-wrap: wrap; min-height: 104px; padding: 1rem 1.1rem; border-color: #566777; box-shadow: inset 0 1px #e2eaf10c, 0 8px 20px #0002; transition: transform 170ms, border-color 170ms, background 170ms; }
+.wow-class-card:hover { transform: translateY(-2px); border-color: var(--class-accent); background: linear-gradient(120deg, #222e3a, #11171e); }
+.wow-class-card > span, .wow-class-hero > span { position: relative; isolation: isolate; border-radius: 50%; box-shadow: 0 0 22px color-mix(in srgb, var(--class-accent) 20%, transparent), inset 0 0 15px color-mix(in srgb, var(--class-accent) 15%, transparent); font: 1.8rem Georgia, serif; }
+.wow-class-card > span::after, .wow-class-hero > span::after { content: ''; position: absolute; inset: 5px; z-index: -1; border: 1px solid color-mix(in srgb, var(--class-accent) 40%, transparent); border-radius: inherit; }
+.wow-class-card strong { font: 500 1.05rem Georgia, serif; }
+.wow-class-card small { flex-basis: 100%; margin: -.4rem 0 0 64px; max-width: unset; text-align: left; font-size: .77rem; }
+.wow-class-hero { position: relative; overflow: hidden; min-height: 180px; padding: clamp(1.4rem, 4vw, 2.5rem); background: radial-gradient(ellipse at 78% 28%, color-mix(in srgb, var(--class-accent) 16%, transparent), transparent 43%), linear-gradient(130deg, #223245, #11171f 72%); box-shadow: inset 0 1px #d8d9df16, 0 16px 30px #0003; }
+.wow-class-hero::after { content: ''; position: absolute; width: 210px; height: 210px; right: -35px; top: -70px; border: 1px solid color-mix(in srgb, var(--class-accent) 34%, transparent); border-radius: 50%; box-shadow: 0 0 0 18px color-mix(in srgb, var(--class-accent) 5%, transparent), 0 0 0 38px color-mix(in srgb, var(--class-accent) 4%, transparent); pointer-events: none; }
+.wow-class-hero > span { flex: 0 0 82px; width: 82px; height: 82px; border-radius: 50%; font-size: 2.3rem; }
+.wow-class-hero h2 { font-size: clamp(2rem, 4vw, 3.1rem); }
+.wow-detail-grid { gap: 1rem; margin-block: 1.2rem; }
+.wow-detail-grid article { min-height: 154px; padding: 1.35rem; border-color: #455969; box-shadow: inset 0 1px #dbe5ee0a; }
+.wow-detail-grid h3, .wow-subsection h3 { font-size: 1.25rem; }
+.wow-detail-grid p, .wow-detail-grid li { font-size: .91rem; line-height: 1.7; }
+.wow-detail-grid ul { display: grid; gap: .55rem; padding-left: 1.2rem; margin-top: .75rem; color: #c7d0d6; }
+.wow-unavailable { color: #a4b1ba !important; font-style: italic; }
+.wow-subsection { margin-block: 2rem; }
+.wow-subsection > h3, .wow-subsection-heading h3 { margin-bottom: .8rem; color: #e7d7b2; font: 500 1.55rem Georgia, serif; }
+.wow-subsection-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+.wow-spec-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .85rem; }
+.wow-spec-card { display: block; min-height: 160px; padding: 1.15rem; border: 1px solid #506273; background: linear-gradient(145deg, #192634, #10151b); text-decoration: none; transition: transform 170ms, border-color 170ms; }
+.wow-spec-card:hover { transform: translateY(-2px); border-color: var(--wow-gold); }
+.wow-spec-card > span { color: var(--wow-blue); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; }
+.wow-spec-card h3 { margin-top: .7rem; color: #eee2c4; font: 500 1.35rem Georgia, serif; }
+.wow-spec-card p { margin-top: .55rem; color: #b9c5ce; line-height: 1.55; }
+.wow-spec-card small { display: block; margin-top: .9rem; color: var(--wow-gold); font-size: .78rem; }
+.wow-race-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.wow-race-list > div { display: grid; grid-template-columns: 7rem 1fr; gap: .7rem; padding: .85rem 1rem; border: 1px solid #3e5060; background: #131a21; color: #c5cfd5; line-height: 1.5; }
+.wow-race-list strong { color: var(--wow-gold); }
+.wow-class-links { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.5rem; }
+.wow-class-links a, .wow-source-link a, .wow-build-overview a { color: var(--wow-blue); }
+.wow-class-links a { padding: .65rem .85rem; border: 1px solid #53687a; text-decoration: none; background: #121b25; }
+.wow-class-links a:hover { border-color: var(--wow-gold); }
+.wow-source-link { margin-top: 1.3rem; color: #aeb9c0; font-size: .8rem; }
+.wow-build-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; padding: 1.2rem; margin-block: 1rem; border: 1px solid #4d6272; background: #111923dd; }
+.wow-build-form label { display: grid; align-content: start; gap: .45rem; color: #e1d3b2; font-size: .84rem; }
+.wow-build-form input:not([type="checkbox"]), .wow-build-form select { width: 100%; min-height: 46px; padding: .65rem .75rem; border: 1px solid #566b7c; border-radius: 2px; color: #e5e9eb; background: #0d131a; font: inherit; }
+.wow-build-form :focus-visible { outline: 2px solid #e4cd8f; outline-offset: 2px; }
+.wow-build-form .wow-hardcore { display: flex; flex-wrap: wrap; align-items: center; color: #c1c8cd; }
+.wow-hardcore small { flex-basis: 100%; padding-left: 1.6rem; color: #9facb4; line-height: 1.5; }
+.wow-note { font-size: .9rem; }
+.wow-build-overview { max-width: 760px; padding: clamp(1.2rem, 4vw, 2rem); margin-block: 1rem; border: 1px solid var(--class-accent); background: linear-gradient(130deg, color-mix(in srgb, var(--class-accent) 11%, #131a22), #11161d); box-shadow: inset 0 1px #fff1; }
+.wow-build-overview h3 { margin-top: .55rem; color: #f0e4c7; font: 500 1.8rem Georgia, serif; }
+.wow-build-overview > p:not(.wow-eyebrow) { margin-top: .8rem; color: #c7d0d6; line-height: 1.65; }
+.wow-build-overview .wow-build-gap { padding: .9rem 1rem; border-left: 2px solid var(--class-accent); background: #070b1070; }
+.wow-build-overview > a { display: inline-block; margin-top: .8rem; }
+@media(max-width: 760px) { .wow-spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wow-build-form { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media(max-width: 500px) { .wow-spec-grid, .wow-build-form, .wow-race-list { grid-template-columns: 1fr; } .wow-class-hero { align-items: start; } .wow-class-hero > span { flex-basis: 60px; width: 60px; height: 60px; } .wow-race-list > div { grid-template-columns: 5.5rem 1fr; } }
+@media(prefers-reduced-motion: reduce) { .wow-class-card:hover, .wow-spec-card:hover { transform: none; } }
+.wow-talent-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; margin-block: 1.2rem; }
+.wow-talent-facts article { padding: 1.35rem; border: 1px solid #5d7181; background: linear-gradient(145deg, #1a2937, #10151c); }
+.wow-talent-facts article > span { color: var(--wow-gold); font-size: .7rem; letter-spacing: .15em; }
+.wow-talent-facts h3 { margin-top: .7rem; color: #eee0bb; font: 500 1.2rem Georgia, serif; }
+.wow-talent-facts p { margin-top: .55rem; color: #c1cbd1; line-height: 1.6; }
+.wow-build-faction { margin-block: .8rem; color: #b7d6e9; font-size: .85rem; }
+@media(max-width: 700px) { .wow-talent-facts { grid-template-columns: 1fr; } }
+
+/* Long-form Forever specialization field guide. */
+.enhancement-guide { --storm-ink: #0b131d; --storm-blue: #85c5ec; --storm-gold: #d8c184; color: #d6dfe5; }
+.enhancement-hero { position: relative; min-height: 360px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(290px, .85fr); border: 1px solid #627b8b; background: linear-gradient(120deg, #0b131a 24%, #14283a); box-shadow: 0 18px 36px #0005, inset 0 1px #fff1; }
+.enhancement-artwork { position: relative; min-height: 360px; margin: 0; overflow: hidden; }
+.enhancement-artwork img { width: 100%; height: 100%; min-height: 360px; display: block; object-fit: cover; object-position: center; }
+.enhancement-artwork::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 60%, #111922 100%), linear-gradient(0deg, #0d131bb0, transparent 32%); pointer-events: none; }
+.enhancement-artwork figcaption { position: absolute; z-index: 1; left: 1rem; bottom: .8rem; color: #c5d1d8; font-size: .68rem; text-shadow: 0 1px 5px #000; }
+.enhancement-hero-copy { align-self: center; padding: clamp(1.4rem, 3vw, 2.6rem); position: relative; z-index: 2; }
+.enhancement-hero-copy h2 { margin-top: .4rem; color: #f0e5c9; font: 500 clamp(2.6rem, 5vw, 4.4rem)/1.03 Georgia, serif; }
+.enhancement-hero-copy > p:not(.wow-eyebrow) { max-width: 42ch; margin-top: .9rem; color: #c7d3dc; font-size: 1rem; line-height: 1.7; }
+.enhancement-hero-facts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+.enhancement-hero-facts span, .wow-source-pill { padding: .4rem .65rem; border: 1px solid #607c90; color: #d9d0b4; background: #101d28; font-size: .76rem; }
+.wow-source-pill { display: inline-flex; margin-top: 1.1rem; color: var(--storm-blue); text-decoration: none; }
+.wow-source-pill:hover { border-color: var(--storm-gold); }
+.enhancement-section-nav { position: sticky; z-index: 3; top: .4rem; display: flex; flex-wrap: wrap; gap: .35rem; padding: .6rem; margin-block: 1rem 1.8rem; border: 1px solid #415566; background: #0d141deF; box-shadow: 0 8px 20px #0004; }
+.enhancement-section-nav a { min-height: 40px; display: inline-flex; align-items: center; padding: .5rem .7rem; color: #d2dce1; text-decoration: none; font-size: .8rem; }
+.enhancement-section-nav a:hover { color: #fff1cf; background: #233343; }
+.enhancement-section-nav a:focus-visible, .enhancement-guide a:focus-visible, .enhancement-guide summary:focus-visible { outline: 2px solid #f0d693; outline-offset: 2px; }
+.enhancement-section { scroll-margin-top: 5rem; margin-block: 2rem; padding: clamp(1rem, 2.6vw, 1.8rem); border: 1px solid #3d5162; background: linear-gradient(145deg, #141e28ee, #0e141bfa); box-shadow: inset 0 1px #fff1, 0 12px 30px #0002; }
+.enhancement-heading { max-width: 78ch; margin-bottom: 1.2rem; }
+.enhancement-heading h3 { margin-top: .35rem; color: #eee1bf; font: 500 clamp(1.45rem, 3vw, 2rem) Georgia, serif; }
+.enhancement-heading > p:not(.wow-eyebrow) { margin-top: .65rem; color: #b8c5ce; font-size: .92rem; line-height: 1.65; }
+.enhancement-pro-con, .enhancement-rotation-grid, .enhancement-route-grid, .enhancement-build-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+.enhancement-pro-con article, .enhancement-rotation-card, .enhancement-route-grid article, .enhancement-build-card { padding: 1.15rem; border: 1px solid #465b6c; background: linear-gradient(135deg, #1a2835, #111820); }
+.enhancement-pro-con h4, .enhancement-rotation-card h4, .enhancement-route-grid h3, .enhancement-build-card h3 { color: var(--storm-gold); font: 500 1.1rem Georgia, serif; }
+.enhancement-pro-con ul, .enhancement-rotation-card ul { display: grid; gap: .55rem; padding-left: 1.2rem; margin-top: .8rem; color: #c8d3da; line-height: 1.58; }
+.enhancement-level-control { display: grid; grid-template-columns: auto minmax(120px, 1fr) 3rem; align-items: center; gap: .9rem; padding: .85rem 1rem; border: 1px solid #526c7e; background: #0e1923; color: #e3d8b9; }
+.enhancement-level-control label { font-weight: 650; }
+.enhancement-level-control input { accent-color: #84c9f0; width: 100%; }
+.enhancement-level-control output { color: var(--storm-blue); text-align: right; font-variant-numeric: tabular-nums; }
+.enhancement-level-control > span { grid-column: 1 / -1; color: #b8c5ce; font-size: .82rem; }
+.enhancement-timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin-top: .9rem; }
+.enhancement-timeline article { position: relative; padding: 1rem; border-top: 2px solid #79acd0; background: #182430; }
+.enhancement-timeline article > span { color: #9bc9e7; font-size: .72rem; letter-spacing: .06em; }
+.enhancement-timeline h4 { margin-top: .45rem; color: #eadfbe; font: 500 1rem Georgia, serif; }
+.enhancement-timeline p { margin-top: .5rem; color: #c0ccd4; font-size: .84rem; line-height: 1.6; }
+.enhancement-talent-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+.enhancement-talent-table th, .enhancement-talent-table td { padding: .8rem .75rem; border-bottom: 1px solid #3b4d5c; text-align: left; vertical-align: top; }
+.enhancement-talent-table th { color: var(--storm-gold); font-size: .8rem; }
+.enhancement-talent-table td { color: #cad5dc; line-height: 1.55; }
+.enhancement-talent-table tr.is-upcoming { opacity: .6; }
+.enhancement-talent-table td small { display: block; color: #9eafb9; font-size: .75rem; }
+.enhancement-table-wrap { overflow-x: auto; border: 1px solid #3f5363; }
+.enhancement-ability { display: inline-flex; align-items: center; gap: .45rem; margin: .15rem .3rem .15rem 0; color: #e1e8ea; white-space: nowrap; }
+.enhancement-ability > span { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #6d9abd; color: #d8c987; background: radial-gradient(circle at 35% 30%, #7bb4d477, #182431 70%); box-shadow: inset 0 1px #fff2; font: 700 .65rem system-ui, sans-serif; }
+.enhancement-ability > strong { font-size: .85rem; font-weight: 600; }
+.enhancement-rotation-card { margin-block: .7rem; }
+.enhancement-rotation-card li { margin-block: .2rem; }
+.enhancement-utility-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.enhancement-utility-grid article { min-height: 118px; padding: 1rem; border: 1px solid #455a6a; background: #15212c; }
+.enhancement-utility-grid p { color: #c5d0d6; line-height: 1.58; }
+.enhancement-rune { display: block; margin-bottom: .45rem; color: var(--storm-blue); font-size: 1.1rem; }
+.enhancement-stat-list { display: grid; gap: .55rem; padding-left: 1.5rem; color: #d0d9df; line-height: 1.6; }
+.enhancement-provisional-label { display: block; margin-block: .8rem; padding: .75rem 1rem; border-left: 2px solid #d7ad65; color: #ddcca4; background: #33281755; line-height: 1.55; }
+.enhancement-quest-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; }
+.enhancement-quest-card { padding: 1rem; border: 1px solid #4c6070; background: linear-gradient(150deg, #1a2732, #10171e); }
+.enhancement-quest-card > span { color: var(--storm-blue); font-size: .73rem; }
+.enhancement-quest-card h3 { margin-top: .5rem; color: #ecdfbc; font: 500 1.05rem Georgia, serif; }
+.enhancement-quest-card p, .enhancement-quest-card small { display: block; margin-top: .5rem; color: #c2cdd3; line-height: 1.55; }
+.enhancement-quest-card small { color: #9eafb9; font-size: .78rem; }
+.enhancement-route-grid article h3 { margin-bottom: .65rem; }
+.enhancement-route-grid article p, .enhancement-route-grid li { color: #c5d0d6; font-size: .87rem; line-height: 1.65; }
+.enhancement-route-grid ul { padding-left: 1.2rem; columns: 2; }
+.enhancement-route-grid small { display: block; margin-top: .6rem; color: #a4b2ba; line-height: 1.55; }
+.enhancement-build-card > p:not(.wow-eyebrow) { margin-top: .6rem; color: #c4cfd5; line-height: 1.6; }
+.enhancement-build-card h3 { margin-top: .35rem; font-size: 1.25rem; }
+.enhancement-build-mode { color: #9fcae2 !important; font-size: .82rem; }
+.enhancement-build-card details { margin-top: .7rem; color: #c4cfd5; }
+.enhancement-build-card summary, .enhancement-sources summary { min-height: 42px; display: flex; align-items: center; cursor: pointer; color: var(--storm-gold); }
+.enhancement-build-card details ul { padding-left: 1.15rem; line-height: 1.6; }
+.enhancement-source-line { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; color: #a7cde2; font-size: .82rem; }
+.enhancement-source-line a { color: #9ecce8; }
+.enhancement-sources { margin-block: 1.2rem; padding: .75rem 1rem; border: 1px solid #405463; background: #111a22; }
+.enhancement-sources ul { display: grid; gap: .5rem; padding-left: 1.2rem; color: #b9c5cc; font-size: .82rem; line-height: 1.55; }
+.enhancement-sources a { color: #9ccbe6; }
+@media(max-width: 900px) { .enhancement-hero { grid-template-columns: 1fr; } .enhancement-artwork { min-height: 270px; max-height: 350px; } .enhancement-artwork img { min-height: 270px; } .enhancement-artwork::after { background: linear-gradient(0deg, #111922 0, transparent 40%); } .enhancement-hero-copy { margin-top: -1.4rem; } .enhancement-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); } .enhancement-quest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media(max-width: 600px) { .enhancement-pro-con, .enhancement-rotation-grid, .enhancement-route-grid, .enhancement-build-grid { grid-template-columns: 1fr; } .enhancement-utility-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .enhancement-timeline { grid-template-columns: 1fr; } .enhancement-quest-grid { grid-template-columns: 1fr; } .enhancement-level-control { grid-template-columns: 1fr auto; } .enhancement-level-control label { grid-column: 1 / -1; } .enhancement-section-nav { position: static; } .enhancement-route-grid ul { columns: 1; } }
+@media(prefers-reduced-motion: reduce) { .enhancement-guide *, .enhancement-guide *::before, .enhancement-guide *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }

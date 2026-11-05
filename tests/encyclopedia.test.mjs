@@ -7,6 +7,8 @@ import { test } from 'node:test';
 const root = resolve(import.meta.dirname, '..');
 const artworkManifest = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-dungeon-1-artwork.json'), 'utf8'));
 const pack = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-dungeon-1.json'), 'utf8'));
+const wowPack = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8'));
+const wowArtwork = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8'));
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
@@ -24,6 +26,8 @@ async function harness(failure = null, storageMode = 'available') {
         : selector === '[data-encyclopedia-filter]' ? extraFilters : []
     },
     fetch: async url => {
+      if (String(url).endsWith('world-of-warcraft-forever.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8')) };
+      if (String(url).endsWith('world-of-warcraft-forever-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8')) };
       if (String(url).endsWith('-artwork.json')) return { ok: true, json: async () => structuredClone(artworkManifest) };
       if (failure === 'network') throw new Error('Network unavailable');
       return { ok: failure !== 'http', status: 404, json: async () => {
@@ -112,7 +116,7 @@ test('location details use one main artwork and refreshed collections retain vis
   const locationHtml = h.app.renderEncyclopediaDetail('locations', ruins);
   assert.equal((locationHtml.match(/entry-art-locations/g) || []).length, 1, 'location detail should render one location artwork frame');
   assert.ok(locationHtml.includes('entry-art-locations entry-art-banner'));
-  assert.ok(locationHtml.includes('location-art-fallback'));
+  assert.ok(locationHtml.includes('Ruins'));
 
   const itemHtml = h.app.renderEncyclopediaCollection('items');
   const curioHtml = h.app.renderEncyclopediaCollection('curios');
@@ -128,7 +132,7 @@ test('location details use one main artwork and refreshed collections retain vis
 test('location guides organize linked expedition records and preserve recorded item and team links', () => {
   const ruins = pack.locations.find(record => record.routeId === 'ruins');
   const html = h.app.renderEncyclopediaDetail('locations', ruins);
-  for (const heading of ['Region overview', 'Main enemies & threats', 'Available bosses', 'Relevant curios', 'Useful provisions & interactions', 'Special mechanics', 'Related team compositions', 'Expedition preparation']) {
+  for (const heading of ['Region overview', 'Before You Enter', 'Enemies', 'Boss encounters', 'Curios', 'Team guides']) {
     assert.ok(html.replaceAll('&amp;', '&').includes(heading), `Ruins guide should include ${heading}`);
   }
   for (const [kind, routeId] of [['enemies', 'bone-soldier'], ['bosses', 'necromancer'], ['curios', 'alchemy-table'], ['items', 'medicinal-herbs']]) {
@@ -143,7 +147,7 @@ test('location guides organize linked expedition records and preserve recorded i
   const courtyard = pack.locations.find(record => record.routeId === 'courtyard');
   const courtyardHtml = h.app.renderEncyclopediaDetail('locations', courtyard);
   assert.ok(courtyardHtml.includes('DLC: The Crimson Court'));
-  assert.ok(courtyardHtml.includes('general-purpose compositions remain unassessed'));
+  assert.ok(courtyardHtml.includes('general-purpose Courtyard team guide yet'));
 });
 
 test('trinket index groups existing rarity metadata and shows verification and source status', () => {
@@ -1102,7 +1106,7 @@ test('Ruins curio cards link valid provisions and preserve sourced and uncertain
       }
     }
   }
-  assert.ok(html.includes('unassessed, not automatically harmful'));
+  assert.ok(html.includes('unknown, not necessarily harmful'));
   const fountain = pack.curios.find(record => record.routeId === 'holy-fountain');
   assert.ok(fountain.interactions.some(entry => entry.itemId?.endsWith(':holy-water') && entry.outcome.includes('12 HP') && entry.chance === '100%'));
   const changed = structuredClone(ruins);
@@ -1110,7 +1114,7 @@ test('Ruins curio cards link valid provisions and preserve sourced and uncertain
   const fakePack = structuredClone(pack);
   fakePack.curios.find(curio => curio.id === ruins.curioIds[0]).interactions[0].certainty = 'incomplete';
   const result = module.renderRegionalGuide(changed, fakePack, { escapeHtml: String, requirementLabel: () => 'Base game', renderBossCounterPreview: () => '', renderEntryArtwork: () => '' });
-  assert.ok(result.includes('Incomplete / unverified'));
+  assert.ok(result.includes('Outcome details incomplete'));
 });
 
 test('regional team classification does not promote boss counters or unassessed teams', () => {
@@ -1121,8 +1125,8 @@ test('regional team classification does not promote boss counters or unassessed 
   assert.equal(teams.bossSpecific.length, 3);
   assert.ok(teams.bossSpecific.every(team => team.boss.routeId === 'necromancer'));
   const html = h.app.renderEncyclopediaDetail('locations', ruins);
-  assert.ok(html.includes('No verified general-purpose Ruins composition'));
-  assert.ok(html.includes('not recommendations for every expedition'));
+  assert.ok(html.includes('general-purpose Ruins team guide yet'));
+  assert.ok(html.includes('not as a ready-made plan for every expedition'));
   assert.ok(html.includes('Starting strategy:'));
   assert.ok(html.includes('DLC: The Shieldbreaker'));
   for (const team of teams.bossSpecific) {
@@ -1150,4 +1154,87 @@ test('regional artwork falls back without private images and section navigation 
   const css = await readFile(resolve(root, 'dist/css/styles.css'), 'utf8');
   assert.ok(css.includes('@media (max-width: 950px) { .region-card-grid, .region-overview-facts { grid-template-columns: 1fr; } }'));
   assert.ok(css.includes('@media (prefers-reduced-motion: reduce) { .region-enemy-card'));
+});
+
+test('WoW: Forever landing, categories, nine classes, zones, and tier lists have working routes', () => {
+  const route = h.app.readRoute;
+  const render = h.app.renderPage;
+  assert.equal(route('#game/world-of-warcraft').view, 'wow-home');
+  const landing = render(route('#game/world-of-warcraft'));
+  for (const destination of ['classes', 'build-finder', 'talent-planner', 'tier-lists', 'leveling', 'dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(landing.includes(`#game/world-of-warcraft/${destination}`));
+  for (const item of wowPack.classes) {
+    const classRoute = route(`#game/world-of-warcraft/classes/${item.id}`);
+    assert.equal(classRoute.view, 'wow-class', item.id);
+    const classHtml = render(classRoute);
+    assert.ok(classHtml.includes(`<h2>${item.name}</h2>`));
+    assert.ok(classHtml.includes('Race and faction options'));
+    assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.sourceId).title));
+    for (const specialization of item.specializations) {
+      const href = `#game/world-of-warcraft/builds/${item.id}/${specialization.id}`;
+      assert.ok(classHtml.includes(href));
+      assert.equal(route(href).view, 'wow-build-detail');
+    }
+  }
+  assert.equal(route('#game/world-of-warcraft/classes/nonexistent').view, 'missing');
+  assert.ok(render(route('#game/world-of-warcraft/leveling')).includes('Zephras Isle'));
+  assert.ok(render(route('#game/world-of-warcraft/leveling')).includes('Skyborne characters'));
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const zephras = wowPack.zones.find(zone => zone.id === 'zephras-isle');
+  const riverglades = wowPack.zones.find(zone => zone.id === 'riverglades');
+  assert.equal(wowModule.matchesWowZoneFilters(zephras, 'Alliance', 8), true);
+  assert.equal(wowModule.matchesWowZoneFilters(zephras, 'Horde', 20), false);
+  assert.equal(wowModule.matchesWowZoneFilters(riverglades, 'Alliance', 60), true, 'unknown ranges remain visible');
+  assert.ok(render(route('#game/world-of-warcraft/tier-lists')).includes('Rankings under review'));
+  assert.equal(route('#game/world-of-warcraft/build-finder').view, 'wow-build-finder');
+  const finderModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const tankPaths = finderModule.renderWowBuildResults(wowPack, { classId: 'warrior', playstyle: 'dungeon-tank', specialization: 'all' }, String);
+  assert.ok(tankPaths.includes('Protection'));
+  assert.ok(!tankPaths.includes('Fury'));
+  assert.ok(tankPaths.includes('not complete talent builds'));
+  const soloPaths = finderModule.renderWowBuildResults(wowPack, { classId: 'warrior', playstyle: 'solo-leveling', level: '18', specialization: 'all', faction: 'Alliance' }, String);
+  assert.ok(soloPaths.includes('Arms'));
+  assert.ok(soloPaths.includes('No evidence-backed build mapping'));
+  assert.ok(soloPaths.includes('At level 18'));
+  assert.ok(soloPaths.includes('Human, Dwarf, Gnome, Night Elf, Skyborne'));
+  assert.equal(wowPack.buildProfiles.length, 0, 'no unverified point-by-point builds are presented');
+  assert.ok(wowPack.classes.every(item => item.specializations.length === 3 && wowPack.sources.some(source => source.id === item.sourceId)));
+  assert.ok(wowPack.talentSystem.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  assert.ok(wowPack.classes.every(item => item.specializations.every(spec => wowPack.sources.some(source => source.id === spec.sourceId))));
+  assert.ok(render(route('#game/world-of-warcraft/talent-planner')).includes('read-only'));
+  for (const category of ['dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(render(route(`#game/world-of-warcraft/${category}`)).includes('Guide in preparation'));
+  assert.equal(render(route('#game/world-of-warcraft/leveling')).includes('Levels null'), false);
+});
+
+test('Enhancement Shaman has a sourced, playable guide with honest talent and art fallbacks', async () => {
+  const route = h.app.readRoute('#game/world-of-warcraft/builds/shaman/enhancement');
+  assert.equal(route.view, 'wow-build-detail');
+  assert.equal(route.classRecord.id, 'shaman');
+  assert.equal(route.specialization.id, 'enhancement');
+  const html = h.app.renderPage(route);
+  for (const section of ['Solo leveling', 'Talent milestones', 'Live combat reference', 'Totems & utility', 'Leveling stat guide', 'Shaman totem quests', 'Faction areas and dungeon options', 'Level 60 priority reference']) assert.ok(html.includes(section), section);
+  for (const talent of ['Shamanistic Focus', 'Stormstrike', 'Improved Stormstrike', 'Mindfulness', 'Water Shield', 'Maelstrom Weapon']) assert.ok(html.includes(talent), talent);
+  for (const ability of ['Rockbiter Weapon', 'Windfury Weapon', 'Earth Shock', 'Fire Nova', 'Healing Wave', 'Totemic Recall']) assert.ok(html.includes(ability), ability);
+  for (const milestone of wowPack.enhancementGuide.talentMilestones) assert.ok(html.includes(`data-enhancement-milestone="${milestone.level}"`));
+  assert.ok(html.includes('Rank not specified in the source text'));
+  assert.ok(html.includes('Provisional') && html.includes('beta testing ended at level 30'));
+  assert.ok(html.includes('Call of Earth') && html.includes('Call of Fire') && html.includes('Call of Water') && html.includes('Call of Air'));
+  assert.ok(html.includes('Ragefire Chasm') && html.includes('Hall of Thanes'));
+  assert.ok(html.includes('Stormstrike anchors the rotation'));
+  for (const id of wowPack.enhancementGuide.sourceIds) {
+    const source = wowPack.sources.find(item => item.id === id);
+    assert.ok(source, `missing source ${id}`);
+    assert.equal(source.gameVersion, 'World of Warcraft: Forever');
+    assert.ok(source.updatedDate && source.confidence && source.url.startsWith('https://'));
+  }
+  assert.equal(wowPack.enhancementGuide.level60Builds.every(build => build.status === 'provisional'), true);
+  assert.equal(wowPack.enhancementGuide.levelRangeDisclosure.includes('without assigning unsupported level bands'), true);
+  for (const item of wowArtwork.records) {
+    assert.ok(item.provenance && item.usage);
+    assert.ok(await readFile(resolve(root, 'dist', item.src)));
+  }
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const fallback = wowModule.renderWowPage(route, wowPack, String, null);
+  assert.ok(fallback.includes('enhancement-art-fallback'));
+  assert.equal(fallback.includes('src=""'), false);
+  for (const href of ['#game/world-of-warcraft/classes/shaman', '#game/world-of-warcraft/talent-planner', '#game/world-of-warcraft/leveling', '#game/world-of-warcraft/dungeons-raids']) assert.notEqual(h.app.readRoute(href).view, 'missing', href);
 });

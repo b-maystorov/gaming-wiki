@@ -1,0 +1,1078 @@
+{
+  "id": "world-of-warcraft-forever",
+  "name": "World of Warcraft: Forever",
+  "version": "Launch foundation · November 2026",
+  "sources": [
+    {
+      "title": "Return to Azeroth in World of Warcraft: Forever",
+      "url": "https://news.blizzard.com/en-gb/article/24315643/return-to-azeroth-in-world-of-warcraft-forever",
+      "publisher": "Blizzard Entertainment",
+      "accessed": "2026-11-05"
+    },
+    {
+      "title": "World of Warcraft: Forever What’s Next Panel Recap",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24303862/world-of-warcraft-forever-whats-next",
+      "publisher": "Blizzard Entertainment",
+      "accessed": "2026-11-05"
+    },
+    {
+      "title": "Create the Hero You Want to Be in World of Warcraft: Forever",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24304075/create-the-hero-you-want-to-be-in-world-of-warcraft-forever",
+      "publisher": "Blizzard Entertainment",
+      "accessed": "2026-11-05"
+    },
+    {
+      "id": "classes-hunter-druid",
+      "title": "World of Warcraft: Forever Class Deep Dives — Hunter and Druid",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24301515/",
+      "publisher": "Blizzard Entertainment",
+      "published": "2026-09-30",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever"
+    },
+    {
+      "id": "classes-mage-shaman",
+      "title": "World of Warcraft: Forever Class Deep Dives — Mage and Shaman",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24302097/world-of-warcraft-forever-class-deep-dives-mage-and-shaman",
+      "publisher": "Blizzard Entertainment",
+      "published": "2026-10-07",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever"
+    },
+    {
+      "id": "classes-rogue-warlock",
+      "title": "World of Warcraft: Forever Class Deep Dives — Rogue and Warlock",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24310968/world-of-warcraft-forever-repaso-a-fondo-de-las-clases-p%C3%ADcaro-y-brujo",
+      "publisher": "Blizzard Entertainment",
+      "published": "2026-10-07",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever"
+    },
+    {
+      "id": "classes-priest-warrior",
+      "title": "World of Warcraft: Forever Class Deep Dives — Priest and Warrior",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24301514/world-of-warcraft-forever-class-deep-dives-priest-and-warrior",
+      "publisher": "Blizzard Entertainment",
+      "published": "2026-09-30",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever"
+    },
+    {
+      "id": "classes-paladin",
+      "title": "World of Warcraft: Forever Class Deep Dives — Paladin",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24302099",
+      "publisher": "Blizzard Entertainment",
+      "published": "2026-10-15",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever"
+    },
+    {
+      "id": "world-of-warcraft-forever-race-class",
+      "title": "Create the Hero You Want to Be in World of Warcraft: Forever",
+      "url": "https://worldofwarcraft.blizzard.com/en-us/news/24304075/create-the-hero-you-want-to-be-in-world-of-warcraft-forever",
+      "publisher": "Blizzard Entertainment",
+      "accessed": "2026-11-05",
+      "gameVersion": "World of Warcraft: Forever"
+    },
+    {
+      "id": "icy-enhancement-guide",
+      "title": "Enhancement Shaman Melee DPS Guide",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-melee-dps-pve-guide",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific launch guide; level-60 outlook is provisional because its beta testing only reached level 30."
+    },
+    {
+      "id": "icy-enhancement-leveling",
+      "title": "Enhancement Shaman Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-leveling",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-03",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific guide; lower-level recommendations draw on beta testing and may change after launch."
+    },
+    {
+      "id": "icy-enhancement-talents",
+      "title": "Enhancement Shaman Builds and Talents",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-melee-dps-pve-spec-builds-talents",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-03",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "The source explicitly marks level-60 builds provisional because beta testing stopped at level 30."
+    },
+    {
+      "id": "icy-enhancement-rotation",
+      "title": "Enhancement Shaman Rotation and Abilities",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-melee-dps-pve-rotation-cooldowns-abilities",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific guide; follow the level-60 rotation only after acquiring its referenced talents."
+    },
+    {
+      "id": "icy-enhancement-stats",
+      "title": "Enhancement Shaman Stat Priority",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-melee-dps-pve-stat-priority",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-03",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "The source calls its level-60 stat ordering speculative because beta gear availability was incomplete."
+    },
+    {
+      "id": "icy-shaman-quests",
+      "title": "Shaman Class Quests",
+      "url": "https://www.icy-veins.com/wow-forever/shaman-class-quests",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-10-31",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific quest guide; some chains differ by faction and race."
+    }
+  ],
+  "classes": [
+    {
+      "id": "warrior",
+      "name": "Warrior",
+      "roles": [
+        "Damage",
+        "Tank"
+      ],
+      "specializations": [
+        {
+          "id": "arms",
+          "name": "Arms",
+          "role": "Damage",
+          "focus": "Weapon-focused melee combat.",
+          "sourceId": "classes-priest-warrior"
+        },
+        {
+          "id": "fury",
+          "name": "Fury",
+          "role": "Damage",
+          "focus": "Aggressive melee damage.",
+          "sourceId": "classes-priest-warrior"
+        },
+        {
+          "id": "protection",
+          "name": "Protection",
+          "role": "Tank",
+          "focus": "Frontline tanking.",
+          "sourceId": "classes-priest-warrior"
+        }
+      ],
+      "color": "#b96c5a",
+      "description": "A durable, hard-hitting frontline fighter who uses Rage, stances and weapon mastery.",
+      "strengths": [
+        "Can serve as either a tank or damage dealer.",
+        "Strong sustained damage against multiple melee targets.",
+        "Brings class-specific group buffs and debuffs."
+      ],
+      "limitations": [
+        "Has limited tools for recovering after taking heavy damage."
+      ],
+      "soloTips": [
+        "Plan recovery between difficult fights; Warriors have limited self-recovery tools."
+      ],
+      "groupUtility": [
+        "Can tank or deal damage.",
+        "Provides distinctive group buffs and debuffs."
+      ],
+      "abilities": [
+        "Rage",
+        "Stances",
+        "Taunt"
+      ],
+      "sourceId": "classes-priest-warrior"
+    },
+    {
+      "id": "paladin",
+      "name": "Paladin",
+      "roles": [
+        "Damage",
+        "Tank",
+        "Healing"
+      ],
+      "specializations": [
+        {
+          "id": "holy",
+          "name": "Holy",
+          "role": "Healing",
+          "focus": "Single-target healing, group support and spell-focused damage.",
+          "sourceId": "classes-paladin"
+        },
+        {
+          "id": "protection",
+          "name": "Protection",
+          "role": "Tank",
+          "focus": "Threat, mana and survival options.",
+          "sourceId": "classes-paladin"
+        },
+        {
+          "id": "retribution",
+          "name": "Retribution",
+          "role": "Damage",
+          "focus": "Weapon attacks blended with Holy damage.",
+          "sourceId": "classes-paladin"
+        }
+      ],
+      "color": "#d6b873",
+      "description": "A versatile champion whose Seals and Judgements support melee combat, healing and protection.",
+      "strengths": [
+        "Holy supports single-target healing, group support and spell-focused damage.",
+        "Protection develops threat, mana and survival tools.",
+        "Retribution blends weapon attacks with Holy damage."
+      ],
+      "limitations": [],
+      "soloTips": [],
+      "groupUtility": [
+        "Holy healing and group support.",
+        "Protection tanking."
+      ],
+      "abilities": [
+        "Seals",
+        "Judgements"
+      ],
+      "sourceId": "classes-paladin"
+    },
+    {
+      "id": "hunter",
+      "name": "Hunter",
+      "roles": [
+        "Damage"
+      ],
+      "specializations": [
+        {
+          "id": "beast-mastery",
+          "name": "Beast Mastery",
+          "role": "Damage",
+          "focus": "Pet-focused play.",
+          "sourceId": "classes-hunter-druid"
+        },
+        {
+          "id": "marksmanship",
+          "name": "Marksmanship",
+          "role": "Damage",
+          "focus": "Ranged precision.",
+          "sourceId": "classes-hunter-druid"
+        },
+        {
+          "id": "survival",
+          "name": "Survival",
+          "role": "Damage",
+          "focus": "Trap and melee options.",
+          "sourceId": "classes-hunter-druid"
+        }
+      ],
+      "color": "#92ae70",
+      "description": "A ranged fighter supported by a loyal pet, with options built around precision, traps and melee tools.",
+      "strengths": [
+        "Pets gain broader ability access, family abilities and gear scaling.",
+        "Traps can be used during combat."
+      ],
+      "limitations": [],
+      "soloTips": [
+        "A pet-focused specialization is available; the source does not rank leveling builds."
+      ],
+      "groupUtility": [
+        "Ranged damage and a combat toolkit that includes traps."
+      ],
+      "abilities": [
+        "Aimed Shot (baseline at level 20)",
+        "Traps"
+      ],
+      "sourceId": "classes-hunter-druid"
+    },
+    {
+      "id": "rogue",
+      "name": "Rogue",
+      "roles": [
+        "Damage"
+      ],
+      "specializations": [
+        {
+          "id": "assassination",
+          "name": "Assassination",
+          "role": "Damage",
+          "focus": "Poisons, finishers and precise attacks.",
+          "sourceId": "classes-rogue-warlock"
+        },
+        {
+          "id": "combat",
+          "name": "Combat",
+          "role": "Damage",
+          "focus": "Weapon-focused combat options.",
+          "sourceId": "classes-rogue-warlock"
+        },
+        {
+          "id": "subtlety",
+          "name": "Subtlety",
+          "role": "Damage",
+          "focus": "Stealth, control and combat tricks.",
+          "sourceId": "classes-rogue-warlock"
+        }
+      ],
+      "color": "#b9b46f",
+      "description": "A precise combatant who uses stealth, control, poisons and weapon attacks to create openings.",
+      "strengths": [
+        "Forever updates expand poison use and weapon options.",
+        "Specialization paths support daggers, other weapon types, finishers, bleeds and combat tricks."
+      ],
+      "limitations": [],
+      "soloTips": [],
+      "groupUtility": [
+        "Stealth, control and poison utility."
+      ],
+      "abilities": [
+        "Stealth",
+        "Poisons"
+      ],
+      "sourceId": "classes-rogue-warlock"
+    },
+    {
+      "id": "priest",
+      "name": "Priest",
+      "roles": [
+        "Damage",
+        "Healing"
+      ],
+      "specializations": [
+        {
+          "id": "discipline",
+          "name": "Discipline",
+          "role": "Healing",
+          "focus": "Healing and defensive spell options.",
+          "sourceId": "classes-priest-warrior"
+        },
+        {
+          "id": "holy",
+          "name": "Holy",
+          "role": "Healing",
+          "focus": "Direct and group healing.",
+          "sourceId": "classes-priest-warrior"
+        },
+        {
+          "id": "shadow",
+          "name": "Shadow",
+          "role": "Damage",
+          "focus": "Shadow damage and control.",
+          "sourceId": "classes-priest-warrior"
+        }
+      ],
+      "color": "#c1c7cd",
+      "description": "A cloth-wearing spellcaster who supports allies with healing and buffs or turns to damaging magic.",
+      "strengths": [
+        "Supports allies through buffs and healing.",
+        "Holy and Discipline include healing tools; Shadow provides a damage path."
+      ],
+      "limitations": [
+        "Wears cloth armor and has few ways to escape enemies."
+      ],
+      "soloTips": [
+        "Limited escape tools make positioning and avoiding unwanted enemies useful considerations."
+      ],
+      "groupUtility": [
+        "Healing and buffs strengthen party members."
+      ],
+      "abilities": [
+        "Penance (damage or healing)",
+        "Power Word: Shield"
+      ],
+      "sourceId": "classes-priest-warrior"
+    },
+    {
+      "id": "shaman",
+      "name": "Shaman",
+      "roles": [
+        "Damage",
+        "Healing"
+      ],
+      "specializations": [
+        {
+          "id": "elemental",
+          "name": "Elemental",
+          "role": "Damage",
+          "focus": "Elemental spell damage.",
+          "sourceId": "classes-mage-shaman"
+        },
+        {
+          "id": "enhancement",
+          "name": "Enhancement",
+          "role": "Damage",
+          "focus": "Melee and weapon-based combat.",
+          "sourceId": "classes-mage-shaman"
+        },
+        {
+          "id": "restoration",
+          "name": "Restoration",
+          "role": "Healing",
+          "focus": "Healing and totem support.",
+          "sourceId": "classes-mage-shaman"
+        }
+      ],
+      "color": "#73a8da",
+      "description": "An adaptable elemental combatant whose totems provide buffs, healing and utility.",
+      "strengths": [
+        "Can deal melee or spell damage and heal.",
+        "Mail armor and shields contribute to its sturdier class toolkit."
+      ],
+      "limitations": [
+        "The official overview describes limited crowd control."
+      ],
+      "soloTips": [],
+      "groupUtility": [
+        "Totems provide buffs, healing and utility.",
+        "Can fill damage or healing roles."
+      ],
+      "abilities": [
+        "Totemic Recall",
+        "Totemic Projection",
+        "Call spells"
+      ],
+      "sourceId": "classes-mage-shaman"
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "roles": [
+        "Damage"
+      ],
+      "specializations": [
+        {
+          "id": "arcane",
+          "name": "Arcane",
+          "role": "Damage",
+          "focus": "Arcane spellcraft and mana-focused choices.",
+          "sourceId": "classes-mage-shaman"
+        },
+        {
+          "id": "fire",
+          "name": "Fire",
+          "role": "Damage",
+          "focus": "Fire damage and critical-strike interactions.",
+          "sourceId": "classes-mage-shaman"
+        },
+        {
+          "id": "frost",
+          "name": "Frost",
+          "role": "Damage",
+          "focus": "Damage with strong control tools.",
+          "sourceId": "classes-mage-shaman"
+        }
+      ],
+      "color": "#7ec1d8",
+      "description": "A fragile ranged spellcaster who chooses among Arcane, Fire and Frost tools.",
+      "strengths": [
+        "Offers ranged single-target and area damage.",
+        "Polymorph provides crowd control.",
+        "Can provide party buffs and conjured food and water."
+      ],
+      "limitations": [
+        "Fragile when caught in melee combat."
+      ],
+      "soloTips": [
+        "Frost offers combat control; the official overview does not rank a leveling build."
+      ],
+      "groupUtility": [
+        "Polymorph, party buffs, and conjured food and water."
+      ],
+      "abilities": [
+        "Polymorph",
+        "Frostfire Bolt (learned at level 40)"
+      ],
+      "sourceId": "classes-mage-shaman"
+    },
+    {
+      "id": "warlock",
+      "name": "Warlock",
+      "roles": [
+        "Damage"
+      ],
+      "specializations": [
+        {
+          "id": "affliction",
+          "name": "Affliction",
+          "role": "Damage",
+          "focus": "Damage-over-time and draining effects.",
+          "sourceId": "classes-rogue-warlock"
+        },
+        {
+          "id": "demonology",
+          "name": "Demonology",
+          "role": "Damage",
+          "focus": "Demon synergies.",
+          "sourceId": "classes-rogue-warlock"
+        },
+        {
+          "id": "destruction",
+          "name": "Destruction",
+          "role": "Damage",
+          "focus": "Shadow and Fire combinations.",
+          "sourceId": "classes-rogue-warlock"
+        }
+      ],
+      "color": "#9f83c7",
+      "description": "A spellcaster who combines Shadow and Fire magic with demonic allies.",
+      "strengths": [
+        "Forever specializations support damage-over-time, demon synergies, and Shadow/Fire combinations.",
+        "Pets scale with their master’s stats."
+      ],
+      "limitations": [
+        "Physically weak and relies on demon pets for protection."
+      ],
+      "soloTips": [
+        "Demon pets can help protect the Warlock; no comparative leveling ranking is published here."
+      ],
+      "groupUtility": [
+        "Demon pets and class-specific curses/banes."
+      ],
+      "abilities": [
+        "Soul Fire",
+        "Incinerate (31-point Destruction talent)"
+      ],
+      "sourceId": "classes-rogue-warlock"
+    },
+    {
+      "id": "druid",
+      "name": "Druid",
+      "roles": [
+        "Damage",
+        "Tank",
+        "Healing"
+      ],
+      "specializations": [
+        {
+          "id": "balance",
+          "name": "Balance",
+          "role": "Damage",
+          "focus": "Spellcasting and nature magic.",
+          "sourceId": "classes-hunter-druid"
+        },
+        {
+          "id": "feral",
+          "name": "Feral",
+          "role": "Tank / Damage",
+          "focus": "Form-based melee and tanking.",
+          "sourceId": "classes-hunter-druid"
+        },
+        {
+          "id": "restoration",
+          "name": "Restoration",
+          "role": "Healing",
+          "focus": "Nature-based healing.",
+          "sourceId": "classes-hunter-druid"
+        }
+      ],
+      "color": "#d69154",
+      "description": "A nature-focused class with adaptable forms and distinct spellcasting, melee and healing paths.",
+      "strengths": [
+        "Feral supports form-based melee and tanking approaches.",
+        "Balance provides a spellcasting damage path.",
+        "Restoration focuses on healing."
+      ],
+      "limitations": [],
+      "soloTips": [],
+      "groupUtility": [
+        "Can approach combat through damage, tanking or healing paths."
+      ],
+      "abilities": [
+        "Druid forms",
+        "Nature magic"
+      ],
+      "sourceId": "classes-hunter-druid"
+    }
+  ],
+  "zones": [
+    {
+      "id": "zephras-isle",
+      "name": "Zephras Isle",
+      "range": "1–12",
+      "faction": "Both",
+      "access": "Skyborne starting zone",
+      "new": true
+    },
+    {
+      "id": "riverglades",
+      "name": "Riverglades",
+      "range": null,
+      "faction": "Both",
+      "access": null,
+      "new": true
+    },
+    {
+      "id": "shendralas",
+      "name": "Shen'dralas",
+      "range": null,
+      "faction": "Both",
+      "access": null,
+      "new": true
+    },
+    {
+      "id": "mount-hyjal",
+      "name": "Mount Hyjal",
+      "range": null,
+      "faction": "Both",
+      "access": "Story access details not yet documented",
+      "new": true
+    },
+    {
+      "id": "elwynn-forest",
+      "name": "Elwynn Forest",
+      "range": null,
+      "faction": "Alliance",
+      "access": null,
+      "new": false
+    },
+    {
+      "id": "durotar",
+      "name": "Durotar",
+      "range": null,
+      "faction": "Horde",
+      "access": null,
+      "new": false
+    },
+    {
+      "id": "westfall",
+      "name": "Westfall",
+      "range": null,
+      "faction": "Alliance",
+      "access": null,
+      "new": false
+    },
+    {
+      "id": "the-barrens",
+      "name": "The Barrens",
+      "range": null,
+      "faction": "Horde",
+      "access": null,
+      "new": false
+    },
+    {
+      "id": "darkshore",
+      "name": "Darkshore",
+      "range": null,
+      "faction": "Alliance",
+      "access": null,
+      "new": false
+    },
+    {
+      "id": "silverpine-forest",
+      "name": "Silverpine Forest",
+      "range": null,
+      "faction": "Horde",
+      "access": null,
+      "new": false
+    },
+    {
+      "id": "redridge-mountains",
+      "name": "Redridge Mountains",
+      "range": null,
+      "faction": "Alliance",
+      "access": null,
+      "new": false
+    },
+    {
+      "id": "stonetalon-mountains",
+      "name": "Stonetalon Mountains",
+      "range": null,
+      "faction": "Both",
+      "access": null,
+      "new": false
+    }
+  ],
+  "tierCategories": [
+    "Leveling",
+    "DPS",
+    "Tanks",
+    "Healing",
+    "PvP"
+  ],
+  "rankings": [],
+  "rankingFields": [
+    "tier",
+    "classId",
+    "specialization",
+    "role",
+    "strengths",
+    "limitations",
+    "gameVersion",
+    "lastUpdated"
+  ],
+  "specialAccess": "Skyborne characters and the Zephras Isle starting experience require the Heroic Pack or higher.",
+  "classNotes": "Specialization roles and Forever identities are drawn from linked Blizzard deep-dives. Enhancement Shaman also has a dedicated, current Forever leveling and combat guide. Other class pages remain concise reference pages until class-specific play guides are researched.",
+  "raceCombinations": {
+    "Alliance": {
+      "Human": [
+        "Hunter",
+        "Mage",
+        "Paladin",
+        "Priest",
+        "Rogue",
+        "Warlock",
+        "Warrior"
+      ],
+      "Dwarf": [
+        "Hunter",
+        "Paladin",
+        "Priest",
+        "Rogue",
+        "Shaman",
+        "Warrior"
+      ],
+      "Gnome": [
+        "Mage",
+        "Priest",
+        "Rogue",
+        "Warlock",
+        "Warrior"
+      ],
+      "Night Elf": [
+        "Druid",
+        "Hunter",
+        "Priest",
+        "Rogue",
+        "Warrior"
+      ],
+      "Skyborne": [
+        "Druid",
+        "Hunter",
+        "Mage",
+        "Rogue",
+        "Warrior"
+      ]
+    },
+    "Horde": {
+      "Orc": [
+        "Hunter",
+        "Mage",
+        "Rogue",
+        "Shaman",
+        "Warlock",
+        "Warrior"
+      ],
+      "Tauren": [
+        "Druid",
+        "Hunter",
+        "Shaman",
+        "Warrior"
+      ],
+      "Troll": [
+        "Hunter",
+        "Mage",
+        "Priest",
+        "Rogue",
+        "Shaman",
+        "Warlock",
+        "Warrior"
+      ],
+      "Undead": [
+        "Mage",
+        "Paladin",
+        "Priest",
+        "Rogue",
+        "Warlock",
+        "Warrior"
+      ],
+      "Skyborne": [
+        "Druid",
+        "Hunter",
+        "Rogue",
+        "Shaman",
+        "Warrior"
+      ]
+    }
+  },
+  "raceCombinationsSourceId": "world-of-warcraft-forever-race-class",
+  "playstyles": [
+    {
+      "id": "solo-leveling",
+      "label": "Solo leveling"
+    },
+    {
+      "id": "fast-questing",
+      "label": "Fast questing"
+    },
+    {
+      "id": "beginner-friendly",
+      "label": "Beginner-friendly"
+    },
+    {
+      "id": "dungeon-dps",
+      "label": "Dungeon DPS"
+    },
+    {
+      "id": "dungeon-tank",
+      "label": "Dungeon tank"
+    },
+    {
+      "id": "dungeon-healer",
+      "label": "Dungeon healer"
+    },
+    {
+      "id": "pvp",
+      "label": "PvP"
+    },
+    {
+      "id": "group-leveling",
+      "label": "Group leveling"
+    }
+  ],
+  "buildProfiles": [],
+  "buildProfileNote": "No complete, version-verified talent loadouts have been published in this guide yet. Use specialization pages as sourced class overviews; do not treat them as point-by-point builds.",
+  "talentSystem": {
+    "firstLevel": 10,
+    "milestones": [
+      11,
+      16,
+      21,
+      31
+    ],
+    "dualSpecializationLevel": 40,
+    "sourceIds": [
+      "classes-hunter-druid",
+      "classes-mage-shaman",
+      "classes-rogue-warlock",
+      "classes-priest-warrior",
+      "classes-paladin"
+    ],
+    "trees": []
+  },
+  "enhancementGuide": {
+    "classId": "shaman",
+    "specializationId": "enhancement",
+    "role": "Melee damage",
+    "sourceIds": [
+      "icy-enhancement-guide",
+      "icy-enhancement-leveling",
+      "icy-enhancement-talents",
+      "icy-enhancement-rotation",
+      "icy-enhancement-stats",
+      "icy-shaman-quests"
+    ],
+    "updateDate": "2026-11-04",
+    "artworkId": "enhancement-shaman-original",
+    "strengths": [
+      "High single-target burst once the core talents come online.",
+      "Strong area damage becomes available early.",
+      "Self-healing helps recover after difficult pulls.",
+      "Ghost Wolf supports travel; the leveling guide calls out improved mobility after level 20."
+    ],
+    "weaknesses": [
+      "Mana is a frequent constraint, especially before sustain talents.",
+      "Weapon upgrades matter greatly to melee damage.",
+      "The opening levels can feel slower before Stormstrike.",
+      "Several enemies at once can overwhelm the build."
+    ],
+    "talentMilestones": [
+      {
+        "level": 20,
+        "name": "Shamanistic Focus",
+        "kind": "talent",
+        "note": "The leveling guide calls this out for reducing Shock mana costs; it does not publish a rank in the text."
+      },
+      {
+        "level": 25,
+        "name": "Stormstrike",
+        "kind": "talent",
+        "note": "The guide recommends reaching the Enhancement core around this point and describes an optional respec at 25."
+      },
+      {
+        "level": 30,
+        "name": "Improved Stormstrike",
+        "kind": "talent",
+        "note": "The guide marks this as a Mana-sustain and cooldown-reset pickup; it does not publish a rank in the text."
+      },
+      {
+        "level": 30,
+        "name": "Windfury Weapon",
+        "kind": "ability",
+        "note": "The leveling guide identifies this as a major power spike at level 30; use Rockbiter Weapon before then."
+      },
+      {
+        "level": 38,
+        "name": "Mindfulness",
+        "kind": "talent",
+        "note": "The leveling guide recommends returning to Restoration for additional passive Mana sustain."
+      },
+      {
+        "level": 42,
+        "name": "Water Shield",
+        "kind": "talent",
+        "note": "The guide lists this as a further Mana return option."
+      }
+    ],
+    "additionalTalents": [
+      "Spirit Weapons",
+      "Improved Ghost Wolf",
+      "Mental Dexterity",
+      "Mental Quickness",
+      "Maelstrom Weapon",
+      "Rage of the Farseer",
+      "Trial by Fire",
+      "Elemental Devastation",
+      "Elemental Focus",
+      "Call of Flame",
+      "Tidal Focus"
+    ],
+    "levelingRotation": [
+      {
+        "title": "Keep ready",
+        "items": [
+          "Before level 30, use Rockbiter Weapon; from level 30, the leveling guide recommends Windfury Weapon.",
+          "Apply Lightning Shield between pulls.",
+          "Place only the totems useful for the next fight; totems stay where placed."
+        ]
+      },
+      {
+        "title": "During a pull",
+        "items": [
+          "Use a low-rank Lightning Bolt to pull a distant enemy when helpful.",
+          "Use Stormstrike on cooldown once learned; respond to Improved Stormstrike resets once talented.",
+          "Use Earth Shock for damage or to interrupt a spellcaster.",
+          "Use Flame Shock on multiple enemies; use Frost Shock when threat is a concern.",
+          "Use Fire Nova when a Fire Totem is active and Mana allows; otherwise keep attacking.",
+          "Heal with Healing Wave after a pull and drink when Mana is low."
+        ]
+      }
+    ],
+    "singleTargetRotation": [
+      "Keep Magma Totem active; use Searing Totem when Mana is tight.",
+      "Keep Flame Shock active.",
+      "Use Rage of the Farseer when talented, for priority targets or a planned burst window.",
+      "Use Stormstrike on its six-second cycle.",
+      "Cast Lightning Bolt when Maelstrom Weapon reaches five stacks; avoid spending fewer stacks because it can reset the swing timer.",
+      "Use Earth Shock; use Fire Nova with a Fire Totem active when Mana permits."
+    ],
+    "aoeRotation": [
+      "Keep a Fire Totem active and use Fire Nova on its cycle.",
+      "Spread Flame Shock across targets.",
+      "Use Rage of the Farseer when talented.",
+      "Use Stormstrike and Earth Shock between Fire Nova casts.",
+      "Spend Maelstrom Weapon at five stacks when talented.",
+      "AoE is Mana intensive; reduce optional casts when resources run low."
+    ],
+    "precombat": [
+      "Use the recommended weapon imbue for your level/build.",
+      "Apply Lightning Shield.",
+      "For a group, the guide lists Strength of Earth, a Fire Totem, Mana Spring, and Windfury Totem as the baseline set; trade Magma for Searing if Mana is limited."
+    ],
+    "utility": [
+      "Strength of Earth Totem for group Strength; Stoneskin Totem when physical defense matters.",
+      "Windfury Totem for groups; Grounding Totem against spellcasters.",
+      "Earthbind Totem for slowing nearby threats; Tremor Totem for Fear, Charm, and Sleep.",
+      "Totemic Recall can recover Mana when moving and replacing totems.",
+      "Healing Wave for efficient recovery between pulls."
+    ],
+    "levelingStats": [
+      "Weapon DPS first; prefer a slow two-handed weapon (the guide suggests approximately 3.3–3.8 speed).",
+      "Intellect for Mana and talent scaling.",
+      "Strength for melee damage, especially before Intellect scaling improves.",
+      "Spirit becomes more useful for Mana sustain after Improved Stormstrike or Mindfulness.",
+      "Agility and Stamina are situational secondary choices."
+    ],
+    "endgameStats": [
+      "Weapon DPS, Hit Chance, Expertise, Intellect, Strength, then Spell Power."
+    ],
+    "quests": [
+      {
+        "name": "Call of Earth",
+        "level": 4,
+        "reward": "Earth Totem; the Dwarf route also lists Stoneskin Totem.",
+        "note": "The level 4 details cited are for Dwarf Shaman; other race routes differ."
+      },
+      {
+        "name": "Call of Fire",
+        "level": 10,
+        "reward": "Fire Totem; the Dwarf route lists Searing Totem.",
+        "note": "Icy Veins says this can be picked up from any Shaman Trainer."
+      },
+      {
+        "name": "Call of Water",
+        "level": 20,
+        "reward": "Water Totem.",
+        "note": "The guide recommends fitting this longer travel chain between other quests."
+      },
+      {
+        "name": "Call of Air",
+        "level": null,
+        "reward": "Air Totem.",
+        "note": "The leveling guide says this involves a Razorfen Kraul run and travel through multiple zones; race-specific details vary."
+      }
+    ],
+    "factionAreas": {
+      "Alliance": [
+        "Loch Modan",
+        "Westfall",
+        "Darkshore",
+        "Redridge Mountains",
+        "Duskwood",
+        "Ashenvale",
+        "The Wetlands"
+      ],
+      "Horde": [
+        "The Barrens",
+        "Silverpine Forest",
+        "Stonetalon Mountains",
+        "Ashenvale",
+        "Hillsbrad Foothills",
+        "Thousand Needles"
+      ]
+    },
+    "dungeons": {
+      "Alliance": [
+        "Hall of Thanes",
+        "The Deadmines",
+        "The Stockade",
+        "Blackfathom Deeps",
+        "Excavation Site: Wetlands",
+        "City of Dalaran"
+      ],
+      "Horde": [
+        "Ragefire Chasm",
+        "Ruins of Lordaeron",
+        "Wailing Caverns",
+        "Shadowfang Keep",
+        "Blackfathom Deeps",
+        "City of Dalaran",
+        "Razorfen Kraul"
+      ]
+    },
+    "level60Builds": [
+      {
+        "id": "enhancement-standard-pve",
+        "name": "Standard Level 60 PvE",
+        "modes": [
+          "Raid PvE"
+        ],
+        "status": "provisional",
+        "summary": "Stormstrike and Improved Stormstrike form the core; the source also recommends Maelstrom Weapon, Rage of the Farseer, and Elemental picks including Elemental Devastation and Trial by Fire. Improved Ghost Wolf is optional; the source suggests two Tidal Focus points if skipped.",
+        "alternatives": [
+          "Windfury Weapon is the source’s default imbue. Rockbiter may be preferable if Totem mechanics favor it; this remains unresolved in the source.",
+          "A Flametongue dagger setup is described as a possibility, not a verified recommendation."
+        ]
+      },
+      {
+        "id": "enhancement-solo-dungeon-pve",
+        "name": "Solo and small-group Level 60",
+        "modes": [
+          "Solo",
+          "Dungeons",
+          "Small groups"
+        ],
+        "status": "provisional",
+        "summary": "Trades deep Enhancement talents Maelstrom Weapon and Rage of the Farseer for more Mana sustain through Mindfulness while retaining Trial by Fire.",
+        "alternatives": [
+          "The source frames this as an option when Judgement of Wisdom support is unreliable and Mana is a problem."
+        ]
+      }
+    ],
+    "levelRangeDisclosure": "The linked leveling guide contains a faction- and level-sensitive zone/dungeon tool. Its exact slider output is not included in this record, so these area names are shown without assigning unsupported level bands.",
+    "talentRankDisclosure": "The public guide text names recommended talents but does not expose all selected ranks or full point-by-point tree strings. Rank values are intentionally omitted; use the linked talent build for the current tree image.",
+    "endgameDisclosure": "The talent source says beta testing ended at level 30; both level-60 loadouts and endgame stat ordering are provisional and may change after launch."
+  }
+}
