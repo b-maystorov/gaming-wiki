@@ -1411,6 +1411,43 @@ test('WoW specialization heroes keep game icons separate from original artwork',
   assert.ok(restoration.includes('assets/images/wow-forever/restoration-shaman.svg'));
 });
 
+test('WoW class and specialization pages link related guide cards only to implemented sibling routes', () => {
+  const sectionLinks = html => {
+    const section = html.match(/<section class="wow-related-guides"[\s\S]*?<\/section>/)?.[0];
+    assert.ok(section, 'page renders the reusable Related Guides section');
+    const links = [...section.matchAll(/<a class="wow-related-guide-card" href="([^"]+)"/g)].map(match => match[1]);
+    assert.equal(new Set(links).size, links.length, 'the section does not repeat destinations');
+    assert.ok(section.includes('wow-related-guide-copy') && section.includes('Browse the existing zone directory'));
+    for (const href of links) assert.notEqual(h.app.readRoute(href).view, 'missing', `unimplemented related route: ${href}`);
+    return { section, links };
+  };
+
+  for (const classRecord of wowPack.classes) {
+    const classHtml = h.app.renderPage(h.app.readRoute(`#game/world-of-warcraft/classes/${classRecord.id}`));
+    const classSection = sectionLinks(classHtml);
+    assert.ok(classSection.links.includes('#game/world-of-warcraft/talent-planner'));
+    const classPlannerAnchor = classSection.section.match(/<a class="wow-related-guide-card" href="#game\/world-of-warcraft\/talent-planner"([^>]*)>/)?.[1] || '';
+    assert.match(classPlannerAnchor, new RegExp(`data-wow-build-class="${classRecord.id}"`), 'planner link carries the relevant class selection');
+    assert.ok(classSection.links.includes('#game/world-of-warcraft/leveling'));
+    assert.ok(!classSection.links.includes(`#game/world-of-warcraft/classes/${classRecord.id}`), 'class overview does not link to itself');
+    for (const spec of classRecord.specializations) assert.ok(classSection.links.includes(`#game/world-of-warcraft/builds/${classRecord.id}/${spec.id}`));
+
+    for (const spec of classRecord.specializations) {
+      const specRoute = h.app.readRoute(`#game/world-of-warcraft/builds/${classRecord.id}/${spec.id}`);
+      const specSection = sectionLinks(h.app.renderPage(specRoute));
+      assert.ok(specSection.links.includes(`#game/world-of-warcraft/classes/${classRecord.id}`));
+      assert.ok(specSection.links.includes('#game/world-of-warcraft/talent-planner'));
+      const plannerAnchor = specSection.section.match(/<a class="wow-related-guide-card" href="#game\/world-of-warcraft\/talent-planner"([^>]*)>/)?.[1] || '';
+      assert.match(plannerAnchor, new RegExp(`data-wow-build-spec="${spec.id}"`), 'planner link carries the current specialization');
+      assert.ok(specSection.links.includes('#game/world-of-warcraft/leveling'));
+      assert.ok(!specSection.links.includes(`#game/world-of-warcraft/builds/${classRecord.id}/${spec.id}`), 'specialization pages do not link to themselves');
+      for (const otherSpec of classRecord.specializations.filter(item => item.id !== spec.id)) {
+        assert.ok(specSection.links.includes(`#game/world-of-warcraft/builds/${classRecord.id}/${otherSpec.id}`));
+      }
+    }
+  }
+});
+
 test('Enhancement Shaman has a sourced, playable guide with honest talent and art fallbacks', async () => {
   const route = h.app.readRoute('#game/world-of-warcraft/builds/shaman/enhancement');
   assert.equal(route.view, 'wow-build-detail');

@@ -300,6 +300,25 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-class-links a, .wow-source-link a, .wow-build-overview a { color: var(--wow-blue); }
 .wow-class-links a { padding: .65rem .85rem; border: 1px solid #53687a; text-decoration: none; background: #121b25; }
 .wow-class-links a:hover { border-color: var(--wow-gold); }
+.wow-related-guides { margin:1.5rem 0; padding:1.15rem; border:1px solid color-mix(in srgb,var(--class-accent) 54%,#536779); background:radial-gradient(ellipse at 100% 0,color-mix(in srgb,var(--class-accent) 12%,transparent),transparent 42%),linear-gradient(145deg,#151f28,#0c1218); box-shadow:inset 0 1px #d8e0e50c,0 12px 26px #0003; }
+.wow-related-guides-heading { margin-bottom:.8rem; }
+.wow-related-guides-heading .wow-eyebrow { margin:0 0 .2rem; color:#c8b579; }
+.wow-related-guides-heading h3 { margin:0; color:#eee0bf; font:500 1.55rem Georgia,serif; }
+.wow-related-guide-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(235px,1fr)); gap:.65rem; }
+.wow-related-guide-card { position:relative; display:grid; grid-template-columns:3.5rem minmax(0,1fr) auto; align-items:center; gap:.75rem; min-width:0; min-height:92px; padding:.7rem; border:1px solid #435766; color:#dce2e0; background:linear-gradient(125deg,#18242d,#10171e); text-decoration:none; transition:transform 160ms,border-color 160ms,box-shadow 160ms; }
+.wow-related-guide-card:hover { transform:translateY(-2px); border-color:var(--class-accent,#c4ad70); box-shadow:0 8px 18px #0004; }
+.wow-related-guide-visual { display:grid; place-items:center; width:3.5rem; height:3.5rem; overflow:hidden; border:1px solid color-mix(in srgb,var(--class-accent) 65%,#637382); background:#080f15; }
+.wow-related-guide-icon { display:block; width:2.8rem; height:2.8rem; aspect-ratio:1; object-fit:contain; }
+.wow-related-guide-icon.is-artwork { width:100%; height:100%; object-fit:cover; }
+.wow-related-guide-icon.is-fallback { display:grid; place-items:center; color:#e0ca8c; font:1.6rem Georgia,serif; }
+.wow-related-guide-copy { display:grid; gap:.18rem; min-width:0; }
+.wow-related-guide-copy small { color:#d1bd7b; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; }
+.wow-related-guide-copy strong { color:#f0e4c7; font:500 1rem Georgia,serif; }
+.wow-related-guide-copy > span { color:#b9c5c9; font-size:.8rem; line-height:1.4; }
+.wow-related-guide-arrow { align-self:start; color:#d8c17d; font-size:1.1rem; }
+.wow-related-guide-card:focus-visible { outline:2px solid #f0d48b; outline-offset:3px; }
+@media(max-width:560px) { .wow-related-guides { padding:.8rem; } .wow-related-guide-grid { grid-template-columns:1fr; } }
+@media(prefers-reduced-motion:reduce) { .wow-related-guide-card { transition:none; } .wow-related-guide-card:hover { transform:none; } }
 .wow-source-link { margin-top: 1.3rem; color: #aeb9c0; font-size: .8rem; }
 .wow-build-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; padding: 1.2rem; margin-block: 1rem; border: 1px solid #4d6272; background: #111923dd; }
 .wow-build-form label { display: grid; align-content: start; gap: .45rem; color: #e1d3b2; font-size: .84rem; }
