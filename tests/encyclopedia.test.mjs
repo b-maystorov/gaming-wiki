@@ -9,6 +9,7 @@ const artworkManifest = JSON.parse(await readFile(resolve(root, 'dist/data/games
 const pack = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-dungeon-1.json'), 'utf8'));
 const wowPack = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8'));
 const wowArtwork = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8'));
+const wowClientData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8'));
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
@@ -28,6 +29,7 @@ async function harness(failure = null, storageMode = 'available') {
     fetch: async url => {
       if (String(url).endsWith('world-of-warcraft-forever.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8')) };
+      if (String(url).endsWith('world-of-warcraft-forever-client-data.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8')) };
       if (String(url).endsWith('-artwork.json')) return { ok: true, json: async () => structuredClone(artworkManifest) };
       if (failure === 'network') throw new Error('Network unavailable');
       return { ok: failure !== 'http', status: 404, json: async () => {
@@ -1161,7 +1163,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   const render = h.app.renderPage;
   assert.equal(route('#game/world-of-warcraft').view, 'wow-home');
   const landing = render(route('#game/world-of-warcraft'));
-  for (const destination of ['my-journey', 'classes', 'build-finder', 'talent-planner', 'tier-lists', 'leveling', 'dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(landing.includes(`#game/world-of-warcraft/${destination}`));
+  for (const destination of ['my-journey', 'classes', 'races', 'build-finder', 'talent-planner', 'tier-lists', 'leveling', 'dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(landing.includes(`#game/world-of-warcraft/${destination}`));
   for (const item of wowPack.classes) {
     const classRoute = route(`#game/world-of-warcraft/classes/${item.id}`);
     assert.equal(classRoute.view, 'wow-class', item.id);
@@ -1211,7 +1213,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   const storage = { getItem: key => memoryStorage.get(key) ?? null, setItem: (key, value) => memoryStorage.set(key, String(value)), removeItem: key => memoryStorage.delete(key) };
   const shamanProfile = { characterName: 'Mira', faction: 'Horde', race: 'Tauren', classId: 'shaman', specializationId: 'enhancement', currentLevel: 17, playstyle: 'solo-leveling', currentZone: 'the-barrens' };
   assert.equal(wowModule.saveWowProfile(shamanProfile, storage), true);
-  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.loadWowProfile(storage))), shamanProfile);
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.loadWowProfile(storage))), { ...shamanProfile, talentBuildId: '' });
   assert.equal(wowModule.saveWowProfile({ ...shamanProfile, currentLevel: 61 }, storage), false);
   assert.deepEqual(JSON.parse(JSON.stringify(wowModule.loadWowProfile({ getItem() { throw new Error('blocked'); } }))), {});
   const checks = { 'shaman:call-fire': true };
@@ -1244,7 +1246,8 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.ok(wowPack.classes.every(item => item.specializations.length === 3 && wowPack.sources.some(source => source.id === item.sourceId)));
   assert.ok(wowPack.talentSystem.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.ok(wowPack.classes.every(item => item.specializations.every(spec => wowPack.sources.some(source => source.id === spec.sourceId))));
-  assert.ok(render(route('#game/world-of-warcraft/talent-planner')).includes('read-only'));
+  assert.ok(render(route('#game/world-of-warcraft/talent-planner')).includes('data-wow-talent-planner'));
+  assert.ok(render(route('#game/world-of-warcraft/talent-planner')).includes('Shaman'), 'the planner has a usable default class selection');
   assert.ok(render(route('#game/world-of-warcraft/dungeons-raids')).includes('Hall of Thanes'));
   assert.ok(render(route('#game/world-of-warcraft/dungeons-raids')).includes('13–18'));
   assert.ok(render(route('#game/world-of-warcraft/dungeons-raids')).includes('Dungeons &amp; Raids') || render(route('#game/world-of-warcraft/dungeons-raids')).includes('Dungeons & Raids'));
@@ -1255,6 +1258,122 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   const journey = render(route('#game/world-of-warcraft/my-journey'));
   assert.ok(journey.includes('Save my character') && journey.includes('Choose a class, faction and level above'));
   assert.equal(render(route('#game/world-of-warcraft/leveling')).includes('Levels null'), false);
+});
+
+test('WoW Forever race, class icon, talent planner, storage, and share data stay valid', async () => {
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  assert.equal(wowClientData.classes.length, 9);
+  assert.equal(wowClientData.races.length, 10);
+  assert.equal(wowClientData.iconAudit.talentRecords, 467);
+  assert.equal(wowClientData.iconAudit.talentsWithLocalIcons, 467);
+  assert.equal(wowClientData.iconAudit.brokenTalentIconPaths, 0);
+  assert.equal(wowClientData.iconAudit.unverifiedTalentRecords, 0);
+
+  for (const classRecord of wowClientData.classes) {
+    assert.ok(classRecord.icon, `class emblem missing for ${classRecord.name}`);
+    assert.ok(await readFile(resolve(root, 'dist', classRecord.icon)));
+    assert.equal(classRecord.trees.length, 3, `${classRecord.name} should have three trees`);
+    const detail = h.app.renderPage(h.app.readRoute(`#game/world-of-warcraft/classes/${classRecord.id}`));
+    assert.ok(detail.includes(classRecord.icon), `${classRecord.name} class guide should use its emblem`);
+    for (const tree of classRecord.trees) {
+      assert.ok(tree.talents.length > 0);
+      const names = new Set(tree.talents.map(talent => talent.name));
+      for (const talent of tree.talents) {
+        assert.ok(talent.id && talent.row >= 1 && talent.column >= 1);
+        assert.equal(talent.rankEffects.length, talent.maxRank, `${talent.name} rank effects`);
+        assert.equal(talent.confirmedRanks.length, talent.maxRank, `${talent.name} confirmed ranks`);
+        assert.ok(talent.icon && await readFile(resolve(root, 'dist', talent.icon)), `missing local talent icon ${talent.iconToken}`);
+        assert.ok(!talent.prerequisite || names.has(talent.prerequisite), `stale prerequisite ${talent.prerequisite}`);
+      }
+    }
+  }
+
+  const raceCombinations = wowPack.raceCombinations;
+  for (const race of wowClientData.races) {
+    const baseName = race.name.replace(/ \([^)]*\)$/, '');
+    const official = raceCombinations[race.faction]?.[baseName];
+    assert.ok(official, `missing official race matrix record ${race.faction} ${baseName}`);
+    assert.deepEqual([...race.classes].sort(), [...official].sort(), `${race.name} Forever class access`);
+    const route = h.app.readRoute(`#game/world-of-warcraft/races/${race.id}`);
+    assert.equal(route.view, 'wow-race');
+    const page = h.app.renderPage(route);
+    assert.ok(page.includes(race.name) && page.includes('Racial abilities'));
+    for (const ability of race.abilities) assert.ok(page.includes(ability.name.replaceAll("'", '&#39;')), `${race.name} racial ability missing from its detail route: ${ability.name}`);
+  }
+  const racePage = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/races'));
+  assert.equal((racePage.match(/data-wow-race-card/g) || []).length, 10);
+  const skyborne = wowClientData.races.find(race => race.id === 'skyborne-windshaper');
+  assert.equal(skyborne.icon, '', 'unavailable icon has an explicit fallback path');
+  assert.ok(h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/races/skyborne-windshaper')).includes('wow-race-emblem is-fallback'));
+  for (const faction of ['Alliance', 'Horde']) {
+    for (const classRecord of wowPack.classes) {
+      const options = wowModule.getWowRaceOptions(wowClientData, faction, classRecord.name);
+      assert.deepEqual(options.map(race => race.name).sort(), Object.entries(raceCombinations[faction]).filter(([, names]) => names.includes(classRecord.name)).map(([name]) => name === 'Skyborne' ? `${name} (${faction === 'Alliance' ? 'High Order' : 'Windshaper'})` : name).sort());
+    }
+  }
+
+  assert.equal(wowModule.availableWowTalentPoints(9, 0), 0);
+  assert.equal(wowModule.availableWowTalentPoints(10, 0), 1);
+  assert.equal(wowModule.availableWowTalentPoints(5, 5), 1);
+  assert.equal(wowModule.availableWowTalentPoints(60, 5), 51);
+  const warrior = wowClientData.classes.find(record => record.id === 'warrior');
+  const arms = warrior.trees.find(tree => tree.id === 'arms');
+  const child = arms.talents.find(talent => talent.prerequisite);
+  const prerequisite = arms.talents.find(talent => talent.name === child.prerequisite);
+  const blocked = wowModule.adjustWowTalentRank(warrior, {}, child.id, 1, 51);
+  assert.match(blocked.error, new RegExp(child.prerequisite));
+  let allocation = {};
+  for (let rank = 0; rank < prerequisite.maxRank; rank++) {
+    const result = wowModule.adjustWowTalentRank(warrior, allocation, prerequisite.id, 1, 51);
+    assert.equal(result.error, '');
+    allocation = result.allocation;
+  }
+  const unlocked = wowModule.adjustWowTalentRank(warrior, allocation, child.id, 1, 51);
+  assert.equal(unlocked.error, '');
+  assert.equal(wowModule.validateWowTalentAllocation(warrior, unlocked.allocation, 51).valid, true);
+  assert.match(wowModule.adjustWowTalentRank(warrior, unlocked.allocation, prerequisite.id, -1, 51).error, /Remove points/);
+  let capped = { [prerequisite.id]: prerequisite.maxRank };
+  assert.match(wowModule.adjustWowTalentRank(warrior, capped, prerequisite.id, 1, 51).error, /maximum rank/);
+  const tooMany = { [prerequisite.id]: prerequisite.maxRank, stale: 100 };
+  assert.equal(wowModule.validateWowTalentAllocation(warrior, tooMany, 1).valid, false);
+
+  const memory = new Map();
+  const storage = { getItem: key => memory.get(key) || null, setItem: (key, value) => memory.set(key, String(value)), removeItem: key => memory.delete(key) };
+  const profileKey = wowModule.WOW_PROFILE_STORAGE_KEY;
+  storage.setItem(profileKey, JSON.stringify({ characterName: 'Old save', faction: 'Horde', race: 'Skyborne', classId: 'shaman', specializationId: 'enhancement', currentLevel: 12, playstyle: 'solo-leveling', currentZone: 'zephras-isle' }));
+  const migrated = wowModule.loadWowProfile(storage);
+  assert.equal(migrated.characterName, 'Old save');
+  assert.equal(migrated.currentLevel, 12);
+  assert.equal(migrated.talentBuildId, '');
+  assert.equal(wowModule.saveWowProfile({ ...migrated, talentBuildId: 'stable-build-id' }, storage), true);
+  assert.equal(wowModule.loadWowProfile(storage).talentBuildId, 'stable-build-id');
+
+  const build = { id: 'stable-build-id', name: 'Arms draft', classId: 'warrior', level: 60, talentedRank: 0, allocation: unlocked.allocation, dataVersion: wowClientData.clientBuild };
+  assert.equal(wowModule.saveWowTalentBuild(build, storage), true);
+  assert.equal(wowModule.loadWowTalentBuilds(storage)[0].id, build.id);
+  assert.equal(wowModule.saveWowTalentBuild({ ...build, name: 'Arms draft edited' }, storage), true);
+  assert.equal(wowModule.loadWowTalentBuilds(storage).length, 1, 'saving edits to a stable build ID replaces that record');
+  assert.equal(wowModule.loadWowTalentBuilds(storage)[0].name, 'Arms draft edited');
+  wowModule.saveWowTalentDraft({ classId: 'warrior', level: 60, talentedRank: 0, allocation: unlocked.allocation, name: 'Arms draft edited', editingBuildId: build.id }, storage);
+  assert.equal(wowModule.loadWowTalentDraft(storage).editingBuildId, build.id, 'the editor keeps the saved record ID across reloads');
+  const shared = wowModule.encodeWowTalentBuild(build);
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.decodeWowTalentBuild(shared, wowClientData))), JSON.parse(JSON.stringify({ classId: 'warrior', level: 60, talentedRank: 0, allocation: unlocked.allocation })));
+  assert.equal(wowModule.decodeWowTalentBuild(encodeURIComponent(JSON.stringify({ version: 'stale', classId: 'warrior' })), wowClientData), null);
+  assert.equal(wowModule.decodeWowTalentBuild('%7Bbad-json', wowClientData), null);
+  assert.equal(wowModule.deleteWowTalentBuild(build.id, storage), true);
+  assert.equal(wowModule.loadWowTalentBuilds(storage).length, 0);
+  assert.equal(wowModule.saveWowTalentBuild(build, { setItem() { throw new Error('denied'); } }), false);
+  assert.equal(wowModule.loadWowTalentBuilds({ getItem() { throw new Error('denied'); } }).length, 0);
+
+  h.context.localStorage.setItem(wowModule.WOW_TALENT_BUILDS_STORAGE_KEY, JSON.stringify([build]));
+  assert.equal(wowModule.loadWowTalentBuilds(h.context.localStorage).length, 1);
+  wowModule.saveWowTalentDraft({ classId: 'warrior', level: 60, talentedRank: 0, allocation: {}, name: '' }, h.context.localStorage);
+  const planner = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/talent-planner'));
+  assert.ok(planner.includes('data-wow-talent-add') && planner.includes('data-wow-talent-remove'));
+  assert.ok(planner.includes('data-wow-talent-save') && planner.includes('data-wow-talent-load'));
+  assert.ok(planner.includes('Copy share link') && planner.includes('does not verify per-row point gates'));
+  assert.ok(h.app.readRoute(`#game/world-of-warcraft/talent-planner/${shared}`).sharedBuildToken);
+  assert.equal(h.app.readRoute('#game/world-of-warcraft/races/not-a-race').view, 'missing');
 });
 
 test('Enhancement Shaman has a sourced, playable guide with honest talent and art fallbacks', async () => {

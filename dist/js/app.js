@@ -8,7 +8,7 @@ import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
-import { renderWowPage, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress } from './wow-forever.js';
+import { renderWowPage, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
 
 let structuredGameContent = null;
 try {
@@ -29,6 +29,7 @@ await loadArtworkManifest();
 
 let wowData = null;
 let wowArtwork = null;
+let wowClientData = null;
 try {
   const wowResponse = await fetch('./data/games/world-of-warcraft-forever.json');
   if (!wowResponse.ok) throw new Error(`WoW data request failed: ${wowResponse.status}`);
@@ -42,6 +43,14 @@ try {
   wowArtwork = await artworkResponse.json();
 } catch (error) {
   console.error('Could not load WoW artwork manifest:', error);
+}
+try {
+  const clientDataResponse = await fetch('./data/games/world-of-warcraft-forever-client-data.json');
+  if (!clientDataResponse.ok) throw new Error(`WoW client-data request failed: ${clientDataResponse.status}`);
+  wowClientData = await clientDataResponse.json();
+} catch (error) {
+  // The encyclopedia and other WoW routes remain usable when the optional talent export is unavailable.
+  console.error('Could not load WoW client-derived data:', error);
 }
 
 const main = document.querySelector('main');
@@ -1431,8 +1440,13 @@ function readRoute(hash) {
   const parts = path.split('/');
   if (parts[0] === 'game' && parts[1] === 'world-of-warcraft') {
     if (parts.length === 2) return { view: 'wow-home' };
-    const categoryViews = { 'my-journey': 'wow-journey', classes: 'wow-classes', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-dungeons', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
+    const categoryViews = { 'my-journey': 'wow-journey', classes: 'wow-classes', races: 'wow-races', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-dungeons', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
     if (parts.length === 3 && categoryViews[parts[2]]) return { view: categoryViews[parts[2]] };
+    if (parts.length === 4 && parts[2] === 'talent-planner') return { view: 'wow-talents', sharedBuildToken: parts[3] };
+    if (parts.length === 4 && parts[2] === 'races') {
+      const raceRecord = wowClientData?.races.find(item => item.id === parts[3]);
+      if (raceRecord) return { view: 'wow-race', raceRecord };
+    }
     if (parts.length === 5 && parts[2] === 'builds') {
       const classRecord = wowData?.classes.find(item => item.id === parts[3]);
       const specialization = classRecord?.specializations.find(item => item.id === parts[4]);
@@ -1508,7 +1522,7 @@ function renderContentError(title = 'Encyclopedia unavailable') {
 
 function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
-  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile()) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
+  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile(), loadWowGuideProgress(), wowClientData) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), 'expedition-planner': renderExpeditionPlanner, trinkets: () => renderEncyclopediaCollection('trinkets'),
     enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests') };
@@ -1590,8 +1604,12 @@ document.addEventListener?.('submit', event => {
   const status = form.querySelector('[data-wow-profile-status]');
   const selectedClass = wowData?.classes.find(item => item.id === profile.classId);
   if (!selectedClass?.specializations.some(item => item.id === profile.specializationId)) profile.specializationId = selectedClass?.specializations[0]?.id || '';
-  const factionRaces = Object.entries(wowData?.raceCombinations?.[profile.faction] || {}).filter(([, classes]) => classes.includes(selectedClass?.name)).map(([race]) => race);
+  const factionRaces = wowClientData?.races?.length
+    ? getWowRaceOptions(wowClientData, profile.faction, selectedClass?.name).map(item => item.name)
+    : Object.entries(wowData?.raceCombinations?.[profile.faction] || {}).filter(([, classes]) => classes.includes(selectedClass?.name)).map(([race]) => race);
+  if (profile.race === 'Skyborne' && !factionRaces.includes('Skyborne')) profile.race = factionRaces.find(race => race.startsWith('Skyborne')) || profile.race;
   if (profile.race && !factionRaces.includes(profile.race)) profile.race = '';
+  if (profile.talentBuildId && !loadWowTalentBuilds().some(build => build.id === profile.talentBuildId && build.classId === profile.classId)) profile.talentBuildId = '';
   if (saveWowProfile(profile)) {
     main.innerHTML = renderPage(readRoute(location.hash));
     const refreshedStatus = main.querySelector('[data-wow-profile-status]');
@@ -1630,9 +1648,107 @@ document.addEventListener?.('click', event => {
     const page = toggle.closest('.wow-build-page, .enhancement-guide');
     page?.querySelector('[data-wow-play-mode]')?.toggleAttribute('hidden', !compact);
     page?.querySelector('[data-wow-full-guide]')?.toggleAttribute('hidden', compact);
+    return;
+  }
+  const addTalent = event.target.closest('[data-wow-talent-add]');
+  const removeTalent = event.target.closest('[data-wow-talent-remove]');
+  const talentReset = event.target.closest('[data-wow-talent-reset]');
+  const saveTalent = event.target.closest('[data-wow-talent-save]');
+  const loadTalent = event.target.closest('[data-wow-talent-load]');
+  const deleteTalent = event.target.closest('[data-wow-talent-delete]');
+  const shareTalent = event.target.closest('[data-wow-talent-share]');
+  if (addTalent || removeTalent || talentReset || saveTalent || loadTalent || deleteTalent || shareTalent) {
+    const route = readRoute(location.hash);
+    const draft = loadWowTalentDraft() || decodeWowTalentBuild(route.sharedBuildToken, wowClientData) || {
+      classId: main.querySelector('[data-wow-talent-class]')?.value || 'shaman',
+      level: Number(main.querySelector('[data-wow-talent-level]')?.value) || 1,
+      talentedRank: Number(main.querySelector('[data-wow-talented-rank]')?.value) || 0,
+      allocation: {}, name: ''
+    };
+    const classRecord = wowClientData?.classes.find(item => item.id === draft.classId);
+    let statusMessage = '';
+    if (addTalent || removeTalent) {
+      const id = addTalent ? addTalent.dataset.wowTalentAdd : removeTalent.dataset.wowTalentRemove;
+      const result = adjustWowTalentRank(classRecord, draft.allocation, id, addTalent ? 1 : -1, availableWowTalentPoints(draft.level, draft.talentedRank));
+      if (result.error) statusMessage = result.error;
+      else draft.allocation = result.allocation;
+      saveWowTalentDraft(draft);
+    } else if (talentReset) {
+      draft.allocation = {};
+      saveWowTalentDraft(draft);
+      statusMessage = 'Talent points reset.';
+    } else if (saveTalent) {
+      draft.name = main.querySelector('[data-wow-build-name]')?.value || '';
+      const validation = validateWowTalentAllocation(classRecord, draft.allocation, availableWowTalentPoints(draft.level, draft.talentedRank));
+      if (!draft.name.trim()) statusMessage = 'Enter a name for this build first.';
+      else if (!validation.valid) statusMessage = validation.issues[0];
+      else {
+        const id = draft.editingBuildId || `wow-build-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+        const saved = saveWowTalentBuild({ id, name: draft.name, classId: draft.classId, level: draft.level, talentedRank: draft.talentedRank, allocation: draft.allocation, dataVersion: wowClientData.clientBuild });
+        if (saved) draft.editingBuildId = id;
+        statusMessage = saved ? 'Build saved on this device.' : 'Browser storage is unavailable; this build was not saved.';
+      }
+      saveWowTalentDraft(draft);
+    } else if (loadTalent) {
+      const build = loadWowTalentBuilds().find(item => item.id === loadTalent.dataset.wowTalentLoad);
+      if (!build || !wowClientData.classes.some(item => item.id === build.classId)) statusMessage = 'This saved build uses a missing class or dataset reference.';
+      else if (build.dataVersion !== wowClientData.clientBuild) statusMessage = 'This saved build uses an older talent-data version. Review its points before rebuilding it.';
+      else {
+        const targetClass = wowClientData.classes.find(item => item.id === build.classId);
+        const validation = validateWowTalentAllocation(targetClass, build.allocation, availableWowTalentPoints(build.level, build.talentedRank));
+        if (!validation.valid) statusMessage = `This saved build needs review: ${validation.issues[0]}`;
+        else Object.assign(draft, { classId: build.classId, level: build.level, talentedRank: build.talentedRank, allocation: build.allocation, name: build.name, editingBuildId: build.id });
+      }
+      saveWowTalentDraft(draft);
+    } else if (deleteTalent) {
+      const deleted = deleteWowTalentBuild(deleteTalent.dataset.wowTalentDelete);
+      if (draft.editingBuildId === deleteTalent.dataset.wowTalentDelete) draft.editingBuildId = '';
+      statusMessage = deleted ? 'Saved build deleted.' : 'Browser storage is unavailable; the build could not be deleted.';
+    } else if (shareTalent) {
+      const shareUrl = `${location.origin || ''}${location.pathname || ''}${location.search || ''}${shareTalent.dataset.shareUrl}`;
+      try {
+        if (navigator.clipboard?.writeText) {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            const output = main.querySelector('[data-wow-talent-status]');
+            if (output) output.textContent = 'Share link copied.';
+          }).catch(() => {
+            const output = main.querySelector('[data-wow-talent-status]');
+            if (output) output.textContent = `Copy this link: ${shareUrl}`;
+          });
+        } else statusMessage = `Copy this link: ${shareUrl}`;
+      } catch { statusMessage = `Copy this link: ${shareUrl}`; }
+    }
+    main.innerHTML = renderPage(readRoute(location.hash));
+    const output = main.querySelector('[data-wow-talent-status]');
+    if (output) output.textContent = statusMessage;
   }
 });
 document.addEventListener?.('change', event => {
+  if (event.target.matches('[data-wow-race-faction], [data-wow-race-class]')) {
+    const faction = main.querySelector('[data-wow-race-faction]')?.value || 'all';
+    const className = main.querySelector('[data-wow-race-class]')?.value || 'all';
+    main.querySelectorAll('[data-wow-race-card]').forEach(card => {
+      const factionMatches = faction === 'all' || card.dataset.faction === faction;
+      const classMatches = className === 'all' || card.dataset.classes.split(' ').includes(className);
+      card.hidden = !(factionMatches && classMatches);
+    });
+    return;
+  }
+  const planner = event.target.closest('[data-wow-talent-planner]');
+  if (planner && event.target.matches('[data-wow-talent-class], [data-wow-talent-level], [data-wow-talented-rank]')) {
+    const prior = loadWowTalentDraft() || { classId: planner.dataset.classId, allocation: {}, name: '' };
+    const next = {
+      classId: planner.querySelector('[data-wow-talent-class]').value,
+      level: Number(planner.querySelector('[data-wow-talent-level]').value) || 1,
+      talentedRank: Number(planner.querySelector('[data-wow-talented-rank]').value) || 0,
+      allocation: prior.classId === planner.querySelector('[data-wow-talent-class]').value ? prior.allocation : {},
+      name: prior.classId === planner.querySelector('[data-wow-talent-class]').value ? prior.name : '',
+      editingBuildId: prior.classId === planner.querySelector('[data-wow-talent-class]').value ? prior.editingBuildId : ''
+    };
+    saveWowTalentDraft(next);
+    main.innerHTML = renderPage(readRoute(location.hash));
+    return;
+  }
   const checkbox = event.target.closest('[data-wow-progress-id]');
   if (!checkbox) return;
   const progress = loadWowGuideProgress();
@@ -1645,15 +1761,25 @@ document.addEventListener?.('change', event => {
   if (!form || !event.target.matches('[data-wow-profile-class], [data-wow-profile-faction]')) return;
   const faction = form.querySelector('[data-wow-profile-faction]').value;
   const classRecord = wowData?.classes.find(item => item.id === form.querySelector('[data-wow-profile-class]').value);
-  const races = classRecord && faction ? Object.entries(wowData.raceCombinations?.[faction] || {}).filter(([, classes]) => classes.includes(classRecord.name)).map(([race]) => race) : [];
+  const races = classRecord && faction ? (wowClientData?.races?.length
+    ? getWowRaceOptions(wowClientData, faction, classRecord.name).map(item => item.name)
+    : Object.entries(wowData.raceCombinations?.[faction] || {}).filter(([, classes]) => classes.includes(classRecord.name)).map(([race]) => race)) : [];
   const raceSelect = form.querySelector('[data-wow-profile-race]');
   const previousRace = raceSelect.value;
   raceSelect.innerHTML = `<option value="">${races.length ? 'Choose race' : 'Choose faction and class first'}</option>${races.map(race => `<option>${escapeHtml(race)}</option>`).join('')}`;
-  if (races.includes(previousRace)) raceSelect.value = previousRace;
+  const upgradedRace = previousRace === 'Skyborne' ? races.find(race => race.startsWith('Skyborne')) : previousRace;
+  if (races.includes(upgradedRace)) raceSelect.value = upgradedRace;
   const specSelect = form.querySelector('[data-wow-profile-spec]');
   const previousSpec = specSelect.value;
   specSelect.innerHTML = `<option value="">Choose specialization</option>${(classRecord?.specializations || []).map(spec => `<option value="${escapeHtml(spec.id)}">${escapeHtml(spec.name)}</option>`).join('')}`;
   if (classRecord?.specializations.some(spec => spec.id === previousSpec)) specSelect.value = previousSpec;
+  const buildSelect = form.querySelector('[name="talentBuildId"]');
+  if (buildSelect) {
+    const previousBuild = buildSelect.value;
+    const builds = loadWowTalentBuilds().filter(build => !classRecord || build.classId === classRecord.id);
+    buildSelect.innerHTML = `<option value="">No saved build selected</option>${builds.map(build => `<option value="${escapeHtml(build.id)}">${escapeHtml(build.name)}</option>`).join('')}`;
+    if (builds.some(build => build.id === previousBuild)) buildSelect.value = previousBuild;
+  }
 });
 document.addEventListener?.('change', event => {
   if (event.target.matches('[data-enhancement-level]')) {
@@ -1670,7 +1796,7 @@ document.addEventListener?.('change', event => {
   if (!event.target.closest('[data-wow-build-finder]')) return;
   const finder = document.querySelector('[data-wow-build-finder]');
   const result = document.getElementById('wow-build-results');
-  if (finder && result && wowData) result.innerHTML = renderWowBuildResults(wowData, Object.fromEntries(new FormData(finder)), escapeHtml);
+  if (finder && result && wowData) result.innerHTML = renderWowBuildResults(wowData, Object.fromEntries(new FormData(finder)), escapeHtml, wowClientData);
 });
 document.addEventListener?.('change', event => {
   if (!event.target.matches('[data-wow-faction-filter], [data-wow-level-filter], [data-wow-class-filter]')) return;

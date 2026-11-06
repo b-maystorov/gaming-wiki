@@ -552,3 +552,118 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-class-card strong { margin:.55rem 1rem 0; font-size:1.18rem; }
 .wow-class-card small { flex-basis:auto; margin:.2rem 1rem .8rem; font-size:.82rem; }
 @media(max-width:620px) { .wow-class-card { min-height:245px; } .wow-class-card > img { height:165px; flex-basis:165px; } .wow-page:has(.wow-content) .wow-banner { min-height:190px; } }
+
+/* Forever client icons are separate from the original class illustrations. */
+.wow-game-icon { display:block; flex:0 0 auto; width:3.25rem; height:3.25rem; object-fit:cover; border:1px solid #9e895d; border-radius:3px; background:#101820; box-shadow:0 0 0 3px #060a0e,0 5px 16px #0008; }
+.wow-game-icon.is-fallback { display:grid; place-items:center; color:#e2d2a8; font:600 1.2rem Georgia,serif; }
+.wow-class-emblem { width:2.9rem; height:2.9rem; }
+.wow-class-emblem-large { width:4.4rem; height:4.4rem; border-width:2px; border-radius:50%; }
+.wow-class-card-identity { display:flex; align-items:center; gap:.75rem; margin:.75rem 1rem 0; }
+.wow-class-card-identity .wow-class-emblem { width:3.25rem; height:3.25rem; }
+.wow-class-card-identity strong { margin:0; }
+.wow-class-hero-heading,.wow-build-heading { position:relative; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:.55rem; }
+.wow-class-hero-heading .wow-class-emblem-large,.wow-build-heading .wow-class-emblem-large { margin-bottom:.25rem; }
+.wow-dashboard-identity { display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:.8rem; }
+.wow-character-emblems { display:flex; grid-row:span 4; align-items:center; flex-direction:column; gap:.55rem; padding-right:.3rem; }
+.wow-character-emblems .wow-race-emblem { width:3.3rem; height:3.3rem; }
+.wow-dashboard-identity .wow-eyebrow,.wow-dashboard-identity h3,.wow-dashboard-identity p,.wow-dashboard-identity a { margin-block:.15rem; }
+.wow-selected-build { margin:.8rem 0; padding:.7rem; border-left:2px solid #bea975; background:#0b1219; }
+.wow-race-filters,.wow-talent-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.9rem; margin:1rem 0; padding:1rem; border:1px solid #4a6171; background:#0e171f; }
+.wow-race-filters label,.wow-talent-controls label,.wow-talent-save label { display:grid; gap:.4rem; color:#e1d1a9; font-size:.88rem; }
+.wow-race-filters select,.wow-talent-controls select,.wow-talent-controls input,.wow-talent-save input { width:100%; min-height:44px; padding:.55rem .7rem; border:1px solid #526a7c; border-radius:2px; color:#edf0ee; background:#0a1118; font:inherit; }
+.wow-race-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; }
+.wow-race-card { display:flex; align-items:center; gap:1rem; min-width:0; padding:.9rem; border:1px solid #485e6d; color:#e9e1d0; background:linear-gradient(130deg,#17232d,#0c1218); text-decoration:none; transition:border-color .16s ease,transform .16s ease,box-shadow .16s ease; }
+.wow-race-card:hover { border-color:#d0b875; transform:translateY(-2px); box-shadow:0 10px 24px #0005; }
+.wow-race-card > span:last-child { display:grid; gap:.3rem; min-width:0; }
+.wow-race-card small,.wow-race-card span span { color:#b8c4c9; font-size:.82rem; line-height:1.45; }
+.wow-race-card strong { color:#ebdcba; font:500 1.25rem Georgia,serif; }
+.wow-race-emblem { width:4rem; height:4rem; border-radius:50%; }
+.wow-race-emblem.is-fallback { color:#e5d19b; border-radius:50%; background:radial-gradient(circle at 35% 25%,#536c7a,#101820 68%); }
+.wow-race-detail { padding:1.1rem; border:1px solid #536a7b; background:linear-gradient(140deg,#16232d,#0c1218); }
+.wow-race-detail > header { display:flex; align-items:center; gap:1.25rem; padding:1rem; border-bottom:1px solid #3d5361; }
+.wow-race-detail > header h3 { margin:.25rem 0; color:#ead9b1; font:500 clamp(1.8rem,4vw,2.8rem) Georgia,serif; }
+.wow-race-detail > header p:not(.wow-eyebrow) { max-width:62rem; color:#c5d0d6; line-height:1.6; }
+.wow-race-detail-icon { display:grid; place-items:center; min-width:5rem; min-height:5rem; border:1px solid #a48c58; background:#080e13; }
+.wow-race-detail > section { margin-top:1.2rem; }
+.wow-race-detail > section > h3,.wow-racial-card h3 { color:#e5d5ac; font:500 1.3rem Georgia,serif; }
+.wow-compatible-classes { display:flex; flex-wrap:wrap; gap:.5rem; }
+.wow-compatible-classes a { display:flex; align-items:center; gap:.55rem; min-height:3.8rem; padding:.45rem .7rem; border:1px solid var(--class-accent); color:#e8e0ce; background:#0b1219; text-decoration:none; }
+.wow-compatible-classes .wow-class-emblem { width:2.4rem; height:2.4rem; }
+.wow-racial-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
+.wow-racial-card { display:flex; align-items:flex-start; gap:.8rem; min-width:0; padding:.85rem; border:1px solid #435968; background:#0b1219; }
+.wow-racial-icon { width:2.9rem; height:2.9rem; }
+.wow-racial-card h3 { margin:.1rem 0 .35rem; }
+.wow-racial-card p { color:#c5d0d6; font-size:.9rem; line-height:1.55; }
+.wow-talent-heading { display:flex; align-items:center; gap:1rem; margin:1rem 0; padding:1rem; border:1px solid var(--class-accent); background:linear-gradient(100deg,#15212b,#0d141b); }
+.wow-talent-heading .wow-class-emblem-large { width:4.8rem; height:4.8rem; }
+.wow-talent-heading h3 { margin:.15rem 0; color:#efe1bd; font:500 2rem Georgia,serif; }
+.wow-talent-heading p:not(.wow-eyebrow),.wow-talent-heading small { color:#bfcbd1; line-height:1.55; }
+.wow-talent-meter { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem 1rem; margin:1rem 0; padding:.8rem 1rem; border-left:3px solid #c8af72; color:#d1d9dc; background:#131e27; }
+.wow-talent-meter strong { color:#f0dfb2; font-size:1.45rem; font-variant-numeric:tabular-nums; }
+.wow-talent-issues { padding:.75rem 1.3rem; border:1px solid #aa655b; color:#f0d2ca; background:#351d20; line-height:1.6; }
+.wow-talent-rule-note { margin:1rem 0; padding:.9rem 1rem; border:1px solid #56636b; color:#cbd2d3; background:#111920; font-size:.88rem; line-height:1.6; }
+.wow-talent-trees { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:start; gap:.8rem; }
+.wow-talent-tree { min-width:0; padding:.8rem; border:1px solid #4b6070; background:linear-gradient(160deg,#15222c,#0b1117); }
+.wow-talent-tree > header { display:flex; align-items:center; gap:.65rem; min-height:3.8rem; margin-bottom:.6rem; padding-bottom:.6rem; border-bottom:1px solid #3b4f5d; }
+.wow-tree-icon { width:2.5rem; height:2.5rem; }
+.wow-talent-tree h3 { margin:0; color:#e8d9b6; font:500 1.25rem Georgia,serif; }
+.wow-talent-tree header small { color:#aebbc2; }
+.wow-talent-tree-scroll { overflow-x:auto; overscroll-behavior-inline:contain; padding:.4rem .25rem .7rem; }
+.wow-talent-grid { position:relative; display:grid; grid-template-columns:repeat(var(--talent-columns),86px); grid-template-rows:repeat(var(--talent-rows),104px); gap:0 10px; width:max-content; min-width:100%; }
+.wow-talent-links { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.wow-talent-links path { fill:none; stroke:#9b8658; stroke-width:2.5; opacity:.7; }
+.wow-talent-node { position:relative; z-index:1; display:flex; align-items:flex-start; flex-direction:column; width:86px; min-height:100px; }
+.wow-talent-add { display:flex; align-items:center; flex-direction:column; gap:.15rem; width:76px; min-height:78px; margin:0 auto; padding:.15rem; border:1px solid #586c77; color:#d9e0de; background:#111a21; cursor:pointer; }
+.wow-talent-add:hover:not(:disabled),.wow-talent-node.is-spent .wow-talent-add { border-color:#e0c47d; box-shadow:0 0 13px #d3ae5b4a; }
+.wow-talent-add:disabled { opacity:.55; cursor:not-allowed; }
+.wow-talent-icon { width:3.35rem; height:3.35rem; border-color:#9b895f; }
+.wow-talent-add strong { max-width:100%; overflow:hidden; color:#e1d8c4; font-size:.68rem; font-weight:500; text-align:center; text-overflow:ellipsis; white-space:nowrap; }
+.wow-talent-add > span:not(.wow-game-icon) { color:#e4cc8d; font-size:.72rem; font-variant-numeric:tabular-nums; }
+.wow-talent-remove { position:absolute; top:0; right:0; display:grid; place-items:center; width:1.45rem; height:1.45rem; padding:0; border:1px solid #786746; color:#f0ddb4; background:#33281a; font-size:1rem; line-height:1; cursor:pointer; }
+.wow-talent-remove:disabled { opacity:.35; cursor:not-allowed; }
+.wow-talent-node > small { max-width:86px; margin:.1rem auto 0; color:#bdc5c6; font-size:.62rem; line-height:1.2; text-align:center; }
+.wow-talent-node.is-locked .wow-talent-add { border-color:#80554e; }
+.wow-talent-node:focus-within { z-index:2; }
+.wow-talent-controls :focus-visible,.wow-talent-save :focus-visible,.wow-talent-node :focus-visible,.wow-race-filters :focus-visible,.wow-race-card:focus-visible { outline:2px solid #f0d48b; outline-offset:3px; }
+.wow-talent-save { display:grid; grid-template-columns:minmax(12rem,1fr) repeat(3,auto); align-items:end; gap:.7rem; margin:1rem 0; padding:1rem; border:1px solid #526979; background:#0e171f; }
+.wow-talent-save button,.wow-saved-builds button { min-height:44px; padding:.55rem .85rem; border:1px solid #b6a16c; color:#f0e3bf; background:#17222c; font:inherit; cursor:pointer; }
+.wow-talent-save button:hover,.wow-saved-builds button:hover { border-color:#f0d48b; background:#253644; }
+.wow-talent-save [data-wow-talent-status] { grid-column:1/-1; min-height:1.4rem; color:#c1d6c8; line-height:1.45; overflow-wrap:anywhere; }
+.wow-saved-builds { padding:.9rem 1rem; border:1px solid #435968; background:#0d151c; }
+.wow-saved-builds h3 { color:#e7d7b3; font:500 1.35rem Georgia,serif; }
+.wow-saved-builds ul { display:grid; gap:.5rem; padding:0; list-style:none; }
+.wow-saved-builds li { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; padding:.6rem; border:1px solid #405462; background:#111a21; }
+.wow-saved-builds li strong { margin-right:auto; color:#eadcbd; }
+.wow-saved-builds li span { color:#b8c3c8; font-size:.82rem; }
+.wow-spellbook { margin:1rem 0; border:1px solid #526a7a; background:#0d151c; }
+.wow-spellbook > summary,.wow-spell-tab > summary { display:flex; justify-content:space-between; gap:1rem; padding:.9rem 1rem; color:#ead9b2; background:#16232d; cursor:pointer; }
+.wow-spellbook > summary { font:500 1.25rem Georgia,serif; }
+.wow-spellbook summary span { color:#abb8bf; font:normal .8rem sans-serif; }
+.wow-ability-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.6rem; padding:1rem; }
+.wow-ability-gallery article { display:flex; align-items:flex-start; gap:.75rem; padding:.7rem; border:1px solid #435968; background:#101a22; }
+.wow-ability-icon { width:2.8rem; height:2.8rem; }
+.wow-ability-gallery h4 { margin:.1rem 0 .3rem; color:#e7d7b3; font:500 1rem Georgia,serif; }
+.wow-ability-gallery p { color:#c1ccd1; font-size:.86rem; line-height:1.5; }
+.wow-spellbook > .wow-note,.wow-spellbook > .wow-source-link { margin:.8rem 1rem; }
+.wow-spell-tab { border-top:1px solid #354b59; }
+.wow-spell-tab > ul { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.35rem; margin:0; padding:.8rem; list-style:none; }
+.wow-spell-tab li { display:flex; align-items:flex-start; gap:.55rem; min-width:0; padding:.5rem; border:1px solid #344955; background:#101920; }
+.wow-spellbook-icon { display:grid; flex:0 0 2.2rem; place-items:center; width:2.2rem; height:2.2rem; border:1px solid #6e634b; color:#d8c48d; background:#111a21; font-size:.9rem; }
+.wow-spellbook-icon.wow-game-icon { width:2.2rem; height:2.2rem; }
+.wow-spell-tab li > span:last-child { display:grid; gap:.25rem; min-width:0; }
+.wow-spell-tab li strong { color:#e1d5bc; font-size:.86rem; }
+.wow-spell-tab li small { color:#b0bdc4; font-size:.75rem; line-height:1.4; }
+.wow-spellbook .wow-source-link a { color:#b7d8e8; }
+.wow-home-class-roster { position:relative; z-index:2; display:flex; flex-wrap:wrap; justify-content:center; gap:.55rem; margin:1rem auto 1.4rem; }
+.wow-home-class-roster a { display:flex; align-items:center; gap:.5rem; min-height:3.55rem; padding:.35rem .65rem; border:1px solid var(--class-accent); color:#e3dfd2; background:#0b1219dc; text-decoration:none; }
+.wow-home-class-roster a:hover { border-color:#e0c47d; background:#192630; }
+.wow-home-class-roster .wow-class-emblem { width:2.8rem; height:2.8rem; }
+.wow-home-class-roster span { font-size:.86rem; }
+.wow-spec-card > .wow-class-emblem { display:block; width:3.3rem; height:3.3rem; margin:1rem 1rem 0; }
+.wow-build-heading .wow-class-emblem-large { align-self:flex-start; }
+.enhancement-hero-copy > .wow-class-emblem-large { margin-bottom:.4rem; }
+.enhancement-play-mode .wow-class-emblem { display:inline-block; vertical-align:middle; margin-right:.4rem; }
+@media(max-width:1050px) { .wow-talent-trees { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:750px) { .wow-talent-trees { grid-template-columns:1fr; } .wow-race-grid,.wow-racial-grid,.wow-ability-gallery,.wow-spell-tab > ul { grid-template-columns:1fr; } .wow-talent-save { grid-template-columns:repeat(2,minmax(0,1fr)); } .wow-talent-save label,.wow-talent-save [data-wow-talent-status] { grid-column:1/-1; } }
+@media(max-width:520px) { .wow-race-filters,.wow-talent-controls { grid-template-columns:1fr; } .wow-race-card { align-items:flex-start; gap:.7rem; padding:.7rem; } .wow-race-emblem { width:3.4rem; height:3.4rem; } .wow-talent-heading { align-items:flex-start; } .wow-talent-heading .wow-class-emblem-large { width:3.5rem; height:3.5rem; } .wow-talent-heading h3 { font-size:1.55rem; } .wow-talent-save { grid-template-columns:1fr; } .wow-talent-save label,.wow-talent-save [data-wow-talent-status] { grid-column:1; } .wow-race-detail > header { align-items:flex-start; padding:.5rem 0 .9rem; } .wow-dashboard-identity { grid-template-columns:auto 1fr; } .wow-character-emblems { grid-row:span 4; } }
+@media(prefers-reduced-motion:reduce) { .wow-race-card { transition:none; } .wow-race-card:hover { transform:none; } }
