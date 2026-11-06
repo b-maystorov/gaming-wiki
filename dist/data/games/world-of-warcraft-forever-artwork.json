@@ -13,6 +13,28 @@
       "usage": "Project-created artwork; no Blizzard assets used."
     },
     {
+      "id": "elemental-shaman-original",
+      "kind": "specialization",
+      "classId": "shaman",
+      "specializationId": "elemental",
+      "src": "assets/images/wow-forever/elemental-shaman.svg",
+      "alt": "Original BM Gaming Wiki vector artwork of a stormcasting plateau; not official game artwork.",
+      "loading": "eager",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "restoration-shaman-original",
+      "kind": "specialization",
+      "classId": "shaman",
+      "specializationId": "restoration",
+      "src": "assets/images/wow-forever/restoration-shaman.svg",
+      "alt": "Original BM Gaming Wiki vector artwork of healing water and a protective totem; not official game artwork.",
+      "loading": "eager",
+      "provenance": "Original vector illustration created for BM Gaming Wiki.",
+      "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
       "id": "warrior-original",
       "kind": "class",
       "classId": "warrior",

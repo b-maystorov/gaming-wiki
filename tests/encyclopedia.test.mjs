@@ -1348,16 +1348,17 @@ test('WoW Forever race, class icon, talent planner, storage, and share data stay
   assert.equal(wowModule.saveWowProfile({ ...migrated, talentBuildId: 'stable-build-id' }, storage), true);
   assert.equal(wowModule.loadWowProfile(storage).talentBuildId, 'stable-build-id');
 
-  const build = { id: 'stable-build-id', name: 'Arms draft', classId: 'warrior', level: 60, talentedRank: 0, allocation: unlocked.allocation, dataVersion: wowClientData.clientBuild };
+  const build = { id: 'stable-build-id', name: 'Arms draft', classId: 'warrior', specializationId: 'arms', level: 60, talentedRank: 0, allocation: unlocked.allocation, dataVersion: wowClientData.clientBuild };
   assert.equal(wowModule.saveWowTalentBuild(build, storage), true);
   assert.equal(wowModule.loadWowTalentBuilds(storage)[0].id, build.id);
+  assert.equal(wowModule.loadWowTalentBuilds(storage)[0].specializationId, 'arms');
   assert.equal(wowModule.saveWowTalentBuild({ ...build, name: 'Arms draft edited' }, storage), true);
   assert.equal(wowModule.loadWowTalentBuilds(storage).length, 1, 'saving edits to a stable build ID replaces that record');
   assert.equal(wowModule.loadWowTalentBuilds(storage)[0].name, 'Arms draft edited');
   wowModule.saveWowTalentDraft({ classId: 'warrior', level: 60, talentedRank: 0, allocation: unlocked.allocation, name: 'Arms draft edited', editingBuildId: build.id }, storage);
   assert.equal(wowModule.loadWowTalentDraft(storage).editingBuildId, build.id, 'the editor keeps the saved record ID across reloads');
   const shared = wowModule.encodeWowTalentBuild(build);
-  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.decodeWowTalentBuild(shared, wowClientData))), JSON.parse(JSON.stringify({ classId: 'warrior', level: 60, talentedRank: 0, allocation: unlocked.allocation })));
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.decodeWowTalentBuild(shared, wowClientData))), JSON.parse(JSON.stringify({ classId: 'warrior', specializationId: 'arms', level: 60, talentedRank: 0, allocation: unlocked.allocation })));
   assert.equal(wowModule.decodeWowTalentBuild(encodeURIComponent(JSON.stringify({ version: 'stale', classId: 'warrior' })), wowClientData), null);
   assert.equal(wowModule.decodeWowTalentBuild('%7Bbad-json', wowClientData), null);
   assert.equal(wowModule.deleteWowTalentBuild(build.id, storage), true);
@@ -1371,9 +1372,40 @@ test('WoW Forever race, class icon, talent planner, storage, and share data stay
   const planner = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/talent-planner'));
   assert.ok(planner.includes('data-wow-talent-add') && planner.includes('data-wow-talent-remove'));
   assert.ok(planner.includes('data-wow-talent-save') && planner.includes('data-wow-talent-load'));
+  assert.ok(planner.includes('data-wow-talent-level-slider'), 'the planner exposes a keyboard-accessible leveling slider');
+  assert.ok(planner.includes('data-wow-talent-spec') && planner.includes('Previous level') && planner.includes('Next level'));
+  assert.equal((planner.match(/class="wow-talent-tree"/g) || []).length, 3, 'the planner renders all three recorded class trees');
+  assert.match(planner, /grid-row:\d+;grid-column:\d+/, 'talent placement uses recorded grid coordinates');
+  assert.ok(planner.includes('wow-talent-rank'), 'each talent node displays its current and maximum ranks above its icon');
   assert.ok(planner.includes('Copy share link') && planner.includes('does not verify per-row point gates'));
+  const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  assert.match(portalStyles, /\.wow-game-icon\s*\{[^}]*aspect-ratio:1;[^}]*object-fit:contain/s, 'WoW icon frames stay square and preserve the full image');
+  assert.match(portalStyles, /\.wow-talent-icon\s*\{[^}]*width:2\.9rem;[^}]*height:2\.9rem/s, 'talent icons stay at a fixed game-icon size');
   assert.ok(h.app.readRoute(`#game/world-of-warcraft/talent-planner/${shared}`).sharedBuildToken);
   assert.equal(h.app.readRoute('#game/world-of-warcraft/races/not-a-race').view, 'missing');
+});
+
+test('WoW specialization heroes keep game icons separate from original artwork', async () => {
+  const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  const shamanElemental = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/builds/shaman/elemental'));
+  assert.ok(shamanElemental.includes('assets/images/wow-forever/elemental-shaman.svg'), 'Elemental selects its dedicated storm art');
+  assert.ok(shamanElemental.includes('Open Talent Build'));
+  assert.ok(shamanElemental.includes('wow-class-emblem-large') && shamanElemental.includes('wow-specialization-icon'));
+  assert.match(portalStyles, /\.wow-build-artwork\s*\{[^}]*width:100%;[^}]*height:100%;[^}]*object-fit:contain/s);
+  assert.match(portalStyles, /\.wow-class-emblem-large\s*\{[^}]*width:4rem;[^}]*height:4rem;[^}]*object-fit:contain/s);
+  assert.match(portalStyles, /\.wow-specialization-icon\s*\{[^}]*width:2\.9rem;[^}]*height:2\.9rem;[^}]*aspect-ratio:1/s);
+  assert.doesNotMatch(portalStyles, /\.wow-build-hero\s+img\s*\{/, 'decorative art sizing must not target nested functional icons');
+  for (const classRecord of wowPack.classes) {
+    for (const spec of classRecord.specializations) {
+      const html = h.app.renderPage(h.app.readRoute(`#game/world-of-warcraft/builds/${classRecord.id}/${spec.id}`));
+      assert.ok(html.includes(spec.name), `${classRecord.name} ${spec.name} route renders`);
+      assert.ok(html.includes('wow-specialization-icon'), `${classRecord.name} ${spec.name} has its tree emblem`);
+      assert.ok(html.includes(`data-wow-build-class="${classRecord.id}"`) && html.includes(`data-wow-build-spec="${spec.id}"`), `${classRecord.name} ${spec.name} has a context-aware talent action`);
+      assert.doesNotMatch(html, /wow-build-artwork[^>]+src="assets\/images\/wow-forever\/icons\//, `${classRecord.name} ${spec.name} uses decorative art, not an enlarged game icon`);
+    }
+  }
+  const restoration = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/builds/shaman/restoration'));
+  assert.ok(restoration.includes('assets/images/wow-forever/restoration-shaman.svg'));
 });
 
 test('Enhancement Shaman has a sourced, playable guide with honest talent and art fallbacks', async () => {

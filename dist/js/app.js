@@ -1617,6 +1617,40 @@ document.addEventListener?.('submit', event => {
   } else status.textContent = 'Browser storage is unavailable or the level is invalid. Your details were not saved.';
 });
 document.addEventListener?.('click', event => {
+  const levelStep = event.target.closest('[data-wow-talent-level-step]');
+  if (levelStep) {
+    const planner = levelStep.closest('[data-wow-talent-planner]');
+    const profile = loadWowProfile();
+    const draft = loadWowTalentDraft() || {
+      classId: planner?.querySelector('[data-wow-talent-class]')?.value || profile.classId || 'shaman',
+      specializationId: planner?.querySelector('[data-wow-talent-spec]')?.value || profile.specializationId || '',
+      level: Number(planner?.querySelector('[data-wow-talent-level]')?.value) || profile.currentLevel || 1,
+      allocation: {}
+    };
+    draft.level = Math.max(1, Math.min(60, (Number(draft.level) || 1) + Number(levelStep.dataset.wowTalentLevelStep)));
+    saveWowTalentDraft(draft);
+    saveWowProfile({ ...profile, classId: draft.classId, currentLevel: draft.level, specializationId: draft.specializationId || '' });
+    main.innerHTML = renderPage(readRoute(location.hash));
+    return;
+  }
+  const specializationBuildLink = event.target.closest('[data-wow-build-class][data-wow-build-spec]');
+  if (specializationBuildLink) {
+    const classId = specializationBuildLink.dataset.wowBuildClass;
+    const specializationId = specializationBuildLink.dataset.wowBuildSpec;
+    const profile = loadWowProfile();
+    const previousDraft = loadWowTalentDraft();
+    const sameClass = previousDraft?.classId === classId;
+    saveWowTalentDraft({
+      classId,
+      specializationId,
+      level: previousDraft?.level || profile.currentLevel || 1,
+      talentedRank: previousDraft?.talentedRank || 0,
+      allocation: sameClass ? previousDraft.allocation : {},
+      name: sameClass ? previousDraft.name : '',
+      editingBuildId: sameClass ? previousDraft.editingBuildId : ''
+    });
+    saveWowProfile({ ...profile, classId, specializationId, currentLevel: profile.currentLevel || 1, talentBuildId: sameClass ? profile.talentBuildId : '' });
+  }
   const profileReset = event.target.closest('[data-wow-profile-reset]');
   if (profileReset) {
     let cleared = false;
@@ -1684,7 +1718,7 @@ document.addEventListener?.('click', event => {
       else if (!validation.valid) statusMessage = validation.issues[0];
       else {
         const id = draft.editingBuildId || `wow-build-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-        const saved = saveWowTalentBuild({ id, name: draft.name, classId: draft.classId, level: draft.level, talentedRank: draft.talentedRank, allocation: draft.allocation, dataVersion: wowClientData.clientBuild });
+        const saved = saveWowTalentBuild({ id, name: draft.name, classId: draft.classId, specializationId: draft.specializationId || '', level: draft.level, talentedRank: draft.talentedRank, allocation: draft.allocation, dataVersion: wowClientData.clientBuild });
         if (saved) draft.editingBuildId = id;
         statusMessage = saved ? 'Build saved on this device.' : 'Browser storage is unavailable; this build was not saved.';
       }
@@ -1697,7 +1731,7 @@ document.addEventListener?.('click', event => {
         const targetClass = wowClientData.classes.find(item => item.id === build.classId);
         const validation = validateWowTalentAllocation(targetClass, build.allocation, availableWowTalentPoints(build.level, build.talentedRank));
         if (!validation.valid) statusMessage = `This saved build needs review: ${validation.issues[0]}`;
-        else Object.assign(draft, { classId: build.classId, level: build.level, talentedRank: build.talentedRank, allocation: build.allocation, name: build.name, editingBuildId: build.id });
+        else Object.assign(draft, { classId: build.classId, specializationId: build.specializationId || '', level: build.level, talentedRank: build.talentedRank, allocation: build.allocation, name: build.name, editingBuildId: build.id });
       }
       saveWowTalentDraft(draft);
     } else if (deleteTalent) {
@@ -1718,6 +1752,8 @@ document.addEventListener?.('click', event => {
         } else statusMessage = `Copy this link: ${shareUrl}`;
       } catch { statusMessage = `Copy this link: ${shareUrl}`; }
     }
+    saveWowTalentDraft(draft);
+    saveWowProfile({ ...loadWowProfile(), classId: draft.classId, specializationId: draft.specializationId || '', currentLevel: draft.level || 1, talentBuildId: draft.editingBuildId || '' });
     main.innerHTML = renderPage(readRoute(location.hash));
     const output = main.querySelector('[data-wow-talent-status]');
     if (output) output.textContent = statusMessage;
@@ -1735,17 +1771,33 @@ document.addEventListener?.('change', event => {
     return;
   }
   const planner = event.target.closest('[data-wow-talent-planner]');
-  if (planner && event.target.matches('[data-wow-talent-class], [data-wow-talent-level], [data-wow-talented-rank]')) {
+  if (planner && event.target.matches('[data-wow-talent-class], [data-wow-talent-spec], [data-wow-talent-level], [data-wow-talent-level-slider], [data-wow-talented-rank]')) {
+    const selectedLevel = event.target.matches('[data-wow-talent-level-slider]')
+      ? Number(event.target.value)
+      : Number(planner.querySelector('[data-wow-talent-level]').value) || 1;
+    const selectedClassId = planner.querySelector('[data-wow-talent-class]').value;
+    const selectedClass = wowData.classes.find(item => item.id === selectedClassId);
+    const selectedSpecializationId = event.target.matches('[data-wow-talent-spec]')
+      ? event.target.value
+      : event.target.matches('[data-wow-talent-class]')
+        ? selectedClass?.specializations[0]?.id || ''
+        : planner.querySelector('[data-wow-talent-spec]').value;
     const prior = loadWowTalentDraft() || { classId: planner.dataset.classId, allocation: {}, name: '' };
     const next = {
-      classId: planner.querySelector('[data-wow-talent-class]').value,
-      level: Number(planner.querySelector('[data-wow-talent-level]').value) || 1,
+      classId: selectedClassId,
+      specializationId: selectedSpecializationId,
+      level: selectedLevel,
       talentedRank: Number(planner.querySelector('[data-wow-talented-rank]').value) || 0,
-      allocation: prior.classId === planner.querySelector('[data-wow-talent-class]').value ? prior.allocation : {},
-      name: prior.classId === planner.querySelector('[data-wow-talent-class]').value ? prior.name : '',
-      editingBuildId: prior.classId === planner.querySelector('[data-wow-talent-class]').value ? prior.editingBuildId : ''
+      allocation: prior.classId === selectedClassId ? prior.allocation : {},
+      name: prior.classId === selectedClassId ? prior.name : '',
+      editingBuildId: prior.classId === selectedClassId ? prior.editingBuildId : ''
     };
     saveWowTalentDraft(next);
+    saveWowProfile({ ...loadWowProfile(), classId: next.classId, specializationId: next.specializationId, currentLevel: next.level, talentBuildId: next.editingBuildId || '' });
+    saveWowProfile({ ...loadWowProfile(), classId: next.classId, currentLevel: next.level, talentBuildId: next.editingBuildId || '' });
+    if (event.target.matches('[data-wow-talent-level-slider]')) {
+      planner.querySelector('[data-wow-talent-level]').value = String(selectedLevel);
+    }
     main.innerHTML = renderPage(readRoute(location.hash));
     return;
   }
