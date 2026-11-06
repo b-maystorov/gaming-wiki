@@ -662,6 +662,16 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-talent-modes .wow-copy-guided { margin-left:auto; color:#f0dcab; }
 .wow-guided-share { margin:.5rem 0; text-align:right; }
 .wow-guided-share button { min-height:40px; padding:.45rem .8rem; border:1px solid #9c8759; color:#f0dfb5; background:#121d25; cursor:pointer; }
+.wow-next-recommended-panel { display:grid; grid-template-columns:4rem minmax(0,1fr); align-items:center; gap:.9rem; max-width:58rem; margin:0 0 1rem; padding:.8rem 1rem; border:1px solid #a88f58; border-left:4px solid #e1c879; background:radial-gradient(ellipse at 0 50%,#36301f 0,#17232b 48%,#101820 100%); box-shadow:0 8px 24px #0003; }
+.wow-next-recommended-icon { display:grid; place-items:center; width:3.6rem; height:3.6rem; border:1px solid #d6bd77; background:#080e14; box-shadow:0 0 14px #cfac5840; }
+.wow-next-recommended-game-icon { width:3rem; height:3rem; }
+.wow-next-recommended-copy { min-width:0; }
+.wow-next-recommended-copy .wow-eyebrow { margin:0 0 .15rem; color:#e5ce8f; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
+.wow-next-recommended-copy h4 { margin:.05rem 0; color:#f3e7c8; font:500 1.3rem Georgia,serif; }
+.wow-next-recommended-rank { margin:.15rem 0; color:#f1d58f; font-size:.9rem; font-variant-numeric:tabular-nums; }
+.wow-next-recommended-explanation,.wow-next-recommended-copy > p:last-child { margin:.2rem 0 0; color:#c7d1d2; font-size:.88rem; line-height:1.45; }
+.wow-next-recommended-panel.is-complete { border-left-color:#759a88; border-color:#506b61; }
+.wow-next-recommended-icon.is-empty { color:#cdb679; font-size:1.6rem; }
 .wow-guided-summary { display:grid; grid-template-columns:1.25fr 1fr; gap:1rem; margin:1rem 0 .65rem; padding:1rem; border:1px solid #7d704e; background:radial-gradient(ellipse at 10% 0,#243745,#111a21 65%); }
 .wow-guided-summary h4 { margin:.1rem 0 .45rem; color:#f0dfb5; font:500 1.45rem Georgia,serif; }
 .wow-guided-summary p,.wow-guided-summary strong { color:#d4dcda; line-height:1.5; }
@@ -697,6 +707,9 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 @media (max-width:650px) {
   .wow-talent-trees { grid-template-columns:1fr; }
   .wow-guided-summary { grid-template-columns:1fr; }
+  .wow-next-recommended-panel { grid-template-columns:3.5rem minmax(0,1fr); gap:.7rem; padding:.7rem; }
+  .wow-next-recommended-icon { width:3.2rem; height:3.2rem; }
+  .wow-next-recommended-game-icon { width:2.7rem; height:2.7rem; }
   .wow-progression-head { display:none; }
   .wow-progression-table { display:none; }
   .wow-progression-mobile { display:grid; gap:.5rem; }
