@@ -30,6 +30,7 @@ await loadArtworkManifest();
 let wowData = null;
 let wowArtwork = null;
 let wowClientData = null;
+let wowGuidedData = null;
 try {
   const wowResponse = await fetch('./data/games/world-of-warcraft-forever.json');
   if (!wowResponse.ok) throw new Error(`WoW data request failed: ${wowResponse.status}`);
@@ -51,6 +52,13 @@ try {
 } catch (error) {
   // The encyclopedia and other WoW routes remain usable when the optional talent export is unavailable.
   console.error('Could not load WoW client-derived data:', error);
+}
+try {
+  const guidedBuildResponse = await fetch('./data/games/world-of-warcraft-forever-guided-builds.json');
+  if (!guidedBuildResponse.ok) throw new Error(`WoW guided-build request failed: ${guidedBuildResponse.status}`);
+  wowGuidedData = await guidedBuildResponse.json();
+} catch (error) {
+  console.error('Could not load WoW guided builds:', error);
 }
 
 const main = document.querySelector('main');
@@ -1522,7 +1530,7 @@ function renderContentError(title = 'Encyclopedia unavailable') {
 
 function renderPage(route) {
   if (route.preview) return renderGamePreview(route.preview);
-  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile(), loadWowGuideProgress(), wowClientData) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
+  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile(), loadWowGuideProgress(), wowClientData, wowGuidedData) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), 'expedition-planner': renderExpeditionPlanner, trinkets: () => renderEncyclopediaCollection('trinkets'),
     enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests') };
@@ -1617,6 +1625,25 @@ document.addEventListener?.('submit', event => {
   } else status.textContent = 'Browser storage is unavailable or the level is invalid. Your details were not saved.';
 });
 document.addEventListener?.('click', event => {
+  const planner = event.target.closest('[data-wow-talent-planner]');
+  const modeButton = event.target.closest('[data-wow-talent-mode]');
+  const copyGuided = event.target.closest('[data-wow-guided-copy]');
+  const progressionLevel = event.target.closest('[data-wow-guided-level]');
+  if (modeButton || copyGuided || progressionLevel) {
+    const profile = loadWowProfile();
+    const prior = loadWowTalentDraft() || { classId: planner?.dataset.classId || 'shaman', specializationId: planner?.querySelector('[data-wow-talent-spec]')?.value || '', level: Number(planner?.querySelector('[data-wow-talent-level]')?.value) || 10, allocation: {}, name: '', editingBuildId: '', mode: planner?.dataset.mode || 'custom', guidedBuildId: planner?.querySelector('[data-wow-guided-build]')?.value || '' };
+    const next = { ...prior };
+    if (modeButton) next.mode = modeButton.dataset.wowTalentMode === 'guided' ? 'guided' : 'custom';
+    if (copyGuided) {
+      try { next.allocation = JSON.parse(decodeURIComponent(planner?.dataset.guidedAllocation || '%7B%7D')); } catch { next.allocation = {}; }
+      next.mode = 'custom'; next.name = ''; next.editingBuildId = ''; next.copiedFromGuided = true;
+    }
+    if (progressionLevel) next.level = Math.max(1, Math.min(60, Number(progressionLevel.dataset.wowGuidedLevel) || next.level));
+    saveWowTalentDraft(next);
+    saveWowProfile({ ...profile, classId: next.classId, specializationId: next.specializationId || '', currentLevel: next.level || 1, talentBuildId: next.editingBuildId || '' });
+    main.innerHTML = renderPage(readRoute(location.hash));
+    return;
+  }
   const levelStep = event.target.closest('[data-wow-talent-level-step]');
   if (levelStep) {
     const planner = levelStep.closest('[data-wow-talent-planner]');
@@ -1625,7 +1652,9 @@ document.addEventListener?.('click', event => {
       classId: planner?.querySelector('[data-wow-talent-class]')?.value || profile.classId || 'shaman',
       specializationId: planner?.querySelector('[data-wow-talent-spec]')?.value || profile.specializationId || '',
       level: Number(planner?.querySelector('[data-wow-talent-level]')?.value) || profile.currentLevel || 1,
-      allocation: {}
+      allocation: {},
+      mode: planner?.dataset.mode || 'custom',
+      guidedBuildId: planner?.querySelector('[data-wow-guided-build]')?.value || ''
     };
     draft.level = Math.max(1, Math.min(60, (Number(draft.level) || 1) + Number(levelStep.dataset.wowTalentLevelStep)));
     saveWowTalentDraft(draft);
@@ -1640,10 +1669,14 @@ document.addEventListener?.('click', event => {
     const profile = loadWowProfile();
     const previousDraft = loadWowTalentDraft();
     const sameClass = previousDraft?.classId === classId;
+    const guidedBuildId = specializationBuildLink.dataset.wowBuildId || '';
+    const hasGuidedBuild = Boolean(guidedBuildId && wowGuidedData?.builds?.some(build => build.id === guidedBuildId));
     saveWowTalentDraft({
       classId,
       specializationId,
-      level: previousDraft?.level || profile.currentLevel || 1,
+      mode: hasGuidedBuild ? 'guided' : 'custom',
+      guidedBuildId,
+      level: previousDraft?.level || profile.currentLevel || (hasGuidedBuild ? 10 : 1),
       talentedRank: previousDraft?.talentedRank || 0,
       allocation: sameClass ? previousDraft.allocation : {},
       name: sameClass ? previousDraft.name : '',
@@ -1731,7 +1764,7 @@ document.addEventListener?.('click', event => {
         const targetClass = wowClientData.classes.find(item => item.id === build.classId);
         const validation = validateWowTalentAllocation(targetClass, build.allocation, availableWowTalentPoints(build.level, build.talentedRank));
         if (!validation.valid) statusMessage = `This saved build needs review: ${validation.issues[0]}`;
-        else Object.assign(draft, { classId: build.classId, specializationId: build.specializationId || '', level: build.level, talentedRank: build.talentedRank, allocation: build.allocation, name: build.name, editingBuildId: build.id });
+        else Object.assign(draft, { classId: build.classId, specializationId: build.specializationId || '', level: build.level, talentedRank: build.talentedRank, allocation: build.allocation, name: build.name, editingBuildId: build.id, mode: 'custom', guidedBuildId: '' });
       }
       saveWowTalentDraft(draft);
     } else if (deleteTalent) {
@@ -1771,7 +1804,7 @@ document.addEventListener?.('change', event => {
     return;
   }
   const planner = event.target.closest('[data-wow-talent-planner]');
-  if (planner && event.target.matches('[data-wow-talent-class], [data-wow-talent-spec], [data-wow-talent-level], [data-wow-talent-level-slider], [data-wow-talented-rank]')) {
+  if (planner && event.target.matches('[data-wow-talent-class], [data-wow-talent-spec], [data-wow-talent-level], [data-wow-talent-level-slider], [data-wow-talented-rank], [data-wow-guided-build]')) {
     const selectedLevel = event.target.matches('[data-wow-talent-level-slider]')
       ? Number(event.target.value)
       : Number(planner.querySelector('[data-wow-talent-level]').value) || 1;
@@ -1782,19 +1815,21 @@ document.addEventListener?.('change', event => {
       : event.target.matches('[data-wow-talent-class]')
         ? selectedClass?.specializations[0]?.id || ''
         : planner.querySelector('[data-wow-talent-spec]').value;
-    const prior = loadWowTalentDraft() || { classId: planner.dataset.classId, allocation: {}, name: '' };
+    const prior = loadWowTalentDraft() || { classId: planner.dataset.classId, specializationId: planner.querySelector('[data-wow-talent-spec]').value, allocation: {}, name: '', mode: planner.dataset.mode || 'custom', guidedBuildId: planner.querySelector('[data-wow-guided-build]')?.value || '' };
     const next = {
       classId: selectedClassId,
       specializationId: selectedSpecializationId,
+      mode: prior.mode === 'guided' && wowGuidedData?.builds?.some(build => build.classId === selectedClassId && build.specializationId === selectedSpecializationId) ? 'guided' : 'custom',
+      guidedBuildId: prior.guidedBuildId || '',
       level: selectedLevel,
-      talentedRank: Number(planner.querySelector('[data-wow-talented-rank]').value) || 0,
+      talentedRank: Number(planner.querySelector('[data-wow-talented-rank]')?.value) || Number(prior.talentedRank) || 0,
       allocation: prior.classId === selectedClassId ? prior.allocation : {},
       name: prior.classId === selectedClassId ? prior.name : '',
       editingBuildId: prior.classId === selectedClassId ? prior.editingBuildId : ''
     };
+    if (event.target.matches('[data-wow-guided-build]')) { next.guidedBuildId = event.target.value; next.mode = 'guided'; }
     saveWowTalentDraft(next);
     saveWowProfile({ ...loadWowProfile(), classId: next.classId, specializationId: next.specializationId, currentLevel: next.level, talentBuildId: next.editingBuildId || '' });
-    saveWowProfile({ ...loadWowProfile(), classId: next.classId, currentLevel: next.level, talentBuildId: next.editingBuildId || '' });
     if (event.target.matches('[data-wow-talent-level-slider]')) {
       planner.querySelector('[data-wow-talent-level]').value = String(selectedLevel);
     }

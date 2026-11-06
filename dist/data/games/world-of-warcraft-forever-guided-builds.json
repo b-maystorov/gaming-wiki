@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "World of Warcraft: Forever",
+  "talentClientBuild": "1.60.1.70755",
+  "lastReviewed": "2026-11-06",
+  "sources": [
+    {
+      "id": "icy-enhancement-leveling",
+      "title": "Icy Veins · Enhancement Shaman Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-leveling",
+      "updated": "2026-11-04",
+      "use": "Level-20 Shamanistic Focus and level-25 Stormstrike milestones; the guide describes an optional Restoration-first respec path."
+    },
+    {
+      "id": "mobalytics-shaman-leveling",
+      "title": "Mobalytics · WoW Forever Shaman Leveling Guide",
+      "url": "https://mobalytics.gg/wow-forever/classes/shaman-leveling-guide",
+      "updated": "2026-11-06",
+      "use": "Cross-check for talent priorities and the published level-by-level Enhancement route."
+    },
+    {
+      "id": "topbuilds-enhancement-leveling",
+      "title": "TopBuilds · Enhancement Shaman Leveling Build & Talents",
+      "url": "https://topbuilds.gg/wow-forever/shaman/enhancement/",
+      "updated": "2026-11-04",
+      "use": "Cross-check for client-era talent names, rank caps, and the level-30 beta endpoint."
+    }
+  ],
+  "builds": [
+    {
+      "id": "bm-shaman-enhancement-solo-10-30",
+      "name": "Mana-aware solo leveling · beta route",
+      "classId": "shaman",
+      "specializationId": "enhancement",
+      "playstyle": "solo-leveling",
+      "role": "Melee damage",
+      "levelRange": { "from": 10, "through": 30 },
+      "coverage": {
+        "status": "partial",
+        "label": "Point progression to level 30 · not verified beyond the beta cap",
+        "highestDocumentedLevel": 30,
+        "beyondRange": "Hold the level-30 allocation and disclose the coverage limit; never extrapolate points."
+      },
+      "sourceIds": [
+        "icy-enhancement-leveling",
+        "mobalytics-shaman-leveling",
+        "topbuilds-enhancement-leveling"
+      ],
+      "gameClientVersion": "1.60.1.70755",
+      "confidence": "Cross-source synthesis checked against local talent IDs, rank caps, point budget, and named prerequisites. Tree-row point gates are not verified by the client export.",
+      "verificationStatus": "Partial · manual in-game verification still needed",
+      "summary": "An original no-respec solo route that brings the published level-20 Shamanistic Focus milestone forward, secures Stormstrike at level 25, and takes Improved Ghost Wolf before finishing the early Improved Stormstrike pickup. It is a BM Gaming Wiki synthesis, not a copied source build.",
+      "allocations": [
+        { "level": 10, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
+        { "level": 11, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
+        { "level": 12, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
+        { "level": 13, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
+        { "level": 14, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
+        { "level": 15, "talentId": "shaman-enhancement-improved-lightning-shield", "rankAdded": 1 },
+        { "level": 16, "talentId": "shaman-enhancement-improved-lightning-shield", "rankAdded": 1 },
+        { "level": 17, "talentId": "shaman-enhancement-improved-lightning-shield", "rankAdded": 1 },
+        { "level": 18, "talentId": "shaman-enhancement-mental-dexterity", "rankAdded": 1 },
+        { "level": 19, "talentId": "shaman-enhancement-mental-dexterity", "rankAdded": 1 },
+        { "level": 20, "talentId": "shaman-enhancement-shamanistic-focus", "rankAdded": 1 },
+        { "level": 21, "talentId": "shaman-enhancement-elemental-weapons", "rankAdded": 1 },
+        { "level": 22, "talentId": "shaman-enhancement-elemental-weapons", "rankAdded": 1 },
+        { "level": 23, "talentId": "shaman-enhancement-elemental-weapons", "rankAdded": 1 },
+        { "level": 24, "talentId": "shaman-enhancement-mental-dexterity", "rankAdded": 1 },
+        { "level": 25, "talentId": "shaman-enhancement-stormstrike", "rankAdded": 1 },
+        { "level": 26, "talentId": "shaman-enhancement-improved-ghost-wolf", "rankAdded": 1 },
+        { "level": 27, "talentId": "shaman-enhancement-improved-ghost-wolf", "rankAdded": 1 },
+        { "level": 28, "talentId": "shaman-enhancement-flurry", "rankAdded": 1 },
+        { "level": 29, "talentId": "shaman-enhancement-flurry", "rankAdded": 1 },
+        { "level": 30, "talentId": "shaman-enhancement-improved-stormstrike", "rankAdded": 1 }
+      ],
+      "respecEvents": [],
+      "milestones": [
+        { "level": 14, "talentId": "shaman-enhancement-thundering-strikes", "ranks": "5/5", "note": "Finish the early critical-strike investment." },
+        { "level": 20, "talentId": "shaman-enhancement-shamanistic-focus", "ranks": "1/1", "note": "Reach the source-highlighted Shock-cost milestone." },
+        { "level": 25, "talentId": "shaman-enhancement-stormstrike", "ranks": "1/1", "note": "Take Stormstrike at the first level the guide identifies as available." },
+        { "level": 30, "talentId": "shaman-enhancement-improved-stormstrike", "ranks": "1/2", "note": "Begin the Improved Stormstrike mana and reset investment; later ranks are outside this route's coverage." }
+      ],
+      "respecDisclosure": "This route does not respec. Icy Veins also describes an optional Restoration-first route and respec at 25, but its written guide does not publish that route's complete rank allocation; it is not offered here as an automatic build."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img" aria-labelledby="title desc">
+  <title id="title">Restoration waters and totems</title>
+  <desc id="desc">Original BM Gaming Wiki vector artwork of luminous healing water, a protective totem and a quiet twilight shore. Not official game artwork.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0b202b"/><stop offset=".58" stop-color="#28515c"/><stop offset="1" stop-color="#15242b"/></linearGradient>
+    <radialGradient id="moon"><stop stop-color="#e0f4dc" stop-opacity=".85"/><stop offset=".28" stop-color="#91d5c5" stop-opacity=".34"/><stop offset="1" stop-color="#77cabb" stop-opacity="0"/></radialGradient>
+    <linearGradient id="water" x2="0" y2="1"><stop stop-color="#83cbbd" stop-opacity=".76"/><stop offset="1" stop-color="#1a4550" stop-opacity=".16"/></linearGradient>
+  </defs>
+  <rect width="1120" height="640" fill="url(#sky)"/>
+  <circle cx="766" cy="188" r="230" fill="url(#moon)"/>
+  <path d="M0 363 138 271l117 83 133-140 126 148 141-92 126 88 120-126 219 126v282H0Z" fill="#172d36"/>
+  <path d="M0 405q190-22 380 0t380 0 360 0v235H0Z" fill="url(#water)"/>
+  <path d="M0 500q130-25 260 0t260 0 260 0 340 0M0 554q112-18 224 0t224 0 224 0 224 0 224 0" fill="none" stroke="#b4e6d6" stroke-width="4" opacity=".42"/>
+  <g transform="translate(282 284)" fill="none" stroke="#c7b77e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 274V78q0-42 38-42t38 42v196M-17 99h110M-4 150h85M10 40 38 0l28 40"/>
+    <path d="M38 79v57m-20-29h40" stroke="#9bded1" stroke-width="8"/>
+  </g>
+  <path d="M507 338q-28 41 0 70 27-29 0-70Zm90 60q-21 31 0 52 20-21 0-52Zm-41-124q-17 26 0 43 17-17 0-43Z" fill="#a3e5d5" opacity=".8"/>
+  <path d="M0 594q150-34 300 0t300 0 300 0 220 0v46H0Z" fill="#0b151a"/>
+  <rect x="1" y="1" width="1118" height="638" fill="none" stroke="#91d2c2" stroke-opacity=".45" stroke-width="2"/>
+</svg>

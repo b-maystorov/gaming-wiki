@@ -94,6 +94,100 @@ export function adjustWowTalentRank(classRecord, allocation, talentId, change, a
   return { allocation: next, error: '' };
 }
 
+export function validateWowGuidedBuild(build, catalog) {
+  const classRecord = catalog?.classes?.find(item => item.id === build?.classId);
+  const issues = [];
+  if (!classRecord) return { valid: false, issues: ['The guided build class is missing from the client dataset.'] };
+  if (!Array.isArray(build.allocations) || !build.coverage?.highestDocumentedLevel) {
+    return { valid: false, issues: ['The guided build has no ordered allocations or coverage limit.'] };
+  }
+  const talentById = new Map(classRecord.trees.flatMap(tree => tree.talents).map(talent => [talent.id, talent]));
+  const allocation = {};
+  const respecByLevel = new Map((build.respecEvents || []).map(event => [event.level, event]));
+  for (let level = build.levelRange.from; level <= build.coverage.highestDocumentedLevel; level++) {
+    const respec = respecByLevel.get(level);
+    if (respec) {
+      const check = validateWowTalentAllocation(classRecord, respec.toAllocation, availableWowTalentPoints(level, 0));
+      if (!check.valid) issues.push(`Level ${level} respec allocation is invalid: ${check.issues[0]}`);
+      else {
+        Object.keys(allocation).forEach(id => delete allocation[id]);
+        Object.assign(allocation, respec.toAllocation);
+      }
+    }
+    const changes = build.allocations.filter(change => change.level === level);
+    if (level >= build.levelRange.from && changes.length !== 1) issues.push(`Level ${level} must have exactly one recorded talent point.`);
+    for (const change of changes) {
+      const talent = talentById.get(change.talentId);
+      if (!talent) { issues.push(`Level ${level} references an unknown talent: ${change.talentId}`); continue; }
+      if (!Number.isInteger(change.rankAdded) || change.rankAdded < 1 || change.rankAdded > talent.maxRank) {
+        issues.push(`Level ${level} has an invalid rank change for ${talent.name}.`);
+        continue;
+      }
+      for (let rank = 0; rank < change.rankAdded; rank++) {
+        const result = adjustWowTalentRank(classRecord, allocation, talent.id, 1, availableWowTalentPoints(level, 0));
+        if (result.error) { issues.push(`Level ${level}: ${result.error}`); break; }
+        Object.assign(allocation, result.allocation);
+      }
+      const check = validateWowTalentAllocation(classRecord, allocation, availableWowTalentPoints(level, 0));
+      if (!check.valid) issues.push(`Level ${level} allocation is invalid: ${check.issues[0]}`);
+    }
+  }
+  return { valid: issues.length === 0, issues };
+}
+
+export function resolveWowGuidedBuild(build, catalog, requestedLevel) {
+  const classRecord = catalog?.classes?.find(item => item.id === build?.classId);
+  const level = Math.max(1, Math.min(60, Number(requestedLevel) || 1));
+  if (!classRecord || !build) return { valid: false, allocation: {}, level, snapshotLevel: level, total: 0, issues: ['Choose a supported guided build.'] };
+  const buildCheck = validateWowGuidedBuild(build, catalog);
+  if (!buildCheck.valid) return { valid: false, allocation: {}, level, snapshotLevel: level, total: 0, issues: buildCheck.issues };
+  const maxLevel = build.coverage.highestDocumentedLevel;
+  const snapshotLevel = Math.min(level, maxLevel);
+  const allocation = {};
+  const respecs = (build.respecEvents || []).filter(event => event.level <= snapshotLevel).sort((a, b) => a.level - b.level);
+  const changesByLevel = new Map();
+  for (const change of build.allocations) {
+    if (change.level > snapshotLevel) continue;
+    const changes = changesByLevel.get(change.level) || [];
+    changes.push(change);
+    changesByLevel.set(change.level, changes);
+  }
+  const eventLevels = [...new Set([...respecs.map(event => event.level), ...changesByLevel.keys()])].sort((a, b) => a - b);
+  const changesAtRequestedLevel = [];
+  let respecAtRequestedLevel = null;
+  for (const eventLevel of eventLevels) {
+    const respec = respecs.find(event => event.level === eventLevel);
+    if (respec) {
+      const oldAllocation = { ...allocation };
+      Object.keys(allocation).forEach(id => delete allocation[id]);
+      Object.assign(allocation, respec.toAllocation);
+      if (eventLevel === level) respecAtRequestedLevel = { ...respec, oldAllocation, newAllocation: { ...allocation } };
+    }
+    for (const change of changesByLevel.get(eventLevel) || []) {
+      for (let rank = 0; rank < change.rankAdded; rank++) {
+        const result = adjustWowTalentRank(classRecord, allocation, change.talentId, 1, availableWowTalentPoints(eventLevel, 0));
+        if (result.error) return { valid: false, allocation, level, snapshotLevel, total: Object.values(allocation).reduce((sum, value) => sum + value, 0), issues: [result.error] };
+        Object.assign(allocation, result.allocation);
+      }
+      if (eventLevel === level) changesAtRequestedLevel.push(change);
+    }
+  }
+  const validation = validateWowTalentAllocation(classRecord, allocation, availableWowTalentPoints(snapshotLevel, 0));
+  return {
+    valid: validation.valid,
+    allocation,
+    level,
+    snapshotLevel,
+    total: validation.total,
+    changesAtRequestedLevel,
+    respecAtRequestedLevel,
+    nextChange: build.allocations.find(change => change.level > snapshotLevel) || null,
+    nextMilestone: build.milestones?.find(milestone => milestone.level > snapshotLevel) || null,
+    covered: level <= maxLevel,
+    issues: validation.issues
+  };
+}
+
 export function loadWowTalentDraft(storage) {
   try {
     const store = storage ?? globalThis.localStorage;
@@ -103,6 +197,8 @@ export function loadWowTalentDraft(storage) {
     return {
       classId: typeof saved.classId === 'string' ? saved.classId : '',
       specializationId: typeof saved.specializationId === 'string' ? saved.specializationId.slice(0, 32) : '',
+      mode: saved.mode === 'guided' ? 'guided' : 'custom',
+      guidedBuildId: typeof saved.guidedBuildId === 'string' ? saved.guidedBuildId.slice(0, 80) : '',
       level: Number.isInteger(level) && level >= 1 && level <= 60 ? level : 1,
       talentedRank: Math.max(0, Math.min(5, Number(saved.talentedRank) || 0)),
       allocation: saved.allocation && typeof saved.allocation === 'object' && !Array.isArray(saved.allocation) ? saved.allocation : {},
@@ -119,6 +215,8 @@ export function saveWowTalentDraft(draft, storage) {
     store.setItem(WOW_TALENT_DRAFT_STORAGE_KEY, JSON.stringify({
       classId: String(draft?.classId || '').slice(0, 32),
       specializationId: String(draft?.specializationId || '').slice(0, 32),
+      mode: draft?.mode === 'guided' ? 'guided' : 'custom',
+      guidedBuildId: String(draft?.guidedBuildId || '').slice(0, 80),
       level: Math.max(1, Math.min(60, Number(draft?.level) || 1)),
       talentedRank: Math.max(0, Math.min(5, Number(draft?.talentedRank) || 0)),
       allocation: draft?.allocation && typeof draft.allocation === 'object' && !Array.isArray(draft.allocation) ? draft.allocation : {},
@@ -158,7 +256,7 @@ export function deleteWowTalentBuild(id, storage) {
 }
 
 export function encodeWowTalentBuild(build) {
-  return encodeURIComponent(JSON.stringify({ version: build.dataVersion, classId: build.classId, specializationId: build.specializationId || '', level: build.level, talentedRank: build.talentedRank, allocation: build.allocation }));
+  return encodeURIComponent(JSON.stringify({ version: build.dataVersion, classId: build.classId, specializationId: build.specializationId || '', level: build.level, talentedRank: build.talentedRank, allocation: build.allocation, mode: build.mode, guidedBuildId: build.guidedBuildId || '' }));
 }
 
 export function decodeWowTalentBuild(token, catalog) {
@@ -168,7 +266,7 @@ export function decodeWowTalentBuild(token, catalog) {
     if (!classRecord || build.version !== catalog.clientBuild || !build.allocation || typeof build.allocation !== 'object' || Array.isArray(build.allocation)) return null;
     const available = availableWowTalentPoints(build.level, build.talentedRank);
     if (!validateWowTalentAllocation(classRecord, build.allocation, available).valid) return null;
-    return { classId: build.classId, specializationId: typeof build.specializationId === 'string' ? build.specializationId.slice(0, 32) : '', level: Math.max(1, Math.min(60, Number(build.level) || 1)), talentedRank: Math.max(0, Math.min(5, Number(build.talentedRank) || 0)), allocation: build.allocation };
+    return { classId: build.classId, specializationId: typeof build.specializationId === 'string' ? build.specializationId.slice(0, 32) : '', level: Math.max(1, Math.min(60, Number(build.level) || 1)), talentedRank: Math.max(0, Math.min(5, Number(build.talentedRank) || 0)), allocation: build.allocation, mode: build.mode === 'guided' ? 'guided' : 'custom', guidedBuildId: typeof build.guidedBuildId === 'string' ? build.guidedBuildId.slice(0, 80) : '' };
   } catch { return null; }
 }
 
@@ -215,25 +313,38 @@ function renderWowSpellbook(classRecord, catalog, escapeHtml) {
   return `<details class="wow-spellbook"><summary>Open Forever trainer spellbook <span>${spellbook.tabs.reduce((sum, tab) => sum + tab.spells.length, 0)} spell/rank records</span></summary>${featured}<p class="wow-note">Spell IDs and descriptions come from a client-derived Forever export; rank source details vary by spell. Blank descriptions mean no verified tooltip text was supplied.</p>${tabs}<p class="wow-source-link">Data: <a href="https://talentsforever.com/data.json" target="_blank" rel="noreferrer">Talents Forever client-data export ↗</a></p></details>`;
 }
 
-function renderWowTalentPlanner(data, catalog, profile, route, escapeHtml) {
+function renderWowTalentPlanner(data, catalog, profile, route, escapeHtml, guidedData = null) {
   if (!catalog?.classes?.length) return '<p class="wow-note">The Forever talent records could not be loaded. No Classic-era talent tree is substituted.</p>';
+  const guidedBuilds = guidedData?.builds || [];
   const savedDraft = loadWowTalentDraft();
   const shared = route.sharedBuildToken && !savedDraft ? decodeWowTalentBuild(route.sharedBuildToken, catalog) : null;
-  let state = savedDraft || shared || { classId: profile.classId || 'shaman', specializationId: profile.specializationId || '', level: profile.currentLevel || 1, talentedRank: 0, allocation: {}, name: '' };
+  let state = savedDraft || shared || {
+    classId: profile.classId || 'shaman', specializationId: profile.specializationId || '',
+    mode: 'guided', guidedBuildId: '', level: profile.currentLevel || 10, talentedRank: 0,
+    allocation: {}, name: '', editingBuildId: ''
+  };
   if (!state.specializationId) state.specializationId = profile.specializationId || '';
   const classId = catalog.classes.some(item => item.id === state.classId) ? state.classId : catalog.classes[0].id;
   const classRecord = catalog.classes.find(item => item.id === classId);
   const sourceClass = data.classes.find(item => item.id === classId);
-  const selectedSpecializationId = sourceClass.specializations.some(item => item.id === state.specializationId)
+  const preferredGuide = guidedBuilds.find(build => build.classId === classId);
+  const specializationId = sourceClass.specializations.some(item => item.id === state.specializationId)
     ? state.specializationId
-    : sourceClass.specializations[0]?.id || '';
-  const availablePoints = availableWowTalentPoints(state.level, state.talentedRank);
-  const validation = validateWowTalentAllocation(classRecord, state.allocation, availablePoints);
+    : preferredGuide?.specializationId || sourceClass.specializations[0]?.id || '';
+  const matchingGuides = guidedBuilds.filter(build => build.classId === classId && build.specializationId === specializationId);
+  const selectedGuide = matchingGuides.find(build => build.id === state.guidedBuildId) || matchingGuides[0] || null;
+  const mode = state.mode === 'guided' && selectedGuide ? 'guided' : 'custom';
+  const level = Math.max(1, Math.min(60, Number(state.level) || 1));
+  const guidedState = mode === 'guided' ? resolveWowGuidedBuild(selectedGuide, catalog, level) : null;
+  const allocation = mode === 'guided' ? guidedState.allocation : (state.allocation || {});
+  const budgetLevel = mode === 'guided' ? guidedState.snapshotLevel : level;
+  const availablePoints = availableWowTalentPoints(budgetLevel, state.talentedRank);
+  const validation = validateWowTalentAllocation(classRecord, allocation, availablePoints);
   const points = validation.total;
-  const nextSupportedMilestone = classId === 'shaman'
-    ? data.enhancementGuide?.talentMilestones.find(item => item.kind === 'talent' && item.level >= state.level)
-    : null;
   const talentMap = new Map(classRecord.trees.flatMap(tree => tree.talents.map(talent => [talent.id, talent])));
+  const addedIds = new Set((guidedState?.changesAtRequestedLevel || []).map(change => change.talentId));
+  const nextTalentId = guidedState?.nextChange?.talentId || '';
+  const treeDistribution = classRecord.trees.map(tree => `${tree.name} ${tree.talents.reduce((sum, talent) => sum + (Number(allocation[talent.id]) || 0), 0)}`).join(' · ');
   const trees = classRecord.trees.map(tree => {
     const maxRow = Math.max(...tree.talents.map(talent => talent.row));
     const maxColumn = Math.max(...tree.talents.map(talent => talent.column));
@@ -245,27 +356,80 @@ function renderWowTalentPlanner(data, catalog, profile, route, escapeHtml) {
       return `<path d="M${x1} ${y1} L${x2} ${y2}" />`;
     }).join('');
     const nodes = tree.talents.map(talent => {
-      const rank = Number(state.allocation?.[talent.id]) || 0;
+      const rank = Number(allocation[talent.id]) || 0;
       const prerequisite = talent.prerequisite ? tree.talents.find(item => item.name === talent.prerequisite) : null;
-      const unmet = prerequisite && Number(state.allocation?.[prerequisite.id] || 0) < prerequisite.maxRank;
+      const unmet = prerequisite && Number(allocation[prerequisite.id] || 0) < prerequisite.maxRank;
       const effect = rank ? talent.rankEffects[Math.min(rank - 1, talent.rankEffects.length - 1)] : talent.rankEffects[0];
-      const title = `${talent.name} · Rank ${rank}/${talent.maxRank}\n${effect || 'Effect text unavailable.'}${talent.prerequisite ? `\nRequires ${talent.prerequisite} at full rank.` : ''}`;
+      const nextEffect = rank < talent.maxRank ? talent.rankEffects[rank] : '';
+      const title = `${talent.name} · Rank ${rank}/${talent.maxRank}\n${effect || 'Effect text unavailable.'}${nextEffect ? `\nNext rank: ${nextEffect}` : '\nMaximum rank reached.'}${talent.prerequisite ? `\nRequires ${talent.prerequisite} at full rank.` : ''}\nTree point gates are not verified.`;
       const columnTitle = `${talent.name}, rank ${rank} of ${talent.maxRank}${unmet ? `, requires ${talent.prerequisite}` : ''}`;
-      return `<article class="wow-talent-node${rank ? ' is-spent' : ''}${unmet ? ' is-locked' : ''}" style="grid-row:${talent.row};grid-column:${talent.column}"><button type="button" class="wow-talent-add" data-wow-talent-add="${escapeHtml(talent.id)}" aria-label="Add a point to ${escapeHtml(columnTitle)}" title="${escapeHtml(title)}"${rank >= talent.maxRank || points >= availablePoints || unmet ? ' disabled' : ''}><span class="wow-talent-rank">${rank}/${talent.maxRank}</span>${renderWowIcon(talent.icon, `${talent.name} talent icon`, escapeHtml, 'wow-talent-icon')}<strong>${escapeHtml(talent.name)}</strong></button><button type="button" class="wow-talent-remove" data-wow-talent-remove="${escapeHtml(talent.id)}" aria-label="Remove a point from ${escapeHtml(columnTitle)}"${rank === 0 ? ' disabled' : ''}>−</button>${talent.prerequisite ? `<small>Requires ${escapeHtml(talent.prerequisite)}</small>` : ''}</article>`;
+      const classes = ['wow-talent-node', rank ? 'is-spent' : '', unmet ? 'is-locked' : '', addedIds.has(talent.id) ? 'is-current-addition' : '', nextTalentId === talent.id ? 'is-next-recommended' : ''].filter(Boolean).join(' ');
+      const pointDisabled = mode === 'guided' || rank >= talent.maxRank || points >= availablePoints || unmet;
+      return `<article class="${classes}" style="grid-row:${talent.row};grid-column:${talent.column}"><button type="button" class="wow-talent-add" data-wow-talent-add="${escapeHtml(talent.id)}" aria-label="Add a point to ${escapeHtml(columnTitle)}" title="${escapeHtml(title)}"${pointDisabled ? ' disabled' : ''}><span class="wow-talent-rank">${rank}/${talent.maxRank}</span>${renderWowIcon(talent.icon, `${talent.name} talent icon`, escapeHtml, 'wow-talent-icon')}<strong>${escapeHtml(talent.name)}</strong></button><button type="button" class="wow-talent-remove" data-wow-talent-remove="${escapeHtml(talent.id)}" aria-label="Remove a point from ${escapeHtml(columnTitle)}"${rank === 0 || mode === 'guided' ? ' disabled' : ''}>−</button>${talent.prerequisite ? `<small>Requires ${escapeHtml(talent.prerequisite)}</small>` : ''}</article>`;
     }).join('');
-    return `<section class="wow-talent-tree" aria-label="${escapeHtml(tree.name)} talent tree"><header>${renderWowIcon(tree.icon, `${tree.name} tree icon`, escapeHtml, 'wow-tree-icon')}<div><h3>${escapeHtml(tree.name)}</h3><small>${tree.talents.length} client talent records</small></div></header><div class="wow-talent-tree-scroll"><div class="wow-talent-grid" style="--talent-columns:${maxColumn};--talent-rows:${maxRow}"><svg class="wow-talent-links" viewBox="0 0 ${maxColumn * 96} ${maxRow * 104}" aria-hidden="true">${connectors}</svg>${nodes}</div></div></section>`;
+    return `<section class="wow-talent-tree" data-tree-id="${escapeHtml(tree.id)}" data-class-id="${escapeHtml(classId)}" aria-label="${escapeHtml(tree.name)} talent tree"><header>${renderWowIcon(tree.icon, `${tree.name} tree icon`, escapeHtml, 'wow-tree-icon')}<div><h3>${escapeHtml(tree.name)}</h3><small>${tree.talents.length} client talent records</small></div></header><div class="wow-talent-tree-scroll"><div class="wow-talent-grid" style="--talent-columns:${maxColumn};--talent-rows:${maxRow}"><svg class="wow-talent-links" viewBox="0 0 ${maxColumn * 96} ${maxRow * 104}" aria-hidden="true">${connectors}</svg>${nodes}</div></div></section>`;
   }).join('');
   const savedBuilds = loadWowTalentBuilds();
-  const staleBuilds = savedBuilds.filter(build => build.classId === classId && (build.dataVersion !== catalog.clientBuild || !validateWowTalentAllocation(classRecord, build.allocation, availableWowTalentPoints(build.level, build.talentedRank)).valid));
   const matchingBuilds = savedBuilds.filter(build => build.classId === classId);
+  const staleBuilds = matchingBuilds.filter(build => build.dataVersion !== catalog.clientBuild || !validateWowTalentAllocation(classRecord, build.allocation, availableWowTalentPoints(build.level, build.talentedRank)).valid);
   const source = catalog.sources?.[0];
-  const share = encodeWowTalentBuild({ dataVersion: catalog.clientBuild, classId, specializationId: selectedSpecializationId, level: state.level, talentedRank: state.talentedRank, allocation: state.allocation || {} });
+  const share = encodeWowTalentBuild({ dataVersion: catalog.clientBuild, classId, specializationId, level, talentedRank: state.talentedRank, allocation, mode, guidedBuildId: mode === 'guided' ? selectedGuide.id : '' });
   const sourceNote = classRecord.sourceNote || `Client talent snapshot ${catalog.clientBuild}.`;
-  const malformedIds = Object.keys(state.allocation || {}).filter(id => !talentMap.has(id));
+  const malformedIds = Object.keys(allocation).filter(id => !talentMap.has(id));
   const shareWarning = route.sharedBuildToken && !savedDraft && !shared ? '<p class="wow-talent-issues" role="status">This shared build is invalid or uses a different talent-data version. It was not loaded.</p>' : '';
-  return `<section class="wow-talent-planner" data-wow-talent-planner data-class-id="${escapeHtml(classId)}"><p class="wow-lede">Plan directly on Forever’s client-derived talent grids. Each node shows its recorded rank and named prerequisite. No automatic route is shown where point-by-point recommendations are unavailable.</p>${shareWarning}<div class="wow-talent-controls"><label>Class<select data-wow-talent-class>${catalog.classes.map(item => `<option value="${escapeHtml(item.id)}"${item.id === classId ? ' selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label><label>Specialization<select data-wow-talent-spec>${sourceClass.specializations.map(item => `<option value="${escapeHtml(item.id)}"${item.id === selectedSpecializationId ? ' selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label><label>Current level<input type="number" min="1" max="60" value="${escapeHtml(String(state.level))}" data-wow-talent-level></label><label class="wow-level-slider-label">Level ${escapeHtml(String(state.level))}<input type="range" min="1" max="60" value="${escapeHtml(String(state.level))}" aria-label="Leveling talent build level" data-wow-talent-level-slider></label><div class="wow-level-stepper"><button type="button" data-wow-talent-level-step="-1"${state.level <= 1 ? ' disabled' : ''}>← Previous level</button><strong>Level ${escapeHtml(String(state.level))}</strong><button type="button" data-wow-talent-level-step="1"${state.level >= 60 ? ' disabled' : ''}>Next level →</button></div><label>Legacy · Talented rank<select data-wow-talented-rank>${Array.from({length:6},(_,rank)=>`<option value="${rank}"${rank === state.talentedRank ? ' selected' : ''}>${rank}/5 · ${rank ? `first point at level ${10-rank}` : 'no early talent points'}</option>`).join('')}</select></label></div><header class="wow-talent-heading" style="--class-accent:${escapeHtml(sourceClass?.color || '#c0a46b')}">${renderClassEmblem(classId,catalog,escapeHtml,'wow-class-emblem-large')}<div><p class="wow-eyebrow">World of Warcraft: Forever · Talent planner</p><h3>${escapeHtml(classRecord.name)}</h3><p>${escapeHtml(sourceNote)}</p><small>Snapshot ${escapeHtml(catalog.snapshotDate)} · build ${escapeHtml(catalog.clientBuild)} · ranks may have changed in later patches.</small></div></header><div class="wow-talent-meter"><strong>${points} / ${availablePoints}</strong><span>points spent / available at level ${escapeHtml(String(state.level))}</span><span>${availablePoints-points} points remaining</span></div>${nextSupportedMilestone ? `<aside class="wow-next-talent"><strong>Next sourced Shaman talent milestone · Level ${nextSupportedMilestone.level}: ${escapeHtml(nextSupportedMilestone.name)}</strong><span>${escapeHtml(nextSupportedMilestone.note)} The source does not specify a complete point-by-point allocation.</span></aside>` : ''}${validation.issues.length ? `<ul class="wow-talent-issues" role="status">${validation.issues.map(issue=>`<li>${escapeHtml(issue)}</li>`).join('')}</ul>` : ''}${malformedIds.length ? `<p class="wow-note" role="status">${malformedIds.length} stale talent reference(s) from a previous dataset were ignored. Reset or review this build before saving.</p>` : ''}<p class="wow-talent-rule-note">${escapeHtml(catalog.talentRuleNote)} The planner validates point budget, rank caps, and the named full-rank prerequisite shown for each node. It does not verify per-row point gates.</p><div class="wow-talent-trees">${trees}</div><div class="wow-talent-save"><label>Build name<input type="text" maxlength="60" value="${escapeHtml(state.name || '')}" data-wow-build-name placeholder="e.g. Leveling test"></label><button type="button" data-wow-talent-save>${state.editingBuildId ? 'Update saved build' : 'Save build'}</button><button type="button" data-wow-talent-reset>Reset allocations</button><button type="button" data-wow-talent-share data-share-url="#game/world-of-warcraft/talent-planner/${escapeHtml(share)}">Copy share link</button><span role="status" aria-live="polite" data-wow-talent-status></span></div><section class="wow-saved-builds"><h3>Saved ${escapeHtml(classRecord.name)} builds</h3>${staleBuilds.length ? `<p class="wow-note">${staleBuilds.length} saved build(s) need review against the current talent snapshot.</p>` : ''}${matchingBuilds.length ? `<ul>${matchingBuilds.map(build=>`<li><strong>${escapeHtml(build.name)}</strong><span>Level ${escapeHtml(String(build.level))} · ${Object.values(build.allocation || {}).reduce((sum,rank)=>sum+(Number(rank)||0),0)} points</span><button type="button" data-wow-talent-load="${escapeHtml(build.id)}"${build.dataVersion !== catalog.clientBuild ? ' disabled aria-label="Saved against an older talent data version"' : ''}>Load</button><button type="button" data-wow-talent-delete="${escapeHtml(build.id)}">Delete</button></li>`).join('')}</ul>` : '<p>No saved builds for this class yet.</p>'}</section><p class="wow-source-link">Talent data adapted from <a href="${escapeHtml(source?.url || 'https://talentsforever.com/data.json')}" target="_blank" rel="noreferrer">Talents Forever · CC BY 4.0 ↗</a></p></section>`;
+  const guidedShareAction = mode === 'guided' ? `<p class="wow-guided-share"><button type="button" data-wow-talent-share data-share-url="#game/world-of-warcraft/talent-planner/${escapeHtml(share)}">Copy this guided build link</button></p>` : '';
+  const guidedOptions = matchingGuides.map(build => `<option value="${escapeHtml(build.id)}"${selectedGuide?.id === build.id ? ' selected' : ''}>${escapeHtml(build.name)}</option>`).join('');
+  const modeControls = `<fieldset class="wow-talent-modes"><legend>Build mode</legend><button type="button" data-wow-talent-mode="guided" aria-pressed="${mode === 'guided'}"${!selectedGuide ? ' disabled' : ''}>Guided Leveling</button><button type="button" data-wow-talent-mode="custom" aria-pressed="${mode === 'custom'}">Custom Build</button>${mode === 'guided' ? '<button type="button" class="wow-copy-guided" data-wow-guided-copy>Copy this level into a new Custom Build</button>' : ''}</fieldset>`;
+  const guideControls = `<label>Recommended build<select data-wow-guided-build${matchingGuides.length ? '' : ' disabled'}>${guidedOptions || '<option value="">No guided build verified for this class and specialization</option>'}</select></label>`;
+  let guidedNotes = '';
+  let progressionMarkup = '';
+  if (mode === 'guided' && selectedGuide) {
+    const buildSources = selectedGuide.sourceIds.map(id => (guidedData?.sources || []).find(item => item.id === id)).filter(Boolean);
+    const sourceLinks = buildSources.map(item => `<a href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">${escapeHtml(item.title)} · updated ${escapeHtml(item.updated)}</a>`).join(' · ');
+    const nextTalent = guidedState.nextChange ? talentMap.get(guidedState.nextChange.talentId) : null;
+    const currentMilestone = selectedGuide.milestones?.find(item => item.level === guidedState.snapshotLevel);
+    const upcomingMilestone = guidedState.nextMilestone;
+    const addedNames = guidedState.changesAtRequestedLevel.map(change => talentMap.get(change.talentId)?.name).filter(Boolean);
+    const changeNote = guidedState.respecAtRequestedLevel
+      ? `<p class="wow-level-change is-respec"><strong>Level ${level} respec:</strong> ${escapeHtml(guidedState.respecAtRequestedLevel.reason || 'This route changes its allocation here.')}</p>`
+      : addedNames.length ? `<p class="wow-level-change"><strong>At level ${level}, this build adds ${guidedState.changesAtRequestedLevel.map(change => `${escapeHtml(talentMap.get(change.talentId)?.name || change.talentId)} rank ${Number(allocation[change.talentId]) || 0}`).join(', ')}.</strong></p>`
+        : '<p class="wow-level-change">No new talent point is recorded for this level.</p>';
+    const coverageNote = !guidedState.covered
+      ? `<p class="wow-coverage-note" role="status">Level ${level} is beyond this route’s documented level ${selectedGuide.coverage.highestDocumentedLevel}. Showing the level-${guidedState.snapshotLevel} allocation; later talents are not projected.</p>`
+      : level < selectedGuide.levelRange.from
+        ? `<p class="wow-coverage-note" role="status">This route starts at level ${selectedGuide.levelRange.from}; no earlier talents are assumed.</p>`
+        : '';
+    guidedNotes = `<section class="wow-guided-summary" aria-live="polite"><div><p class="wow-eyebrow">${escapeHtml(selectedGuide.name)} · ${escapeHtml(selectedGuide.verificationStatus)}</p><h4>Level ${level}${guidedState.covered ? '' : ` · showing documented level ${guidedState.snapshotLevel}`}</h4><p>${escapeHtml(selectedGuide.summary)}</p><p class="wow-guided-distribution">${escapeHtml(treeDistribution)}</p></div><div><strong>Next recommended talent</strong><p>${nextTalent ? `Level ${guidedState.nextChange.level} · ${escapeHtml(nextTalent.name)}` : 'No later point in documented coverage.'}</p>${upcomingMilestone ? `<strong>Upcoming milestone · Level ${upcomingMilestone.level}</strong><p>${escapeHtml(talentMap.get(upcomingMilestone.talentId)?.name || '')} · ${escapeHtml(upcomingMilestone.note)}</p>` : ''}${currentMilestone ? `<p class="wow-milestone-current">Current milestone · ${escapeHtml(currentMilestone.ranks)} ${escapeHtml(talentMap.get(currentMilestone.talentId)?.name || '')}</p>` : ''}</div></section>${changeNote}${coverageNote}<p class="wow-guide-confidence">Coverage: ${escapeHtml(selectedGuide.coverage.label)} · ${escapeHtml(selectedGuide.confidence)} ${escapeHtml(selectedGuide.respecDisclosure || '')}</p><p class="wow-source-link">Sources: ${sourceLinks}</p>`;
+    const grouped = [];
+    for (const change of selectedGuide.allocations) {
+      const talent = talentMap.get(change.talentId);
+      if (!talent) continue;
+      const previous = grouped[grouped.length - 1];
+      if (previous && previous.talentId === change.talentId && previous.toLevel + 1 === change.level) {
+        previous.toLevel = change.level;
+        previous.lastRank = (previous.lastRank || 0) + change.rankAdded;
+      } else grouped.push({ talentId: change.talentId, fromLevel: change.level, toLevel: change.level, firstRank: Number(allocation[change.talentId]) || 0, lastRank: change.rankAdded });
+    }
+    const progressRows = grouped.map(row => {
+      const talent = talentMap.get(row.talentId);
+      const fromSnapshot = resolveWowGuidedBuild(selectedGuide, catalog, row.fromLevel - 1);
+      const startingRank = Number(fromSnapshot.allocation[row.talentId]) || 0;
+      const endingRank = startingRank + (row.toLevel - row.fromLevel + 1);
+      const levelLabel = row.fromLevel === row.toLevel ? `Level ${row.fromLevel}` : `Levels ${row.fromLevel}–${row.toLevel}`;
+      const current = level >= row.fromLevel && level <= row.toLevel;
+      const rowMarkup = `<span class="wow-progression-level">${levelLabel}</span><span class="wow-progression-talent">${renderWowIcon(talent.icon, `${talent.name} talent icon`, escapeHtml, 'wow-progression-icon')}<strong>${escapeHtml(talent.name)}</strong></span><span>${startingRank + 1}–${endingRank}/${talent.maxRank}</span><span>${escapeHtml(selectedGuide.milestones?.find(item => item.talentId === row.talentId)?.note || 'Part of the selected leveling route.')}</span>`;
+      return `<button type="button" class="wow-progression-row${current ? ' is-current' : ''}" data-wow-guided-level="${row.fromLevel}" aria-current="${current ? 'step' : 'false'}">${rowMarkup}</button>`;
+    }).join('');
+    progressionMarkup = `<section class="wow-guided-progression"><h4>Talent progression · ${escapeHtml(selectedGuide.levelRange.from)}–${escapeHtml(selectedGuide.coverage.highestDocumentedLevel)}</h4><div class="wow-progression-head"><span>Level</span><span>Talent</span><span>Ranks</span><span>Why</span></div><div class="wow-progression-table">${progressRows}</div><div class="wow-progression-mobile">${grouped.map(row => { const talent = talentMap.get(row.talentId); const current = level >= row.fromLevel && level <= row.toLevel; return `<details class="wow-progression-detail${current ? ' is-current' : ''}"><summary>${row.fromLevel}–${row.toLevel} · ${escapeHtml(talent.name)}</summary><button type="button" data-wow-guided-level="${row.fromLevel}">Move to level ${row.fromLevel}</button><p>${escapeHtml(selectedGuide.milestones?.find(item => item.talentId === row.talentId)?.note || 'Part of the selected leveling route.')}</p></details>`; }).join('')}</div></section>`;
+  }
+  const customActions = mode === 'custom' ? `<div class="wow-talent-save"><label>Build name<input type="text" maxlength="60" value="${escapeHtml(state.name || '')}" data-wow-build-name placeholder="e.g. My Enhancement build"></label><button type="button" data-wow-talent-save>${state.editingBuildId ? 'Update saved build' : 'Save as new build'}</button><button type="button" data-wow-talent-reset>Reset custom allocation</button><button type="button" data-wow-talent-share data-share-url="#game/world-of-warcraft/talent-planner/${escapeHtml(share)}">Copy share link</button><span role="status" aria-live="polite" data-wow-talent-status></span></div>` : '';
+  const savedList = matchingBuilds.length ? `<ul>${matchingBuilds.map(build => `<li><strong>${escapeHtml(build.name)}</strong><span>Level ${escapeHtml(String(build.level))} · ${Object.values(build.allocation || {}).reduce((sum, rank) => sum + (Number(rank) || 0), 0)} points</span><button type="button" data-wow-talent-load="${escapeHtml(build.id)}"${build.dataVersion !== catalog.clientBuild ? ' disabled aria-label="Saved against an older talent data version"' : ''}>Load into Custom Build</button><button type="button" data-wow-talent-delete="${escapeHtml(build.id)}">Delete</button></li>`).join('')}</ul>` : '<p>No saved custom builds for this class yet.</p>';
+  const unsupportedGuide = mode === 'custom' && !matchingGuides.length
+    ? `<p class="wow-coverage-note" role="status">No automatic build is currently available for ${escapeHtml(classRecord.name)} · ${escapeHtml(sourceClass.specializations.find(spec => spec.id === specializationId)?.name || '')}. Manual planning is available.</p>`
+    : '';
+  const copyNote = mode === 'custom' && state.copiedFromGuided ? '<p class="wow-note" role="status">Recommended allocation copied into a new unsaved custom draft. Your saved builds were not changed.</p>' : '';
+  return `<section class="wow-talent-planner" data-wow-talent-planner data-class-id="${escapeHtml(classId)}" data-mode="${mode}" data-guided-allocation="${escapeHtml(encodeURIComponent(JSON.stringify(guidedState?.allocation || {})))}">${shareWarning}<div class="wow-talent-controls"><label>Class<select data-wow-talent-class>${catalog.classes.map(item => `<option value="${escapeHtml(item.id)}"${item.id === classId ? ' selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label><label>Specialization<select data-wow-talent-spec>${sourceClass.specializations.map(item => `<option value="${escapeHtml(item.id)}"${item.id === specializationId ? ' selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label>${guideControls}<label>Current level<input type="number" min="1" max="60" value="${level}" data-wow-talent-level></label><label class="wow-level-slider-label">Level ${level}<input type="range" min="1" max="60" value="${level}" aria-label="Leveling talent build level" data-wow-talent-level-slider></label><div class="wow-level-stepper"><button type="button" data-wow-talent-level-step="-1"${level <= 1 ? ' disabled' : ''}>← Previous level</button><strong>Level ${level}</strong><button type="button" data-wow-talent-level-step="1"${level >= 60 ? ' disabled' : ''}>Next level →</button></div></div>${modeControls}${guidedShareAction}<header class="wow-talent-heading" style="--class-accent:${escapeHtml(sourceClass?.color || '#c0a46b')}">${renderClassEmblem(classId, catalog, escapeHtml, 'wow-class-emblem-large')}<div><p class="wow-eyebrow">World of Warcraft: Forever · Talent planner</p><h3>${escapeHtml(classRecord.name)} · ${escapeHtml(sourceClass.specializations.find(spec => spec.id === specializationId)?.name || '')}</h3><p>${escapeHtml(sourceNote)}</p><small>Snapshot ${escapeHtml(catalog.snapshotDate)} · client ${escapeHtml(catalog.clientBuild)}</small></div></header>${unsupportedGuide}${copyNote}${guidedNotes}<div class="wow-talent-meter"><strong>${points} / ${availablePoints}</strong><span>points spent / points at ${mode === 'guided' ? `snapshot level ${budgetLevel}` : `level ${level}`}</span><span>${availablePoints - points} remaining</span></div>${mode === 'guided' ? `<p class="wow-build-distribution">${escapeHtml(treeDistribution)}</p>` : ''}${validation.issues.length ? `<ul class="wow-talent-issues" role="status">${validation.issues.map(issue => `<li>${escapeHtml(issue)}</li>`).join('')}</ul>` : ''}${malformedIds.length ? `<p class="wow-note" role="status">${malformedIds.length} stale talent reference(s) are excluded from the visible tree.</p>` : ''}<p class="wow-talent-rule-note">${escapeHtml(catalog.talentRuleNote)} Known rank limits and named prerequisites are validated. Per-row point gates are not verified.</p><div class="wow-talent-trees" data-spec-tree-set="${escapeHtml(classId)}:${escapeHtml(specializationId)}">${trees}</div>${progressionMarkup}${customActions}<section class="wow-saved-builds"><h3>Saved custom builds · ${escapeHtml(classRecord.name)}</h3>${staleBuilds.length ? `<p class="wow-note">${staleBuilds.length} saved build(s) need review against the current talent snapshot.</p>` : ''}${savedList}</section><p class="wow-source-link">Talent node data: <a href="${escapeHtml(source?.url || 'https://talentsforever.com/data.json')}" target="_blank" rel="noreferrer">Talents Forever · CC BY 4.0 ↗</a></p></section>`;
 }
-
 export function getWowDungeonSuggestions(dungeons, level) {
   const currentLevel = Number(level) || 1;
   const records = Array.isArray(dungeons) ? dungeons : [];
@@ -339,7 +503,7 @@ function renderWowJourney(data, artworkManifest, catalog, profile, progress, esc
   </section>`;
 }
 
-export function renderWowPage(route, data, escapeHtml, artworkManifest = null, profile = {}, progress = loadWowGuideProgress(), catalog = null) {
+export function renderWowPage(route, data, escapeHtml, artworkManifest = null, profile = {}, progress = loadWowGuideProgress(), catalog = null, guidedData = null) {
   const href = view => `#game/world-of-warcraft/${view}`;
   const scene = `<div class="wow-scene" aria-hidden="true"><div class="wow-moon"></div><div class="wow-spires"></div></div>`;
   const categories = [
@@ -383,10 +547,10 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
   if (route.view === 'wow-build-detail') {
     const { classRecord, specialization: spec } = route;
     body = classRecord.id === 'shaman' && spec.id === 'enhancement'
-      ? renderEnhancementGuide(data, artworkManifest, escapeHtml, profile, catalog)
+      ? renderEnhancementGuide(data, artworkManifest, escapeHtml, profile, catalog, guidedData)
       : renderSpecOverview(classRecord, spec, data, href, escapeHtml, artworkManifest, profile, catalog);
   }
-  if (route.view === 'wow-talents') body = renderWowTalentPlanner(data,catalog,profile,route,escapeHtml);
+  if (route.view === 'wow-talents') body = renderWowTalentPlanner(data,catalog,profile,route,escapeHtml,guidedData);
   if (route.view === 'wow-leveling') body = `<p class="wow-lede">Choose your faction, class and current level to narrow the confirmed zone directory and open a class-specific first-steps guide.</p><p class="wow-note">${escapeHtml(data.specialAccess)}</p><div class="wow-zone-filters"><label>Faction <select data-wow-faction-filter><option value="all">All factions</option><option${profile.faction === 'Alliance' ? ' selected' : ''}>Alliance</option><option${profile.faction === 'Horde' ? ' selected' : ''}>Horde</option></select></label><label>Class <select data-wow-class-filter><option value="">Choose class</option>${data.classes.map(item => `<option value="${escapeHtml(item.id)}"${profile.classId === item.id ? ' selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label><label>Current level <input data-wow-level-filter type="number" min="1" max="60" inputmode="numeric" value="${profile.currentLevel || ''}" placeholder="1–60"><small>Unknown level bands remain visible.</small></label></div><section class="wow-leveling-next" data-wow-leveling-next aria-live="polite">${data.classes.some(item => item.id === profile.classId) ? (() => { const selected = data.classes.find(item => item.id === profile.classId); return `<strong>${escapeHtml(selected.name)} · ${escapeHtml(selected.starterGuide.specialization)} · Level ${escapeHtml(String(profile.currentLevel || 1))}</strong><p>${escapeHtml(selected.starterGuide.zoneAdvice)}</p><a href="#game/world-of-warcraft/classes/${escapeHtml(selected.id)}">Open ${escapeHtml(selected.name)} first-steps guide →</a>`; })() : '<strong>Start here</strong><p>Pick your class to see its current leveling recommendation.</p>'}</section><div class="wow-zone-grid">${data.zones.map(zone => { const range = zone.range?.split(/[–-]/).map(Number); const zoneLevelMatch = !profile.currentLevel || !range || Number(profile.currentLevel) >= range[0] && Number(profile.currentLevel) <= range[1]; const zoneFactionMatch = !profile.faction || zone.faction === 'Both' || zone.faction === profile.faction; return `<article class="wow-zone" id="${escapeHtml(zone.id)}" data-wow-zone-card data-zone-faction="${escapeHtml(zone.faction)}"${zoneLevelMatch && zoneFactionMatch ? '' : ' hidden'}${range ? ` data-level-start="${range[0]}" data-level-end="${range[1]}"` : ''}>${(() => { const picture = artworkManifest?.records?.find(record => record.kind === 'zone' && record.zoneId === zone.id); return picture ? `<img src="${escapeHtml(picture.src)}" alt="${escapeHtml(picture.alt)}" loading="lazy" width="560" height="300">` : '<span class="wow-zone-art-fallback" aria-hidden="true">✦</span>'; })()}<div><h2>${escapeHtml(zone.name)}</h2>${zone.new ? '<span class="wow-tag">New in Forever</span>' : ''}</div><p>${zone.range ? `Levels ${escapeHtml(zone.range)}` : 'Level range not yet confirmed here'} · ${escapeHtml(zone.faction)}</p>${zone.access ? `<small>${escapeHtml(zone.access)}</small>` : ''}</article>`; }).join('')}</div>`;
   if (route.view === 'wow-tier-lists') body = `<p class="wow-lede">No launch rankings are published here yet. We’ll add class and specialization comparisons when version-specific evidence is available.</p><div class="wow-tier-grid">${data.tierCategories.map((category, index) => `<article><span>0${index + 1}</span><h2>${escapeHtml(category)}</h2><p>Rankings under review</p></article>`).join('')}</div>`;
   if (route.view === 'wow-dungeons') body = renderWowDungeons(data, escapeHtml);
@@ -414,11 +578,12 @@ function renderSpecOverview(classRecord, spec, data, href, escapeHtml, artworkMa
   const compactCombat = supportsBuild ? guide.combat.map(item => `<li>${escapeHtml(item)}</li>`).join('') : '<li>No spec-specific combat priority is verified for this path yet.</li>';
   const altLinks = classRecord.specializations.filter(other => other.id !== spec.id).map(other => `<a href="${href(`builds/${classRecord.id}/${other.id}`)}">${escapeHtml(other.name)}</a>`).join('');
   const emblem = renderClassEmblem(classRecord.id,catalog,escapeHtml,'wow-class-emblem-large');
-  const talentAction = `<a class="wow-build-primary-action" href="#game/world-of-warcraft/talent-planner" data-wow-build-class="${escapeHtml(classRecord.id)}" data-wow-build-spec="${escapeHtml(spec.id)}">Open Talent Build <span aria-hidden="true">→</span></a>`;
+  const supportedGuide = classRecord.id === 'shaman' && spec.id === 'enhancement';
+  const talentAction = `<a class="wow-build-primary-action" href="#game/world-of-warcraft/talent-planner" data-wow-build-class="${escapeHtml(classRecord.id)}" data-wow-build-spec="${escapeHtml(spec.id)}"${supportedGuide ? ' data-wow-build-id="bm-shaman-enhancement-solo-10-30"' : ''}>${supportedGuide ? 'Follow Leveling Build' : 'Open Manual Talent Planner'} <span aria-hidden="true">→</span></a>`;
   return `<article class="wow-build-page" style="--class-accent:${escapeHtml(classRecord.color)}"><header class="wow-build-hero" data-specialization="${escapeHtml(spec.id)}">${art ? `<div class="wow-build-art-panel"><img class="wow-build-artwork" src="${escapeHtml(art.src)}" alt="${escapeHtml(art.alt)}" width="1120" height="640"></div>` : '<div class="wow-build-art-panel wow-build-art-fallback" aria-hidden="true">✦</div>'}<div class="wow-build-heading"><div class="wow-build-emblems">${emblem}${specializationIcon}</div><p class="wow-eyebrow">${escapeHtml(classRecord.name)} · ${escapeHtml(spec.role)} · Forever</p><h3>${escapeHtml(spec.name)}</h3><p>${escapeHtml(spec.focus)}</p><span>Recommended for leveling: ${escapeHtml(guide?.specialization || 'No recommendation recorded')}</span>${talentAction}</div></header><div class="wow-build-controls"><a href="#game/world-of-warcraft/classes/${escapeHtml(classRecord.id)}">← ${escapeHtml(classRecord.name)} guide</a><button type="button" data-wow-play-mode-toggle aria-expanded="false">Switch to Play Mode</button><a href="#game/world-of-warcraft/talent-planner">Open talent planner →</a>${levelingSource ? `<a href="${escapeHtml(levelingSource.url)}" target="_blank" rel="noreferrer">Full Forever leveling reference ↗</a>` : ''}</div><section class="wow-play-mode" data-wow-play-mode hidden><p class="wow-eyebrow">Second monitor · Level ${profileLevel}</p><h4>${escapeHtml(classRecord.name)} · ${escapeHtml(spec.name)}</h4><p>${escapeHtml(compactTalent)}</p><ul>${compactCombat}</ul><p><strong>Destination:</strong> ${escapeHtml(guide?.zoneAdvice || 'No spec-matched leveling route is recorded.')}</p><a href="#game/world-of-warcraft/my-journey">Open My Azeroth Journey →</a></section><div data-wow-full-guide><div class="wow-build-columns"><section><h4>Who this path suits</h4><p>${supportsBuild ? escapeHtml(guide.reason) : `The current Forever class record describes ${escapeHtml(spec.focus.toLowerCase())}. A spec-specific leveling rotation is not yet recorded locally.`}</p><h4>Strengths</h4>${renderBullets(supportsBuild ? classRecord.strengths : [spec.focus], escapeHtml)}<h4>Limitations</h4>${renderBullets(classRecord.limitations, escapeHtml)}</section><section><h4>Talent progression</h4>${milestones ? `<ul class="wow-build-milestones">${milestones}</ul>` : '<p>No point-by-point allocation is asserted. Follow the linked Forever guide before assigning talents.</p>'}<h4>Combat priority</h4>${fightList ? `<ol>${fightList}</ol>` : '<p>This route currently has a specialization overview only; no rotation is inferred from another game version.</p>'}</section><section><h4>Gear and pacing</h4><p>${supportsBuild ? escapeHtml(guide.gear) : 'Use current, level-appropriate equipment; no specialization-specific stat order is stored for this path.'}</p><h4>Resource reminder</h4><p>${supportsBuild ? escapeHtml(guide.resource) : 'See the class overview and source guide for verified resource advice.'}</p></section></div><nav class="wow-build-alternatives" aria-label="Other specializations"><strong>Other specializations</strong>${altLinks}</nav><p class="wow-source-link">${specSource ? `<a href="${escapeHtml(specSource.url)}" target="_blank" rel="noreferrer">${escapeHtml(specSource.title)} ↗</a>` : ''}${levelingSource ? ` · <a href="${escapeHtml(levelingSource.url)}" target="_blank" rel="noreferrer">${escapeHtml(levelingSource.title)} ↗</a>` : ''}</p></div></article>`;
 }
 
-function renderEnhancementGuide(data, artworkManifest, escapeHtml, profile = {}, catalog = null) {
+function renderEnhancementGuide(data, artworkManifest, escapeHtml, profile = {}, catalog = null, guidedData = null) {
   const guide = data.enhancementGuide;
   const enhancementTreeIcon = catalog?.classes?.find(item => item.id === 'shaman')?.trees.find(tree => tree.name === 'Enhancement')?.icon || '';
   const sourceById = id => data.sources.find(source => source.id === id);
@@ -435,6 +600,14 @@ function renderEnhancementGuide(data, artworkManifest, escapeHtml, profile = {},
   };
   const sourceIds = [...new Set(guide.sourceIds)];
   const currentLevel = Number(profile.currentLevel) || 1;
+  const automaticBuild = guidedData?.builds?.find(item => item.classId === 'shaman' && item.specializationId === 'enhancement');
+  const automaticState = automaticBuild && catalog ? resolveWowGuidedBuild(automaticBuild, catalog, currentLevel) : null;
+  const automaticTalentById = new Map(catalog?.classes?.find(item => item.id === 'shaman')?.trees.flatMap(tree => tree.talents).map(item => [item.id, item]) || []);
+  const automaticDistribution = automaticBuild && automaticState?.valid
+    ? catalog.classes.find(item => item.id === 'shaman').trees.map(tree => `${tree.name} ${tree.talents.reduce((sum, talent) => sum + (Number(automaticState.allocation[talent.id]) || 0), 0)}`).join(' · ')
+    : 'No complete automatic route is loaded for this level.';
+  const automaticNextTalent = automaticState?.nextChange ? automaticTalentById.get(automaticState.nextChange.talentId) : null;
+  const quickTalentIcons = guide.additionalTalents.slice(0, 4).map(name => ability(name)).join('');
   const nextTalent = guide.talentMilestones.find(item => item.kind === 'talent' && item.level >= currentLevel);
   const currentDungeon = (data.dungeons || []).find(item => currentLevel >= item.minLevel && currentLevel <= item.maxLevel);
   const nextDungeon = (data.dungeons || []).filter(item => item.minLevel > currentLevel).sort((a,b) => a.minLevel-b.minLevel)[0];
@@ -447,8 +620,8 @@ function renderEnhancementGuide(data, artworkManifest, escapeHtml, profile = {},
     ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(art.alt)}" width="1120" height="640" fetchpriority="high">`
     : `<div class="enhancement-art-fallback" role="img" aria-label="Storm-lit mountain and totem illustration unavailable"><span aria-hidden="true">✦</span></div>`;
   return `<article class="enhancement-guide" style="--class-accent:#73a8da">
-    <header class="enhancement-hero"><figure class="enhancement-artwork">${artMarkup}<figcaption>${image ? 'Original BM Gaming Wiki artwork · not in-game art' : 'Illustration fallback'}</figcaption></figure><div class="enhancement-hero-copy"><div class="wow-build-emblems">${renderClassEmblem('shaman',catalog,escapeHtml,'wow-class-emblem-large')}${renderWowIcon(enhancementTreeIcon,'Enhancement talent-tree icon',escapeHtml,'wow-specialization-icon')}</div><p class="wow-eyebrow">Shaman · Melee damage · WoW: Forever</p><h2>Enhancement</h2><p>Fight in melee with weapon strikes and Shock spells. Stormstrike anchors the rotation; totems bring useful buffs to the party. Mana is your limiting resource, so spend it where it changes the fight.</p><div class="enhancement-hero-facts"><span>High burst</span><span>Totem utility</span><span>Mana hungry</span></div><div class="enhancement-hero-actions"><a class="wow-build-primary-action" href="#game/world-of-warcraft/talent-planner" data-wow-build-class="shaman" data-wow-build-spec="enhancement">Open Talent Build <span aria-hidden="true">→</span></a><a class="wow-source-pill" href="#enhancement-leveling">Start leveling ↓</a><a class="wow-source-pill" href="${escapeHtml(sourceById('icy-enhancement-guide')?.url || '#')}" target="_blank" rel="noreferrer">Guide updated ${escapeHtml(guide.updateDate)} · Icy Veins ↗</a></div></div></header>
-    <section class="enhancement-quick-reference" aria-labelledby="enhancement-quick-title"><p class="wow-eyebrow">Second-monitor reference</p><h3 id="enhancement-quick-title">Enhancement at a glance</h3><div><article><strong>Before a pull</strong><p>Rockbiter before level 30; Windfury Weapon after 30. Apply Lightning Shield between pulls.</p></article><article><strong>In combat</strong><p>Stormstrike when available, then use Shocks as needed. Let weapon swings finish low-health enemies to preserve Mana.</p></article><article><strong>Remember</strong><p>Any Mana spend pauses Spirit regeneration for five seconds. Avoid unnecessary casts when the target is nearly down.</p></article></div></section><div class="enhancement-mode-control"><span>Saved character level: ${currentLevel}</span><button type="button" data-wow-play-mode-toggle aria-expanded="false">Switch to Play Mode</button></div><section class="enhancement-play-mode" data-wow-play-mode hidden><p class="wow-eyebrow">${renderClassEmblem('shaman',catalog,escapeHtml)} Live reference · Level ${currentLevel}</p><h3>Enhancement Shaman</h3><p><strong>Next talent:</strong> ${nextTalent ? `Level ${nextTalent.level} · ${escapeHtml(nextTalent.name)}` : 'No later talent milestone is recorded.'}</p><p><strong>Fight:</strong> Stormstrike on cooldown after level 25; use Shocks deliberately and let auto-attacks finish low-health targets.</p><p><strong>Questing:</strong> ${escapeHtml(profile.currentZone ? (data.zones.find(zone => zone.id === profile.currentZone)?.name || 'Current region') : guide.factionAreas.Alliance[0] + ' (Alliance) · ' + guide.factionAreas.Horde[0] + ' (Horde)')}</p><p><strong>Dungeon:</strong> ${escapeHtml(currentDungeon?.name || nextDungeon ? `${(currentDungeon || nextDungeon).name} · levels ${(currentDungeon || nextDungeon).minLevel}–${(currentDungeon || nextDungeon).maxLevel}` : 'No level-matched dungeon range recorded.')}</p><a href="#game/world-of-warcraft/my-journey">Open My Azeroth Journey →</a></section><div data-wow-full-guide><nav class="enhancement-section-nav" aria-label="Enhancement guide sections"><a href="#enhancement-leveling">Leveling</a><a href="#enhancement-talents">Talent milestones</a><a href="#enhancement-combat">Combat</a><a href="#enhancement-utility">Totems & utility</a><a href="#enhancement-gear">Gear</a><a href="#enhancement-quests">Class quests</a><a href="#enhancement-routes">Areas & dungeons</a><a href="#enhancement-level60">Level 60</a></nav>
+    <header class="enhancement-hero"><figure class="enhancement-artwork">${artMarkup}<figcaption>${image ? 'Original BM Gaming Wiki artwork · not in-game art' : 'Illustration fallback'}</figcaption></figure><div class="enhancement-hero-copy"><div class="wow-build-emblems">${renderClassEmblem('shaman',catalog,escapeHtml,'wow-class-emblem-large')}${renderWowIcon(enhancementTreeIcon,'Enhancement talent-tree icon',escapeHtml,'wow-specialization-icon')}</div><p class="wow-eyebrow">Shaman · Melee damage · WoW: Forever</p><h2>Enhancement</h2><p>Fight in melee with weapon strikes and Shock spells. Stormstrike anchors the rotation; totems bring useful buffs to the party. Mana is your limiting resource, so spend it where it changes the fight.</p><div class="enhancement-hero-facts"><span>High burst</span><span>Totem utility</span><span>Mana hungry</span></div><div class="enhancement-hero-actions"><a class="wow-build-primary-action" href="#game/world-of-warcraft/talent-planner" data-wow-build-class="shaman" data-wow-build-spec="enhancement" data-wow-build-id="bm-shaman-enhancement-solo-10-30">Follow Leveling Build <span aria-hidden="true">→</span></a><a class="wow-source-pill" href="#enhancement-leveling">Start leveling ↓</a><a class="wow-source-pill" href="${escapeHtml(sourceById('icy-enhancement-guide')?.url || '#')}" target="_blank" rel="noreferrer">Guide updated ${escapeHtml(guide.updateDate)} · Icy Veins ↗</a></div></div></header>
+    <section class="enhancement-quick-reference" aria-labelledby="enhancement-quick-title"><p class="wow-eyebrow">Second-monitor reference</p><h3 id="enhancement-quick-title">Enhancement at a glance</h3><div><article><strong>Before a pull</strong><p>Rockbiter before level 30; Windfury Weapon after 30. Apply Lightning Shield between pulls.</p></article><article><strong>In combat</strong><p>Stormstrike when available, then use Shocks as needed. Let weapon swings finish low-health enemies to preserve Mana.</p></article><article><strong>Remember</strong><p>Any Mana spend pauses Spirit regeneration for five seconds. Avoid unnecessary casts when the target is nearly down.</p></article></div></section><div class="enhancement-mode-control"><span>Saved character level: ${currentLevel}</span><button type="button" data-wow-play-mode-toggle aria-expanded="false">Switch to Play Mode</button></div><section class="enhancement-play-mode" data-wow-play-mode hidden><p class="wow-eyebrow">${renderClassEmblem('shaman',catalog,escapeHtml)} Live reference · Level ${currentLevel}</p><h3>Enhancement Shaman</h3><p><strong>Next recommended talent:</strong> ${automaticNextTalent ? `Level ${automaticState.nextChange.level} · ${escapeHtml(automaticNextTalent.name)}` : 'No later allocation is documented in this route.'}</p><p><strong>Current allocation:</strong> ${escapeHtml(automaticDistribution)} · ${automaticState?.total || 0} points</p><div class="wow-ability-row">${quickTalentIcons}</div><p><strong>Fight:</strong> Stormstrike on cooldown after level 25; use Shocks deliberately and let auto-attacks finish low-health targets.</p><p><strong>Questing:</strong> ${escapeHtml(profile.currentZone ? (data.zones.find(zone => zone.id === profile.currentZone)?.name || 'Current region') : guide.factionAreas.Alliance[0] + ' (Alliance) · ' + guide.factionAreas.Horde[0] + ' (Horde)')}</p><p><strong>Dungeon:</strong> ${escapeHtml(currentDungeon?.name || nextDungeon ? `${(currentDungeon || nextDungeon).name} · levels ${(currentDungeon || nextDungeon).minLevel}–${(currentDungeon || nextDungeon).maxLevel}` : 'No level-matched dungeon range recorded.')}</p><a href="#game/world-of-warcraft/my-journey">Open My Azeroth Journey →</a></section><div data-wow-full-guide><nav class="enhancement-section-nav" aria-label="Enhancement guide sections"><a href="#enhancement-leveling">Leveling</a><a href="#enhancement-talents">Talent milestones</a><a href="#enhancement-combat">Combat</a><a href="#enhancement-utility">Totems & utility</a><a href="#enhancement-gear">Gear</a><a href="#enhancement-quests">Class quests</a><a href="#enhancement-routes">Areas & dungeons</a><a href="#enhancement-level60">Level 60</a></nav>
     <section class="enhancement-section" aria-labelledby="enhancement-at-glance"><div class="enhancement-heading"><p class="wow-eyebrow">At a glance</p><h3 id="enhancement-at-glance">A strong toolkit with a real Mana budget</h3></div><div class="enhancement-pro-con"><article><h4>What works well</h4>${list(guide.strengths)}</article><article><h4>Plan around</h4>${list(guide.weaknesses)}</article></div></section>
     <section id="enhancement-leveling" class="enhancement-section" aria-labelledby="enhancement-leveling-title"><div class="enhancement-heading"><p class="wow-eyebrow">Solo leveling</p><h3 id="enhancement-leveling-title">Build toward Stormstrike, protect your Mana</h3></div><div class="enhancement-level-control"><label for="enhancement-level">Your level</label><input id="enhancement-level" data-enhancement-level type="range" min="1" max="60" value="10"><output for="enhancement-level" data-enhancement-level-output>10</output><span id="enhancement-level-status" aria-live="polite">At level 10. Next listed milestone: level 20, Shamanistic Focus.</span></div><div class="enhancement-timeline"><article><span>Levels 1–19</span><h4>Spend carefully</h4><p>Use Rockbiter Weapon before level 30, keep Lightning Shield active between pulls, and let auto-attacks finish low-health enemies instead of spending Mana on overkill.</p></article><article><span>Levels 20–29</span><h4>Reach Stormstrike</h4><p>Shamanistic Focus is a level 20 recommendation. Stormstrike becomes available around level 25; the source describes an optional respec to reach it.</p></article><article><span>Levels 30–41</span><h4>Gain sustain and mobility</h4><p>Windfury Weapon unlocks at 30. Improved Stormstrike adds Mana sustain and reset opportunities; the guide later pivots to Restoration for Mindfulness.</p></article><article><span>Level 42+</span><h4>Continue the sustain path</h4><p>Water Shield is listed at 42. Save deeper Enhancement investments until these resource tools are in place.</p></article></div></section>
     <section id="enhancement-talents" class="enhancement-section" aria-labelledby="enhancement-talents-title"><div class="enhancement-heading"><p class="wow-eyebrow">Level-based picks</p><h3 id="enhancement-talents-title">Talent milestones</h3><p>${escapeHtml(guide.talentRankDisclosure)}</p></div><div class="enhancement-table-wrap"><table class="enhancement-talent-table"><thead><tr><th>Level</th><th>Talent / unlock</th><th>Why the guide picks it</th><th>Rank</th></tr></thead><tbody>${milestoneRows}</tbody></table></div><p class="wow-note">Other talents the guides discuss: ${guide.additionalTalents.map(name => ability(name)).join(' ')}</p><p class="enhancement-source-line">${sourceLink('icy-enhancement-leveling')} · ${sourceLink('icy-enhancement-talents')}</p></section>

@@ -10,6 +10,7 @@ const pack = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-du
 const wowPack = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8'));
 const wowArtwork = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8'));
 const wowClientData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8'));
+const wowGuidedData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8'));
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
@@ -30,6 +31,7 @@ async function harness(failure = null, storageMode = 'available') {
       if (String(url).endsWith('world-of-warcraft-forever.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-client-data.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8')) };
+      if (String(url).endsWith('world-of-warcraft-forever-guided-builds.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8')) };
       if (String(url).endsWith('-artwork.json')) return { ok: true, json: async () => structuredClone(artworkManifest) };
       if (failure === 'network') throw new Error('Network unavailable');
       return { ok: failure !== 'http', status: 404, json: async () => {
@@ -1358,7 +1360,7 @@ test('WoW Forever race, class icon, talent planner, storage, and share data stay
   wowModule.saveWowTalentDraft({ classId: 'warrior', level: 60, talentedRank: 0, allocation: unlocked.allocation, name: 'Arms draft edited', editingBuildId: build.id }, storage);
   assert.equal(wowModule.loadWowTalentDraft(storage).editingBuildId, build.id, 'the editor keeps the saved record ID across reloads');
   const shared = wowModule.encodeWowTalentBuild(build);
-  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.decodeWowTalentBuild(shared, wowClientData))), JSON.parse(JSON.stringify({ classId: 'warrior', specializationId: 'arms', level: 60, talentedRank: 0, allocation: unlocked.allocation })));
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.decodeWowTalentBuild(shared, wowClientData))), JSON.parse(JSON.stringify({ classId: 'warrior', specializationId: 'arms', level: 60, talentedRank: 0, allocation: unlocked.allocation, mode: 'custom', guidedBuildId: '' })));
   assert.equal(wowModule.decodeWowTalentBuild(encodeURIComponent(JSON.stringify({ version: 'stale', classId: 'warrior' })), wowClientData), null);
   assert.equal(wowModule.decodeWowTalentBuild('%7Bbad-json', wowClientData), null);
   assert.equal(wowModule.deleteWowTalentBuild(build.id, storage), true);
@@ -1389,7 +1391,8 @@ test('WoW specialization heroes keep game icons separate from original artwork',
   const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
   const shamanElemental = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/builds/shaman/elemental'));
   assert.ok(shamanElemental.includes('assets/images/wow-forever/elemental-shaman.svg'), 'Elemental selects its dedicated storm art');
-  assert.ok(shamanElemental.includes('Open Talent Build'));
+  assert.ok(shamanElemental.includes('Open Manual Talent Planner'), 'Elemental has a manual-planning action because it has no verified guided route');
+  assert.doesNotMatch(shamanElemental, /data-wow-build-id="bm-shaman-enhancement-solo-10-30"/);
   assert.ok(shamanElemental.includes('wow-class-emblem-large') && shamanElemental.includes('wow-specialization-icon'));
   assert.match(portalStyles, /\.wow-build-artwork\s*\{[^}]*width:100%;[^}]*height:100%;[^}]*object-fit:contain/s);
   assert.match(portalStyles, /\.wow-class-emblem-large\s*\{[^}]*width:4rem;[^}]*height:4rem;[^}]*object-fit:contain/s);
@@ -1441,4 +1444,88 @@ test('Enhancement Shaman has a sourced, playable guide with honest talent and ar
   assert.ok(fallback.includes('enhancement-art-fallback'));
   assert.equal(fallback.includes('src=""'), false);
   for (const href of ['#game/world-of-warcraft/classes/shaman', '#game/world-of-warcraft/talent-planner', '#game/world-of-warcraft/leveling', '#game/world-of-warcraft/dungeons-raids']) assert.notEqual(h.app.readRoute(href).view, 'missing', href);
+});
+
+test('guided Enhancement build resolves documented level snapshots without projecting beyond coverage', () => {
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const route = wowGuidedData.builds.find(build => build.id === 'bm-shaman-enhancement-solo-10-30');
+  assert.ok(route);
+  const validation = wowModule.validateWowGuidedBuild(route, wowClientData);
+  assert.equal(validation.valid, true, validation.issues.join('; '));
+  const snapshot = level => wowModule.resolveWowGuidedBuild(route, wowClientData, level);
+  const talentId = name => wowClientData.classes.find(item => item.id === 'shaman').trees.flatMap(tree => tree.talents).find(talent => talent.name === name).id;
+  assert.equal(snapshot(10).total, 1);
+  assert.equal(snapshot(14).allocation[talentId('Thundering Strikes')], 5);
+  assert.equal(snapshot(20).allocation[talentId('Shamanistic Focus')], 1);
+  assert.equal(snapshot(25).allocation[talentId('Stormstrike')], 1);
+  assert.equal(snapshot(25).total, 16);
+  assert.equal(snapshot(30).allocation[talentId('Improved Stormstrike')], 1);
+  assert.equal(snapshot(30).total, 21);
+  assert.equal(snapshot(31).covered, false);
+  assert.equal(snapshot(31).snapshotLevel, 30);
+  assert.equal(snapshot(31).total, 21);
+  assert.equal(route.allocations.length, 21, 'the route contains ordered point events, not only an end distribution');
+  const invalid = structuredClone(route);
+  invalid.allocations[0].talentId = 'missing-talent';
+  assert.equal(wowModule.validateWowGuidedBuild(invalid, wowClientData).valid, false);
+  const missingLevel = structuredClone(route);
+  missingLevel.allocations = missingLevel.allocations.filter(change => change.level !== 11);
+  assert.equal(wowModule.validateWowGuidedBuild(missingLevel, wowClientData).valid, false);
+  const noPrerequisiteTalents = wowClientData.classes.find(item => item.id === 'shaman').trees.flatMap(tree => tree.talents).filter(talent => !talent.prerequisite);
+  const respecBuild = {
+    ...route,
+    levelRange: { from: 10, through: 12 },
+    coverage: { ...route.coverage, highestDocumentedLevel: 12 },
+    allocations: [10, 11, 12].map((level, index) => ({ level, talentId: noPrerequisiteTalents[index + 1].id, rankAdded: 1 })),
+    respecEvents: [{ level: 11, toAllocation: { [noPrerequisiteTalents[0].id]: 1 }, reason: 'Switch to a recorded test distribution.' }]
+  };
+  assert.equal(wowModule.validateWowGuidedBuild(respecBuild, wowClientData).valid, true);
+  const respecState = wowModule.resolveWowGuidedBuild(respecBuild, wowClientData, 11);
+  assert.ok(respecState.respecAtRequestedLevel);
+  assert.equal(respecState.respecAtRequestedLevel.oldAllocation[noPrerequisiteTalents[1].id], 1);
+  assert.equal(respecState.respecAtRequestedLevel.newAllocation[noPrerequisiteTalents[0].id], 1);
+  assert.equal(respecState.allocation[noPrerequisiteTalents[1].id], undefined, 'a respec removes the prior allocation');
+  assert.equal(respecState.allocation[noPrerequisiteTalents[2].id], 1, 'the point recorded at the respec level is applied after the reset');
+  assert.ok(wowGuidedData.builds.every(build => build.classId === 'shaman'), 'raw catalog coverage is not presented as complete routes for every class');
+});
+
+test('guided planner renders its controls, progression, level state, and guide navigation', () => {
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  h.context.localStorage.removeItem(wowModule.WOW_TALENT_DRAFT_STORAGE_KEY);
+  const route = wowGuidedData.builds[0];
+  const resolved = wowModule.resolveWowGuidedBuild(route, wowClientData, 15);
+  assert.equal(resolved.changesAtRequestedLevel[0].talentId, 'shaman-enhancement-improved-lightning-shield');
+  const html = wowModule.renderWowPage({ view: 'wow-talents' }, wowPack, String, wowArtwork, { classId: 'shaman', specializationId: 'enhancement', currentLevel: 15 }, {}, wowClientData, wowGuidedData);
+  assert.match(html, /Guided Leveling/);
+  assert.match(html, /Custom Build/);
+  assert.match(html, /At level 15, this build adds/);
+  assert.match(html, /Next recommended talent/);
+  assert.match(html, /data-wow-guided-level="15"/);
+  assert.match(html, /data-wow-talent-level-slider/);
+  assert.match(html, /data-guided-allocation=/);
+  assert.match(html, /Copy this guided build link/);
+  assert.equal((html.match(/class="wow-talent-tree"/g) || []).length, 3);
+  const guide = wowModule.renderWowPage({ view: 'wow-build-detail', classRecord: wowPack.classes.find(item => item.id === 'shaman'), specialization: wowPack.classes.find(item => item.id === 'shaman').specializations.find(item => item.id === 'enhancement') }, wowPack, String, wowArtwork, { currentLevel: 15 }, {}, wowClientData, wowGuidedData);
+  assert.match(guide, /Follow Leveling Build/);
+  assert.match(guide, /data-wow-build-id="bm-shaman-enhancement-solo-10-30"/);
+  assert.match(guide, /Current allocation:/);
+  assert.match(guide, /Next recommended talent:/);
+});
+
+test('talent draft migration and guided share state preserve custom allocations', () => {
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const memory = new Map();
+  const storage = { getItem: key => memory.get(key) || null, setItem: (key, value) => memory.set(key, String(value)) };
+  memory.set(wowModule.WOW_TALENT_DRAFT_STORAGE_KEY, JSON.stringify({ classId: 'shaman', specializationId: 'enhancement', level: 18, allocation: { keep: 1 }, name: 'Existing custom' }));
+  const migrated = wowModule.loadWowTalentDraft(storage);
+  assert.equal(migrated.mode, 'custom');
+  assert.deepEqual(JSON.parse(JSON.stringify(migrated.allocation)), { keep: 1 });
+  wowModule.saveWowTalentDraft({ ...migrated, mode: 'guided', guidedBuildId: wowGuidedData.builds[0].id }, storage);
+  assert.deepEqual(JSON.parse(JSON.stringify(wowModule.loadWowTalentDraft(storage).allocation)), { keep: 1 });
+  const point = wowModule.resolveWowGuidedBuild(wowGuidedData.builds[0], wowClientData, 20);
+  const token = wowModule.encodeWowTalentBuild({ dataVersion: wowClientData.clientBuild, classId: 'shaman', specializationId: 'enhancement', level: 20, allocation: point.allocation, mode: 'guided', guidedBuildId: wowGuidedData.builds[0].id });
+  const restored = wowModule.decodeWowTalentBuild(token, wowClientData);
+  assert.equal(restored.mode, 'guided');
+  assert.equal(restored.guidedBuildId, wowGuidedData.builds[0].id);
+  assert.equal(wowModule.validateWowTalentAllocation(wowClientData.classes.find(item => item.id === 'shaman'), restored.allocation, 11).valid, true);
 });

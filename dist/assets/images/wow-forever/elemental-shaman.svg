@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img" aria-labelledby="title desc">
+  <title id="title">Elemental stormcasting</title>
+  <desc id="desc">Original BM Gaming Wiki vector artwork of a storm-lit plateau with branching lightning and elemental rune stones. Not official game artwork.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0b142c"/><stop offset=".62" stop-color="#263c6f"/><stop offset="1" stop-color="#121a2a"/></linearGradient>
+    <radialGradient id="storm"><stop stop-color="#b5ddff" stop-opacity=".8"/><stop offset=".3" stop-color="#6ea9ff" stop-opacity=".32"/><stop offset="1" stop-color="#6689ff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bolt" x2="0" y2="1"><stop stop-color="#f5faff"/><stop offset="1" stop-color="#83c9ff"/></linearGradient>
+    <linearGradient id="land" x2="0" y2="1"><stop stop-color="#53668a"/><stop offset="1" stop-color="#111827"/></linearGradient>
+  </defs>
+  <rect width="1120" height="640" fill="url(#sky)"/>
+  <circle cx="755" cy="203" r="265" fill="url(#storm)"/>
+  <path d="M0 355 145 230l105 104 162-187 148 192 111-116 128 121 114-102 207 146v252H0Z" fill="#18233a"/>
+  <path d="m0 469 184-153 117 115 114-142 158 149 134-118 134 132 116-96 163 119v165H0Z" fill="url(#land)"/>
+  <path d="m707 0-37 132 58 20-86 123 67-11-20 104 104-166-60-17L783 38Z" fill="url(#bolt)"/>
+  <path d="M710 211 560 145m151 66 147-83m-161 147-107 74m123-89 167 48" fill="none" stroke="#a7d4ff" stroke-width="5" stroke-linecap="round" opacity=".72"/>
+  <g fill="none" stroke="#c9b77f" stroke-width="8" opacity=".86"><path d="M218 526V376q0-31 31-31t31 31v150M207 396h85M220 439h60"/><path d="M868 526V394q0-27 27-27t27 27v132M856 414h80M870 454h52"/></g>
+  <path d="M0 574q143-54 286 0t286 0 286 0 262 0v66H0Z" fill="#0a0e18"/>
+  <rect x="1" y="1" width="1118" height="638" fill="none" stroke="#91baff" stroke-opacity=".45" stroke-width="2"/>
+</svg>
