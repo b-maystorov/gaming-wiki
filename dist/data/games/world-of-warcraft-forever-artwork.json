@@ -153,6 +153,96 @@
       "loading": "lazy",
       "provenance": "Original vector illustration created for BM Gaming Wiki.",
       "usage": "Project-created artwork; no Blizzard assets used."
+    },
+    {
+      "id": "class-card-warrior-original",
+      "kind": "class-card",
+      "classId": "warrior",
+      "src": "assets/images/wow-forever/class-card-warrior.svg",
+      "alt": "Original BM Gaming Wiki warrior archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-paladin-original",
+      "kind": "class-card",
+      "classId": "paladin",
+      "src": "assets/images/wow-forever/class-card-paladin.svg",
+      "alt": "Original BM Gaming Wiki paladin archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-hunter-original",
+      "kind": "class-card",
+      "classId": "hunter",
+      "src": "assets/images/wow-forever/class-card-hunter.svg",
+      "alt": "Original BM Gaming Wiki hunter archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-rogue-original",
+      "kind": "class-card",
+      "classId": "rogue",
+      "src": "assets/images/wow-forever/class-card-rogue.svg",
+      "alt": "Original BM Gaming Wiki rogue archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-priest-original",
+      "kind": "class-card",
+      "classId": "priest",
+      "src": "assets/images/wow-forever/class-card-priest.svg",
+      "alt": "Original BM Gaming Wiki priest archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-mage-original",
+      "kind": "class-card",
+      "classId": "mage",
+      "src": "assets/images/wow-forever/class-card-mage.svg",
+      "alt": "Original BM Gaming Wiki mage archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-warlock-original",
+      "kind": "class-card",
+      "classId": "warlock",
+      "src": "assets/images/wow-forever/class-card-warlock.svg",
+      "alt": "Original BM Gaming Wiki warlock archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-druid-original",
+      "kind": "class-card",
+      "classId": "druid",
+      "src": "assets/images/wow-forever/class-card-druid.svg",
+      "alt": "Original BM Gaming Wiki druid archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "class-card-shaman-original",
+      "kind": "class-card",
+      "classId": "shaman",
+      "src": "assets/images/wow-forever/class-card-shaman.svg",
+      "alt": "Original BM Gaming Wiki Shaman archetype illustration.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG illustration; no external photos or game art."
     }
   ],
   "fallbacks": {
@@ -160,7 +250,8 @@
     "specialization": "CSS scene plus class sigil",
     "ability": "Name badge; not a game icon",
     "zone": "Region color and title frame",
-    "dungeon": "Dungeon name plate; not an in-game image"
+    "dungeon": "Dungeon name plate; not an in-game image",
+    "racePortrait": "Illustrated local silhouette with faction-colored frame when a portrait mapping is unavailable."
   },
   "unavailableMappings": {
     "classes": [],
@@ -740,6 +831,98 @@
       "iconToken": "race_skyborne",
       "src": "",
       "fallback": true
+    }
+  },
+  "racePortraits": {
+    "orc": {
+      "name": "Orc",
+      "faction": "Horde",
+      "src": "assets/images/wow-forever/race-portrait-orc.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Orc.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "undead": {
+      "name": "Undead",
+      "faction": "Horde",
+      "src": "assets/images/wow-forever/race-portrait-undead.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Undead.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "tauren": {
+      "name": "Tauren",
+      "faction": "Horde",
+      "src": "assets/images/wow-forever/race-portrait-tauren.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Tauren.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "troll": {
+      "name": "Troll",
+      "faction": "Horde",
+      "src": "assets/images/wow-forever/race-portrait-troll.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Troll.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "skyborne-windshaper": {
+      "name": "Skyborne (Windshaper)",
+      "faction": "Horde",
+      "src": "assets/images/wow-forever/race-portrait-skyborne-windshaper.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Skyborne (Windshaper).",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "human": {
+      "name": "Human",
+      "faction": "Alliance",
+      "src": "assets/images/wow-forever/race-portrait-human.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Human.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "dwarf": {
+      "name": "Dwarf",
+      "faction": "Alliance",
+      "src": "assets/images/wow-forever/race-portrait-dwarf.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Dwarf.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "night-elf": {
+      "name": "Night Elf",
+      "faction": "Alliance",
+      "src": "assets/images/wow-forever/race-portrait-night-elf.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Night Elf.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "gnome": {
+      "name": "Gnome",
+      "faction": "Alliance",
+      "src": "assets/images/wow-forever/race-portrait-gnome.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Gnome.",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
+    },
+    "skyborne-high-order": {
+      "name": "Skyborne (High Order)",
+      "faction": "Alliance",
+      "src": "assets/images/wow-forever/race-portrait-skyborne-high-order.svg",
+      "alt": "Original BM Gaming Wiki illustrated portrait of Skyborne (High Order).",
+      "loading": "lazy",
+      "provenance": "Original vector artwork created for BM Gaming Wiki.",
+      "usage": "Project-created SVG portrait; no external photos or game art."
     }
   }
 }

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+<title id="title">Original Rogue class artwork</title><desc id="desc">A project-created fantasy illustration showing a rogue archetype with distinctive class equipment.</desc>
+<defs><linearGradient id="back" x2=".9" y2="1"><stop stop-color="#393a32"/><stop offset=".55" stop-color="#202b35"/><stop offset="1" stop-color="#0c1219"/></linearGradient><radialGradient id="glow"><stop stop-color="#b9b46f" stop-opacity=".42"/><stop offset="1" stop-color="#b9b46f" stop-opacity="0"/></radialGradient><linearGradient id="cloth" x2="1" y2="1"><stop stop-color="#b9b46f" stop-opacity=".74"/><stop offset="1" stop-color="#393a32"/></linearGradient></defs>
+<rect width="600" height="360" fill="url(#back)"/><ellipse cx="366" cy="152" rx="225" ry="190" fill="url(#glow)"/>moonlit alley
+<path d="M184 360q4-93 78-119l45-22h103l53 29q53 28 70 112z" fill="url(#cloth)" stroke="#b9b46f" stroke-opacity=".6" stroke-width="4"/>
+<path d="M205 307q10-53 73-75l29 39-18 42-72 18z" fill="#29343c" stroke="{accent}" stroke-opacity=".72" stroke-width="4"/><path d="M495 307q-10-53-73-75l-29 39 18 42 72 18z" fill="#29343c" stroke="{accent}" stroke-opacity=".72" stroke-width="4"/><path d="M291 257q59 22 118 0" fill="none" stroke="#e0d4be" stroke-opacity=".35" stroke-width="3"/>
+<path d="M287 207q8-40 6-65h118q-4 47 12 69l-51 34h-58z" fill="#ba8d76"/>
+<ellipse cx="350" cy="137" rx="67" ry="82" fill="#ba8d76" stroke="#ead1b6" stroke-opacity=".25" stroke-width="3"/>
+<path d="M268 139q17-99 111-91 51 9 63 87l-34 30h-112z" fill="#293033" stroke="#827f61" stroke-width="5"/><path d="M281 133q47-48 144-8l-23-54q-65-42-104 8z" fill="#151a1d"/><path d="M322 151h10m41-1h10" stroke="#e5d9c5" stroke-width="5"/>
+<path d="M302 132q9-6 18 0m45 0q9-6 18 0" fill="none" stroke="#56433b" stroke-width="4" stroke-linecap="round"/><ellipse cx="312" cy="139" rx="3.2" ry="4" fill="#25272a"/><ellipse cx="367" cy="139" rx="3.2" ry="4" fill="#25272a"/><path d="M350 144l-4 16 5 2" fill="none" stroke="#8f6656" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/><path d="M340 176q10 5 20 0" fill="none" stroke="#643f3b" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M236 321q99-41 205-4" fill="none" stroke="#e5d8bc" stroke-opacity=".45" stroke-width="3"/><path d="M158 90 178 280" stroke="#d6d2c4" stroke-width="9"/><path d="M151 71l20 18-21 18z" fill="#c5bd98"/><path d="M493 88 475 282" stroke="#d6d2c4" stroke-width="8"/><path d="M500 69l-18 18 20 18z" fill="#c5bd98"/>
+<path d="M0 332h600" stroke="#d7c69c" stroke-opacity=".16" stroke-width="2"/>
+</svg>

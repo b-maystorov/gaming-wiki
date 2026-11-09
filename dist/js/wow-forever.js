@@ -283,9 +283,16 @@ export function getWowRaceOptions(catalog, faction, className) {
   return (catalog?.races || []).filter(race => race.faction === faction && race.classes.includes(className));
 }
 
-function renderWowRaceDirectory(data, catalog, escapeHtml) {
+function renderWowRaceDirectory(data, catalog, artworkManifest, escapeHtml) {
   if (!catalog?.races?.length) return '<p class="wow-note">Race details could not be loaded. The class guide still lists its verified faction options.</p>';
-  const cards = catalog.races.map(race => `<a class="wow-race-card" href="#game/world-of-warcraft/races/${escapeHtml(race.id)}" data-wow-race-card data-faction="${escapeHtml(race.faction)}" data-classes="${escapeHtml(race.classes.map(name => name.toLowerCase()).join(' '))}">${renderWowIcon(race.icon, `${race.name} race emblem`, escapeHtml, 'wow-race-emblem')}<span><small>${escapeHtml(race.faction)}</small><strong>${escapeHtml(race.name)}</strong><span>${escapeHtml(race.classes.join(' · '))}</span></span></a>`).join('');
+  const cards = catalog.races.map(race => {
+    const portrait = artworkManifest?.racePortraits?.[race.id];
+    const factionAccent = race.faction === 'Alliance' ? '#86a9c2' : '#bd8069';
+    const portraitMarkup = portrait?.src
+      ? `<img class="wow-race-portrait-image" src="${escapeHtml(portrait.src)}" alt="${escapeHtml(portrait.alt || `${race.name} portrait`)}" width="128" height="128" loading="lazy">`
+      : '<span class="wow-race-portrait-fallback" aria-hidden="true"><i></i><b></b></span>';
+    return `<a class="wow-race-card" style="--faction-accent:${factionAccent}" href="#game/world-of-warcraft/races/${escapeHtml(race.id)}" data-wow-race-card data-faction="${escapeHtml(race.faction)}" data-classes="${escapeHtml(race.classes.map(name => name.toLowerCase()).join(' '))}"><span class="wow-race-portrait">${portraitMarkup}</span><span class="wow-race-card-copy"><small class="wow-race-faction">${escapeHtml(race.faction)}</small><strong>${escapeHtml(race.name)}</strong><span class="wow-race-classes">${escapeHtml(race.classes.join(' · '))}</span></span></a>`;
+  }).join('');
   return `<p class="wow-lede">Pick a faction and see the races and class combinations confirmed for WoW: Forever.</p><div class="wow-race-filters"><label>Faction<select data-wow-race-faction><option value="all">Both factions</option><option>Alliance</option><option>Horde</option></select></label><label>Compatible class<select data-wow-race-class><option value="all">All classes</option>${data.classes.map(item => `<option value="${escapeHtml(item.name.toLowerCase())}">${escapeHtml(item.name)}</option>`).join('')}</select></label></div><div class="wow-race-grid">${cards}</div><p class="wow-source-link">Race availability: <a href="${escapeHtml(data.sources.find(item => item.id === data.raceCombinationsSourceId)?.url || 'https://worldofwarcraft.blizzard.com/en-us/news/24304075/create-the-hero-you-want-to-be-in-world-of-warcraft-forever')}" target="_blank" rel="noreferrer">Blizzard Forever race and class overview ↗</a></p>`;
 }
 
@@ -558,15 +565,16 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
     ['beginner-guides', 'Beginner Guides', 'Getting started · Upcoming']
   ];
   const classArt = item => artworkManifest?.records?.find(record => record.kind === 'class' && record.classId === item.id) || artworkManifest?.records?.find(record => record.classId === item.id);
+  const classCardArt = item => artworkManifest?.records?.find(record => record.kind === 'class-card' && record.classId === item.id) || classArt(item);
   const title = route.view === 'wow-home' ? 'Welcome to Azeroth' : route.view === 'wow-journey' ? 'My Azeroth Journey' : route.view === 'wow-classes' ? 'Classes & Specializations' : route.view === 'wow-races' ? 'Races of Azeroth' : route.view === 'wow-race' ? route.raceRecord.name : route.view === 'wow-class' ? route.classRecord.name : route.view === 'wow-dungeons' ? 'Dungeons & Raids' : route.view === 'wow-leveling' ? 'Leveling Zones & Routes' : route.view === 'wow-tier-lists' ? 'Tier Lists' : route.view === 'wow-build-finder' ? 'Find My Build' : route.view === 'wow-build-detail' ? `${route.classRecord.name} · ${route.specialization.name}` : route.view === 'wow-talents' ? 'Talent Planner' : categories.find(item => item[0] === route.view.replace('wow-', ''))?.[1] || 'Azeroth Field Guide';
   let body = '';
   if (route.view === 'wow-home') { const heroArt = classArt(data.classes.find(item => item.id === 'shaman')); body = `${heroArt ? `<div class="wow-home-art" style="--wow-home-art:url('${escapeHtml(heroArt.src)}')" aria-hidden="true"></div>` : ''}<section class="wow-home-intro"><p class="wow-eyebrow">Azeroth · Forever begins now</p><h2>Pack light. The world is waiting.</h2><p>Pick a class, find your next stop, and keep a practical guide close while you play.</p><a href="${href('classes')}">Choose a class <span aria-hidden="true">→</span></a></section><nav class="wow-home-class-roster" aria-label="Choose a class">${data.classes.map(item=>`<a href="${href(`classes/${item.id}`)}" style="--class-accent:${escapeHtml(item.color)}">${renderClassEmblem(item.id,catalog,escapeHtml)}<span>${escapeHtml(item.name)}</span></a>`).join('')}</nav><section class="wow-feature-grid">${categories.map(([id, name, description], i) => `<a class="wow-feature" href="${href(id)}"><span>0${i + 1}</span><h2>${escapeHtml(name)}</h2><p>${escapeHtml(description)}</p><b aria-hidden="true">↗</b></a>`).join('')}</section><aside class="wow-note">World of Warcraft: Forever guides are kept separate from Retail and other Classic versions.</aside>`; }
   if (route.view === 'wow-journey') body = renderWowJourney(data, artworkManifest, catalog, profile, progress, escapeHtml);
   if (route.view === 'wow-classes') body = `<p class="wow-lede">Choose your class and get practical Forever-specific tips for your first levels.</p><p class="wow-note">${escapeHtml(data.classNotes)}</p><div class="wow-class-grid">${data.classes.map(item => {
-    const art = classArt(item);
+    const art = classCardArt(item);
     return `<a class="wow-class-card" style="--class-accent:${escapeHtml(item.color)}" href="${href(`classes/${item.id}`)}"><span class="wow-class-card-art">${art ? `<img src="${escapeHtml(art.src)}" alt="" width="480" height="320" loading="lazy">` : `<span class="wow-class-art-fallback" aria-hidden="true">${escapeHtml(item.name.slice(0, 1))}</span>`}<span class="wow-class-card-emblem">${renderClassEmblem(item.id,catalog,escapeHtml,'wow-class-card-icon')}</span></span><span class="wow-class-card-copy"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.roles.join(' · '))}</small><span class="wow-class-card-link">Explore class <span aria-hidden="true">→</span></span></span></a>`;
   }).join('')}</div>`;
-  if (route.view === 'wow-races') body = renderWowRaceDirectory(data, catalog, escapeHtml);
+  if (route.view === 'wow-races') body = renderWowRaceDirectory(data, catalog, artworkManifest, escapeHtml);
   if (route.view === 'wow-race') body = renderWowRaceDetail(route.raceRecord, data, catalog, escapeHtml);
   if (route.view === 'wow-class') {
     const item = route.classRecord;

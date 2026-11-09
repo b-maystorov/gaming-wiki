@@ -1168,6 +1168,29 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.equal(route('#game/world-of-warcraft').view, 'wow-home');
   const landing = render(route('#game/world-of-warcraft'));
   for (const destination of ['my-journey', 'classes', 'races', 'build-finder', 'talent-planner', 'tier-lists', 'leveling', 'dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(landing.includes(`#game/world-of-warcraft/${destination}`));
+  const classOverview = render(route('#game/world-of-warcraft/classes'));
+  const classCardArt = wowArtwork.records.filter(record => record.kind === 'class-card');
+  assert.equal(classCardArt.length, 9, 'each documented class has dedicated overview art');
+  for (const item of wowPack.classes) {
+    const cardArt = classCardArt.find(record => record.classId === item.id);
+    assert.ok(cardArt, `missing overview artwork for ${item.name}`);
+    assert.ok(classOverview.includes(cardArt.src), `${item.name} card uses its local illustration`);
+    assert.ok(classOverview.includes(`href="#game/world-of-warcraft/classes/${item.id}"`));
+    assert.ok(await readFile(resolve(root, 'dist', cardArt.src)));
+  }
+  assert.equal((classOverview.match(/class="wow-class-card-emblem"/g) || []).length, 9);
+  assert.equal((classOverview.match(/class="wow-class-card-copy"/g) || []).length, 9);
+  const raceOverview = render(route('#game/world-of-warcraft/races'));
+  assert.equal((raceOverview.match(/data-wow-race-card/g) || []).length, 10);
+  assert.ok(raceOverview.includes('data-wow-race-faction') && raceOverview.includes('data-wow-race-class'));
+  for (const race of wowClientData.races) {
+    const portrait = wowArtwork.racePortraits[race.id];
+    assert.ok(portrait, `missing portrait mapping for ${race.name}`);
+    assert.ok(raceOverview.includes(portrait.src), `${race.name} uses its local portrait`);
+    assert.ok(raceOverview.includes(`data-faction="${race.faction}"`), `${race.name} retains its faction filter value`);
+    assert.ok(raceOverview.includes(`data-classes="${race.classes.map(name => name.toLowerCase()).join(' ')}"`), `${race.name} retains its compatibility filter values`);
+    assert.ok(await readFile(resolve(root, 'dist', portrait.src)));
+  }
   for (const item of wowPack.classes) {
     const classRoute = route(`#game/world-of-warcraft/classes/${item.id}`);
     assert.equal(classRoute.view, 'wow-class', item.id);
@@ -1392,7 +1415,6 @@ test('WoW Forever race, class icon, talent planner, storage, and share data stay
   assert.match(planner, /grid-row:\d+;grid-column:\d+/, 'talent placement uses recorded grid coordinates');
   assert.ok(planner.includes('wow-talent-rank'), 'each talent node displays its current and maximum ranks above its icon');
   assert.ok(planner.includes('Copy share link') && planner.includes('does not verify per-row point gates'));
-  const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
   assert.match(portalStyles, /\.wow-game-icon\s*\{[^}]*aspect-ratio:1;[^}]*object-fit:contain/s, 'WoW icon frames stay square and preserve the full image');
   assert.match(portalStyles, /\.wow-talent-icon\s*\{[^}]*width:2\.9rem;[^}]*height:2\.9rem/s, 'talent icons stay at a fixed game-icon size');
   assert.ok(h.app.readRoute(`#game/world-of-warcraft/talent-planner/${shared}`).sharedBuildToken);

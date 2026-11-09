@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+<title id="title">Original Druid class artwork</title><desc id="desc">A project-created fantasy illustration showing a druid archetype with distinctive class equipment.</desc>
+<defs><linearGradient id="back" x2=".9" y2="1"><stop stop-color="#40543e"/><stop offset=".55" stop-color="#202b35"/><stop offset="1" stop-color="#0c1219"/></linearGradient><radialGradient id="glow"><stop stop-color="#d69154" stop-opacity=".42"/><stop offset="1" stop-color="#d69154" stop-opacity="0"/></radialGradient><linearGradient id="cloth" x2="1" y2="1"><stop stop-color="#d69154" stop-opacity=".74"/><stop offset="1" stop-color="#40543e"/></linearGradient></defs>
+<rect width="600" height="360" fill="url(#back)"/><ellipse cx="366" cy="152" rx="225" ry="190" fill="url(#glow)"/>moon grove
+<path d="M184 360q4-93 78-119l45-22h103l53 29q53 28 70 112z" fill="url(#cloth)" stroke="#d69154" stroke-opacity=".6" stroke-width="4"/>
+<path d="M205 307q10-53 73-75l29 39-18 42-72 18z" fill="#29343c" stroke="{accent}" stroke-opacity=".72" stroke-width="4"/><path d="M495 307q-10-53-73-75l-29 39 18 42 72 18z" fill="#29343c" stroke="{accent}" stroke-opacity=".72" stroke-width="4"/><path d="M291 257q59 22 118 0" fill="none" stroke="#e0d4be" stroke-opacity=".35" stroke-width="3"/>
+<path d="M287 207q8-40 6-65h118q-4 47 12 69l-51 34h-58z" fill="#c38e72"/>
+<ellipse cx="350" cy="137" rx="67" ry="82" fill="#c38e72" stroke="#ead1b6" stroke-opacity=".25" stroke-width="3"/>
+<path d="M270 118q10-83 74-81t84 82l-19 55h-122z" fill="#47593f" stroke="#94a36f" stroke-width="5"/><path d="M290 72 265 28l53 34m90 10 28-44-57 30" fill="#40543e" stroke="#c29461" stroke-width="6"/><path d="M324 149h9m38 0h9" stroke="#eee0c4" stroke-width="5"/>
+<path d="M302 132q9-6 18 0m45 0q9-6 18 0" fill="none" stroke="#56433b" stroke-width="4" stroke-linecap="round"/><ellipse cx="312" cy="139" rx="3.2" ry="4" fill="#25272a"/><ellipse cx="367" cy="139" rx="3.2" ry="4" fill="#25272a"/><path d="M350 144l-4 16 5 2" fill="none" stroke="#8f6656" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/><path d="M340 176q10 5 20 0" fill="none" stroke="#643f3b" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M236 321q99-41 205-4" fill="none" stroke="#e5d8bc" stroke-opacity=".45" stroke-width="3"/><path d="M470 272V54" stroke="#96754d" stroke-width="8"/><path d="M469 109q-48-24-38-65 36 2 40 39 7-44 45-47 3 39-41 68" fill="#68835b" stroke="#a7b47c" stroke-width="4"/><path d="M452 266h38" stroke="#c4a36e" stroke-width="10"/>
+<path d="M0 332h600" stroke="#d7c69c" stroke-opacity=".16" stroke-width="2"/>
+</svg>

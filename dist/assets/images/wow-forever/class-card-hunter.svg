@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+<title id="title">Original Hunter class artwork</title><desc id="desc">A project-created fantasy illustration showing a hunter archetype with distinctive class equipment.</desc>
+<defs><linearGradient id="back" x2=".9" y2="1"><stop stop-color="#354839"/><stop offset=".55" stop-color="#202b35"/><stop offset="1" stop-color="#0c1219"/></linearGradient><radialGradient id="glow"><stop stop-color="#92ae70" stop-opacity=".42"/><stop offset="1" stop-color="#92ae70" stop-opacity="0"/></radialGradient><linearGradient id="cloth" x2="1" y2="1"><stop stop-color="#92ae70" stop-opacity=".74"/><stop offset="1" stop-color="#354839"/></linearGradient></defs>
+<rect width="600" height="360" fill="url(#back)"/><ellipse cx="366" cy="152" rx="225" ry="190" fill="url(#glow)"/>pinewood hunt
+<path d="M184 360q4-93 78-119l45-22h103l53 29q53 28 70 112z" fill="url(#cloth)" stroke="#92ae70" stroke-opacity=".6" stroke-width="4"/>
+<path d="M205 307q10-53 73-75l29 39-18 42-72 18z" fill="#29343c" stroke="{accent}" stroke-opacity=".72" stroke-width="4"/><path d="M495 307q-10-53-73-75l-29 39 18 42 72 18z" fill="#29343c" stroke="{accent}" stroke-opacity=".72" stroke-width="4"/><path d="M291 257q59 22 118 0" fill="none" stroke="#e0d4be" stroke-opacity=".35" stroke-width="3"/>
+<path d="M287 207q8-40 6-65h118q-4 47 12 69l-51 34h-58z" fill="#c39372"/>
+<ellipse cx="350" cy="137" rx="67" ry="82" fill="#c39372" stroke="#ead1b6" stroke-opacity=".25" stroke-width="3"/>
+<path d="M282 115q14-73 79-65 50 7 66 62l-30 68h-94z" fill="#364338" stroke="#92ae70" stroke-width="5"/><path d="M292 115q46-42 119 0l-15-36q-52-31-89 4z" fill="#29372d"/><path d="M320 143h9m43 0h9" stroke="#e7d6b8" stroke-width="6"/>
+<path d="M302 132q9-6 18 0m45 0q9-6 18 0" fill="none" stroke="#56433b" stroke-width="4" stroke-linecap="round"/><ellipse cx="312" cy="139" rx="3.2" ry="4" fill="#25272a"/><ellipse cx="367" cy="139" rx="3.2" ry="4" fill="#25272a"/><path d="M350 144l-4 16 5 2" fill="none" stroke="#8f6656" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/><path d="M340 176q10 5 20 0" fill="none" stroke="#643f3b" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M236 321q99-41 205-4" fill="none" stroke="#e5d8bc" stroke-opacity=".45" stroke-width="3"/><path d="M530 25q72 150 0 300" fill="none" stroke="#a78255" stroke-width="10"/><path d="M515 176 555 176" stroke="#d6d1b8" stroke-width="4"/><path d="M556 176l-25-11v22z" fill="#d6d1b8"/><path d="M525 81l-36 101m36-55-29 49" stroke="#a78255" stroke-width="4"/><path d="M526 120l29 17-29 17z" fill="#667c53"/>
+<path d="M0 332h600" stroke="#d7c69c" stroke-opacity=".16" stroke-width="2"/>
+</svg>
