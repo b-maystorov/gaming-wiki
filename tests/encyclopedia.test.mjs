@@ -1273,6 +1273,16 @@ test('WoW Forever race, class icon, talent planner, storage, and share data stay
   assert.equal(wowClientData.iconAudit.brokenTalentIconPaths, 0);
   assert.equal(wowClientData.iconAudit.unverifiedTalentRecords, 0);
 
+  const classOverview = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes'));
+  assert.equal((classOverview.match(/class="wow-class-card"/g) || []).length, wowPack.classes.length);
+  assert.equal((classOverview.match(/class="wow-class-card-art"/g) || []).length, wowPack.classes.length);
+  assert.equal((classOverview.match(/class="wow-class-card-emblem"/g) || []).length, wowPack.classes.length);
+  assert.ok(classOverview.includes('wow-class-card-copy') && classOverview.includes('wow-class-card-link'));
+  const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  assert.match(portalStyles, /\.wow-class-card\s*\{[^}]*grid-template-rows:11\.5rem 1fr/s);
+  assert.match(portalStyles, /\.wow-class-card-art\s*>\s*img\s*\{[^}]*object-fit:cover/s);
+  assert.match(portalStyles, /\.wow-class-card-icon\s*\{[^}]*width:2\.7rem;[^}]*height:2\.7rem/s);
+
   for (const classRecord of wowClientData.classes) {
     assert.ok(classRecord.icon, `class emblem missing for ${classRecord.name}`);
     assert.ok(await readFile(resolve(root, 'dist', classRecord.icon)));

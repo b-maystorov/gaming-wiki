@@ -232,10 +232,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-content > h2 { margin: 1.3rem 0; color: #e9d8ad; font: 500 2rem Georgia, serif; }
 .wow-lede { max-width: 72ch; color: #c3cdd3; line-height: 1.75; }
 .wow-class-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1.4rem; }
-.wow-class-card { display: flex; align-items: center; gap: 1rem; min-height: 92px; padding: .9rem 1rem; border: 1px solid #526171; background: linear-gradient(120deg, #192330, #10151b); text-decoration: none; }
-.wow-class-card > span, .wow-class-hero > span { display: grid; flex: 0 0 48px; width: 48px; height: 48px; place-items: center; border: 1px solid var(--class-accent); color: var(--class-accent); font: 1.45rem Georgia, serif; background: color-mix(in srgb, var(--class-accent) 13%, #111); }
-.wow-class-card strong { color: #ede2c6; }
-.wow-class-card small { margin-left: auto; max-width: 11ch; text-align: right; color: #aebbc4; font-size: .68rem; }
 .wow-class-hero { display: flex; align-items: center; gap: 1.2rem; padding: 1.4rem; border: 1px solid #556d80; background: linear-gradient(120deg, #203044, #121821); }
 .wow-class-hero > span { flex-basis: 76px; width: 76px; height: 76px; font-size: 2rem; }
 .wow-class-hero h2 { margin-top: .3rem; color: #eee1c4; font: 500 2.1rem Georgia, serif; }
@@ -250,7 +246,7 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-zone > div { display: flex; align-items: start; justify-content: space-between; gap: .7rem; }
 .wow-tag { color: #9dd5ee; font-size: .62rem; text-align: right; text-transform: uppercase; letter-spacing: .08em; }
 @media(max-width: 760px) { .wow-feature-grid, .wow-class-grid, .wow-zone-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wow-banner { min-height: 370px; } }
-@media(max-width: 500px) { .wow-feature-grid, .wow-class-grid, .wow-zone-grid, .wow-detail-grid, .wow-tier-grid { grid-template-columns: 1fr; } .wow-banner { min-height: 350px; padding: 2.6rem .2rem 1.5rem; } .wow-class-card small { max-width: 15ch; } .wow-scene { inset-inline: -20px; } }
+@media(max-width: 500px) { .wow-feature-grid, .wow-class-grid, .wow-zone-grid, .wow-detail-grid, .wow-tier-grid { grid-template-columns: 1fr; } .wow-banner { min-height: 350px; padding: 2.6rem .2rem 1.5rem; } .wow-scene { inset-inline: -20px; } }
 @media(prefers-reduced-motion: reduce) { .wow-page *, .wow-page *::before, .wow-page *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } .wow-feature:hover { transform: none; } }
 /* A layered, CSS-only gateway gives the homepage a scene without relying on unapproved game art. */
 .portal-hero-vista { position: absolute; z-index: 0; pointer-events: none; width: min(43vw, 500px); height: 420px; right: 0; top: 25px; opacity: .85; overflow: hidden; background: radial-gradient(ellipse at 56% 50%, #d99a6426, transparent 48%), radial-gradient(ellipse at 60% 86%, #aa303631, transparent 64%); mask-image: linear-gradient(90deg, transparent, #000 25% 90%, transparent); }
@@ -266,13 +262,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 @media(max-width: 900px) { .portal-hero-vista { right: -70px; opacity: .55; } }
 @media(max-width: 560px) { .portal-hero-vista { width: 85vw; height: 310px; top: 35px; right: -34vw; opacity: .38; } .portal-hero-copy { max-width: 100%; } }
 
-.wow-class-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.wow-class-card { position: relative; flex-wrap: wrap; min-height: 104px; padding: 1rem 1.1rem; border-color: #566777; box-shadow: inset 0 1px #e2eaf10c, 0 8px 20px #0002; transition: transform 170ms, border-color 170ms, background 170ms; }
-.wow-class-card:hover { transform: translateY(-2px); border-color: var(--class-accent); background: linear-gradient(120deg, #222e3a, #11171e); }
-.wow-class-card > span, .wow-class-hero > span { position: relative; isolation: isolate; border-radius: 50%; box-shadow: 0 0 22px color-mix(in srgb, var(--class-accent) 20%, transparent), inset 0 0 15px color-mix(in srgb, var(--class-accent) 15%, transparent); font: 1.8rem Georgia, serif; }
-.wow-class-card > span::after, .wow-class-hero > span::after { content: ''; position: absolute; inset: 5px; z-index: -1; border: 1px solid color-mix(in srgb, var(--class-accent) 40%, transparent); border-radius: inherit; }
-.wow-class-card strong { font: 500 1.05rem Georgia, serif; }
-.wow-class-card small { flex-basis: 100%; margin: -.4rem 0 0 64px; max-width: unset; text-align: left; font-size: .77rem; }
 .wow-class-hero { position: relative; overflow: hidden; min-height: 180px; padding: clamp(1.4rem, 4vw, 2.5rem); background: radial-gradient(ellipse at 78% 28%, color-mix(in srgb, var(--class-accent) 16%, transparent), transparent 43%), linear-gradient(130deg, #223245, #11171f 72%); box-shadow: inset 0 1px #d8d9df16, 0 16px 30px #0003; }
 .wow-class-hero::after { content: ''; position: absolute; width: 210px; height: 210px; right: -35px; top: -70px; border: 1px solid color-mix(in srgb, var(--class-accent) 34%, transparent); border-radius: 50%; box-shadow: 0 0 0 18px color-mix(in srgb, var(--class-accent) 5%, transparent), 0 0 0 38px color-mix(in srgb, var(--class-accent) 4%, transparent); pointer-events: none; }
 .wow-class-hero > span { flex: 0 0 82px; width: 82px; height: 82px; border-radius: 50%; font-size: 2.3rem; }
@@ -428,10 +417,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-home-intro h2 { max-width:14ch; margin-top:.6rem; color:#f0e4c5; font:500 clamp(2.4rem,5.8vw,4.8rem)/1.08 Georgia,serif; text-shadow:0 4px 28px #000; }
 .wow-home-intro p:not(.wow-eyebrow) { max-width:48ch; margin-top:1rem; color:#d0d9df; line-height:1.7; }
 .wow-home-intro > a { display:inline-flex; gap:.7rem; margin-top:1.2rem; padding:.8rem 1.1rem; border:1px solid #bcaa75; color:#f0dfae; background:#151e27dd; text-decoration:none; }
-.wow-class-card { display:grid; grid-template-columns:96px 1fr; align-items:center; gap:.65rem 1rem; overflow:hidden; padding:.7rem; }
-.wow-class-card > img { grid-row:span 2; width:96px; height:82px; object-fit:cover; object-position:center 35%; border:1px solid color-mix(in srgb,var(--class-accent) 65%,#596777); }
-.wow-class-card strong { align-self:end; }
-.wow-class-card small { grid-column:2; flex-basis:auto; align-self:start; margin:0; }
 .wow-class-hero-illustrated { display:grid; grid-template-columns:minmax(250px,.85fr) minmax(0,1.15fr); align-items:stretch; min-height:300px; padding:0; }
 .wow-class-hero-illustrated > img { width:100%; height:100%; min-height:300px; object-fit:cover; object-position:center 35%; }
 .wow-class-hero-illustrated > div { align-self:center; padding:clamp(1.4rem,4vw,2.5rem); }
@@ -460,8 +445,8 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-leveling-next { margin:1rem 0; padding:1rem 1.2rem; border-left:3px solid #c5ad72; background:#18232d; }
 .wow-leveling-next strong { color:#ecdfbc; }
 .wow-leveling-next p { margin-top:.35rem; color:#c6d1d7; line-height:1.6; }
-@media(max-width:680px) { .wow-class-hero-illustrated { grid-template-columns:1fr; } .wow-class-hero-illustrated > img { min-height:230px; max-height:280px; } .wow-starter-summary,.wow-starter-grid { grid-template-columns:1fr; } .wow-class-card { grid-template-columns:82px 1fr; } .wow-class-card > img { width:82px; height:76px; } }
-@media(prefers-reduced-motion:reduce) { .wow-class-card:hover,.wow-spec-card:hover { transform:none; } }
+@media(max-width:680px) { .wow-class-hero-illustrated { grid-template-columns:1fr; } .wow-class-hero-illustrated > img { min-height:230px; max-height:280px; } .wow-starter-summary,.wow-starter-grid { grid-template-columns:1fr; } }
+@media(prefers-reduced-motion:reduce) { .wow-spec-card:hover { transform:none; } }
 .wow-page:has(.wow-home-intro) .wow-banner { min-height: 300px; }
 .wow-home-art { z-index: 0; height: 620px; }
 .wow-home-intro,.wow-feature-grid,.wow-page > .wow-note { position:relative; z-index:1; }
@@ -579,20 +564,31 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 .wow-page:has(.wow-content) .wow-banner { min-height:230px; padding-block:1.3rem; }
 .wow-page:has(.wow-content) .wow-banner > p:not(.wow-eyebrow) { display:none; }
 .wow-page:has(.wow-content) .wow-nav { margin-top:1rem; }
-.wow-class-card { display:flex; flex-direction:column; align-items:stretch; min-height:275px; padding:0; }
-.wow-class-card > img { width:100%; height:185px; flex:0 0 185px; object-fit:cover; object-position:center 35%; border:0; border-bottom:1px solid color-mix(in srgb,var(--class-accent) 65%,#596777); }
-.wow-class-card strong { margin:.55rem 1rem 0; font-size:1.18rem; }
-.wow-class-card small { flex-basis:auto; margin:.2rem 1rem .8rem; font-size:.82rem; }
-@media(max-width:620px) { .wow-class-card { min-height:245px; } .wow-class-card > img { height:165px; flex-basis:165px; } .wow-page:has(.wow-content) .wow-banner { min-height:190px; } }
+.wow-class-card { display:grid; grid-template-rows:11.5rem 1fr; min-width:0; min-height:19rem; overflow:hidden; border:1px solid #4b5a66; border-radius:5px; color:inherit; text-decoration:none; background:linear-gradient(145deg,#19232d,#10151b 72%); box-shadow:inset 0 1px #ffffff0a,0 10px 24px #0003; transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease,background 180ms ease; }
+.wow-class-card:hover { transform:translateY(-3px); border-color:var(--class-accent); color:inherit; background:linear-gradient(145deg,#202d38,#11171d 72%); box-shadow:inset 0 1px #ffffff12,0 15px 30px #0005,0 0 22px color-mix(in srgb,var(--class-accent) 12%,transparent); }
+.wow-class-card:focus-visible { outline:2px solid color-mix(in srgb,var(--class-accent) 72%,#f4df9e); outline-offset:3px; }
+.wow-class-card-art { position:relative; display:block; min-width:0; overflow:hidden; border-bottom:1px solid color-mix(in srgb,var(--class-accent) 48%,#465563); background:radial-gradient(ellipse at 70% 40%,color-mix(in srgb,var(--class-accent) 20%,transparent),transparent 58%),#101820; }
+.wow-class-card-art::after { content:""; position:absolute; inset:38% 0 0; pointer-events:none; background:linear-gradient(0deg,#0a0f14a8,transparent); }
+.wow-class-card-art > img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 42%; transition:transform 260ms ease; }
+.wow-class-card:hover .wow-class-card-art > img { transform:scale(1.035); }
+.wow-class-art-fallback { display:grid; width:100%; height:100%; place-items:center; color:color-mix(in srgb,var(--class-accent) 72%,#e8dfc9); font:500 4rem Georgia,serif; }
+.wow-class-card-emblem { position:absolute; z-index:1; left:1rem; bottom:-1.15rem; display:grid; width:3.4rem; height:3.4rem; place-items:center; border:1px solid color-mix(in srgb,var(--class-accent) 72%,#766747); border-radius:5px; background:#111820; box-shadow:0 3px 12px #0009,0 0 15px color-mix(in srgb,var(--class-accent) 18%,transparent); }
+.wow-class-card-icon { width:2.7rem; height:2.7rem; max-width:2.7rem; max-height:2.7rem; border:0; border-radius:3px; box-shadow:none; }
+.wow-class-card-copy { display:flex; min-width:0; flex-direction:column; align-items:flex-start; gap:.45rem; padding:1.55rem 1rem .9rem; }
+.wow-class-card-copy > strong { color:#f0e4c5; font:500 clamp(1.2rem,1.6vw,1.5rem)/1.2 Georgia,serif; letter-spacing:.01em; }
+.wow-class-card-copy > small { color:#adbbc5; font-size:.79rem; line-height:1.5; }
+.wow-class-card-link { display:flex; width:100%; align-items:center; justify-content:space-between; gap:.5rem; margin-top:auto; padding-top:.45rem; color:color-mix(in srgb,var(--class-accent) 75%,#e2d6bb); font-size:.76rem; letter-spacing:.045em; }
+.wow-class-card-link > span { font-size:1rem; transition:transform 180ms ease; }
+.wow-class-card:hover .wow-class-card-link > span { transform:translateX(3px); }
+@media(max-width:620px) { .wow-class-card { grid-template-rows:10.5rem 1fr; min-height:18rem; } .wow-class-card-copy { padding-inline:.9rem; } .wow-page:has(.wow-content) .wow-banner { min-height:190px; } }
+.wow-class-card:focus-visible, .wow-class-card:hover { z-index:1; }
+@media(prefers-reduced-motion:reduce) { .wow-class-card,.wow-class-card-art > img,.wow-class-card-link > span { transition:none; } .wow-class-card:hover { transform:none; } }
 
 /* Forever client icons are separate from the original class illustrations. */
 .wow-game-icon { display:block; flex:0 0 auto; width:3.25rem; height:3.25rem; aspect-ratio:1; object-fit:contain; image-rendering:auto; border:1px solid #9e895d; border-radius:3px; background:#101820; box-shadow:0 0 0 3px #060a0e,0 5px 16px #0008; }
 .wow-game-icon.is-fallback { display:grid; place-items:center; color:#e2d2a8; font:600 1.2rem Georgia,serif; }
 .wow-class-emblem { width:2.9rem; height:2.9rem; }
 .wow-class-emblem-large { width:4rem; height:4rem; max-width:4rem; max-height:4rem; border-width:2px; border-radius:5px; object-fit:contain; }
-.wow-class-card-identity { display:flex; align-items:center; gap:.75rem; margin:.75rem 1rem 0; }
-.wow-class-card-identity .wow-class-emblem { width:3.25rem; height:3.25rem; }
-.wow-class-card-identity strong { margin:0; }
 .wow-class-hero-heading,.wow-build-heading { position:relative; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:.55rem; }
 .wow-class-hero-heading .wow-class-emblem-large,.wow-build-heading .wow-class-emblem-large { margin-bottom:.25rem; }
 .wow-dashboard-identity { display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:.8rem; }
