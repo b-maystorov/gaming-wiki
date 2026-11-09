@@ -620,11 +620,25 @@
             "2. Murloc Gills",
             "3. The State of the Mines",
             "4. Moonbrook Espionage",
-            "5. Explosive Consultation (Stormwind engineer)",
+            "5. Explosive Consultation",
             "6. A Dynamite Plan",
             "7–8. Detonation at a Distance (both steps)",
-            "9. Explosive Consultation (return to Alba)",
+            "9. Explosive Consultation",
             "10–11. Destruction in Deadmines steps; accept the dungeon objective before entering"
+          ],
+          "raceNote": "Forever-specific chain added in patch 1.60.1; Wowhead lists Dwarf, Night Elf, Gnome, and High Order Skyborne, excluding Humans. Alliance faction alone does not guarantee eligibility.",
+          "stageDetails": [
+            {"name":"Testing the Wells","npc":"Alba Fairmoon","where":"Sentinel Hill, Westfall · 52.4, 53.0","min":9,"prerequisites":[],"next":"Murloc Gills","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"Murloc Gills","npc":"Alba Fairmoon","where":"Sentinel Hill, Westfall","min":9,"prerequisites":["Testing the Wells"],"next":"The State of the Mines","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"The State of the Mines","npc":"Alba Fairmoon","where":"Sentinel Hill, Westfall","min":9,"prerequisites":["Murloc Gills"],"next":"Moonbrook Espionage","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"Moonbrook Espionage","npc":"Alba Fairmoon","where":"Sentinel Hill, Westfall","min":9,"prerequisites":["The State of the Mines"],"next":"Explosive Consultation","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"Explosive Consultation","stepNote":"Stormwind engineer handoff","npc":"Alba Fairmoon","startingLocation":"Sentinel Hill, Westfall","where":"Dwarven District, Stormwind","min":9,"prerequisites":["Moonbrook Espionage"],"next":"A Dynamite Plan","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"A Dynamite Plan","npc":"Sprite Jumpsprocket","where":"Dwarven District, Stormwind","min":9,"prerequisites":["Explosive Consultation"],"next":"Detonation at a Distance","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"Detonation at a Distance","stepNote":"First step","npc":"Sprite Jumpsprocket → Jasper Fel","where":"Stormwind · Dwarven District → SI:7","min":9,"prerequisites":["A Dynamite Plan"],"next":"Detonation at a Distance","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"Detonation at a Distance","stepNote":"Second step","npc":"Jasper Fel → Sprite Jumpsprocket","where":"SI:7 → Dwarven District, Stormwind","min":9,"prerequisites":["Detonation at a Distance"],"next":"Explosive Consultation","reward":"Experience and Stormwind reputation; no gear"},
+            {"name":"Explosive Consultation","stepNote":"Return to Alba Fairmoon","npc":"Alba Fairmoon","where":"Sentinel Hill, Westfall","min":9,"prerequisites":["Detonation at a Distance"],"next":"Destruction in Deadmines","reward":"Experience; no gear"},
+            {"name":"Destruction in Deadmines","stepNote":"Accept before entering","npc":"Alba Fairmoon","where":"Sentinel Hill, Westfall · 52.4, 53.0","min":9,"prerequisites":["Explosive Consultation"],"next":"Destruction in Deadmines","reward":"No gear reward"},
+            {"name":"Destruction in Deadmines","stepNote":"Detonator objective","npc":"Alba Fairmoon","where":"Sentinel Hill, Westfall · 52.4, 53.0","min":9,"prerequisites":["Destruction in Deadmines"],"next":null,"reward":"No gear reward"}
           ]
         },
         {
@@ -636,9 +650,9 @@
           "factions": [
             "Alliance"
           ],
-          "stage": "OUTDOOR PREREQUISITE",
-          "kind": "outdoor",
-          "outside": "Advance the Westfall questline to the final Defias Traitor escort and accept the instance quest before entering.",
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Complete the first six outdoor steps, including the Defias Traitor escort, then return to Gryan and pick up the final VanCleef quest before entering.",
           "unlock": "Defeat Edwin VanCleef and loot his head.",
           "rewards": "Chausses of Westfall; Tunic of Westfall; Staff of Westfall",
           "shaman": "The reward choice Staff of Westfall is a verified caster/healing option for a Shaman using a staff: +5 Intellect, +6 Spirit, and the tooltip lists up to +48 healing and +16 magic damage. It is not the Enhancement weapon recommendation; Enhancement gearing prioritizes two-hand mace DPS.",
@@ -654,6 +668,15 @@
             "5. The Defias Brotherhood — catch the Defias Messenger and report back",
             "6. The Defias Traitor — escort him from Sentinel Hill to the hideout",
             "7. Accept the final The Defias Brotherhood quest from Gryan before entering"
+          ],
+          "stageDetails": [
+            {"name":"The Defias Brotherhood","stepNote":"First step","npc":"Gryan Stoutmantle","where":"Sentinel Hill, Westfall · 56.3, 47.5","min":14,"prerequisites":[],"next":"The Defias Brotherhood","reward":"Experience and Stormwind reputation"},
+            {"name":"The Defias Brotherhood","stepNote":"Wiley's Note","npc":"Wiley the Black","where":"Lakeshire, Redridge Mountains · 21.5, 45.3","min":14,"prerequisites":["The Defias Brotherhood"],"next":"The Defias Brotherhood","reward":"Experience and Stormwind reputation"},
+            {"name":"The Defias Brotherhood","stepNote":"Stormwind report lead","npc":"Gryan Stoutmantle","where":"Sentinel Hill, Westfall · 56.3, 47.5","min":14,"prerequisites":["The Defias Brotherhood"],"next":"The Defias Brotherhood","reward":"Experience and Stormwind reputation"},
+            {"name":"The Defias Brotherhood","stepNote":"Report to Master Mathias Shaw","npc":"Master Mathias Shaw","where":"Stormwind","min":14,"prerequisites":["The Defias Brotherhood"],"next":"The Defias Brotherhood","reward":"Experience and Stormwind reputation"},
+            {"name":"The Defias Brotherhood","stepNote":"Messenger report","npc":"Gryan Stoutmantle","where":"Sentinel Hill, Westfall · 56.3, 47.5","min":14,"prerequisites":["The Defias Brotherhood"],"next":"The Defias Brotherhood","reward":"Experience and Stormwind reputation"},
+            {"name":"The Defias Brotherhood","stepNote":"Defias Traitor escort","npc":"Gryan Stoutmantle","where":"Sentinel Hill, Westfall","min":14,"prerequisites":["The Defias Brotherhood"],"next":"The Defias Brotherhood","reward":"Experience and Stormwind reputation"},
+            {"name":"The Defias Brotherhood","stepNote":"Final VanCleef quest","npc":"Gryan Stoutmantle","where":"Sentinel Hill, Westfall · 56.3, 47.5","min":14,"prerequisites":["The Defias Brotherhood"],"next":null,"reward":"Choose one: Chausses of Westfall, Tunic of Westfall, Staff of Westfall"}
           ]
         },
         {
