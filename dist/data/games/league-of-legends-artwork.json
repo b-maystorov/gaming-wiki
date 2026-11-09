@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "gameId": "league-of-legends",
+  "records": [
+    {
+      "id": "league-of-legends:homepage:featured",
+      "kind": "homepage",
+      "src": "assets/images/home/league-of-legends-ahri.jpg",
+      "alt": "Ahri featured in her classic League of Legends champion splash art.",
+      "width": 1600,
+      "height": 900,
+      "originalWidth": 1215,
+      "originalHeight": 717,
+      "sourceUrl": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg",
+      "sourceFileName": "Ahri_0.jpg",
+      "sourcePage": "https://developer.riotgames.com/docs/lol",
+      "provenance": "Official Ahri champion splash art distributed through Riot Games Data Dragon; locally cropped to a 1600x900 landscape frame for the homepage.",
+      "usageStatus": "Riot's general developer policy lists Data Dragon assets for use in third-party products, subject to its policies and registration requirements. Registration and reuse clearance for this personal wiki have not been independently verified; Riot retains copyright.",
+      "usage": "Official Riot Games asset. This record does not claim independent permission or registration approval for this website."
+    }
+  ]
+}

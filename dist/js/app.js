@@ -30,6 +30,7 @@ const darkestDungeonArtwork = await loadArtworkManifest();
 
 let wowData = null;
 let wowArtwork = null;
+let leagueArtwork = null;
 let wowClientData = null;
 let wowGuidedData = null;
 let wowDungeonPrep = null;
@@ -53,6 +54,13 @@ try {
   wowArtwork = await artworkResponse.json();
 } catch (error) {
   console.error('Could not load WoW artwork manifest:', error);
+}
+try {
+  const leagueArtworkResponse = await fetch('./data/games/league-of-legends-artwork.json');
+  if (!leagueArtworkResponse.ok) throw new Error(`League of Legends artwork request failed: ${leagueArtworkResponse.status}`);
+  leagueArtwork = await leagueArtworkResponse.json();
+} catch (error) {
+  console.error('Could not load League of Legends artwork:', error);
 }
 try {
   const clientDataResponse = await fetch('./data/games/world-of-warcraft-forever-client-data.json');
@@ -142,8 +150,17 @@ function renderHome() {
   const gameCards = portalGames.map(game => {
     const artwork = game.id === 'darkest-dungeon'
       ? darkestDungeonArtwork?.homepageArtwork?.primary
-      : wowArtwork?.records.find(record => record.id === 'wow-forever:homepage:featured');
+      : game.id === 'world-of-warcraft'
+        ? wowArtwork?.records.find(record => record.id === 'wow-forever:homepage:featured')
+        : leagueArtwork?.records?.find(record => record.id === 'league-of-legends:homepage:featured');
     const title = game.homeTitle || game.name;
+    if (game.id === 'league-of-legends') return `<a class="home-game-card" href="${escapeHtml(game.href)}" aria-label="League of Legends, coming soon">
+      <span class="home-game-art" data-home-art>
+        <img data-home-art-image src="${escapeHtml(artwork?.src || '')}" alt="${escapeHtml(artwork?.alt || 'League of Legends champion artwork unavailable')}" width="1600" height="900" loading="lazy">
+        <span data-home-art-fallback hidden>Artwork unavailable</span>
+      </span>
+      <span class="home-game-copy"><span class="home-game-label">In development</span><strong>League of Legends</strong><span class="home-game-description">League guides are coming later.</span><span class="home-coming-status">Coming Soon</span></span>
+    </a>`;
     if (!game.available) return `<article class="home-game-card is-coming" aria-label="${escapeHtml(title)}, coming soon">
       <span class="home-game-art home-game-art--unavailable" aria-hidden="true"><span>Coming Soon</span></span>
       <span class="home-game-copy"><span class="home-game-label">In development</span><strong>${escapeHtml(title)}</strong><span class="home-game-description">Guides for this universe are not available yet.</span><span class="home-coming-status">Coming Soon</span></span>
@@ -175,6 +192,16 @@ function renderPortalScenery(game) {
 }
 
 function renderGamePreview(game) {
+  if (game.id === 'league-of-legends') {
+    const artwork = leagueArtwork?.records?.find(record => record.id === 'league-of-legends:homepage:featured');
+    return `<div class="portal"><section class="league-coming-page" aria-labelledby="page-title">
+      <figure class="league-coming-art" data-home-art>
+        <img data-home-art-image src="${escapeHtml(artwork?.src || '')}" alt="${escapeHtml(artwork?.alt || 'League of Legends champion artwork unavailable')}" width="1600" height="900">
+        <span data-home-art-fallback hidden>Artwork unavailable</span>
+      </figure>
+      <div class="league-coming-copy"><p class="home-section-kicker">Coming Soon</p><h1 id="page-title" tabindex="-1">League of Legends</h1><p>League of Legends guides are coming later.</p><a class="league-coming-back" href="#home">← Back to Home</a></div>
+    </section></div>`;
+  }
   return `<div class="portal"><section class="portal-preview" data-portal-theme="${escapeHtml(game.theme)}">
     <a class="portal-return" href="#home/games">← All game universes</a>
     <div class="portal-scene portal-preview-scene">

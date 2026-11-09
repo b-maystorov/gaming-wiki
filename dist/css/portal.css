@@ -176,6 +176,20 @@ body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
   .home-game-card:hover { transform: none; }
 }
 
+/* League's preview route uses its own artwork and a short, direct status page. */
+.league-coming-page { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr); align-items: center; gap: clamp(1.5rem, 4vw, 3.5rem); max-width: 1120px; margin: 2rem auto 1rem; padding: 1rem; }
+.league-coming-art { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border: 1px solid #3d4855; border-radius: 4px; background: #111820; box-shadow: 0 12px 30px #0005; }
+.league-coming-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.league-coming-art [data-home-art-fallback]:not([hidden]) { position: absolute; inset: 0; display: grid; place-items: center; color: #e3d6b8; background: #111820; }
+.league-coming-copy h1 { margin-top: .5rem; color: #f1eee6; font: 500 clamp(2rem, 4vw, 3.1rem)/1.15 Georgia, serif; }
+.league-coming-copy > p:not(.home-section-kicker) { max-width: 38ch; margin-top: .8rem; color: #c1cbd4; line-height: 1.65; }
+.league-coming-back { display: inline-flex; align-items: center; min-height: 44px; margin-top: 1.3rem; padding: .55rem .8rem; border: 1px solid #687080; border-radius: 3px; color: #e5d7b6; background: #151b23; font-size: .84rem; font-weight: 650; text-decoration: none; }
+.league-coming-back:hover { border-color: #b49b61; background: #1c242e; color: #fff2d2; }
+.league-coming-back:focus-visible { outline: 2px solid #e0c77f; outline-offset: 3px; }
+@media (max-width: 760px) {
+  .league-coming-page { grid-template-columns: 1fr; max-width: 620px; }
+}
+
 /* Preview pages share the scene renderer and theme tokens, not the DD game shell. */
 .portal-return { display: inline-block; padding-block: 1.2rem; margin-block: .6rem; color: var(--world-accent); font-size: .9rem; }
 .portal-preview-scene { border: 1px solid var(--world-line); }
