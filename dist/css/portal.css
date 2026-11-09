@@ -139,13 +139,16 @@ body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
 .home-welcome h1 { margin-top: .35rem; color: #f3efe5; font: 600 clamp(2rem, 4vw, 3rem)/1.12 Georgia, serif; letter-spacing: -.025em; }
 .home-welcome > p:last-child { max-width: 64ch; margin-top: .7rem; color: var(--home-muted); font-size: .97rem; line-height: 1.65; }
 .home-featured, .home-coming { margin-top: 1.1rem; }
-.home-section-heading { margin-bottom: .85rem; }
+.home-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: .85rem; }
 .home-section-kicker { color: var(--home-gold); font-size: .65rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .home-section-heading h2 { margin-top: .2rem; color: #eee8dc; font: 500 1.55rem/1.2 Georgia, serif; }
-.home-featured-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.home-featured-grid { display: grid; grid-auto-columns: minmax(280px, 33%); grid-auto-flow: column; gap: 1rem; overflow-x: auto; overscroll-behavior-inline: contain; padding: .2rem .2rem .85rem; scroll-padding-inline: .2rem; scroll-snap-type: x mandatory; scrollbar-color: #655943 #15191e; scrollbar-width: thin; }
 .home-game-card { display: grid; grid-template-rows: auto 1fr; min-width: 0; overflow: hidden; border: 1px solid #35414c; border-radius: 4px; color: inherit; background: #111820; text-decoration: none; box-shadow: 0 8px 20px #0003; transition: border-color 160ms ease, transform 160ms ease, background 160ms ease; }
+.home-featured-grid > .home-game-card { scroll-snap-align: start; }
 .home-game-card:hover { border-color: #9e8959; transform: translateY(-2px); background: #151e27; }
 .home-game-card:focus-visible { outline: 3px solid #e0c77f; outline-offset: 4px; }
+.home-game-card.is-coming { cursor: default; }
+.home-game-card.is-coming:hover { transform: none; border-color: #4b5159; background: #111820; }
 .home-game-art { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; background: #10161d; }
 .home-game-art > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .home-game-art [data-home-art-fallback] { position: absolute; inset: 0; place-items: center; color: #e3d6b8; background: #111820; font-size: .9rem; }
@@ -156,14 +159,16 @@ body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
 .home-game-copy > strong { color: #f2ebdc; font: 500 1.35rem/1.2 Georgia, serif; }
 .home-game-description { max-width: 48ch; color: var(--home-muted); font-size: .88rem; line-height: 1.5; }
 .home-game-action { display: flex; align-items: center; justify-content: space-between; margin-top: .35rem; padding-top: .65rem; border-top: 1px solid #303944; color: #e7d5a7; font-size: .81rem; font-weight: 700; }
-.home-coming { padding-top: .3rem; }
-.home-coming-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
-.home-coming-card { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.2rem; padding: .85rem 1rem; border: 1px solid #303943; border-radius: 3px; background: #0e141a; }
-.home-coming-card h3 { color: #c6ccd1; font-size: .95rem; font-weight: 600; }
-.home-coming-status { flex: 0 0 auto; padding: .3rem .5rem; border: 1px solid #4a5052; border-radius: 2px; color: #b9b6a8; font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.home-game-art--unavailable { display: grid; place-items: center; color: #bbc1c8; background: #12171d; }
+.home-game-art--unavailable > span { padding: .42rem .65rem; border: 1px solid #414951; border-radius: 2px; color: #d3d0c6; background: #0b0f14; font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.home-coming-status { justify-self: start; padding: .3rem .5rem; border: 1px solid #4a5052; border-radius: 2px; color: #c6c4ba; font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.home-game-controls { display: flex; gap: .45rem; }
+.home-game-controls button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #46515a; border-radius: 3px; color: #e5d7b6; background: #121820; font: 1.5rem/1 system-ui, sans-serif; cursor: pointer; }
+.home-game-controls button:hover { border-color: #b49b61; background: #1b2229; }
+.home-game-controls button:focus-visible { outline: 2px solid #e0c77f; outline-offset: 3px; }
 @media (max-width: 680px) {
   .home-page { padding-top: .7rem; }
-  .home-featured-grid, .home-coming-grid { grid-template-columns: 1fr; }
+  .home-featured-grid { grid-auto-columns: minmax(0, 84%); gap: .8rem; }
   .home-game-copy { min-height: 0; }
 }
 @media (prefers-reduced-motion: reduce) {

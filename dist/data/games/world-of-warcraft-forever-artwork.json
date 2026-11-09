@@ -247,14 +247,14 @@
     {
       "id": "wow-forever:homepage:featured",
       "kind": "homepage",
-      "src": "assets/images/home/wow-classic-dungeon-screenshot.jpg",
-      "alt": "World of Warcraft Classic in-game dungeon battle with a group fighting a spider-like enemy.",
+      "src": "assets/images/home/wow-classic-stormwind.jpg",
+      "alt": "A World of Warcraft Classic paladin standing in Stormwind.",
       "loading": "eager",
       "sourceUrl": "https://blizzard.gamespress.com/Kit/Details/World-of-Warcraft-Classic-and-15th-Anniversary",
-      "sourceFileName": "ClassicDungeon.jpg",
+      "sourceFileName": "ClassicStormwind.jpg",
       "originalWidth": 1920,
       "originalHeight": 1080,
-      "provenance": "Blizzard Entertainment publisher press-center screenshot, ClassicDungeon.jpg from the World of Warcraft: Classic 1920x1080 set.",
+      "provenance": "Blizzard Entertainment publisher press-center screenshot, ClassicStormwind.jpg from the World of Warcraft: Classic 1920x1080 set; resized locally to 1600x900 for the homepage.",
       "usageStatus": "Games Press describes these as publisher PR assets suitable for editorial support but does not guarantee reproduction rights; Blizzard retains copyright and explicit clearance is unconfirmed.",
       "usage": "Publisher PR asset; Games Press recommends editorial use but does not guarantee reproduction rights. Copyright remains with Blizzard and explicit clearance is unconfirmed."
     }

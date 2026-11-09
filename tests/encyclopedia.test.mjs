@@ -501,18 +501,38 @@ test('homepage features direct game routes and records its local game artwork', 
 
   const cardLinks = [...home.matchAll(/<a class="home-game-card" href="([^"]+)"/g)].map(match => match[1]);
   assert.deepEqual(cardLinks, ['#game/darkest-dungeon', '#game/world-of-warcraft']);
-  assert.equal((home.match(/class="home-game-card"/g) || []).length, 2);
+  assert.equal((home.match(/class="home-game-card/g) || []).length, 4, 'all four games share one carousel row');
+  assert.equal((home.match(/class="home-game-card is-coming"/g) || []).length, 2);
   assert.ok(home.includes('Darkest Dungeon I') && home.includes('Heroes, bosses, team compositions and expedition planning.'));
   assert.ok(home.includes('World of Warcraft: Forever') && home.includes('Classes, talents, leveling routes and dungeon preparation.'));
   assert.ok(home.includes('Explore Guides'));
   assert.equal(h.app.readRoute(cardLinks[0]).view, 'game');
   assert.equal(h.app.readRoute(cardLinks[1]).view, 'wow-home');
 
-  const comingSoon = home.match(/<div class="home-coming-grid">([\s\S]*?)<\/div>/)?.[1] || '';
-  assert.ok(comingSoon.includes('League of Legends') && comingSoon.includes('Darkest Dungeon II'));
-  assert.equal((comingSoon.match(/Coming Soon/g) || []).length, 2);
-  assert.doesNotMatch(comingSoon, /<a\b|<button\b/, 'coming-soon cards do not advertise nonfunctional actions');
+  const comingSoon = home.match(/<article class="home-game-card is-coming"[\s\S]*?<\/article>/g) || [];
+  assert.equal(comingSoon.length, 2);
+  assert.ok(comingSoon[0].includes('League of Legends') && comingSoon[1].includes('Darkest Dungeon II'));
+  assert.ok(comingSoon.every(card => card.includes('Coming Soon')));
+  assert.ok(!home.includes('home-coming-grid'), 'coming-soon games are integrated into the game row');
+  for (const href of ['#game/league-of-legends', '#game/darkest-dungeon-2']) assert.equal(h.app.readRoute(href).view, 'preview');
+  assert.match(home, /id="home-game-strip"[^>]*role="region"[^>]*tabindex="0"/);
+  assert.match(home, /data-home-games-scroll="-1"/);
+  assert.match(home, /data-home-games-scroll="1"/);
   assert.doesNotMatch(home, /data-preview-game|game-showcase|portal-hero-vista|portal-selectors|data-explore-games/);
+
+  const shell = await readFile(resolve(root, 'dist/index.html'), 'utf8');
+  const mainNavigation = shell.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)?.[0] || '';
+  assert.equal((mainNavigation.match(/<a\b/g) || []).length, 1);
+  assert.match(mainNavigation, /href="#home\/games"[^>]*>Universes<\/a>/);
+  assert.doesNotMatch(mainNavigation, /Darkest Dungeon|WoW: Forever|Dungeons/);
+  assert.match(shell, /class="command-trigger-label">Search<\/span>/);
+  assert.match(shell, /id="open-command-center"[^>]*aria-controls="command-center"/);
+  const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  assert.match(portalStyles, /scroll-snap-type:\s*x mandatory/);
+  assert.match(portalStyles, /grid-auto-flow:\s*column/);
+  const appSource = await readFile(resolve(root, 'dist/js/app.js'), 'utf8');
+  assert.match(appSource, /data-home-games-scroll/);
+  assert.match(appSource, /strip\.scrollBy/);
 
   const ddArt = artworkManifest.homepageArtwork;
   const wowArt = wowArtwork.records.find(record => record.id === 'wow-forever:homepage:featured');
@@ -526,6 +546,9 @@ test('homepage features direct game routes and records its local game artwork', 
   }
   assert.equal(ddArt.primary.originalWidth / ddArt.primary.originalHeight, 16 / 9);
   assert.equal(wowArt.originalWidth / wowArt.originalHeight, 16 / 9);
+  assert.equal(wowArt.sourceFileName, 'ClassicStormwind.jpg');
+  assert.match(wowArt.alt, /paladin.*Stormwind/i);
+  assert.equal((await readFile(resolve(root, 'dist', wowArt.src))).subarray(0, 2).toString('hex'), 'ffd8');
 });
 
 for (const failure of ['network', 'http', 'json', 'shape']) {

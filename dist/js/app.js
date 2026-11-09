@@ -139,22 +139,23 @@ function renderList(items, ordered = false) {
 }
 
 function renderHome() {
-  const featuredGames = portalGames.filter(game => game.available).map(game => {
+  const gameCards = portalGames.map(game => {
     const artwork = game.id === 'darkest-dungeon'
       ? darkestDungeonArtwork?.homepageArtwork?.primary
       : wowArtwork?.records.find(record => record.id === 'wow-forever:homepage:featured');
-    return { ...game, artwork };
-  });
-  const gameCards = featuredGames.map(game => `<a class="home-game-card" href="${escapeHtml(game.href)}" aria-label="Explore ${escapeHtml(game.homeTitle)} guides">
-    <span class="home-game-art" data-home-art>
-      <img data-home-art-image src="${escapeHtml(game.artwork?.path || game.artwork?.src || '')}" alt="${escapeHtml(game.artwork?.alt || `${game.homeTitle} artwork`)}" width="1600" height="900" loading="eager">
-      <span data-home-art-fallback hidden>Artwork unavailable</span>
-    </span>
-    <span class="home-game-copy"><span class="home-game-label">Guides available</span><strong>${escapeHtml(game.homeTitle)}</strong><span class="home-game-description">${escapeHtml(game.homeDescription)}</span><span class="home-game-action">Explore Guides <span aria-hidden="true">→</span></span></span>
-  </a>`).join('');
-  const comingSoon = portalGames.filter(game => !game.available).map(game => `<article class="home-coming-card" aria-label="${escapeHtml(game.name)}, coming soon">
-    <h3>${escapeHtml(game.name)}</h3><span class="home-coming-status">Coming Soon</span>
-  </article>`).join('');
+    const title = game.homeTitle || game.name;
+    if (!game.available) return `<article class="home-game-card is-coming" aria-label="${escapeHtml(title)}, coming soon">
+      <span class="home-game-art home-game-art--unavailable" aria-hidden="true"><span>Coming Soon</span></span>
+      <span class="home-game-copy"><span class="home-game-label">In development</span><strong>${escapeHtml(title)}</strong><span class="home-game-description">Guides for this universe are not available yet.</span><span class="home-coming-status">Coming Soon</span></span>
+    </article>`;
+    return `<a class="home-game-card" href="${escapeHtml(game.href)}" aria-label="Explore ${escapeHtml(title)} guides">
+      <span class="home-game-art" data-home-art>
+        <img data-home-art-image src="${escapeHtml(artwork?.path || artwork?.src || '')}" alt="${escapeHtml(artwork?.alt || `${title} artwork`)}" width="1600" height="900" loading="eager">
+        <span data-home-art-fallback hidden>Artwork unavailable</span>
+      </span>
+      <span class="home-game-copy"><span class="home-game-label">Guides available</span><strong>${escapeHtml(title)}</strong><span class="home-game-description">${escapeHtml(game.homeDescription)}</span><span class="home-game-action">Explore Guides <span aria-hidden="true">→</span></span></span>
+    </a>`;
+  }).join('');
 
   return `<div class="portal home-page">
     <section class="home-welcome" aria-labelledby="page-title">
@@ -163,12 +164,8 @@ function renderHome() {
       <p>Practical guides, builds, leveling routes and dungeon strategies for the games you love.</p>
     </section>
     <section class="home-featured" aria-labelledby="featured-games-title">
-      <div class="home-section-heading"><p class="home-section-kicker">Start playing</p><h2 id="featured-games-title">Featured games</h2></div>
-      <div class="home-featured-grid">${gameCards}</div>
-    </section>
-    <section class="home-coming" aria-labelledby="coming-soon-title">
-      <div class="home-section-heading"><p class="home-section-kicker">On the horizon</p><h2 id="coming-soon-title">Coming Soon</h2></div>
-      <div class="home-coming-grid">${comingSoon}</div>
+      <div class="home-section-heading"><div><p class="home-section-kicker">Start playing</p><h2 id="featured-games-title">Featured games</h2></div><div class="home-game-controls" role="group" aria-label="Browse games"><button type="button" data-home-games-scroll="-1" aria-label="Scroll games left">‹</button><button type="button" data-home-games-scroll="1" aria-label="Scroll games right">›</button></div></div>
+      <div class="home-featured-grid" id="home-game-strip" role="region" aria-label="Games" tabindex="0">${gameCards}</div>
     </section>
   </div>`;
 }
@@ -1962,6 +1959,16 @@ window.addEventListener('storage', event => {
   }
 });
 document.addEventListener('click', event => {
+  const gameScrollButton = event.target.closest('[data-home-games-scroll]');
+  if (gameScrollButton) {
+    const strip = document.getElementById('home-game-strip');
+    if (strip) {
+      const direction = Number(gameScrollButton.dataset.homeGamesScroll) || 1;
+      strip.scrollBy({ left: direction * strip.clientWidth * 0.85, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
+    return;
+  }
+
   const regionSection = event.target.closest('[data-region-section]');
   if (regionSection) {
     const target = document.getElementById(regionSection.dataset.regionSection);
