@@ -4285,5 +4285,26 @@
       "banner": null,
       "legacyAssets": []
     }
-  ]
+  ],
+  "homepageArtwork": {
+    "category": "homepage",
+    "recordId": "darkest-dungeon-1:homepage:featured",
+    "recordName": "Darkest Dungeon I",
+    "primary": {
+      "path": "assets/images/home/darkest-dungeon-i-key-art.jpg",
+      "exists": true,
+      "currentlyReferenced": true,
+      "verifiedAuthentic": true,
+      "verificationSource": "Red Hook Studios official press kit; DD1-KeyArt-4k.jpg",
+      "alt": "Official Darkest Dungeon I key art showing the heroes gathered around a fire with the game logo.",
+      "sourceUrl": "https://drive.google.com/drive/folders/1m_ghUF54cxbBnJE6ZbYy5bxHHtKC4IWp",
+      "sourceFileName": "DD1-KeyArt-4k.jpg",
+      "originalWidth": 3840,
+      "originalHeight": 2160,
+      "usageStatus": "Official publisher press-kit image; copyright remains with Red Hook Studios. The kit does not state a reproduction license; editorial display intended, permission not independently confirmed."
+    },
+    "thumbnail": null,
+    "banner": null,
+    "legacyAssets": []
+  }
 }

@@ -26,7 +26,7 @@ try {
   heroAbilities.crusader = { skills: [], loadError: true };
 }
 
-await loadArtworkManifest();
+const darkestDungeonArtwork = await loadArtworkManifest();
 
 let wowData = null;
 let wowArtwork = null;
@@ -75,7 +75,6 @@ main.addEventListener('error', handleArtworkError, true);
 // `builds` remains the route alias for the long-form strategy section.
 const sections = ['overview', 'teams', 'bosses', 'trinkets', 'attributes', 'abilities', 'progression', 'builds'];
 let currentView = '';
-let selectedPortalGame = 0;
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, character => ({
@@ -140,39 +139,38 @@ function renderList(items, ordered = false) {
 }
 
 function renderHome() {
-  return `<div class="portal">
-    <section class="portal-hero" aria-labelledby="page-title">
-      <div class="portal-hero-vista" aria-hidden="true"><span></span><span></span><span></span><i></i></div>
-      <div class="portal-hero-copy">
-        <div class="portal-identity"><img src="assets/images/bm-mark.svg" width="112" height="112" alt=""><div><p class="portal-brand-name">BM Gaming Wiki</p><p class="portal-kicker">Your adventure, understood</p></div></div>
-        <h1 id="page-title" tabindex="-1">Every game has a story.<br> <em>Master yours.</em></h1>
-        <p class="portal-intro">Explore Darkest Dungeon guides today, or step into World of Warcraft: Forever for class and leveling foundations. The field guide grows world by world.</p>
-        <button class="portal-explore" type="button" data-explore-games>Explore Games <span aria-hidden="true">↓</span></button>
-      </div>
-      <div class="portal-hero-foot"><span>A personal field guide for the journey</span><span aria-hidden="true">01 — Choose your world</span></div>
+  const featuredGames = portalGames.filter(game => game.available).map(game => {
+    const artwork = game.id === 'darkest-dungeon'
+      ? darkestDungeonArtwork?.homepageArtwork?.primary
+      : wowArtwork?.records.find(record => record.id === 'wow-forever:homepage:featured');
+    return { ...game, artwork };
+  });
+  const gameCards = featuredGames.map(game => `<a class="home-game-card" href="${escapeHtml(game.href)}" aria-label="Explore ${escapeHtml(game.homeTitle)} guides">
+    <span class="home-game-art" data-home-art>
+      <img data-home-art-image src="${escapeHtml(game.artwork?.path || game.artwork?.src || '')}" alt="${escapeHtml(game.artwork?.alt || `${game.homeTitle} artwork`)}" width="1600" height="900" loading="eager">
+      <span data-home-art-fallback hidden>Artwork unavailable</span>
+    </span>
+    <span class="home-game-copy"><span class="home-game-label">Guides available</span><strong>${escapeHtml(game.homeTitle)}</strong><span class="home-game-description">${escapeHtml(game.homeDescription)}</span><span class="home-game-action">Explore Guides <span aria-hidden="true">→</span></span></span>
+  </a>`).join('');
+  const comingSoon = portalGames.filter(game => !game.available).map(game => `<article class="home-coming-card" aria-label="${escapeHtml(game.name)}, coming soon">
+    <h3>${escapeHtml(game.name)}</h3><span class="home-coming-status">Coming Soon</span>
+  </article>`).join('');
+
+  return `<div class="portal home-page">
+    <section class="home-welcome" aria-labelledby="page-title">
+      <p class="home-brand-name">BM Gaming Wiki</p>
+      <h1 id="page-title" tabindex="-1">Your adventure. Your guide.</h1>
+      <p>Practical guides, builds, leveling routes and dungeon strategies for the games you love.</p>
     </section>
-    <section class="portal-library" aria-labelledby="games-heading">
-      <div class="portal-library-heading"><div><p class="portal-kicker">The game library</p><h2 id="games-heading" tabindex="-1">Choose your world.</h2></div><p>Four universes. Choose your next adventure.</p></div>
-      <div class="portal-selectors" role="group" aria-label="Preview a game">${portalGames.map((game, index) => `
-        <button type="button" class="portal-selector" data-preview-game="${index}" data-portal-theme="${game.theme}" aria-pressed="${index === selectedPortalGame}" aria-controls="game-showcase">
-          <span class="portal-selector-number" aria-hidden="true">0${index + 1}</span><strong>${escapeHtml(game.name)}</strong><small>${game.available ? 'Guides available' : 'Wiki in development'}</small>
-        </button>`).join('')}</div>
-      <div id="game-showcase" class="portal-showcase" data-active-game="${selectedPortalGame}">${renderPortalShowcase(portalGames[selectedPortalGame])}</div>
-      <p class="portal-preview-status visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
-      <p class="portal-art-note">Original abstract scenery · No official game artwork</p>
+    <section class="home-featured" aria-labelledby="featured-games-title">
+      <div class="home-section-heading"><p class="home-section-kicker">Start playing</p><h2 id="featured-games-title">Featured games</h2></div>
+      <div class="home-featured-grid">${gameCards}</div>
+    </section>
+    <section class="home-coming" aria-labelledby="coming-soon-title">
+      <div class="home-section-heading"><p class="home-section-kicker">On the horizon</p><h2 id="coming-soon-title">Coming Soon</h2></div>
+      <div class="home-coming-grid">${comingSoon}</div>
     </section>
   </div>`;
-}
-
-function renderPortalShowcase(game) {
-  return `<article class="portal-scene" data-portal-theme="${escapeHtml(game.theme)}" aria-labelledby="showcase-title">
-    ${renderPortalScenery(game)}
-    <div class="portal-panel-top"><span>World preview</span><span class="portal-status">${game.available ? 'Guides available' : 'Wiki in development'}</span></div>
-    <div class="portal-panel-copy"><p class="portal-kicker">${escapeHtml(game.label)}</p><h3 id="showcase-title">${escapeHtml(game.name)}</h3>
-      <p class="portal-description">${escapeHtml(game.description)}</p>
-      <a class="portal-panel-action" href="${escapeHtml(game.href)}">${escapeHtml(game.action)} <span aria-hidden="true">↗</span></a>
-    </div>
-  </article>`;
 }
 
 function renderPortalScenery(game) {
@@ -196,20 +194,6 @@ function renderGamePreview(game) {
       <div class="portal-category-grid">${game.categories.map((category, index) => `<article class="portal-category"><span aria-hidden="true">0${index + 1}</span><h3>${escapeHtml(category)}</h3><p>Planned · No guides yet</p></article>`).join('')}</div>
     </section>
   </section></div>`;
-}
-
-function selectPortalGame(button) {
-  const showcase = document.getElementById('game-showcase');
-  const index = Number(button.dataset.previewGame);
-  if (!showcase || !portalGames[index] || showcase.dataset.activeGame === String(index)) return;
-  // Keep the selectors mounted so keyboard focus survives each preview change.
-  selectedPortalGame = index;
-  showcase.innerHTML = renderPortalShowcase(portalGames[index]);
-  showcase.dataset.activeGame = String(index);
-  document.querySelectorAll('[data-preview-game]').forEach(selector => {
-    selector.setAttribute('aria-pressed', String(selector === button));
-  });
-  document.querySelector('.portal-preview-status').textContent = `${portalGames[index].name}: ${portalGames[index].available ? 'guides available' : 'wiki in development; preview available'}.`;
 }
 
 function renderGameLanding() {
@@ -1584,7 +1568,6 @@ function showRoute() {
   commandCenter.close({ restoreFocus: false });
   const route = readRoute(location.hash);
   updateBackToTop(route, 0);
-  if (route.preview) selectedPortalGame = portalGames.indexOf(route.preview);
   document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview' || route.view.startsWith('wow-'));
   const viewKey = route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.kind && route.record ? `${route.kind}/${route.record.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
   const changed = viewKey !== currentView;
@@ -1601,7 +1584,7 @@ function showRoute() {
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
   const sectionTarget = route.hero && !route.hero.contentUnavailable && (!changed || route.section !== 'overview');
-  const target = document.getElementById(route.library ? 'games-heading' : sectionTarget ? route.section : 'page-title');
+  const target = document.getElementById(route.library ? 'featured-games-title' : sectionTarget ? route.section : 'page-title');
   target.focus({ preventScroll: true });
   if (sectionTarget || route.library) target.scrollIntoView({ block: 'start' });
   else window.scrollTo(0, 0);
@@ -1978,15 +1961,6 @@ window.addEventListener('storage', event => {
     refreshExpeditionPlanner();
   }
 });
-// Native buttons provide Tab, Enter, Space, and touch selection; mouse hover previews too.
-document.addEventListener('pointerover', event => {
-  const button = event.target.closest('[data-preview-game]');
-  if (button && event.pointerType === 'mouse') selectPortalGame(button);
-});
-document.addEventListener('focusin', event => {
-  const button = event.target.closest('[data-preview-game]');
-  if (button) selectPortalGame(button);
-});
 document.addEventListener('click', event => {
   const regionSection = event.target.closest('[data-region-section]');
   if (regionSection) {
@@ -2038,17 +2012,6 @@ document.addEventListener('click', event => {
     refreshTeamEquipmentReadiness();
     updatePlannerEquipmentSummary();
     document.querySelectorAll('[data-ownership-storage-status]').forEach(status => { status.textContent = `${ownershipStorageNotice(result.persisted)} Owned list cleared.`; });
-    return;
-  }
-  const previewButton = event.target.closest('[data-preview-game]');
-  if (previewButton) {
-    selectPortalGame(previewButton);
-    return;
-  }
-  if (event.target.closest('[data-explore-games]')) {
-    const heading = document.getElementById('games-heading');
-    heading.focus({ preventScroll: true });
-    heading.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
     return;
   }
   const sidebarToggle = event.target.closest('.sidebar-toggle');

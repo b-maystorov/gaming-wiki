@@ -10,10 +10,15 @@ export function setArtworkManifest(manifest) {
 export async function loadArtworkManifest() {
   try {
     const response = await fetch(new URL('../data/games/darkest-dungeon-1-artwork.json', import.meta.url));
-    if (response.ok) setArtworkManifest(await response.json());
+    if (response.ok) {
+      const manifest = await response.json();
+      setArtworkManifest(manifest);
+      return manifest;
+    }
   } catch {
     // The public site also works without the optional artwork registry.
   }
+  return null;
 }
 
 export function artworkCandidates(category, record, slot = 'primary') {
@@ -56,6 +61,12 @@ export function renderEntryArtwork(category, record, slot = 'primary', fallback 
 
 export function handleArtworkError(event) {
   const image = event.target;
+  if (image.matches('[data-home-art-image]')) {
+    image.hidden = true;
+    const fallback = image.closest('[data-home-art]')?.querySelector('[data-home-art-fallback]');
+    if (fallback) fallback.hidden = false;
+    return;
+  }
   if (!image.matches('[data-entry-image]')) return;
   const visual = image.closest('[data-art-visual]');
   visual.dataset.artFailed = 'true';

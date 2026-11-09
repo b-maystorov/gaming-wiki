@@ -489,6 +489,45 @@ test('all encyclopedia routes and generated internal links resolve', () => {
   }
 });
 
+test('homepage features direct game routes and records its local game artwork', async () => {
+  const homeRoute = h.app.readRoute('#home');
+  const home = h.app.renderPage(homeRoute);
+  assert.equal(homeRoute.view, 'home');
+  assert.equal(h.app.readRoute('#home/games').view, 'home', 'the older games anchor remains a homepage route');
+  assert.equal(h.app.readRoute('#home/games').library, true);
+  assert.ok(home.includes('id="featured-games-title"'), 'the legacy games anchor now targets the featured games heading');
+  assert.ok(home.includes('BM Gaming Wiki') && home.includes('Your adventure. Your guide.'));
+  assert.ok(home.includes('Practical guides, builds, leveling routes and dungeon strategies for the games you love.'));
+
+  const cardLinks = [...home.matchAll(/<a class="home-game-card" href="([^"]+)"/g)].map(match => match[1]);
+  assert.deepEqual(cardLinks, ['#game/darkest-dungeon', '#game/world-of-warcraft']);
+  assert.equal((home.match(/class="home-game-card"/g) || []).length, 2);
+  assert.ok(home.includes('Darkest Dungeon I') && home.includes('Heroes, bosses, team compositions and expedition planning.'));
+  assert.ok(home.includes('World of Warcraft: Forever') && home.includes('Classes, talents, leveling routes and dungeon preparation.'));
+  assert.ok(home.includes('Explore Guides'));
+  assert.equal(h.app.readRoute(cardLinks[0]).view, 'game');
+  assert.equal(h.app.readRoute(cardLinks[1]).view, 'wow-home');
+
+  const comingSoon = home.match(/<div class="home-coming-grid">([\s\S]*?)<\/div>/)?.[1] || '';
+  assert.ok(comingSoon.includes('League of Legends') && comingSoon.includes('Darkest Dungeon II'));
+  assert.equal((comingSoon.match(/Coming Soon/g) || []).length, 2);
+  assert.doesNotMatch(comingSoon, /<a\b|<button\b/, 'coming-soon cards do not advertise nonfunctional actions');
+  assert.doesNotMatch(home, /data-preview-game|game-showcase|portal-hero-vista|portal-selectors|data-explore-games/);
+
+  const ddArt = artworkManifest.homepageArtwork;
+  const wowArt = wowArtwork.records.find(record => record.id === 'wow-forever:homepage:featured');
+  assert.ok(ddArt && wowArt, 'both featured images have structured source and use-status records');
+  for (const art of [ddArt.primary, wowArt]) {
+    const relativePath = art.path || art.src;
+    assert.ok(relativePath.startsWith('assets/images/home/'));
+    assert.ok(home.includes(relativePath), `${relativePath} is rendered locally on the homepage`);
+    assert.ok(await readFile(resolve(root, 'dist', relativePath)), `${relativePath} exists`);
+    assert.ok(art.sourceUrl && art.sourceFileName && art.usageStatus, `${relativePath} records source and usage status`);
+  }
+  assert.equal(ddArt.primary.originalWidth / ddArt.primary.originalHeight, 16 / 9);
+  assert.equal(wowArt.originalWidth / wowArt.originalHeight, 16 / 9);
+});
+
 for (const failure of ['network', 'http', 'json', 'shape']) {
   test(`${failure} load failure preserves guides and shows honest error states`, async () => {
     const { app } = await harness(failure);
@@ -536,7 +575,7 @@ test('PNG and SVG failures advance candidates and preserve the final fallback', 
     const visuals = [{ hidden: false, dataset: {} }, { hidden: true, dataset: {} }];
     const frame = { classList: { add: name => classes.push(name) }, querySelector: () => fallback,
       querySelectorAll: () => visuals };
-    const fail = index => artwork.handleArtworkError({ target: { matches: () => true,
+    const fail = index => artwork.handleArtworkError({ target: { matches: selector => selector === '[data-entry-image]',
       closest: selector => selector === '[data-art-visual]' ? visuals[index] : frame } });
     if (hiddenFailsFirst) {
       fail(1);

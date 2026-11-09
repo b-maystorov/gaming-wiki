@@ -2,10 +2,12 @@
 export const portalGames = [
   { id: 'darkest-dungeon', name: 'Darkest Dungeon I', theme: 'crimson', motif: 'gateway', label: 'The original descent',
     available: true, action: 'Enter the dungeon', href: '#game/darkest-dungeon',
-    description: 'Hero guides, team compositions, and trinkets. Prepare your party for the darkness ahead.' },
+    description: 'Hero guides, team compositions, and trinkets. Prepare your party for the darkness ahead.',
+    homeTitle: 'Darkest Dungeon I', homeDescription: 'Heroes, bosses, team compositions and expedition planning.' },
   { id: 'world-of-warcraft', name: 'World of Warcraft', theme: 'frost', motif: 'citadel', label: 'A world of legends',
     available: true, action: 'Enter Azeroth', href: '#game/world-of-warcraft',
     description: 'Beyond the frozen gates, a world of adventure awaits. Discover the shape of our future Warcraft wiki.',
+    homeTitle: 'World of Warcraft: Forever', homeDescription: 'Classes, talents, leveling routes and dungeon preparation.',
     categories: ['Classes', 'Specializations', 'Builds', 'Dungeons', 'Raids', 'Equipment'] },
   { id: 'league-of-legends', name: 'League of Legends', theme: 'arcane', motif: 'crystal', label: 'The next great play',
     available: false, action: 'Explore the preview', href: '#game/league-of-legends',

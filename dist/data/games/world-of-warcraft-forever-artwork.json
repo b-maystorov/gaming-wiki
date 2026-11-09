@@ -243,6 +243,20 @@
       "loading": "lazy",
       "provenance": "Original vector artwork created for BM Gaming Wiki.",
       "usage": "Project-created SVG illustration; no external photos or game art."
+    },
+    {
+      "id": "wow-forever:homepage:featured",
+      "kind": "homepage",
+      "src": "assets/images/home/wow-classic-dungeon-screenshot.jpg",
+      "alt": "World of Warcraft Classic in-game dungeon battle with a group fighting a spider-like enemy.",
+      "loading": "eager",
+      "sourceUrl": "https://blizzard.gamespress.com/Kit/Details/World-of-Warcraft-Classic-and-15th-Anniversary",
+      "sourceFileName": "ClassicDungeon.jpg",
+      "originalWidth": 1920,
+      "originalHeight": 1080,
+      "provenance": "Blizzard Entertainment publisher press-center screenshot, ClassicDungeon.jpg from the World of Warcraft: Classic 1920x1080 set.",
+      "usageStatus": "Games Press describes these as publisher PR assets suitable for editorial support but does not guarantee reproduction rights; Blizzard retains copyright and explicit clearance is unconfirmed.",
+      "usage": "Publisher PR asset; Games Press recommends editorial use but does not guarantee reproduction rights. Copyright remains with Blizzard and explicit clearance is unconfirmed."
     }
   ],
   "fallbacks": {

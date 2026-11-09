@@ -39,48 +39,15 @@ body.portal-page {
 .portal-footer-note p + p { margin-top: .5rem; }
 .portal-footer-note > span { display: block; margin-top: .9rem; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: #bcb1ab; }
 .portal { --portal-muted: #bbb2ad; }
-.portal-hero { position: relative; isolation: isolate; padding: 4rem 0 0; overflow: hidden; }
-.portal-hero::before { content: ''; position: absolute; inset: 0 -10% 0 20%; z-index: -2; background: radial-gradient(ellipse at 78% 35%, #a64b3f33, transparent 65%), linear-gradient(125deg, transparent 45%, #c3504c12 45.1%, transparent 75%); }
-.portal-hero-copy { position: relative; z-index: 1; max-width: 860px; }
 .portal-kicker { font-size: .67rem; text-transform: uppercase; letter-spacing: .19em; font-weight: 650; color: #d4b8b2; }
 .portal-kicker > span { margin-inline: .7rem; color: #be545a; }
-.portal-hero h1 { font-size: clamp(2.8rem, 5.8vw, 4.65rem); line-height: 1.09; letter-spacing: -.045em; margin-top: 1.8rem; text-wrap: balance; }
-.portal-hero h1 em { color: #e5a29b; font-weight: 400; }
-.portal-intro { max-width: 49ch; margin-top: 1.5rem; color: var(--portal-muted); line-height: 1.8; }
-.portal-explore { display: inline-flex; gap: 2.2rem; align-items: center; margin-top: 1.8rem; padding: .8rem 1.2rem; min-height: 48px; border: 1px solid #c16f70; border-radius: 3px; box-shadow: inset 0 1px #ffb7a333, 0 8px 24px #a4303522; background: linear-gradient(120deg, #96394a, #68232f); color: #fff2e8; font: 600 .85rem system-ui, sans-serif; cursor: pointer; transition: background 180ms, transform 180ms; }
-.portal-explore:hover { background: #a23947; transform: translateY(-2px); }
-.portal-explore:focus-visible { outline: 3px solid #ffe2c8; outline-offset: 5px; }
-.portal-compass { position: absolute; z-index: -1; width: 360px; height: 360px; right: -20px; top: 90px; border: 1px solid #c7735866; border-radius: 50%; box-shadow: 0 0 65px #b2483420, inset 0 0 70px #b2483418; background: radial-gradient(circle at 30% 20%, #a38c5030, transparent 40%), radial-gradient(circle at 80% 75%, #376c8b35, transparent 40%), radial-gradient(circle, #dc8b5e16 0 42%, transparent 43% 60%, #dc8b5e22 61% 62%, transparent 63%); transform: rotate(-18deg); }
-.portal-compass::before, .portal-compass::after { content: ''; position: absolute; inset: 48px; border: 1px solid #c7735866; transform: rotate(45deg); }
-.portal-compass::after { inset: 85px; transform: rotate(0); }
-.portal-compass span { position: absolute; inset: 0; display: grid; place-items: center; color: #dfb99d80; font-size: 155px; text-shadow: 0 0 40px #dc8b5e44; }
-.portal-hero-foot { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3.5rem; padding-block: 1.1rem; border-block: 1px solid #343033; color: var(--portal-muted); font-size: .65rem; text-transform: uppercase; letter-spacing: .13em; }
-.portal-library { position: relative; padding-top: 3.5rem; }
-.portal-library::before { content: ""; position: absolute; top: 0; left: 1.5rem; width: 1px; height: 2rem; background: linear-gradient(#b57a6c88, #b57a6c00); }
-.portal-library-heading { display: flex; justify-content: space-between; align-items: end; gap: 1.1rem; margin-bottom: 1.8rem; }
-.portal-library-heading h2 { margin-top: .45rem; font-size: 2.3rem; scroll-margin-top: 1.5rem; }
-.portal-library-heading > p { color: var(--portal-muted); font-size: .8rem; }
-.portal-identity { display: flex; gap: 1.5rem; align-items: center; }
-.portal-identity img { flex: 0 0 auto; width: 112px; height: 112px; filter: drop-shadow(0 10px 28px #be4f4966); }
-.portal-brand-name { font: 750 clamp(1.5rem, 3.5vw, 2.25rem) system-ui, sans-serif; letter-spacing: .025em; }
-.portal-identity .portal-kicker { margin-top: .4rem; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* These tokens belong only to the global portal, independent of inner game themes. */
 .portal [data-portal-theme="crimson"] { --world-accent: #edb0a1; --world-glow: #742433; --world-line: #a65853; --world-secondary: #dd743a; }
 .portal [data-portal-theme="frost"] { --world-accent: #e8ce92; --world-glow: #245c85; --world-line: #80b4d3; --world-secondary: #7ac5ec; }
 .portal [data-portal-theme="arcane"] { --world-accent: #e8d09b; --world-glow: #49387c; --world-line: #9b8bd3; --world-secondary: #529de6; }
 .portal [data-portal-theme="ember"] { --world-accent: #efbb92; --world-glow: #71331e; --world-line: #b66a3f; --world-secondary: #f08239; }
-.portal-selectors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; margin-bottom: 1.8rem; }
-.portal-selector { appearance: none; border-radius: 5px; position: relative; min-width: 0; min-height: 150px; padding: 1.5rem 1.3rem; text-align: left; border: 1px solid var(--world-line); background: radial-gradient(ellipse at 100% 0, var(--world-glow), transparent 90%), #11131b; color: #f3eee6; font: inherit; cursor: pointer; box-shadow: inset 0 1px #ffffff0d, 0 8px 22px #0002; transition: border-color 180ms, box-shadow 180ms, transform 180ms; }
-.portal-selector strong { display: block; font-size: 1rem; font-weight: 650; line-height: 1.4; margin-block: .7rem .4rem; }
-.portal-selector small { display: block; color: #e0d9d0; font-size: .72rem; }
-.portal-selector-number { color: var(--world-accent); font: .6rem system-ui, sans-serif; letter-spacing: .15em; }
-.portal-selector[aria-pressed="true"] { border-color: var(--world-accent); background: linear-gradient(120deg, #17161c 25%, var(--world-glow)); box-shadow: inset 0 -4px var(--world-accent), 0 6px 24px #0005; }
-.portal-selector[aria-pressed="true"]::after { content: "Selected"; position: absolute; top: 1.2rem; right: 1.2rem; font-size: .6rem; text-transform: uppercase; letter-spacing: .08em; color: var(--world-accent); }
-.portal-selector[aria-pressed="true"]::before { content: ""; position: absolute; left: calc(50% - 7px); bottom: -8px; width: 14px; height: 14px; background: var(--world-accent); clip-path: polygon(0 0, 100% 0, 50% 100%); }
-.portal-selector:hover { border-color: var(--world-accent); transform: translateY(-3px); box-shadow: inset 0 1px #ffffff22, 0 10px 24px #0005; }
-.portal-selector:focus-visible, .portal-panel-action:focus-visible { outline: 3px solid #ffe2c8; outline-offset: 3px; }
-.portal-showcase { background: #101116; border: 1px solid #51434b; border-radius: 6px; overflow: hidden; box-shadow: 0 22px 60px #0005; }
+.portal-panel-action:focus-visible { outline: 3px solid #ffe2c8; outline-offset: 3px; }
 .portal-scene { position: relative; isolation: isolate; overflow: hidden; min-height: 500px; padding: 2.75rem; border-top: 2px solid var(--world-line); display: flex; flex-direction: column; background: radial-gradient(ellipse at 85% 30%, var(--world-glow), transparent 85%), #101116; }
 /* Explicit nonnegative layers: scenery, local scrim, then text. The art stays visible. */
 .portal-environment { position: absolute; z-index: 0; inset: 0 0 0 48%; overflow: hidden; background: radial-gradient(ellipse at 60% 35%, var(--world-glow), transparent 75%); }
@@ -93,7 +60,6 @@ body.portal-page {
 .portal-description { max-width: 43ch; min-height: 5.4em; color: #d6ccc7; font-size: .95rem; margin-top: 1rem; }
 .portal-panel-action { display: inline-flex; align-items: center; gap: 2.5rem; margin-top: 1.3rem; padding: .8rem 1.1rem; min-height: 48px; border: 1px solid var(--world-line); border-radius: 3px; box-shadow: inset 0 1px #ffffff18, 0 8px 20px #0004; background: linear-gradient(120deg, var(--world-glow), #1e202b); color: #fff2e8; font-size: .85rem; text-decoration: none; transition: background-color 180ms; }
 .portal-panel-action:hover { background: #22232d; color: var(--world-accent); }
-.portal-art-note { color: var(--portal-muted); font-size: .65rem; margin-top: .8rem; text-align: right; }
 /* Abstract scenery uses original geometry, never scaled game sprites. */
 .portal-scenery { position: absolute; z-index: 0; pointer-events: none; }
 .gateway { width: 235px; height: 380px; right: 22%; top: 65px; border: 2px solid var(--world-line); border-radius: 50% 50% 0 0; box-shadow: 0 0 0 18px #100d1166, 0 0 0 19px #a6585377, 0 0 0 40px #100d1166, 0 0 0 41px #8b434855; background: linear-gradient(90deg, #110f13, #40151f, #110f13); }
@@ -121,10 +87,8 @@ body.portal-page {
 .portal-environment[data-scenery="crystal"] .scene-ground { height: 25%; inset-inline: 2%; border-top: 1px solid #d2bd8577; border-radius: 50%; background: repeating-radial-gradient(ellipse at 50% 0, transparent 0 22px, #8c81cd30 23px 24px, transparent 25px 42px), linear-gradient(0deg, #0c0b19, #3a365866); transform: perspective(350px) rotateX(20deg); }
 .portal-environment[data-scenery="horizon"] .scene-distance { inset: 0; background: radial-gradient(circle at 59% 29%, #17121d 0 35px, #e5a05a99 36px, #bc592c44 39px, transparent 70px), linear-gradient(170deg, transparent 20%, #d4864f22 20.5%, transparent 32%); }
 .portal-environment[data-scenery="horizon"] .scene-ground { height: 30%; background: linear-gradient(155deg, transparent 38%, #31252b 38.5%, #0b0c12 60%); clip-path: polygon(0 0, 35% 50%, 55% 100%, 75% 40%, 100% 5%, 100% 100%, 0 100%); }
-.portal-hero-copy { animation: portal-enter 400ms ease-out; }
 .portal-scene { animation: portal-scene-enter 360ms ease-out; }
 .portal-environment { animation: environment-enter 500ms cubic-bezier(.2,.7,.2,1); }
-@keyframes portal-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes environment-enter { from { opacity: .5; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes portal-scene-enter { from { opacity: .7; } to { opacity: 1; } }
 @media (max-width: 900px) {
@@ -134,9 +98,6 @@ body.portal-page {
   .portal-footer-note { grid-column: 1 / -1; border-top: 1px solid #514047; padding-top: 1.2rem; }
   .site-footer .portal-footer-note { max-width: none; }
 
-  .portal-selectors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .portal-library-heading { align-items: start; flex-direction: column; }
-  .portal-compass { opacity: .5; }
   .portal-scene { padding: 1.8rem; }
   .gateway { right: 5%; }
 }
@@ -154,18 +115,6 @@ body.portal-page {
   .site-footer { margin-top: 2.5rem; gap: 1.5rem; padding: 1.8rem 1.2rem 2rem; }
   .portal-footer-brand p { max-width: 27ch; }
 
-  .portal-hero { padding-top: 2.3rem; }
-  .portal-hero h1 { font-size: clamp(2.35rem, 9vw, 3.2rem); }
-  .portal-kicker { font-size: .58rem; letter-spacing: .12em; }
-  .portal-identity { gap: .7rem; }
-  .portal-identity img { width: 80px; height: 80px; }
-  .portal-compass { right: -190px; top: 45px; opacity: .35; }
-  .portal-hero-foot { margin-top: 2.5rem; font-size: .58rem; }
-  .portal-hero-foot > span:last-child { display: none; }
-  .portal-library-heading h2 { font-size: 2rem; }
-  .portal-selector { padding: 1rem .8rem; min-height: 140px; }
-  .portal-selector[aria-pressed="true"]::after { top: 1rem; right: .6rem; font-size: .55rem; }
-  .portal-selector strong { font-size: .9rem; }
   .portal-scene { padding: 1.4rem; min-height: 600px; }
   .portal-environment { inset: 0 0 auto; height: 310px; }
   .portal-scene::after { background: linear-gradient(0deg, #101116 0 48%, transparent 78%); }
@@ -177,7 +126,49 @@ body.portal-page {
   .citadel { height: 270px; }
   .crystal { top: 15px; height: 240px; width: 170px; right: 25%; }
   .horizon { left: 0; }
-  .portal-art-note { text-align: left; }
+}
+
+/* Compact game library for the main homepage; preview pages keep their own layout. */
+body.portal-page:has(.home-page) { background: #090d12; }
+body.portal-page:has(.home-page) main::before { display: none; }
+body.portal-page:has(.home-page) .site-footer { margin-top: 2.5rem; border-color: #29313a; border-radius: 4px 4px 0 0; background: #0e1319; }
+body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
+.home-page { --home-gold: #d8bd78; --home-muted: #c1cbd4; color: #f1eee6; padding: 1.3rem 0 1.6rem; }
+.home-welcome { padding: .4rem 0 1.4rem; }
+.home-brand-name { color: var(--home-gold); font-size: .82rem; font-weight: 700; letter-spacing: .08em; }
+.home-welcome h1 { margin-top: .35rem; color: #f3efe5; font: 600 clamp(2rem, 4vw, 3rem)/1.12 Georgia, serif; letter-spacing: -.025em; }
+.home-welcome > p:last-child { max-width: 64ch; margin-top: .7rem; color: var(--home-muted); font-size: .97rem; line-height: 1.65; }
+.home-featured, .home-coming { margin-top: 1.1rem; }
+.home-section-heading { margin-bottom: .85rem; }
+.home-section-kicker { color: var(--home-gold); font-size: .65rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.home-section-heading h2 { margin-top: .2rem; color: #eee8dc; font: 500 1.55rem/1.2 Georgia, serif; }
+.home-featured-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.home-game-card { display: grid; grid-template-rows: auto 1fr; min-width: 0; overflow: hidden; border: 1px solid #35414c; border-radius: 4px; color: inherit; background: #111820; text-decoration: none; box-shadow: 0 8px 20px #0003; transition: border-color 160ms ease, transform 160ms ease, background 160ms ease; }
+.home-game-card:hover { border-color: #9e8959; transform: translateY(-2px); background: #151e27; }
+.home-game-card:focus-visible { outline: 3px solid #e0c77f; outline-offset: 4px; }
+.home-game-art { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; background: #10161d; }
+.home-game-art > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.home-game-art [data-home-art-fallback] { position: absolute; inset: 0; place-items: center; color: #e3d6b8; background: #111820; font-size: .9rem; }
+.home-game-art [data-home-art-fallback]:not([hidden]) { display: grid; }
+.home-game-art [hidden], .home-game-card [hidden] { display: none !important; }
+.home-game-copy { display: grid; align-content: start; gap: .42rem; min-height: 9.3rem; padding: 1rem 1.1rem 1.05rem; }
+.home-game-label { color: var(--home-gold); font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.home-game-copy > strong { color: #f2ebdc; font: 500 1.35rem/1.2 Georgia, serif; }
+.home-game-description { max-width: 48ch; color: var(--home-muted); font-size: .88rem; line-height: 1.5; }
+.home-game-action { display: flex; align-items: center; justify-content: space-between; margin-top: .35rem; padding-top: .65rem; border-top: 1px solid #303944; color: #e7d5a7; font-size: .81rem; font-weight: 700; }
+.home-coming { padding-top: .3rem; }
+.home-coming-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.home-coming-card { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.2rem; padding: .85rem 1rem; border: 1px solid #303943; border-radius: 3px; background: #0e141a; }
+.home-coming-card h3 { color: #c6ccd1; font-size: .95rem; font-weight: 600; }
+.home-coming-status { flex: 0 0 auto; padding: .3rem .5rem; border: 1px solid #4a5052; border-radius: 2px; color: #b9b6a8; font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+@media (max-width: 680px) {
+  .home-page { padding-top: .7rem; }
+  .home-featured-grid, .home-coming-grid { grid-template-columns: 1fr; }
+  .home-game-copy { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-game-card { transition: none; }
+  .home-game-card:hover { transform: none; }
 }
 
 /* Preview pages share the scene renderer and theme tokens, not the DD game shell. */
@@ -197,12 +188,9 @@ body.portal-page {
 }
 @media (max-width: 400px) {
   .portal-category-grid { grid-template-columns: 1fr; }
-  .portal-selectors { gap: .65rem; }
-  .portal-selector[aria-pressed="true"]::after { letter-spacing: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .portal *, .portal *::before, .portal *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  .portal-selector:hover, .portal-explore:hover { transform: none; }
 }
 
 /* WoW: Forever uses the shared portal frame with a distinct Azeroth palette. */
@@ -248,20 +236,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620p
 @media(max-width: 760px) { .wow-feature-grid, .wow-class-grid, .wow-zone-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wow-banner { min-height: 370px; } }
 @media(max-width: 500px) { .wow-feature-grid, .wow-class-grid, .wow-zone-grid, .wow-detail-grid, .wow-tier-grid { grid-template-columns: 1fr; } .wow-banner { min-height: 350px; padding: 2.6rem .2rem 1.5rem; } .wow-scene { inset-inline: -20px; } }
 @media(prefers-reduced-motion: reduce) { .wow-page *, .wow-page *::before, .wow-page *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } .wow-feature:hover { transform: none; } }
-/* A layered, CSS-only gateway gives the homepage a scene without relying on unapproved game art. */
-.portal-hero-vista { position: absolute; z-index: 0; pointer-events: none; width: min(43vw, 500px); height: 420px; right: 0; top: 25px; opacity: .85; overflow: hidden; background: radial-gradient(ellipse at 56% 50%, #d99a6426, transparent 48%), radial-gradient(ellipse at 60% 86%, #aa303631, transparent 64%); mask-image: linear-gradient(90deg, transparent, #000 25% 90%, transparent); }
-.portal-hero-vista::before { content: ''; position: absolute; width: 205px; height: 340px; left: 43%; top: 25px; border: 1px solid #c9856d9c; border-bottom: 0; border-radius: 52% 52% 0 0; box-shadow: 0 0 0 14px #572c3324, 0 0 0 15px #c9856d4c, 0 0 55px #df765433, inset 0 0 34px #df76541c; background: linear-gradient(90deg, #100d13, #9f46332b 48%, #100d13); }
-.portal-hero-vista::after { content: ''; position: absolute; inset: auto 0 0; height: 47%; background: linear-gradient(0deg, #0b0c0f 5%, transparent), linear-gradient(90deg, transparent 15%, #281923 15.2% 21%, transparent 21.2% 76%, #251820 76.2% 82%, transparent 82.2%); clip-path: polygon(0 100%,0 62%,10% 62%,10% 33%,19% 33%,19% 70%,30% 70%,30% 48%,40% 48%,40% 100%,66% 100%,66% 52%,76% 52%,76% 24%,84% 24%,84% 66%,100% 66%,100% 100%); }
-.portal-hero-vista span { position: absolute; z-index: 1; bottom: 16%; height: 26%; width: 7%; border-top: 1px solid #d39a795e; background: repeating-linear-gradient(90deg, #c88d7130 0 1px, transparent 1px 12px), #110f14aa; }
-.portal-hero-vista span:nth-child(1) { left: 7%; height: 35%; }
-.portal-hero-vista span:nth-child(2) { left: 28%; height: 48%; }
-.portal-hero-vista span:nth-child(3) { right: 7%; height: 39%; }
-.portal-hero-vista i { position: absolute; z-index: 1; left: 48%; bottom: 0; width: 24%; height: 33%; border: 1px solid #d2a37975; border-bottom: 0; border-radius: 55% 55% 0 0; background: linear-gradient(90deg, #17151b, #4b2e2d, #111117); box-shadow: 0 -8px 30px #e28e4f21; }
-.portal-hero-copy { max-width: 790px; }
-.portal-hero h1 { text-shadow: 0 5px 36px #0b0c0f; }
-@media(max-width: 900px) { .portal-hero-vista { right: -70px; opacity: .55; } }
-@media(max-width: 560px) { .portal-hero-vista { width: 85vw; height: 310px; top: 35px; right: -34vw; opacity: .38; } .portal-hero-copy { max-width: 100%; } }
-
 .wow-class-hero { position: relative; overflow: hidden; min-height: 180px; padding: clamp(1.4rem, 4vw, 2.5rem); background: radial-gradient(ellipse at 78% 28%, color-mix(in srgb, var(--class-accent) 16%, transparent), transparent 43%), linear-gradient(130deg, #223245, #11171f 72%); box-shadow: inset 0 1px #d8d9df16, 0 16px 30px #0003; }
 .wow-class-hero::after { content: ''; position: absolute; width: 210px; height: 210px; right: -35px; top: -70px; border: 1px solid color-mix(in srgb, var(--class-accent) 34%, transparent); border-radius: 50%; box-shadow: 0 0 0 18px color-mix(in srgb, var(--class-accent) 5%, transparent), 0 0 0 38px color-mix(in srgb, var(--class-accent) 4%, transparent); pointer-events: none; }
 .wow-class-hero > span { flex: 0 0 82px; width: 82px; height: 82px; border-radius: 50%; font-size: 2.3rem; }
