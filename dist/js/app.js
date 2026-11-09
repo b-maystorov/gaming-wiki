@@ -9,6 +9,7 @@ import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
 import { renderWowPage, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
+import { renderWowDungeonPrep, loadDungeonPrepProgress, saveDungeonPrepProgress, setDungeonPrepFaction, setDungeonPrepLevel } from './wow-dungeon-prep.js';
 
 let structuredGameContent = null;
 try {
@@ -31,6 +32,14 @@ let wowData = null;
 let wowArtwork = null;
 let wowClientData = null;
 let wowGuidedData = null;
+let wowDungeonPrep = null;
+try {
+  const prepResponse = await fetch('./data/games/world-of-warcraft-forever-dungeon-prep.json');
+  if (!prepResponse.ok) throw new Error(`WoW dungeon prep request failed: ${prepResponse.status}`);
+  wowDungeonPrep = await prepResponse.json();
+} catch (error) {
+  console.error('Could not load WoW dungeon preparation data:', error);
+}
 try {
   const wowResponse = await fetch('./data/games/world-of-warcraft-forever.json');
   if (!wowResponse.ok) throw new Error(`WoW data request failed: ${wowResponse.status}`);
@@ -1449,6 +1458,7 @@ function readRoute(hash) {
   if (parts[0] === 'game' && parts[1] === 'world-of-warcraft') {
     if (parts.length === 2) return { view: 'wow-home' };
     const categoryViews = { 'my-journey': 'wow-journey', classes: 'wow-classes', races: 'wow-races', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-dungeons', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
+    if (parts.length === 4 && parts[2] === 'dungeons') return { view: 'wow-dungeon-prep', dungeonId: parts[3] };
     if (parts.length === 3 && categoryViews[parts[2]]) return { view: categoryViews[parts[2]] };
     if (parts.length === 4 && parts[2] === 'talent-planner') return { view: 'wow-talents', sharedBuildToken: parts[3] };
     if (parts.length === 4 && parts[2] === 'races') {
@@ -1529,6 +1539,7 @@ function renderContentError(title = 'Encyclopedia unavailable') {
 }
 
 function renderPage(route) {
+  if (route.view === 'wow-dungeon-prep') return renderWowDungeonPrep(route, wowDungeonPrep, escapeHtml, loadDungeonPrepProgress());
   if (route.preview) return renderGamePreview(route.preview);
   if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile(), loadWowGuideProgress(), wowClientData, wowGuidedData) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
@@ -1793,6 +1804,18 @@ document.addEventListener?.('click', event => {
   }
 });
 document.addEventListener?.('change', event => {
+  if (event.target.matches('[data-prep-level]')) {
+    setDungeonPrepLevel(event.target.value);
+    const levelText = document.querySelector('[data-prep-level-advice]');
+    const header = document.querySelector('.dungeon-prep-page .dungeon-prep-hero .wow-eyebrow');
+    const range = header?.textContent.match(/Levels (\d+[–-]\d+)/)?.[1];
+    if (levelText && range) {
+      const [minimum, maximum] = range.split(/[–-]/).map(Number);
+      const level = Number(event.target.value);
+      levelText.textContent = level < minimum ? `Level ${level} is below this dungeon's suggested ${range} range.` : level > maximum ? `Level ${level} is above this dungeon's suggested ${range} range; expect an easier run.` : `Level ${level} is within this dungeon's suggested ${range} range.`;
+    }
+    return;
+  }
   if (event.target.matches('[data-wow-race-faction], [data-wow-race-class]')) {
     const faction = main.querySelector('[data-wow-race-faction]')?.value || 'all';
     const className = main.querySelector('[data-wow-race-class]')?.value || 'all';
@@ -1844,6 +1867,27 @@ document.addEventListener?.('change', event => {
   status.textContent = saveWowGuideProgress(progress) ? 'Progress saved on this device.' : 'Progress could not be saved because browser storage is unavailable.';
 });
 document.addEventListener?.('change', event => {
+  if (event.target.matches('[data-prep-faction-select]')) {
+    setDungeonPrepFaction(event.target.value);
+    main.innerHTML = renderPage(readRoute(location.hash));
+    return;
+  }
+  const dungeonCheck = event.target.closest('[data-dungeon-check]');
+  if (dungeonCheck) {
+    const progress = loadDungeonPrepProgress();
+    progress[dungeonCheck.dataset.dungeonCheck] = dungeonCheck.checked;
+    const status = document.querySelector('[data-dungeon-status]');
+    if (status) status.textContent = saveDungeonPrepProgress(progress) ? 'Checklist saved on this device.' : 'Browser storage is unavailable.';
+    const cards = [...document.querySelectorAll('.dungeon-quest-card')];
+    const readyCount = cards.filter(card => card.querySelector('[data-dungeon-check]')?.checked).length;
+    const outdoorCount = cards.filter(card => card.dataset.prepKind === 'outdoor' && !card.querySelector('[data-dungeon-check]')?.checked).length;
+    const rewardCount = cards.reduce((sum, card) => sum + Number(card.dataset.prepRewardCount || 0), 0);
+    const updateCount = (selector, value) => { const target = document.querySelector(selector); if (target) target.textContent = String(value); };
+    updateCount('[data-count-ready]', readyCount);
+    updateCount('[data-count-outdoor]', outdoorCount);
+    updateCount('[data-count-rewards]', rewardCount);
+    return;
+  }
   const form = event.target.closest('[data-wow-character-form]');
   if (!form || !event.target.matches('[data-wow-profile-class], [data-wow-profile-faction]')) return;
   const faction = form.querySelector('[data-wow-profile-faction]').value;

@@ -1,0 +1,775 @@
+{
+  "version": "World of Warcraft: Forever",
+  "checkedDate": "2026-11-09",
+  "sources": [
+    {
+      "id": "dungeon-overview",
+      "url": "https://www.wowhead.com/forever/guide/dungeons-overview-locations-details",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "shadowfang-quests",
+      "url": "https://www.icy-veins.com/wow-forever/shadowfang-keep-quests/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "wailing-quests",
+      "url": "https://www.icy-veins.com/wow-forever/wailing-caverns-quests",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "ruins-quests",
+      "url": "https://www.icy-veins.com/wow-forever/ruins-of-lordaeron-quests/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "deadmines-quests",
+      "url": "https://www.icy-veins.com/wow-forever/deadmines-quests/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "hall-quests",
+      "url": "https://www.icy-veins.com/wow-forever/hall-of-thanes-quests/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "shaman-enhancement",
+      "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-leveling/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "ironforge-greathammer",
+      "url": "https://db.icy-veins.com/wow-forever/items/279895",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "smite-hammer",
+      "url": "https://db.icy-veins.com/wow-forever/items/7230",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "hall-incursion",
+      "url": "https://db.icy-veins.com/wow-forever/quests/96393",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "ruins-quest-details",
+      "url": "https://www.icy-veins.com/wow-forever/ruins-of-lordaeron-quests/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "deadmines-forever-guide",
+      "url": "https://www.icy-veins.com/wow-forever/deadmines-guide",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "shaman-restoration",
+      "url": "https://www.icy-veins.com/wow-forever/restoration-shaman-leveling/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "wailing-trouble-docks",
+      "url": "https://db.icy-veins.com/wow-forever/quests/",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "dark-iron-map",
+      "url": "https://db.icy-veins.com/wow-forever/items/274268",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "restless-dead-bracers",
+      "url": "https://db.icy-veins.com/wow-forever/items/280095",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "staff-westfall",
+      "url": "https://db.icy-veins.com/wow-forever/items/2042",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "deadmines-level-guide",
+      "url": "https://www.icy-veins.com/wow-forever/deadmines-guide",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "ruins-forever-changes",
+      "url": "https://www.wowhead.com/forever/guide/dungeons-overview-locations-details",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "forever-dungeon-quests",
+      "url": "https://www.wowhead.com/forever/news/every-quest-for-dungeons-up-to-level-20-in-wow-forever-383768",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "defias-chain",
+      "url": "https://www.wowhead.com/forever/quest=166/the-defias-brotherhood",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "toxic-soil-chain",
+      "url": "https://www.wowhead.com/forever/quest=92742/testing-the-wells",
+      "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "testing-wells-db",
+      "url": "https://www.wowhead.com/forever/quest=92742/testing-the-wells",
+      "checkedDate": "2026-11-09"
+    }
+  ],
+  "dungeons": [
+    {
+      "id": "shadowfang-keep",
+      "name": "Shadowfang Keep",
+      "zone": "Silverpine Forest",
+      "range": "22–30",
+      "status": "verified-list",
+      "entrance": "In the keep in southwestern Silverpine Forest; verify the current map marker in game.",
+      "warnings": "Undead and worgen packs can make pulls dangerous; the published quest list has no general Alliance quest.",
+      "quests": [
+        {
+          "id": "sfk-deathstalkers",
+          "name": "Deathstalkers in Shadowfang",
+          "npc": "High Executor Hadrec",
+          "where": "Silverpine Forest · 43.4, 40.8",
+          "min": 18,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Travel to Hadrec and accept the objective before the run.",
+          "unlock": "Find Deathstalker Adamant and Deathstalker Vincent inside the keep.",
+          "rewards": "Ghostly Mantle; Tanned Shoulderpads; Bronzed Shoulderguards",
+          "shaman": "Reward item stats were not independently verified in this pass; compare item tooltips before choosing."
+        },
+        {
+          "id": "sfk-book-ur",
+          "name": "The Book of Ur",
+          "npc": "Keeper Bel'dugur",
+          "where": "Undercity · 53.6, 54.0",
+          "min": 16,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept the book recovery quest in Undercity.",
+          "unlock": "Recover the book in Fenrus the Devourer's room.",
+          "rewards": "Tattered Mittens; Grizzled Boots; Steel-clasped Bracers",
+          "shaman": "No reward stats independently verified; inspect tooltip for Strength, Stamina or Agility."
+        },
+        {
+          "id": "sfk-arugal",
+          "name": "Arugal Must Die",
+          "npc": "Dalar Dawnweaver",
+          "where": "Silverpine Forest · 44.2, 39.8",
+          "min": 18,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept the kill quest in Silverpine Forest.",
+          "unlock": "Kill Archmage Arugal and loot his head.",
+          "rewards": "Seal of Sylvanas",
+          "shaman": "Item stats not independently verified; do not assume it is an upgrade."
+        }
+      ],
+      "level21Advice": "Wait until level 22 to enter the suggested range; the documented outdoor quest list is Horde-only, so no Alliance quest preparation is recorded."
+    },
+    {
+      "id": "wailing-caverns",
+      "name": "Wailing Caverns",
+      "zone": "The Barrens",
+      "range": "15–24",
+      "status": "quest-list-verified",
+      "entrance": "The cave lies in the northern Barrens; quest NPCs are above the skull entrance at 46.4, 33.7.",
+      "warnings": "Deviate Hides can take multiple runs; collect every quest item and complete all leaders if available.",
+      "quests": [
+        {
+          "id": "wc-smart-drinks",
+          "name": "Smart Drinks",
+          "npc": "Mebok Mizzyrix",
+          "where": "The Barrens · 62.4, 37.6",
+          "min": 13,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "OUTDOOR PREREQUISITE",
+          "kind": "outdoor",
+          "outside": "Complete Raptor Horns first, then return to Mebok to accept Smart Drinks.",
+          "unlock": "Wailing Essence can drop from Devouring Ectoplasm inside or outside.",
+          "rewards": "No gear reward",
+          "shaman": "Experience and quest completion only; no item upgrade is listed."
+        },
+        {
+          "id": "wc-deviate-hides",
+          "name": "Deviate Hides",
+          "npc": "Nalpak",
+          "where": "The Barrens · 46.4, 33.7 (ledge above entrance)",
+          "min": 13,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Climb above the entrance and accept before the run.",
+          "unlock": "Collect 20 Deviate Hides from beasts inside or outside; often more than one run.",
+          "rewards": "Deviate Hide Pack; Slick Deviate Leggings",
+          "shaman": "The reward stats are not transcribed here; inspect armor and attributes before selecting."
+        },
+        {
+          "id": "wc-deviate-eradication",
+          "name": "Deviate Eradication",
+          "npc": "Ebru",
+          "where": "The Barrens · 46.4, 33.7 (ledge above entrance)",
+          "min": 15,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Climb above the entrance and accept before the run.",
+          "unlock": "Defeat the listed Deviate enemies inside.",
+          "rewards": "Pattern: Deviate Scale Belt; Sizzle Stick; Dagmire Gauntlets",
+          "shaman": "Sizzle Stick is a weapon candidate; verify its current tooltip and compare with your equipped weapon."
+        },
+        {
+          "id": "wc-leaders",
+          "name": "Leaders of the Fang",
+          "npc": "Nara Wildmane",
+          "where": "Thunder Bluff · 75.6, 31.2",
+          "min": 10,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept from Nara in Thunder Bluff.",
+          "unlock": "Defeat all four Druids of the Fang and loot their gems.",
+          "rewards": "Crescent Staff; Wingblade; Hammerbone",
+          "shaman": "Crescent Staff may suit a caster set; compare verified stats and your current weapon before selecting."
+        },
+        {
+          "id": "wc-glowing-shard",
+          "name": "The Glowing Shard",
+          "npc": "Glowing Shard item from Mutanus the Devourer",
+          "where": "Begins inside Wailing Caverns",
+          "min": 15,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "TURN IN AFTER DUNGEON",
+          "kind": "inside",
+          "outside": "No pre-run pickup: this quest begins with a shard dropped by the final boss.",
+          "unlock": "After obtaining the shard, speak with Falla Sagewind above the caverns, then follow the faction-specific handoff.",
+          "rewards": "Talbar Mantle; Quagmire Galoshes",
+          "shaman": "Reward stats were not independently verified; compare tooltips before selecting."
+        },
+        {
+          "id": "wc-trouble-docks",
+          "name": "Trouble at the Docks",
+          "npc": "Crane Operator Bigglefuzz",
+          "where": "The Barrens · 63.0, 37.6",
+          "min": 14,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept from Bigglefuzz. Mad Magglish is in the pre-instance cave tunnels; follow the right-hand passage to find him and retrieve the 99-Year-Old Port.",
+          "unlock": "Retrieve the port from Mad Magglish before entering the instance proper.",
+          "rewards": "No gear reward",
+          "shaman": "No equipment reward; convenient experience while already preparing for Wailing Caverns."
+        }
+      ],
+      "level21Advice": "Reasonable at level 21 (Forever range 15–24). The shared quests are Alliance-accessible; Raptor Horns unlocks Smart Drinks.",
+      "levelRangeSource": "https://www.wowhead.com/forever/guide/dungeons-overview-locations-details"
+    },
+    {
+      "id": "ruins-of-lordaeron",
+      "name": "Ruins of Lordaeron",
+      "zone": "Tirisfal Glades",
+      "range": "15–20",
+      "status": "quest-list-verified",
+      "entrance": "Ruins above Undercity in Tirisfal Glades; use the Forever dungeon map marker.",
+      "warnings": "Several quests start from items inside, so they are not outdoor preparation. The New Plague and Wrath of Rath'mael have faction-specific outdoor chains.",
+      "quests": [
+        {
+          "id": "ruins-new-plague",
+          "name": "The New Plague",
+          "npc": "Apothecary Renferrel (chain start); Theodore Griffs (dungeon quest)",
+          "where": "The Sepulcher, Silverpine Forest → Undercity · 46.6, 72.0",
+          "min": 16,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "OUTDOOR PREREQUISITE",
+          "kind": "outdoor",
+          "prerequisites": [
+            "A Recipe For Death"
+          ],
+          "outside": "Start A Recipe For Death with Apothecary Renferrel and complete its Silverpine chain; then collect The New Plague from Theodore Griffs.",
+          "unlock": "Highly Toxic Strain drops from Witherfang, the first boss.",
+          "rewards": "Blight Gloves; Plaguefang",
+          "shaman": "Potential gloves or weapon options, but stats were not verified here. Inspect tooltip before choosing."
+        },
+        {
+          "id": "ruins-wrath",
+          "name": "The Wrath of Rath'mael",
+          "npc": "Deathguard Linnea (chain start); Deathguard Kristof (dungeon quest)",
+          "where": "Brill → Tirisfal Glades · 65.2, 60.2",
+          "min": 15,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "OUTDOOR PREREQUISITE",
+          "kind": "outdoor",
+          "prerequisites": [
+            "Rear Guard Patrol"
+          ],
+          "outside": "Start Rear Guard Patrol with Deathguard Linnea in Brill and finish its chain; then accept from Kristof.",
+          "unlock": "Kill Rath'mael inside Ruins of Lordaeron.",
+          "rewards": "Forsaken Greataxe; Gnarled Necromancer's Staff",
+          "shaman": "Weapon options could suit Enhancement or caster play; stats remain unverified, so use tooltip comparison."
+        },
+        {
+          "id": "ruins-frightened-request",
+          "name": "A Frightened Request",
+          "npc": "Tabitha Heartweaver",
+          "where": "Silverpine Forest · 44.5, 43.0",
+          "min": 15,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept from Tabitha; find her husband's corpse by the graveyard near Rath'mael's spawn.",
+          "unlock": "Recover items from the corpse in the dungeon area.",
+          "rewards": "Tabitha's Cuffs; Edwards' Knife",
+          "shaman": "Stats not independently verified; compare the knife only if it matches your weapon setup."
+        },
+        {
+          "id": "ruins-horde-light",
+          "name": "Light's Justice",
+          "npc": "Morbin Lightbane",
+          "where": "Undercity · 57.8, 89.8",
+          "min": 15,
+          "factions": [
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept in Undercity; collect intact limbs from dungeon undead.",
+          "unlock": "Collect Intact Limbs from skeleton and zombie enemies.",
+          "rewards": "Spare Part Bindings; The Stitcher",
+          "shaman": "Stats not independently verified; inspect before selecting."
+        },
+        {
+          "id": "ruins-abominable-creatures",
+          "name": "Abominable Creatures",
+          "npc": "Captain Truman",
+          "where": "Ruins of Lordaeron · immediately inside the entrance",
+          "min": 16,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "COMPLETE INSIDE DUNGEON",
+          "kind": "inside",
+          "prerequisites": [],
+          "outside": "No outdoor pickup: Captain Truman is inside beside the entrance. Accept this when you enter.",
+          "unlock": "Loot The Baron’s head, then return it to Captain Truman inside.",
+          "rewards": "Grave Shroud; Slain Baron's Signet; Monstrous Cleaver",
+          "shaman": "Monstrous Cleaver is a two-hand sword and cannot be used by a Shaman. No equipment reward here is verified as a Shaman upgrade.",
+          "sourceIds": [
+            "ruins-quests"
+          ]
+        },
+        {
+          "id": "ruins-bloodied-insignia",
+          "name": "Bloodied Insignia",
+          "npc": "Bloodied Insignia item dropped by skeletons",
+          "where": "Inside Ruins of Lordaeron",
+          "min": 16,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "COMPLETE INSIDE DUNGEON",
+          "kind": "inside",
+          "prerequisites": [],
+          "outside": "No outdoor pickup: the first insignia starts this quest from dungeon skeletons.",
+          "unlock": "Loot additional Bloodied Insignias from skeletons in the instance.",
+          "rewards": "Duty Bound Leggings; Remembrance Armor",
+          "shaman": "Armor stats not independently checked; compare in-game tooltips."
+        },
+        {
+          "id": "ruins-crest-alliance",
+          "name": "Crest of Lordaeron",
+          "npc": "Crest of Lordaeron object inside the dungeon",
+          "where": "Inside Ruins of Lordaeron",
+          "min": 16,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "TURN IN AFTER DUNGEON",
+          "kind": "inside",
+          "prerequisites": [],
+          "outside": "No outdoor pickup: find the Crest at one of its in-instance spawn points.",
+          "unlock": "Recover the Crest inside, then deliver it to Lady Dena Kennedy in Stormwind.",
+          "rewards": "Small Sack of Gems",
+          "shaman": "No gear reward."
+        },
+        {
+          "id": "ruins-remember-love",
+          "name": "Remember That I Love You",
+          "npc": "Blood-Stained Letter item",
+          "where": "Inside the ruins near Rath'mael’s spawn",
+          "min": 15,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "COMPLETE INSIDE DUNGEON",
+          "kind": "inside",
+          "prerequisites": [],
+          "outside": "No outdoor pickup verified: locate the Blood-Stained Letter on the ground near Rath'mael’s spawn.",
+          "unlock": "The letter begins the short quest chain; continue to Orphan Matron Nightingale in Stormwind, then finish the follow-up near Darkshire.",
+          "rewards": "Tarnished Locket",
+          "shaman": "No reward stats verified; this is a story quest, not a known equipment upgrade.",
+          "sourceIds": [
+            "ruins-quests"
+          ]
+        }
+      ],
+      "level21Advice": "At 21 you are just above the 15–20 suggested band. Alliance has no verified outdoor prerequisite chain in the available quest list; collect the documented instance quests before/inside the run."
+    },
+    {
+      "id": "hall-of-thanes",
+      "name": "Hall of Thanes",
+      "zone": "Dun Morogh / Ironforge",
+      "range": "13–18",
+      "status": "quest-list-verified",
+      "entrance": "In Ironforge, beneath the High Seat in Old Ironforge. In the throne room take the left corridor down to the lower area.",
+      "warnings": "At level 21 this is below its suggested range and likely an easy revisit. The Ironforge Greathammer from Old Ironforge Incursion is specifically listed as an Enhancement Shaman leveling weapon.",
+      "quests": [
+        {
+          "id": "hot-underground-map",
+          "name": "Underground Map",
+          "npc": "Dark Iron Spy (loot-started from Dark Iron Map)",
+          "where": "Ironbeard's Compound, Dun Morogh",
+          "min": 15,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "OUTDOOR PREREQUISITE",
+          "kind": "outdoor",
+          "prerequisites": [],
+          "outside": "Kill Dark Iron Spy NPCs at Ironbeard's Compound and loot the Dark Iron Map; use it to begin Underground Map.",
+          "unlock": "Completing Underground Map unlocks Old Ironforge Incursion from Earthseer Farsen.",
+          "rewards": "Leads to Old Ironforge Incursion; no separate equipment reward recorded.",
+          "shaman": "The prerequisite itself has no listed gear reward. It unlocks the Alliance quest that can reward Ironforge Greathammer.",
+          "sourceIds": [
+            "hall-quests",
+            "dark-iron-map"
+          ]
+        },
+        {
+          "id": "hot-old-ironforge-incursion",
+          "name": "Old Ironforge Incursion",
+          "npc": "Earthseer Farsen",
+          "where": "Dun Morogh · 64.8, 58.4",
+          "min": 9,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "prerequisites": [
+            "Underground Map"
+          ],
+          "outside": "After completing Underground Map, accept the dungeon quest from Earthseer Farsen.",
+          "unlock": "Defeat Durgen Dirgehammer and loot his head; turn in to King Magni Bronzebeard in Ironforge.",
+          "rewards": "Choose one: Calibrated Blunderbuss; Ironforge Greathammer; Deepblaze.",
+          "shaman": "Ironforge Greathammer is a Forever Enhancement Shaman leveling recommendation. Verified item: two-hand mace, 39–60 damage, speed 3.10 (16.0 DPS), 42 Fire damage chance on hit. Confirm you can use two-hand maces and compare your current weapon.",
+          "sourceIds": [
+            "hall-quests",
+            "hall-incursion",
+            "ironforge-greathammer",
+            "shaman-enhancement"
+          ]
+        },
+        {
+          "id": "hot-restless-dead",
+          "name": "The Restless Dead",
+          "npc": "Afadra Dunwall",
+          "where": "Ironforge · 32.6, 46.9 (NPC map variants 32.8, 48.6; 33.0, 47.8; 33.5, 48.0)",
+          "min": 15,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "prerequisites": [],
+          "outside": "Accept from Afadra before entering.",
+          "unlock": "Kill 15 Enraged Apparitions and 10 Tormented Souls; one run is expected to suffice.",
+          "rewards": "Dusty Belt; Cryptwalker Bracers",
+          "shaman": "Cryptwalker Bracers are mail with +2 Strength and +2 Spirit: plausible Enhancement stats, but the Forever Enhancement guide prioritizes weapon upgrades. Choose only if they improve your current bracers.",
+          "sourceIds": [
+            "hall-quests",
+            "restless-dead-bracers"
+          ]
+        },
+        {
+          "id": "hot-important-heirlooms",
+          "name": "Important Heirlooms",
+          "npc": "Thom Filch",
+          "where": "Ironforge · 32.6, 44.6",
+          "min": 10,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "prerequisites": [],
+          "outside": "Accept in Ironforge before entering.",
+          "unlock": "Loot eight Dwarven Heirlooms scattered through the dungeon, including behind vaults near the final room.",
+          "rewards": "Dwarven Tome; Tomb Robber's Gloves",
+          "shaman": "Stats are not verified here; inspect before selecting.",
+          "sourceIds": [
+            "hall-quests"
+          ]
+        },
+        {
+          "id": "hot-ancient-grudge",
+          "name": "An Ancient Grudge",
+          "npc": "Ghostly Attendant",
+          "where": "Inside Hall of Thanes",
+          "min": 10,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "COMPLETE INSIDE DUNGEON",
+          "kind": "inside",
+          "prerequisites": [],
+          "outside": "No outdoor pickup; accept from the Ghostly Attendant in the instance.",
+          "unlock": "Defeat Faldrim Anvilmar, the first boss.",
+          "rewards": "Catacomb Cloak; Deepgrave Trousers",
+          "shaman": "Not an outdoor preparation quest; stats not reviewed."
+        },
+        {
+          "id": "hot-treaty-understanding",
+          "name": "The Treaty of Understanding",
+          "npc": "Tablet in a vault in the final room",
+          "where": "Inside Hall of Thanes",
+          "min": 9,
+          "factions": [
+            "Alliance",
+            "Horde"
+          ],
+          "stage": "COMPLETE INSIDE DUNGEON",
+          "kind": "inside",
+          "prerequisites": [],
+          "outside": "No pre-run pickup; loot the tablet in a final-room vault.",
+          "unlock": "Find the tablet during the run.",
+          "rewards": "No gear reward",
+          "shaman": "No equipment reward."
+        }
+      ],
+      "level21Advice": "Below the suggested 13–18 band; at 21 it is likely an easy revisit. Its Alliance map chain awards an Enhancement-recommended weapon.",
+      "levelRange": "13–18"
+    },
+    {
+      "id": "deadmines",
+      "name": "Deadmines",
+      "zone": "Westfall",
+      "range": "17–26",
+      "status": "verified-list",
+      "entrance": "Moonbrook in Westfall; follow the mine entrance route on the local map.",
+      "warnings": "At level 21 you are within the Forever guide range (17–26). Collect the Alliance quests in Westfall/Stormwind; the Defias Brotherhood and Forever-only Testing the Wells chains are the main outdoor preparation.",
+      "quests": [
+        {
+          "id": "dm-testing-wells",
+          "name": "Testing the Wells → Destruction in Deadmines",
+          "npc": "Alba Fairmoon",
+          "where": "Sentinel Hill, Westfall · 52.4, 53.0",
+          "min": 9,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "OUTDOOR PREREQUISITE",
+          "kind": "outdoor",
+          "outside": "This is a Forever-only Toxic Soil storyline, not a Classic assumption. Start with Alba Fairmoon at Sentinel Hill (52.5, 53.0), collect both farm well samples, and follow the ordered chain through the Deadmines step. Wowhead lists this chain for Dwarf, Night Elf, Gnome, and High Order Skyborne; check race eligibility in game.",
+          "unlock": "Use the detonator in Gilnid's room.",
+          "rewards": "No gear reward listed",
+          "shaman": "Quest progression and experience only; no item upgrade claimed.",
+          "sourceIds": [
+            "deadmines-quests",
+            "toxic-soil-chain",
+            "forever-dungeon-quests"
+          ],
+          "prerequisites": [
+            "1. Testing the Wells — collect samples from Jansen Stead and Molsen Farm",
+            "2. Murloc Gills",
+            "3. The State of the Mines",
+            "4. Moonbrook Espionage",
+            "5. Explosive Consultation (Stormwind engineer)",
+            "6. A Dynamite Plan",
+            "7–8. Detonation at a Distance (both steps)",
+            "9. Explosive Consultation (return to Alba)",
+            "10–11. Destruction in Deadmines steps; accept the dungeon objective before entering"
+          ]
+        },
+        {
+          "id": "dm-defias-brotherhood",
+          "name": "The Defias Brotherhood",
+          "npc": "Gryan Stoutmantle",
+          "where": "Sentinel Hill, Westfall · 56.2, 47.6",
+          "min": 14,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "OUTDOOR PREREQUISITE",
+          "kind": "outdoor",
+          "outside": "Advance the Westfall questline to the final Defias Traitor escort and accept the instance quest before entering.",
+          "unlock": "Defeat Edwin VanCleef and loot his head.",
+          "rewards": "Chausses of Westfall; Tunic of Westfall; Staff of Westfall",
+          "shaman": "The reward choice Staff of Westfall is a verified caster/healing option for a Shaman using a staff: +5 Intellect, +6 Spirit, and the tooltip lists up to +48 healing and +16 magic damage. It is not the Enhancement weapon recommendation; Enhancement gearing prioritizes two-hand mace DPS.",
+          "sourceIds": [
+            "deadmines-quests",
+            "defias-chain"
+          ],
+          "prerequisites": [
+            "1. The Defias Brotherhood — Gryan Stoutmantle sends you to Wiley the Black in Lakeshire",
+            "2. The Defias Brotherhood — return Wiley’s Note to Gryan",
+            "3. The Defias Brotherhood — take Wiley’s Note to Master Mathias Shaw in Stormwind",
+            "4. The Defias Brotherhood — return Shaw’s Report to Gryan",
+            "5. The Defias Brotherhood — catch the Defias Messenger and report back",
+            "6. The Defias Traitor — escort him from Sentinel Hill to the hideout",
+            "7. Accept the final The Defias Brotherhood quest from Gryan before entering"
+          ]
+        },
+        {
+          "id": "dm-collecting-memories",
+          "name": "Collecting Memories",
+          "npc": "Wilder Thistlenettle",
+          "where": "Stormwind · 70.2, 40.8",
+          "min": 14,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept in Stormwind; collect Miner’s Union Cards from undead miners outside the instance before entering.",
+          "unlock": "The outside cards complete the quest; it is not an inside objective.",
+          "rewards": "Tunneler's Boots; Dusty Mining Gloves; Worn Miner's Waistcord",
+          "shaman": "Reward stats not verified; inspect before selecting."
+        },
+        {
+          "id": "dm-underground-assault",
+          "name": "Underground Assault",
+          "npc": "Shoni the Shilent",
+          "where": "Stormwind · 62.6, 34.2",
+          "min": 15,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "outside": "Accept from Shoni in Stormwind.",
+          "unlock": "Loot Gnoam Sprecklesprocket from Sneed's Shredder.",
+          "rewards": "Polar Gauntlets; Sable Wand; Bravo's Armbands; Dreamer's Leggings",
+          "shaman": "Sable Wand may suit a caster set; verify stats in game before choosing."
+        },
+        {
+          "id": "dm-red-silk-bandanas",
+          "name": "Red Silk Bandanas",
+          "npc": "Scout Riell",
+          "where": "Westfall · Sentinel Hill · 56.6, 47.4",
+          "min": 14,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "prerequisites": [
+            "Complete steps 1–6 of The Defias Brotherhood chain through the Defias Traitor escort; then take Red Silk Bandanas from Scout Riell."
+          ],
+          "outside": "Advance The Defias Brotherhood through the Defias Traitor escort; then accept from Scout Riell. Bandanas drop from Defias enemies in the instance.",
+          "unlock": "Loot Red Silk Bandanas from Defias enemies during the run.",
+          "rewards": "Solid Shortblade; Scrimshaw Dagger; Piercing Axe; Monastic Hammer",
+          "shaman": "Monastic Hammer is a possible weapon choice, but no current Forever stats or Shaman recommendation were verified here. Compare its tooltip before choosing.",
+          "sourceIds": [
+            "deadmines-quests",
+            "forever-dungeon-quests"
+          ]
+        },
+        {
+          "id": "dm-oh-brother",
+          "name": "Oh Brother...",
+          "npc": "Wilder Thistlenettle",
+          "where": "Stormwind · 70.2, 40.8",
+          "min": 15,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "PICK UP BEFORE ENTERING",
+          "kind": "dungeon",
+          "prerequisites": [],
+          "outside": "Accept from Wilder in Stormwind; the badge drops from Foreman Thistlenettle outside the instance, so do that objective before going underground.",
+          "unlock": "The pre-instance named elite objective can be completed outdoors before entering.",
+          "rewards": "Miner's Revenge; Miner's Workgloves; Miner's Workboots",
+          "shaman": "No verified Shaman-specific upgrade; check item tooltips."
+        },
+        {
+          "id": "dm-unsent-letter",
+          "name": "The Unsent Letter",
+          "npc": "An Unsent Letter dropped by Edwin VanCleef",
+          "where": "Begins inside Deadmines; turn in to Baros Alexston in Stormwind",
+          "min": 16,
+          "factions": [
+            "Alliance"
+          ],
+          "stage": "TURN IN AFTER DUNGEON",
+          "kind": "inside",
+          "prerequisites": [],
+          "outside": "No pre-run pickup: this starts from a drop by VanCleef and leads into a later Stockades chain.",
+          "unlock": "Recover the letter from VanCleef and turn it in after the run.",
+          "rewards": "Seal of Wrynn at the end of the later chain",
+          "shaman": "The final reward is not a Deadmines quest reward and the later chain’s item stats are not reviewed here."
+        }
+      ],
+      "level21Advice": "Reasonable at level 21 (Forever guide range 17–26). Prioritize the outdoor Defias chain and Old Ironforge Incursion weapon quest if not already completed.",
+      "levelRangeSource": "https://www.icy-veins.com/wow-forever/deadmines-guide"
+    },
+    {
+      "id": "blackfathom-deeps",
+      "name": "Blackfathom Deeps",
+      "zone": "Ashenvale",
+      "range": "24–32",
+      "status": "upcoming",
+      "entrance": "Preparation details not yet verified.",
+      "warnings": "No preparation checklist published until Forever quest data is verified.",
+      "quests": [],
+      "level21Advice": "Not at level 21: it is below the suggested 24–32 range. Wait until at least level 24; the Alliance quest-preparation list is not verified yet."
+    },
+    {
+      "id": "excavation-site-wetlands",
+      "name": "Excavation Site: Wetlands",
+      "zone": "Wetlands",
+      "range": "24–29",
+      "status": "partial",
+      "entrance": "Above Whelgar’s Excavation, Wetlands.",
+      "warnings": "Forever level/location verified. Preparation quest relationships and rewards remain under review.",
+      "quests": [],
+      "level21Advice": "Not at level 21: it is below the suggested 24–29 range. Revisit from level 24; Forever quest prerequisites and rewards remain unverified."
+    }
+  ]
+}

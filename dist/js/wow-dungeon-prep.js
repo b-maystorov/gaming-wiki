@@ -1,0 +1,47 @@
+export const DUNGEON_PREP_STORAGE_KEY = 'bm-wow-forever-dungeon-prep-v1';
+let selectedDungeonFaction = 'Alliance';
+let selectedDungeonLevel = 21;
+export function setDungeonPrepFaction(faction) { if (['Horde', 'Alliance'].includes(faction)) selectedDungeonFaction = faction; }
+export function setDungeonPrepLevel(level) { const parsed = Number(level); if (Number.isInteger(parsed) && parsed >= 1 && parsed <= 60) selectedDungeonLevel = parsed; }
+
+export function loadDungeonPrepProgress(storage) {
+  try {
+    const saved = JSON.parse((storage ?? globalThis.localStorage)?.getItem(DUNGEON_PREP_STORAGE_KEY) || '{}');
+    return saved && typeof saved === 'object' && !Array.isArray(saved) ? Object.fromEntries(Object.entries(saved).filter(([, value]) => typeof value === 'boolean')) : {};
+  } catch { return {}; }
+}
+
+export function saveDungeonPrepProgress(progress, storage) {
+  try { (storage ?? globalThis.localStorage).setItem(DUNGEON_PREP_STORAGE_KEY, JSON.stringify(progress)); return true; }
+  catch { return false; }
+}
+
+export function countDocumentedRewardItems(quest) {
+  const text = String(quest?.rewards || '');
+  if (!text || /no .*?(?:gear|equipment) reward|at the end of the later chain/i.test(text)) return 0;
+  return text.split(';').map(item => item.trim()).filter(Boolean).length;
+}
+
+export function filterDungeonQuests(dungeon, faction) {
+  return (dungeon?.quests || []).filter(quest => quest.factions?.includes(faction));
+}
+
+export function renderWowDungeonPrep(route, data, escapeHtml, progress = {}) {
+  const record = data?.dungeons?.find(dungeon => dungeon.id === route.dungeonId);
+  if (!record) return `<div class="wow-page"><section class="wow-content"><h1 id="page-title" tabindex="-1">Dungeon preparation unavailable</h1><p>This route has no documented dungeon record.</p><a href="#game/world-of-warcraft/dungeons-raids">Back to dungeons</a></section></div>`;
+  const faction = selectedDungeonFaction;
+  const stageOrder = { 'OUTDOOR PREREQUISITE': 0, 'PICK UP BEFORE ENTERING': 1, 'COMPLETE INSIDE DUNGEON': 2, 'TURN IN AFTER DUNGEON': 3 };
+  const quests = filterDungeonQuests(record, faction).sort((left, right) => (stageOrder[left.stage] ?? 4) - (stageOrder[right.stage] ?? 4));
+  const readyCount = quests.filter(quest => progress[`${record.id}:${quest.id}`]).length;
+  const outdoorRemaining = quests.filter(quest => quest.kind === 'outdoor' && !progress[`${record.id}:${quest.id}`]).length;
+  const rewardsCount = quests.reduce((sum, quest) => sum + countDocumentedRewardItems(quest), 0);
+  const sourceIds = new Set(['dungeon-overview', record.id === 'shadowfang-keep' ? 'shadowfang-quests' : record.id === 'wailing-caverns' ? 'wailing-quests' : record.id === 'ruins-of-lordaeron' ? 'ruins-quests' : record.id === 'deadmines' ? 'deadmines-quests' : 'hall-quests']);
+  const sources = (data.sources || []).filter(source => sourceIds.has(source.id)).map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.id)} · checked ${escapeHtml(source.checkedDate)}</a>`).join(' · ');
+  const levelAdvice = selectedDungeonLevel === 21 ? record.level21Advice : (() => { const levels = record.range.split(/[–-]/).map(Number); return selectedDungeonLevel < levels[0] ? `Level ${selectedDungeonLevel} is below this dungeon's suggested ${record.range} range.` : selectedDungeonLevel > levels[1] ? `Level ${selectedDungeonLevel} is above this dungeon's suggested ${record.range} range; expect an easier run.` : `Level ${selectedDungeonLevel} is within this dungeon's suggested ${record.range} range.`; })();
+  const questCards = quests.map(quest => {
+    const refs = quest.sourceIds || [record.id === 'hall-of-thanes' ? 'hall-quests' : record.id === 'deadmines' ? 'deadmines-quests' : record.id === 'ruins-of-lordaeron' ? 'ruins-quests' : record.id === 'wailing-caverns' ? 'wailing-quests' : 'shadowfang-quests'];
+    const links = (data.sources || []).filter(source => refs.includes(source.id)).map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">Quest source ↗</a>`).join(' ');
+    return `<article class="dungeon-quest-card" data-prep-faction="${escapeHtml(quest.factions.join(','))}" data-prep-kind="${escapeHtml(quest.kind)}" data-prep-reward-count="${countDocumentedRewardItems(quest)}"><header><span class="dungeon-stage">${escapeHtml(quest.stage)}</span><label><input type="checkbox" data-dungeon-check="${escapeHtml(`${record.id}:${quest.id}`)}"${progress[`${record.id}:${quest.id}`] ? ' checked' : ''}> Mark done / picked up</label></header><h3>${escapeHtml(quest.name)}</h3><p><strong>Starting NPC / item:</strong> ${escapeHtml(quest.npc)}</p><p><strong>Zone / coordinates:</strong> ${escapeHtml(quest.where)}</p><p><strong>Minimum level:</strong> ${escapeHtml(String(quest.min))} · <strong>Faction:</strong> ${escapeHtml(quest.factions.join(', '))}</p>${quest.prerequisites?.length ? `<p><strong>Prerequisite order:</strong> ${quest.prerequisites.map(escapeHtml).join(' → ')}</p>` : ''}<p>${escapeHtml(quest.outside)}</p><p><strong>Instance objective / handoff:</strong> ${escapeHtml(quest.unlock)}</p><p><strong>Quest rewards:</strong> ${escapeHtml(quest.rewards)}</p><p><strong>Why it may help a Shaman:</strong> ${escapeHtml(quest.shaman)}</p>${links ? `<p class="dungeon-card-source">${links}</p>` : ''}</article>`;
+  }).join('');
+  return `<div class="wow-page"><section class="wow-banner"><p class="wow-eyebrow">BM Gaming Wiki · World of Warcraft: Forever</p><h1 id="page-title" tabindex="-1">${escapeHtml(record.name)} · Before You Enter</h1><p>Alliance · Shaman · Level ${selectedDungeonLevel} · Enhancement focus · Forever-specific preparation</p></section><section class="wow-content dungeon-prep-page"><a class="wow-back" href="#game/world-of-warcraft/dungeons-raids">← Dungeon directory</a><header class="dungeon-prep-hero"><div><p class="wow-eyebrow">${escapeHtml(record.zone)} · Levels ${escapeHtml(record.range)}</p><h2>Prepare the journey</h2><p>${escapeHtml(record.entrance)}</p><p class="dungeon-warning">${escapeHtml(record.warnings)}</p><p class="dungeon-level-advice" data-prep-level-advice>${escapeHtml(levelAdvice)}</p></div><div class="dungeon-controls"><label>Faction <select data-prep-faction-select><option${faction === 'Horde' ? ' selected' : ''}>Horde</option><option${faction === 'Alliance' ? ' selected' : ''}>Alliance</option></select></label><div class="dungeon-profile-fact"><span>Class</span><strong>Shaman</strong></div><div class="dungeon-profile-fact"><span>Gear focus</span><strong>Enhancement priority</strong></div><label>Character level <input data-prep-level type="number" min="1" max="60" value="${selectedDungeonLevel}"></label></div></header><section class="dungeon-summary"><strong>Ready quests: <span data-count-ready>${readyCount}</span></strong><strong>Remaining outdoor prerequisites: <span data-count-outdoor>${outdoorRemaining}</span></strong><strong>Available rewards: <span data-count-rewards>${rewardsCount}</span></strong></section><section><p class="wow-eyebrow">Preparation checklist</p><h2>Quest records</h2><p>Stage labels distinguish outdoor prerequisites from quests collected before the run and tasks completed inside.</p><div class="dungeon-quest-grid">${questCards || '<p>No verified quests are recorded for this faction yet. This is a data gap, not proof that no quests exist.</p>'}</div><p data-dungeon-status role="status" aria-live="polite"></p></section><section class="dungeon-entry-notes"><h2>Entrance & encounter notes</h2><p>${escapeHtml(record.entrance)}</p><p>${escapeHtml(record.warnings)}</p></section><section class="dungeon-related"><h2>Keep planning</h2><a href="#game/world-of-warcraft/leveling">Leveling guide</a> · <a href="#game/world-of-warcraft/classes/shaman">Shaman class guide</a> · <a href="#game/world-of-warcraft/builds/shaman/enhancement">Enhancement guide</a></section><p class="wow-source-link">Sources: ${sources || 'No source recorded'}</p><p class="wow-note">Reward names and item effects appear only where verified. Boss drops are separate from the quest rewards above. Page checked ${escapeHtml(data.checkedDate)}.</p></section></div>`;
+}

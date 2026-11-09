@@ -11,6 +11,7 @@ const wowPack = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-o
 const wowArtwork = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8'));
 const wowClientData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8'));
 const wowGuidedData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8'));
+const dungeonPrepData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-dungeon-prep.json'), 'utf8'));
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
@@ -32,6 +33,7 @@ async function harness(failure = null, storageMode = 'available') {
       if (String(url).endsWith('world-of-warcraft-forever-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-client-data.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-guided-builds.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8')) };
+      if (String(url).endsWith('world-of-warcraft-forever-dungeon-prep.json')) return { ok: true, json: async () => structuredClone(dungeonPrepData) };
       if (String(url).endsWith('-artwork.json')) return { ok: true, json: async () => structuredClone(artworkManifest) };
       if (failure === 'network') throw new Error('Network unavailable');
       return { ok: failure !== 'http', status: 404, json: async () => {
@@ -1579,4 +1581,37 @@ test('talent draft migration and guided share state preserve custom allocations'
   assert.equal(restored.mode, 'guided');
   assert.equal(restored.guidedBuildId, wowGuidedData.builds[0].id);
   assert.equal(wowModule.validateWowTalentAllocation(wowClientData.classes.find(item => item.id === 'shaman'), restored.allocation, 11).valid, true);
+});
+
+test('WoW dungeon preparation routes, quest relationships, faction filtering, local progress and missing data', async () => {
+  const h = await harness();
+  for (const id of ['shadowfang-keep', 'wailing-caverns', 'ruins-of-lordaeron', 'hall-of-thanes', 'deadmines']) {
+    assert.equal(h.app.readRoute(`#game/world-of-warcraft/dungeons/${id}`).view, 'wow-dungeon-prep');
+  }
+  const prep = h.modules.get(resolve(root, 'dist/js/wow-dungeon-prep.js')).namespace;
+  assert.deepEqual(prep.filterDungeonQuests(dungeonPrepData.dungeons.find(item => item.id === 'shadowfang-keep'), 'Alliance'), []);
+  assert.equal(prep.countDocumentedRewardItems({ rewards: 'Ironforge Greathammer; Deepblaze; Calibrated Blunderbuss' }), 3);
+  assert.equal(prep.countDocumentedRewardItems({ rewards: 'No gear reward' }), 0);
+  const ruins = dungeonPrepData.dungeons.find(item => item.id === 'ruins-of-lordaeron');
+  const allianceQuests = prep.filterDungeonQuests(ruins, 'Alliance');
+  assert.ok(allianceQuests.every(item => item.factions.includes('Alliance')));
+  assert.deepEqual(ruins.quests.find(item => item.id === 'ruins-new-plague').prerequisites, ['A Recipe For Death']);
+  assert.deepEqual(ruins.quests.find(item => item.id === 'ruins-wrath').prerequisites, ['Rear Guard Patrol']);
+  assert.equal(dungeonPrepData.dungeons.find(item => item.id === 'deadmines').quests.find(item => item.id === 'dm-testing-wells').stage, 'OUTDOOR PREREQUISITE');
+  assert.equal(dungeonPrepData.dungeons.find(item => item.id === 'wailing-caverns').quests.find(item => item.id === 'wc-smart-drinks').kind, 'outdoor');
+  const values = new Map();
+  const storage = { getItem: key => values.get(key) || null, setItem: (key, value) => values.set(key, value) };
+  assert.equal(prep.saveDungeonPrepProgress({ 'deadmines:dm-testing-wells': true, 'unrelated:key': true }, storage), true);
+  assert.deepEqual(JSON.parse(JSON.stringify(prep.loadDungeonPrepProgress(storage))), { 'deadmines:dm-testing-wells': true, 'unrelated:key': true });
+  assert.equal(prep.saveDungeonPrepProgress({ x: true }, { setItem() { throw new Error('blocked'); } }), false);
+  assert.ok(prep.renderWowDungeonPrep({ dungeonId: 'unknown' }, dungeonPrepData, String).includes('Dungeon preparation unavailable'));
+  assert.ok(prep.renderWowDungeonPrep({ dungeonId: 'hall-of-thanes' }, dungeonPrepData, String).includes('Alliance · Shaman · Level 21'));
+  assert.ok(prep.renderWowDungeonPrep({ dungeonId: 'hall-of-thanes' }, dungeonPrepData, String).includes('Old Ironforge Incursion'));
+  const allianceWailing = prep.filterDungeonQuests(dungeonPrepData.dungeons.find(item => item.id === 'wailing-caverns'), 'Alliance');
+  assert.ok(allianceWailing.some(item => item.id === 'wc-smart-drinks'));
+  assert.ok(!allianceWailing.some(item => item.id === 'wc-leaders'));
+  const deadminesPage = prep.renderWowDungeonPrep({ dungeonId: 'deadmines' }, dungeonPrepData, String);
+  assert.ok(deadminesPage.includes('Staff of Westfall'));
+  assert.ok(deadminesPage.includes('Why it may help a Shaman'));
+  assert.ok(!deadminesPage.includes('Arugal Must Die'));
 });
