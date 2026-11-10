@@ -1490,6 +1490,10 @@ function readRoute(hash) {
   // Preserve existing bookmarks without rewriting history entries.
   if (path === 'heroes') return { view: 'heroes', game: true };
   const parts = path.split('/');
+  if (parts[0] === 'info' && parts.length === 2
+      && ['about', 'impressum', 'privacy', 'disclaimer', 'contact'].includes(parts[1])) {
+    return { view: `info-${parts[1]}` };
+  }
   if (parts[0] === 'game' && parts[1] === 'world-of-warcraft') {
     if (parts.length === 2) return { view: 'wow-home' };
     const categoryViews = { 'my-journey': 'wow-journey', classes: 'wow-classes', races: 'wow-races', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-dungeons', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
@@ -1567,7 +1571,19 @@ function renderBreadcrumbs(route) {
   ).join('')}</ol></nav>`;
 }
 
-const pageTitles = { 'content-unavailable': 'Encyclopedia unavailable', home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', bosses: 'Bosses', 'boss-detail': 'Boss guide', teams: 'Team Compositions', 'team-detail': 'Team composition', 'expedition-planner': 'Expedition Planner', trinkets: 'Trinkets', enemies: 'Enemies', items: 'Items & Provisions', curios: 'Curios', locations: 'Locations', quests: 'Quests', missing: 'Page not found' };
+const pageTitles = { 'content-unavailable': 'Encyclopedia unavailable', home: 'Gaming Wiki', game: 'Darkest Dungeon', heroes: 'Heroes', bosses: 'Bosses', 'boss-detail': 'Boss guide', teams: 'Team Compositions', 'team-detail': 'Team composition', 'expedition-planner': 'Expedition Planner', trinkets: 'Trinkets', enemies: 'Enemies', items: 'Items & Provisions', curios: 'Curios', locations: 'Locations', quests: 'Quests', 'info-about': 'About', 'info-impressum': 'Impressum', 'info-privacy': 'Privacy', 'info-disclaimer': 'Disclaimer', 'info-contact': 'Get in Touch', missing: 'Page not found' };
+
+function renderInfoPage(view) {
+  const title = pageTitles[view];
+  const content = {
+    'info-about': '<p>BM Gaming Wiki is an independent personal fan project for practical gaming guides, builds and adventures.</p><p>It is created and maintained as a personal reference for games the owner enjoys.</p>',
+    'info-impressum': '<p><strong>Informational placeholder — this is not a legally sufficient Impressum.</strong></p><p>Owner and legally required contact details have not been configured for this local project. If the site is published publicly, the owner must provide accurate details required by the applicable law.</p>',
+    'info-privacy': '<p>This project serves its guide data and artwork from local site files. Some planner, profile, progress and preference features save data in your browser\'s localStorage on this device.</p><p>The current project code does not implement cookies or analytics. Source references may take you to external websites when you choose to follow them. The repository does not configure a hosting provider; any hosting service may have its own request logs and privacy terms.</p>',
+    'info-disclaimer': '<p>BM Gaming Wiki is an unofficial personal fan project. It is not affiliated with, endorsed by, or sponsored by the respective game developers or publishers.</p><p>Game names, trademarks and related content belong to their respective owners.</p>',
+    'info-contact': '<p>Feedback and suggestions are welcome. Contact details and a contact form have not been configured for this project.</p><p>You can reach the project through its configured public GitHub repository: <a href="https://github.com/b-maystorov/gaming-wiki" target="_blank" rel="noreferrer">BM Gaming Wiki on GitHub</a>.</p>'
+  }[view];
+  return `<section class="info-page" aria-labelledby="page-title"><p class="info-page-kicker">BM Gaming Wiki · Project information</p><h1 id="page-title" tabindex="-1">${escapeHtml(title)}</h1><div class="info-page-copy">${content}</div><a class="info-page-home" href="#home">← Back to Home</a></section>`;
+}
 
 function renderContentError(title = 'Encyclopedia unavailable') {
   return `<section class="page-intro"><h1 id="page-title" tabindex="-1">${escapeHtml(title)}</h1><p class="lede" role="status">The Darkest Dungeon encyclopedia data could not be loaded. Reload the page to try again. Existing hero guides and team compositions are still available.</p><a href="#game/darkest-dungeon/heroes">Browse heroes</a> · <a href="#game/darkest-dungeon/teams">Browse teams</a></section>`;
@@ -1579,7 +1595,8 @@ function renderPage(route) {
   if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile(), loadWowGuideProgress(), wowClientData, wowGuidedData) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), 'expedition-planner': renderExpeditionPlanner, trinkets: () => renderEncyclopediaCollection('trinkets'),
-    enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests') };
+    enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests'),
+    'info-about': () => renderInfoPage(route.view), 'info-impressum': () => renderInfoPage(route.view), 'info-privacy': () => renderInfoPage(route.view), 'info-disclaimer': () => renderInfoPage(route.view), 'info-contact': () => renderInfoPage(route.view) };
   const content = route.hero ? renderHeroPage(route.hero) : route.boss ? renderBossDetail(route.boss) : route.kind && route.record ? renderEncyclopediaDetail(route.kind, route.record) : route.view === 'team-detail' ? (route.team.boss ? renderBossCounterGuide(route.team) : renderTeamDetail(route.team)) : views[route.view] ? views[route.view]() :
     '<section class="empty-state"><h1 id="page-title" tabindex="-1">Page not found</h1><p>This page is not available.</p><a href="#home">Return home</a></section>';
   const page = renderBreadcrumbs(route) + (!structuredGameContent && route.game ? '<p class="guide-data-note" role="status">Encyclopedia data is unavailable. Some records and item details cannot be shown. Reload the page to try again.</p>' : '') + content;
@@ -1617,6 +1634,8 @@ function scrollBackToTop() {
 
 function showRoute() {
   commandCenter.close({ restoreFocus: false });
+  const footerYear = document.querySelector('[data-footer-year]');
+  if (footerYear) footerYear.textContent = String(new Date().getFullYear());
   const route = readRoute(location.hash);
   updateBackToTop(route, 0);
   document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview' || route.view.startsWith('wow-'));

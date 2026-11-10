@@ -540,7 +540,13 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.match(mainNavigation, /href="#home\/games"[^>]*>Universes<\/a>/);
   assert.doesNotMatch(mainNavigation, /Darkest Dungeon|WoW: Forever|Dungeons/);
   assert.match(shell, /class="command-trigger-label">Search<\/span>/);
-  assert.match(shell, /id="open-command-center"[^>]*aria-controls="command-center"/);
+  const searchTrigger = shell.match(/<button id="open-command-center"[^>]*>[\s\S]*?<\/button>/)?.[0] || '';
+  assert.match(searchTrigger, /aria-controls="command-center"/);
+  assert.match(searchTrigger, /aria-keyshortcuts="\/"/, 'the slash shortcut stays available to assistive technology');
+  assert.match(searchTrigger, /class="search-symbol"/);
+  assert.match(searchTrigger, /class="command-trigger-label">Search/);
+  assert.doesNotMatch(searchTrigger, /<kbd|>\/</, 'the visual slash badge is removed');
+  assert.match(searchTrigger, /title="Search the wiki"/);
   const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
   assert.match(portalStyles, /scroll-snap-type:\s*x mandatory/);
   assert.match(portalStyles, /grid-auto-flow:\s*column/);
@@ -549,6 +555,15 @@ test('homepage features direct game routes and records its local game artwork', 
   const appSource = await readFile(resolve(root, 'dist/js/app.js'), 'utf8');
   assert.match(appSource, /data-home-games-scroll/);
   assert.match(appSource, /strip\.scrollBy/);
+  const searchStyles = await readFile(resolve(root, 'dist/css/command-center.css'), 'utf8');
+  assert.match(searchStyles, /\.command-trigger:hover\s*\{[^}]*#54a9f5/i);
+  assert.match(searchStyles, /\.command-trigger:focus-visible\s*\{[^}]*#75bcff/i);
+  assert.match(searchStyles, /\.command-trigger\s*\{[^}]*min-height:\s*44px/);
+  assert.match(searchStyles, /@media\s*\(max-width:\s*760px\)[\s\S]*?\.command-trigger\s*\{\s*min-width:\s*44px/);
+  assert.doesNotMatch(searchStyles, /@media\s*\(max-width:\s*420px\)[\s\S]*?\.command-trigger-label\s*\{\s*display:\s*none/);
+  const commandCenterSource = await readFile(resolve(root, 'dist/js/command-center.js'), 'utf8');
+  assert.match(commandCenterSource, /event\.key === '\/'/, 'the existing slash key listener remains active');
+  assert.match(commandCenterSource, /trigger\.addEventListener\('click', open\)/, 'the button still opens the search dialog');
 
   const ddArt = artworkManifest.homepageArtwork;
   const wowArt = wowArtwork.records.find(record => record.id === 'wow-forever:homepage:featured');
@@ -599,6 +614,55 @@ test('League of Legends and Darkest Dungeon II Coming Soon routes work', () => {
   assert.ok(dd2Page.includes('A future guide collection for heroes, skills, journeys, combat and strategies.'));
   assert.match(dd2Page, /href="#home"[^>]*>← Back to Home<\/a>/);
   assert.doesNotMatch(dd2Page, /hero guide|build guide|skill guide/i, 'the preview does not add gameplay guides');
+});
+
+test('global footer links, project information routes, logo, and background rails are available', async () => {
+  const shell = await readFile(resolve(root, 'dist/index.html'), 'utf8');
+  const footer = shell.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)?.[0] || '';
+  assert.ok(footer.includes('Your adventure. Your guide.'));
+  assert.ok(footer.includes('A personal fan-made gaming wiki for guides, builds and adventures.'));
+  assert.ok(footer.includes('© <time data-footer-year>2026</time> BM Gaming Wiki — Personal fan project.'));
+  assert.ok(footer.includes('Unofficial fan project. Not affiliated with or endorsed by'));
+  assert.equal((footer.match(/<section\b|<nav\b/g) || []).length, 4, 'footer has four desktop content columns');
+
+  const footerRoutes = [...footer.matchAll(/href="(#[^"]+)"/g)].map(match => match[1]);
+  assert.deepEqual(footerRoutes, [
+    '#home', '#home/games', '#game/darkest-dungeon', '#game/world-of-warcraft',
+    '#game/league-of-legends', '#game/darkest-dungeon-2', '#info/about', '#info/impressum',
+    '#info/privacy', '#info/disclaimer', '#info/contact'
+  ]);
+  for (const href of footerRoutes) assert.notEqual(h.app.readRoute(href).view, 'missing', href);
+  assert.ok(footer.includes('https://github.com/b-maystorov/gaming-wiki'));
+
+  const logo = await readFile(resolve(root, 'dist/assets/images/bm-mark.svg'), 'utf8');
+  assert.match(logo, /#071426/i);
+  assert.match(logo, /#4aa8ff/i);
+  assert.match(shell, /src="assets\/images\/bm-mark\.svg"/g);
+  assert.equal((shell.match(/src="assets\/images\/bm-mark\.svg"/g) || []).length, 3, 'header, search and footer share the local BM mark');
+
+  const pages = [
+    ['about', /independent personal fan project/i],
+    ['impressum', /not a legally sufficient Impressum/i],
+    ['privacy', /localStorage/i],
+    ['disclaimer', /not affiliated with, endorsed by, or sponsored by/i],
+    ['contact', /Contact details and a contact form have not been configured/i]
+  ];
+  for (const [slug, expected] of pages) {
+    const route = h.app.readRoute(`#info/${slug}`);
+    assert.equal(route.view, `info-${slug}`);
+    assert.match(h.app.renderPage(route), expected, `#info/${slug} renders its information page`);
+  }
+  const contact = h.app.renderPage(h.app.readRoute('#info/contact'));
+  assert.ok(contact.includes('https://github.com/b-maystorov/gaming-wiki'));
+
+  const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  const baseStyles = await readFile(resolve(root, 'dist/css/styles.css'), 'utf8');
+  assert.match(baseStyles, /body\s*\{[^}]*radial-gradient\([^}]+#1474d5/i, 'page surround uses restrained blue gradients');
+  assert.doesNotMatch(portalStyles, /body\.portal-page:has\(\.home-page\)\s*\{\s*background:\s*#[0-9a-f]{6};/i);
+  assert.match(portalStyles, /\.portal-page main::before\s*\{[^}]*pointer-events:\s*none/);
+  assert.match(portalStyles, /\.site-footer::before\s*\{[^}]*pointer-events:\s*none/);
+  assert.match(portalStyles, /\.site-footer-grid\s*\{[^}]*grid-template-columns:\s*1\.25fr 1\.2fr 1fr \.8fr/);
+  assert.match(portalStyles, /\.footer-links a:focus-visible\s*\{/);
 });
 
 for (const failure of ['network', 'http', 'json', 'shape']) {

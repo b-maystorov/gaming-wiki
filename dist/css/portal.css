@@ -1,43 +1,55 @@
 /* Shared header/footer polish; scenery and page framing stay scoped to the portal. */
 body.portal-page {
-  background: radial-gradient(ellipse 320px 600px at 0 420px, #60263830, transparent),
-    radial-gradient(ellipse 350px 700px at 100% 850px, #294b632b, transparent), #0b0c0f;
+  background: radial-gradient(ellipse 34vw 520px at 0% 5%, #1474d52a, transparent 76%),
+    radial-gradient(ellipse 34vw 520px at 100% 5%, #1474d526, transparent 76%),
+    radial-gradient(ellipse 65vw 900px at 50% 0%, #0a1a2b99, transparent 82%), linear-gradient(180deg, #0b1320, #0b1018 55%, #090e16);
 }
 .portal-page .site-header, .portal-page main, .portal-page .site-footer { width: min(1200px, calc(100% - 80px)); }
 /* Non-interactive rails frame the content without covering focus rings or adding scroll width. */
 .portal-page main { position: relative; }
-.portal-page main::before { content: ''; position: absolute; pointer-events: none; inset: 1.5rem -20px 0; border-inline: 1px solid #a9796b22; background: linear-gradient(#c28c7344, transparent) left top / 1px 160px no-repeat, linear-gradient(#c28c7344, transparent) right top / 1px 160px no-repeat; }
+.portal-page main::before { content: ''; position: absolute; pointer-events: none; inset: 1.5rem -20px 0; border-inline: 1px solid #4b94d522; background: linear-gradient(#4b94d544, transparent) left top / 1px 160px no-repeat, linear-gradient(#4b94d544, transparent) right top / 1px 160px no-repeat; }
 .site-header {
   grid-template-columns: auto minmax(0, 1fr) auto; gap: 1.4rem;
-  padding: 1rem 1.4rem; margin-top: 1rem; border: 1px solid #44373c; border-radius: 6px;
-  background: linear-gradient(120deg, #20191f, #121318 65%); box-shadow: 0 12px 35px #0003, inset 0 1px #ffffff08;
+  padding: 1rem 1.4rem; margin-top: 1rem; border: 1px solid #283c55; border-radius: 6px;
+  background: linear-gradient(120deg, #111e2e, #0c121b 65%); box-shadow: 0 12px 35px #0005, inset 0 1px #ffffff08;
 }
 .brand { font-family: system-ui, sans-serif; font-size: .95rem; font-weight: 750; letter-spacing: .04em; }
 .portal-header-brand { display: flex; align-items: center; gap: .75rem; }
-.portal-header-brand img { flex-shrink: 0; filter: drop-shadow(0 3px 6px #0008); }
-.brand-detail { font-weight: 500; color: #d9cec7; }
+.portal-header-brand img { flex-shrink: 0; filter: drop-shadow(0 0 5px #238bdf55); }
+.brand-detail { font-weight: 500; color: #c3d0de; }
 .site-nav { gap: .35rem; }
-.header-status { display: inline-flex; align-items: center; gap: .5rem; padding: .4rem .65rem; border: 1px solid #634851; border-radius: 20px; color: #e7c8bd; font-size: .65rem; white-space: nowrap; background: #2a1d254d; }
-.header-status > span { width: 5px; height: 5px; border-radius: 50%; background: #dcaa8d; box-shadow: 0 0 9px #dcaa8d44; }
-.site-nav a { min-height: 44px; display: inline-flex; align-items: center; padding: .6rem 1rem; border: 1px solid transparent; border-radius: 3px; font-size: .8rem; color: #d3c6c0; }
-.site-nav a[aria-current] { color: #ffe0d4; background: linear-gradient(135deg, #522a34, #2b2028); border-color: #81505a; box-shadow: inset 0 -2px #cd827c; }
-.site-nav a:hover { color: #fff1e6; border-color: #75505a; background: #31232c; }
-.site-header a:focus-visible { outline: 2px solid #ffdfbd; outline-offset: 4px; }
-.site-footer { display: grid; grid-template-columns: 1.25fr .85fr 1fr; gap: 2.5rem; padding: 2.5rem 1.5rem 2.8rem; margin-top: 3.5rem; align-items: start; border: 1px solid #514047; border-bottom: 0; border-radius: 6px 6px 0 0; background: linear-gradient(130deg, #21191f80, #111319); position: relative; }
-.portal-page .site-footer::before { content: ''; position: absolute; top: -1px; left: 0; width: 90px; height: 2px; background: #ca8a80; }
-.portal-footer-brand { display: flex; align-items: center; gap: 1rem; }
-.portal-footer-brand strong { font: 650 .9rem system-ui, sans-serif; color: #f3e4d9; letter-spacing: .04em; }
-.portal-footer-brand { min-width: 0; }
+.header-status { display: inline-flex; align-items: center; gap: .5rem; padding: .4rem .65rem; border: 1px solid #315477; border-radius: 20px; color: #c6def5; font-size: .65rem; white-space: nowrap; background: #15263a80; }
+.header-status > span { width: 5px; height: 5px; border-radius: 50%; background: #56adff; box-shadow: 0 0 9px #3b98ed77; }
+.site-nav a { min-height: 44px; display: inline-flex; align-items: center; padding: .6rem 1rem; border: 1px solid transparent; border-radius: 3px; font-size: .8rem; color: #c9d4e0; }
+.site-nav a[aria-current] { color: #e2f2ff; background: linear-gradient(135deg, #18314d, #101c2a); border-color: #315d83; box-shadow: inset 0 -2px #55a9f5; }
+.site-nav a:hover { color: #f0f8ff; border-color: #416b91; background: #17283b; }
+.site-header a:focus-visible { outline: 2px solid #75bcff; outline-offset: 4px; }
+.site-footer { display: grid; gap: 0; padding: 0; margin-top: 3.5rem; color: #c1cedc; background: #0c1420eF; border: 1px solid #2a4059; border-radius: 6px 6px 0 0; position: relative; }
+.site-footer::before { content: ''; position: absolute; top: -1px; left: 0; width: min(220px, 36%); height: 2px; pointer-events: none; background: linear-gradient(90deg, #65baff, #2479c4aa, transparent); }
+.site-footer-grid { display: grid; grid-template-columns: 1.25fr 1.2fr 1fr .8fr; gap: clamp(1.3rem, 3vw, 3rem); padding: 2.4rem 2rem; align-items: start; }
+.footer-brand-column { min-width: 0; }
+.footer-brand-lockup { display: flex; align-items: center; gap: .8rem; color: #edf6ff; }
+.footer-brand-lockup img { flex-shrink: 0; filter: drop-shadow(0 0 5px #238bdf55); }
+.footer-brand-lockup strong { font-size: .92rem; letter-spacing: .025em; }
+.footer-tagline { margin-top: .85rem; color: #e4f1ff; font: 1rem Georgia, serif; }
+.footer-description { max-width: 32ch; margin-top: .55rem; color: #b7c5d3; font-size: .78rem; line-height: 1.65; }
 .footer-links { display: grid; justify-items: start; align-content: start; gap: .2rem; }
-.footer-links strong { color: #e1c5b9; font-size: .72rem; font-weight: 600; margin-bottom: .55rem; }
-.footer-links a { display: inline-flex; align-items: center; min-height: 44px; color: #cfc1ba; font-size: .75rem; text-decoration: none; border-bottom: 1px solid transparent; transition: color 160ms, border-color 160ms; }
-.footer-links a:hover { color: #ffe0cf; border-color: #bd837b; }
-.footer-links a:focus-visible { outline: 2px solid #ffdfbd; outline-offset: 3px; }
-.portal-footer-brand p { margin-top: .4rem; color: #bcb1ab; font-size: .75rem; }
-.portal-footer-note { display: block; max-width: 38ch; font-size: .72rem; }
-.portal-footer-note p:first-child { color: #e1c5b9; font-weight: 600; }
-.portal-footer-note p + p { margin-top: .5rem; }
-.portal-footer-note > span { display: block; margin-top: .9rem; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: #bcb1ab; }
+.footer-links > strong { color: #edf5fc; font-size: .7rem; font-weight: 700; letter-spacing: .13em; margin: .2rem 0 .45rem; text-transform: uppercase; }
+.footer-links a { display: inline-flex; align-items: center; min-height: 38px; color: #c1cedc; font-size: .77rem; text-decoration: none; border-bottom: 1px solid transparent; transition: color 160ms, border-color 160ms; }
+.footer-links a:hover { color: #8ecaff; border-color: #4d9be0; }
+.footer-links a:focus-visible { outline: 2px solid #75bcff; outline-offset: 3px; }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem 1.5rem; padding: 1rem 2rem; border-top: 1px solid #273b51; color: #aebdcd; font-size: .68rem; }
+.footer-bottom time { color: #c7d7e8; }
+.info-page { max-width: 850px; min-height: 42vh; margin: clamp(2.5rem, 8vh, 5.5rem) auto; padding: clamp(1.4rem, 4vw, 2.8rem); border: 1px solid #293e55; border-radius: 5px; background: linear-gradient(145deg, #101a27f2, #0c121bf5); box-shadow: 0 20px 55px #0004; }
+.info-page-kicker { margin-bottom: .8rem; color: #78baff; font-size: .67rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.info-page h1 { color: #f0f6fd; }
+.info-page-copy { max-width: 68ch; margin-top: 1.3rem; color: #c2cfdd; font-size: .94rem; line-height: 1.8; }
+.info-page-copy p + p { margin-top: 1rem; }
+.info-page-copy strong { color: #eff6fc; }
+.info-page-copy a, .info-page-home { color: #8bc8ff; }
+.info-page-copy a:focus-visible, .info-page-home:focus-visible { outline: 2px solid #75bcff; outline-offset: 4px; }
+.info-page-home { display: inline-flex; align-items: center; min-height: 44px; margin-top: 1.5rem; padding: .55rem .85rem; border: 1px solid #3c6386; border-radius: 3px; color: #d5eaff; background: #132238; font-size: .82rem; text-decoration: none; }
+.info-page-home:hover { border-color: #73bafa; background: #192d45; color: #fff; }
 .portal { --portal-muted: #bbb2ad; }
 .portal-kicker { font-size: .67rem; text-transform: uppercase; letter-spacing: .19em; font-weight: 650; color: #d4b8b2; }
 .portal-kicker > span { margin-inline: .7rem; color: #be545a; }
@@ -94,9 +106,8 @@ body.portal-page {
 @media (max-width: 900px) {
   .site-header { grid-template-columns: auto minmax(0, 1fr); gap: 1rem; }
   .header-status { display: none; }
-  .site-footer { grid-template-columns: 1fr 1fr; gap: 1.8rem; }
-  .portal-footer-note { grid-column: 1 / -1; border-top: 1px solid #514047; padding-top: 1.2rem; }
-  .site-footer .portal-footer-note { max-width: none; }
+  .site-footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem 2.5rem; }
+  .footer-bottom { flex-direction: column; }
 
   .portal-scene { padding: 1.8rem; }
   .gateway { right: 5%; }
@@ -106,14 +117,14 @@ body.portal-page {
   .portal-page main::before { display: none; }
   .site-header { grid-template-columns: 1fr; }
   .site-nav { justify-content: flex-start; }
-  .site-footer { grid-template-columns: 1fr; }
-  .portal-footer-note { grid-column: auto; }
+  .site-footer-grid { grid-template-columns: 1fr; gap: 1.4rem; }
 
   .site-header { padding: .85rem 1rem; margin-top: .6rem; gap: .8rem; }
   .site-nav { gap: .4rem; }
   .site-nav a { padding: .6rem .8rem; }
-  .site-footer { margin-top: 2.5rem; gap: 1.5rem; padding: 1.8rem 1.2rem 2rem; }
-  .portal-footer-brand p { max-width: 27ch; }
+  .site-footer { margin-top: 2.5rem; }
+  .site-footer-grid { padding: 1.6rem 1.2rem; }
+  .footer-bottom { padding: .9rem 1.2rem; }
 
   .portal-scene { padding: 1.4rem; min-height: 600px; }
   .portal-environment { inset: 0 0 auto; height: 310px; }
@@ -129,10 +140,8 @@ body.portal-page {
 }
 
 /* Compact game library for the main homepage; preview pages keep their own layout. */
-body.portal-page:has(.home-page) { background: #090d12; }
+body.portal-page:has(.home-page) { background: radial-gradient(ellipse 34vw 520px at 0% 5%, #1474d52a, transparent 76%), radial-gradient(ellipse 34vw 520px at 100% 5%, #1474d526, transparent 76%), radial-gradient(ellipse 65vw 900px at 50% 0%, #0a1a2b99, transparent 82%), linear-gradient(180deg, #0b1320, #0b1018 55%, #090e16); }
 body.portal-page:has(.home-page) main::before { display: none; }
-body.portal-page:has(.home-page) .site-footer { margin-top: 2.5rem; border-color: #29313a; border-radius: 4px 4px 0 0; background: #0e1319; }
-body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
 .home-page { --home-gold: #d8bd78; --home-muted: #c1cbd4; color: #f1eee6; padding: 1.3rem 0 1.6rem; }
 .home-welcome { padding: .4rem 0 1.4rem; }
 .home-brand-name { color: var(--home-gold); font-size: .82rem; font-weight: 700; letter-spacing: .08em; }
@@ -213,7 +222,7 @@ body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
 }
 
 /* WoW: Forever uses the shared portal frame with a distinct Azeroth palette. */
-body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 520px 620px at 82% 310px, #28567a35, transparent 72%), radial-gradient(ellipse 420px 540px at 8% 1000px, #8d70331b, transparent 70%), #090d13; }
+body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px at 0% 5%, #1474d52a, transparent 76%), radial-gradient(ellipse 34vw 520px at 100% 5%, #1474d526, transparent 76%), radial-gradient(ellipse 65vw 900px at 50% 0%, #0a1a2b99, transparent 82%), linear-gradient(180deg, #0b1320, #0b1018 55%, #090e16); }
 .wow-page { --wow-gold: #d5bc7d; --wow-blue: #75bce0; --wow-line: #6a8294; position: relative; isolation: isolate; padding-bottom: 2rem; }
 .wow-scene { position: absolute; z-index: -1; inset: 0 -7vw auto; height: 520px; overflow: hidden; pointer-events: none; background: radial-gradient(ellipse at 72% 21%, #9ac9e33d, transparent 35%), linear-gradient(180deg, #132336 0%, #101821b0 60%, transparent); }
 .wow-moon { position: absolute; width: 240px; aspect-ratio: 1; border: 1px solid #d2c18b65; border-radius: 50%; right: 18%; top: 35px; box-shadow: 0 0 90px #89c9ee38, inset 0 0 50px #c7b67522; background: radial-gradient(circle at 35% 35%, #9bc6d33a, transparent 68%); }

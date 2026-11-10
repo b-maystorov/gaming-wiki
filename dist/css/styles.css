@@ -22,7 +22,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; }
+body { margin: 0; background: radial-gradient(ellipse 34vw 520px at 0% 5%, #1474d52a, transparent 76%), radial-gradient(ellipse 34vw 520px at 100% 5%, #1474d526, transparent 76%), radial-gradient(ellipse 65vw 900px at 50% 0%, #0a1a2b99, transparent 82%), linear-gradient(180deg, #0b1320, #0b1018 55%, #090e16); background-attachment: fixed; }
 a { color: inherit; text-underline-offset: .25em; }
 a:hover, a:focus-visible { color: var(--accent-text); }
 a:focus-visible, summary:focus-visible, [tabindex="-1"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 5px; }

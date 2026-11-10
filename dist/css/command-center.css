@@ -1,11 +1,11 @@
 /* Command Center is shared by every route; native dialog supplies the modal layer. */
 .header-tools { display: flex; align-items: center; gap: .8rem; }
-.command-trigger { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-width: 104px; min-height: 44px; padding: .55rem .75rem; border: 1px solid #665462; border-radius: 4px; background: #201d25; color: #f0e3d8; box-shadow: inset 0 1px #ffffff0a; cursor: pointer; transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease; }
-.command-trigger:hover { background: #2b2530; border-color: #ad8b78; color: #fff3e4; }
+.command-trigger { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-width: 92px; min-height: 44px; padding: .55rem .75rem; border: 1px solid #315477; border-radius: 4px; background: #101c2b; color: #d8eaff; box-shadow: inset 0 1px #ffffff0a; cursor: pointer; transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease; }
+.command-trigger:hover { background: #152a40; border-color: #54a9f5; color: #f2f9ff; box-shadow: 0 0 12px #287dc033; }
 .command-trigger-label { font-size: .78rem; font-weight: 600; }
 .search-symbol { display: inline-block; position: relative; flex: 0 0 15px; width: 15px; height: 15px; border: 1.7px solid currentColor; border-radius: 50%; margin: 0 4px 4px 0; }
 .search-symbol::after { content: ''; position: absolute; width: 7px; height: 1.7px; background: currentColor; right: -5px; bottom: -3px; transform: rotate(45deg); }
-.command-trigger kbd, .command-hints kbd { font: .7rem system-ui, sans-serif; padding: .12rem .35rem; border: 1px solid #6b535d; border-radius: 3px; background: #17151c; color: #e7d4ca; }
+.command-hints kbd { font: .7rem system-ui, sans-serif; padding: .12rem .35rem; border: 1px solid #6b535d; border-radius: 3px; background: #17151c; color: #e7d4ca; }
 .command-open { overflow: hidden; }
 .command-center { width: min(680px, calc(100% - 32px)); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); padding: 0; margin: auto; overflow: auto; color: #f3eee6; background: linear-gradient(135deg, #2d1c27, #15151c 45%); border: 1px solid #94606f; border-radius: 9px; box-shadow: 0 30px 100px #000b, inset 0 1px #f3b3a51a; }
 .command-center[open] { display: flex; flex-direction: column; }
@@ -34,7 +34,8 @@
 .command-result small { color: #cfb9bf; font-size: .72rem; margin-top: .15rem; }
 .command-empty { margin: 0; padding: 1.5rem; color: #d5c0c2; text-align: center; font-size: .9rem; }
 .command-hints { display: flex; flex-wrap: wrap; gap: .7rem 1.2rem; padding: .85rem 1.4rem; border-top: 1px solid #60404d; background: #15131a; color: #c8b6bd; font-size: .7rem; }
-.command-trigger:focus-visible, .command-heading button:focus-visible { outline: 2px solid #ffdfbd; outline-offset: 3px; }
+.command-trigger:focus-visible { outline: 2px solid #75bcff; outline-offset: 3px; border-color: #75bcff; box-shadow: 0 0 14px #287dc044; }
+.command-heading button:focus-visible { outline: 2px solid #ffdfbd; outline-offset: 3px; }
 @media (max-width: 900px) {
   .site-header { grid-template-columns: auto minmax(0, 1fr) auto; }
 }
@@ -43,10 +44,6 @@
   .header-tools { grid-column: 2; grid-row: 1; }
   .site-nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
   .command-trigger { min-width: 44px; }
-  .command-trigger kbd { display: none; }
-}
-@media (max-width: 420px) {
-  .command-trigger-label { display: none; }
 }
 @media (max-width: 480px) {
   .command-heading { padding: 1rem; }
