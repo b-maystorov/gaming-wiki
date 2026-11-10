@@ -569,7 +569,7 @@ test('homepage features direct game routes and records its local game artwork', 
   const wowArt = wowArtwork.records.find(record => record.id === 'wow-forever:homepage:featured');
   const leagueArt = leagueArtwork.records.find(record => record.id === 'league-of-legends:homepage:featured');
   assert.ok(ddArt && wowArt && leagueArt, 'all three illustrated cards have structured source and use-status records');
-  for (const art of [ddArt.primary, wowArt, leagueArt]) {
+  for (const art of [ddArt.primary, leagueArt]) {
     const relativePath = art.path || art.src;
     assert.ok(relativePath.startsWith('assets/images/home/'));
     assert.ok(home.includes(relativePath), `${relativePath} is rendered locally on the homepage`);
@@ -577,10 +577,15 @@ test('homepage features direct game routes and records its local game artwork', 
     assert.ok(art.sourceUrl && art.sourceFileName && art.usageStatus, `${relativePath} records source and usage status`);
   }
   assert.equal(ddArt.primary.originalWidth / ddArt.primary.originalHeight, 16 / 9);
-  assert.equal(wowArt.originalWidth / wowArt.originalHeight, 16 / 9);
-  assert.equal(wowArt.sourceFileName, 'ClassicStormwind.jpg');
-  assert.match(wowArt.alt, /paladin.*Stormwind/i);
-  assert.equal((await readFile(resolve(root, 'dist', wowArt.src))).subarray(0, 2).toString('hex'), 'ffd8');
+  assert.equal(wowArt.src, 'assets/images/wow-forever/wow-forever-banner.png');
+  assert.equal(wowArt.sourceFileName, 'wow-forever-banner.png');
+  assert.equal(wowArt.usageStatus, 'User-provided; redistribution rights unverified.');
+  assert.deepEqual([wowArt.width, wowArt.height], [860, 484]);
+  assert.equal((await readFile(resolve(root, 'dist', wowArt.src))).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  const wowHome = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft'));
+  assert.match(wowHome, /class="wow-home-hero-art"[^>]*><img src="assets\/images\/wow-forever\/wow-forever-banner\.png"[^>]*width="860" height="484"/);
+  assert.match(portalStyles, /\.wow-home-hero-art\s*\{[^}]*display:block[^}]*z-index:0/);
+  assert.match(portalStyles, /\.wow-home-hero-art img\s*\{[^}]*visibility:visible[^}]*height:auto[^}]*object-fit:contain/);
   assert.equal(leagueArt.width / leagueArt.height, 16 / 9);
   assert.equal(leagueArt.sourceFileName, 'Ahri_0.jpg');
   assert.match(leagueArt.usageStatus, /not been independently verified/i);
@@ -1343,8 +1348,29 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   const render = h.app.renderPage;
   assert.equal(route('#game/world-of-warcraft').view, 'wow-home');
   const landing = render(route('#game/world-of-warcraft'));
-  for (const destination of ['my-journey', 'classes', 'races', 'build-finder', 'talent-planner', 'tier-lists', 'leveling', 'dungeons-raids', 'gear-professions', 'beginner-guides']) assert.ok(landing.includes(`#game/world-of-warcraft/${destination}`));
+  const homeArt = wowArtwork.records.find(record => record.id === 'wow-forever:homepage:featured');
+  assert.ok(homeArt, 'WoW landing hero artwork is registered locally');
+  assert.ok(await readFile(resolve(root, 'dist', homeArt.src)));
+  assert.ok(homeArt.src === 'assets/images/wow-forever/wow-forever-banner.png', 'landing artwork points at the supplied local image');
+  assert.equal(homeArt.usageStatus, 'User-provided; redistribution rights unverified.');
+  assert.ok(landing.includes(`<img src="${homeArt.src}" alt="${homeArt.alt}" width="860" height="484"`), 'landing renders the image at its native aspect ratio');
+  const heroStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  assert.ok(heroStyles.includes('.wow-home-hero-art img { display:block; visibility:visible; width:100%; max-width:860px; height:auto; object-fit:contain; }'));
+  assert.ok(landing.includes('<h1 id="page-title" tabindex="-1">World of Warcraft: Forever</h1>'));
+  assert.ok(landing.includes('Your adventure across Azeroth starts here.'));
+  assert.ok(landing.includes('Explore Classes') && landing.includes('Continue My Journey'));
+  assert.ok(landing.includes('href="#game/world-of-warcraft/classes"'), 'Explore Classes remains a working route');
+  assert.ok(landing.includes('href="#game/world-of-warcraft/my-journey"'), 'Continue My Journey remains a working route');
+  assert.ok(!landing.includes('wow-scene') && !landing.includes('wow-moon'), 'old ambient circles are omitted from the landing hero');
+  for (const destination of ['classes', 'races', 'talent-planner', 'leveling', 'dungeons-raids', 'tier-lists']) {
+    const target = `#game/world-of-warcraft/${destination}`;
+    assert.ok(landing.includes(`href="${target}"`), `landing directory links to ${destination}`);
+    assert.notEqual(route(target).view, 'missing', `${destination} route resolves`);
+  }
+  assert.equal((landing.match(/class="wow-home-destination"/g) || []).length, 6, 'landing has six focused directory cards');
   const classOverview = render(route('#game/world-of-warcraft/classes'));
+  assert.ok(classOverview.includes(`<img class="wow-banner-art" src="${homeArt.src}" alt="" aria-hidden="true" width="860" height="484">`), 'the supplied WoW banner is reused in game-page headers');
+  assert.ok(heroStyles.includes('.wow-banner-art { position:absolute; z-index:0;') && heroStyles.includes('pointer-events:none;'), 'shared banner artwork stays behind and cannot block page navigation');
   const classCardArt = wowArtwork.records.filter(record => record.kind === 'class-card');
   assert.equal(classCardArt.length, 9, 'each documented class has dedicated overview art');
   for (const item of wowPack.classes) {

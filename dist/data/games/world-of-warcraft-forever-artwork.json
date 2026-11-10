@@ -247,16 +247,19 @@
     {
       "id": "wow-forever:homepage:featured",
       "kind": "homepage",
-      "src": "assets/images/home/wow-classic-stormwind.jpg",
-      "alt": "A World of Warcraft Classic paladin standing in Stormwind.",
+      "src": "assets/images/wow-forever/wow-forever-banner.png",
+      "alt": "World of Warcraft: Forever promotional landscape artwork with its logo above an Azeroth valley.",
       "loading": "eager",
-      "sourceUrl": "https://blizzard.gamespress.com/Kit/Details/World-of-Warcraft-Classic-and-15th-Anniversary",
-      "sourceFileName": "ClassicStormwind.jpg",
-      "originalWidth": 1920,
-      "originalHeight": 1080,
-      "provenance": "Blizzard Entertainment publisher press-center screenshot, ClassicStormwind.jpg from the World of Warcraft: Classic 1920x1080 set; resized locally to 1600x900 for the homepage.",
-      "usageStatus": "Games Press describes these as publisher PR assets suitable for editorial support but does not guarantee reproduction rights; Blizzard retains copyright and explicit clearance is unconfirmed.",
-      "usage": "Publisher PR asset; Games Press recommends editorial use but does not guarantee reproduction rights. Copyright remains with Blizzard and explicit clearance is unconfirmed."
+      "width": 860,
+      "height": 484,
+      "originalWidth": 860,
+      "originalHeight": 484,
+      "sourceUrl": null,
+      "sourceFileName": "wow-forever-banner.png",
+      "sourcePage": "User-provided local asset; external source not supplied.",
+      "provenance": "User-provided image at dist/assets/images/wow-forever/wow-forever-banner.png. Displayed locally without image re-encoding.",
+      "usageStatus": "User-provided; redistribution rights unverified.",
+      "usage": "No independent permission or redistribution license is asserted."
     }
   ],
   "fallbacks": {
