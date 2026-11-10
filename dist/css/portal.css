@@ -178,10 +178,11 @@ body.portal-page {
 body.portal-page:has(.home-page) { background: radial-gradient(ellipse 34vw 520px at 0% 5%, #1474d52a, transparent 76%), radial-gradient(ellipse 34vw 520px at 100% 5%, #1474d526, transparent 76%), radial-gradient(ellipse 65vw 900px at 50% 0%, #0a1a2b99, transparent 82%), linear-gradient(180deg, #0b1320, #0b1018 55%, #090e16); }
 body.portal-page:has(.home-page) main::before { display: none; }
 .home-page { --home-gold: #d8bd78; --home-muted: #c1cbd4; color: #f1eee6; padding: 1.3rem 0 1.6rem; }
-.home-welcome { padding: .4rem 0 1.4rem; }
-.home-brand-name { color: var(--home-gold); font-size: .82rem; font-weight: 700; letter-spacing: .08em; }
-.home-welcome h1 { margin-top: .35rem; color: #f3efe5; font: 600 clamp(2rem, 4vw, 3rem)/1.12 Georgia, serif; letter-spacing: -.025em; }
-.home-welcome > p:last-child { max-width: 64ch; margin-top: .7rem; color: var(--home-muted); font-size: .97rem; line-height: 1.65; }
+.home-welcome { position:relative; display:flex; align-items:center; min-height:238px; max-height:260px; padding:1.4rem clamp(1.25rem,3vw,2.2rem); overflow:hidden; border:1px solid #2c4968; border-left:3px solid #438fd0; border-radius:5px; background:radial-gradient(ellipse 34% 115% at 94% 48%,#2475bb30,transparent 100%),radial-gradient(ellipse 60% 140% at 100% 100%,#13365a55,transparent 78%),linear-gradient(105deg,#0c1726 0%,#101e30 58%,#12253a 100%); box-shadow:inset 0 1px #d8eaff0d,0 14px 32px #0003; }
+.home-welcome-copy { position:relative; z-index:1; max-width:68ch; }
+.home-brand-name { color:#83c4ff; font-size:.74rem; font-weight:750; letter-spacing:.16em; text-transform:uppercase; }
+.home-welcome h1 { max-width:22ch; margin-top:.5rem; color:#f1f6fc; font:600 clamp(2rem,4vw,3rem)/1.1 Georgia,serif; letter-spacing:-.025em; text-shadow:0 2px 22px #0008; }
+.home-welcome-copy > p:last-child { max-width:60ch; margin-top:.7rem; color:#c5d2e0; font-size:.94rem; line-height:1.6; }
 .home-featured, .home-coming { margin-top: 1.1rem; }
 .home-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: .85rem; }
 .home-section-kicker { color: var(--home-gold); font-size: .65rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
@@ -212,6 +213,8 @@ body.portal-page:has(.home-page) main::before { display: none; }
 .home-game-controls button:focus-visible { outline: 2px solid #e0c77f; outline-offset: 3px; }
 @media (max-width: 680px) {
   .home-page { padding-top: .7rem; }
+  .home-welcome { min-height:0; max-height:none; padding:1.25rem; }
+  .home-welcome h1 { font-size:clamp(1.9rem,7vw,2.5rem); }
   .home-featured-grid { grid-auto-columns: minmax(0, 84%); gap: .8rem; }
   .home-game-copy { min-height: 0; }
 }

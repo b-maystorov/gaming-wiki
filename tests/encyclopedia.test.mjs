@@ -502,6 +502,11 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.ok(home.includes('id="featured-games-title"'), 'the legacy games anchor now targets the featured games heading');
   assert.ok(home.includes('BM Gaming Wiki') && home.includes('Your adventure. Your guide.'));
   assert.ok(home.includes('Practical guides, builds, leveling routes and dungeon strategies for the games you love.'));
+  assert.doesNotMatch(home, /bm-gaming-controller|home-welcome-art/, 'the welcome banner has no generic controller illustration');
+  const welcomeStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  assert.match(welcomeStyles, /\.home-welcome\s*\{[^}]*max-height:260px[^}]*background:[^}]*radial-gradient/);
+  assert.doesNotMatch(welcomeStyles, /home-welcome-art|bm-gaming-controller/);
+  assert.match(welcomeStyles, /@media\s*\(max-width:\s*680px\)[\s\S]*?\.home-welcome\s*\{[^}]*max-height:none/);
 
   const cardLinks = [...home.matchAll(/<a class="home-game-card" href="([^"]+)"/g)].map(match => match[1]);
   assert.deepEqual(cardLinks, ['#game/darkest-dungeon', '#game/world-of-warcraft', '#game/league-of-legends', '#game/darkest-dungeon-2']);

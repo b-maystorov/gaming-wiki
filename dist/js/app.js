@@ -194,9 +194,9 @@ function renderHome() {
 
   return `<div class="portal home-page">
     <section class="home-welcome" aria-labelledby="page-title">
-      <p class="home-brand-name">BM Gaming Wiki</p>
-      <h1 id="page-title" tabindex="-1">Your adventure. Your guide.</h1>
-      <p>Practical guides, builds, leveling routes and dungeon strategies for the games you love.</p>
+      <div class="home-welcome-copy"><p class="home-brand-name">BM Gaming Wiki</p>
+        <h1 id="page-title" tabindex="-1">Your adventure. Your guide.</h1>
+        <p>Practical guides, builds, leveling routes and dungeon strategies for the games you love.</p></div>
     </section>
     <section class="home-featured" aria-labelledby="featured-games-title">
       <div class="home-section-heading"><div><p class="home-section-kicker">Start playing</p><h2 id="featured-games-title">Featured games</h2></div><div class="home-game-controls" role="group" aria-label="Browse games"><button type="button" data-home-games-scroll="-1" aria-label="Scroll games left">‹</button><button type="button" data-home-games-scroll="1" aria-label="Scroll games right">›</button></div></div>
