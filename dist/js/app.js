@@ -161,6 +161,10 @@ function renderHome() {
       </span>
       <span class="home-game-copy"><span class="home-game-label">In development</span><strong>League of Legends</strong><span class="home-game-description">League guides are coming later.</span><span class="home-coming-status">Coming Soon</span></span>
     </a>`;
+    if (game.id === 'darkest-dungeon-2') return `<a class="home-game-card" href="${escapeHtml(game.href)}" aria-label="Darkest Dungeon II, coming soon">
+      <span class="home-game-art home-game-art--darkest-dungeon-2" role="img" aria-label="Darkest Dungeon II artwork coming soon"><span>Artwork coming soon</span></span>
+      <span class="home-game-copy"><span class="home-game-label">In development</span><strong>Darkest Dungeon II</strong><span class="home-game-description">Heroes, journeys and strategies. Guides coming later.</span><span class="home-coming-status">Coming Soon</span></span>
+    </a>`;
     if (!game.available) return `<article class="home-game-card is-coming" aria-label="${escapeHtml(title)}, coming soon">
       <span class="home-game-art home-game-art--unavailable" aria-hidden="true"><span>Coming Soon</span></span>
       <span class="home-game-copy"><span class="home-game-label">In development</span><strong>${escapeHtml(title)}</strong><span class="home-game-description">Guides for this universe are not available yet.</span><span class="home-coming-status">Coming Soon</span></span>
@@ -202,6 +206,10 @@ function renderGamePreview(game) {
       <div class="league-coming-copy"><p class="home-section-kicker">Coming Soon</p><h1 id="page-title" tabindex="-1">League of Legends</h1><p>League of Legends guides are coming later.</p><a class="league-coming-back" href="#home">← Back to Home</a></div>
     </section></div>`;
   }
+  if (game.id === 'darkest-dungeon-2') return `<div class="portal"><section class="league-coming-page darkest-dungeon-2-coming-page" aria-labelledby="page-title">
+      <figure class="league-coming-art darkest-dungeon-2-coming-art" role="img" aria-label="Darkest Dungeon II artwork coming soon"><span>Artwork coming soon</span></figure>
+      <div class="league-coming-copy"><p class="home-section-kicker">Coming Soon</p><h1 id="page-title" tabindex="-1">Darkest Dungeon II</h1><p>A future guide collection for heroes, skills, journeys, combat and strategies.</p><a class="league-coming-back" href="#home">← Back to Home</a></div>
+    </section></div>`;
   return `<div class="portal"><section class="portal-preview" data-portal-theme="${escapeHtml(game.theme)}">
     <a class="portal-return" href="#home/games">← All game universes</a>
     <div class="portal-scene portal-preview-scene">

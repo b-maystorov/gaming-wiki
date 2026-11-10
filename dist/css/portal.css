@@ -161,6 +161,8 @@ body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
 .home-game-action { display: flex; align-items: center; justify-content: space-between; margin-top: .35rem; padding-top: .65rem; border-top: 1px solid #303944; color: #e7d5a7; font-size: .81rem; font-weight: 700; }
 .home-game-art--unavailable { display: grid; place-items: center; color: #bbc1c8; background: #12171d; }
 .home-game-art--unavailable > span { padding: .42rem .65rem; border: 1px solid #414951; border-radius: 2px; color: #d3d0c6; background: #0b0f14; font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.home-game-art--darkest-dungeon-2 { display: grid; place-items: center; color: #d7c9b5; background: radial-gradient(ellipse at 50% 115%, #422a24 0, #211d1c 42%, #111820 78%); }
+.home-game-art--darkest-dungeon-2 > span { padding: .42rem .65rem; border: 1px solid #54463d; border-radius: 2px; color: #ded1bd; background: #111820b8; font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .home-coming-status { justify-self: start; padding: .3rem .5rem; border: 1px solid #4a5052; border-radius: 2px; color: #c6c4ba; font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
 .home-game-controls { display: flex; gap: .45rem; }
 .home-game-controls button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #46515a; border-radius: 3px; color: #e5d7b6; background: #121820; font: 1.5rem/1 system-ui, sans-serif; cursor: pointer; }
@@ -186,6 +188,8 @@ body.portal-page:has(.home-page) .site-footer::before { background: #c5a867; }
 .league-coming-back { display: inline-flex; align-items: center; min-height: 44px; margin-top: 1.3rem; padding: .55rem .8rem; border: 1px solid #687080; border-radius: 3px; color: #e5d7b6; background: #151b23; font-size: .84rem; font-weight: 650; text-decoration: none; }
 .league-coming-back:hover { border-color: #b49b61; background: #1c242e; color: #fff2d2; }
 .league-coming-back:focus-visible { outline: 2px solid #e0c77f; outline-offset: 3px; }
+.darkest-dungeon-2-coming-art { display: grid; place-items: center; color: #ded1bd; background: radial-gradient(ellipse at 50% 115%, #422a24 0, #211d1c 42%, #111820 78%); }
+.darkest-dungeon-2-coming-art > span { padding: .55rem .8rem; border: 1px solid #54463d; border-radius: 2px; color: #ded1bd; background: #111820b8; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 @media (max-width: 760px) {
   .league-coming-page { grid-template-columns: 1fr; max-width: 620px; }
 }

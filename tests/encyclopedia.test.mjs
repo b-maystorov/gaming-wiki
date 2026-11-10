@@ -502,20 +502,23 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.ok(home.includes('Practical guides, builds, leveling routes and dungeon strategies for the games you love.'));
 
   const cardLinks = [...home.matchAll(/<a class="home-game-card" href="([^"]+)"/g)].map(match => match[1]);
-  assert.deepEqual(cardLinks, ['#game/darkest-dungeon', '#game/world-of-warcraft', '#game/league-of-legends']);
+  assert.deepEqual(cardLinks, ['#game/darkest-dungeon', '#game/world-of-warcraft', '#game/league-of-legends', '#game/darkest-dungeon-2']);
   assert.equal((home.match(/class="home-game-card/g) || []).length, 4, 'all four games share one carousel row');
-  assert.equal((home.match(/class="home-game-card is-coming"/g) || []).length, 1, 'Darkest Dungeon II remains the only noninteractive upcoming card');
+  assert.equal((home.match(/class="home-game-card is-coming"/g) || []).length, 0, 'the upcoming DDII card is a real link');
   assert.ok(home.includes('Darkest Dungeon I') && home.includes('Heroes, bosses, team compositions and expedition planning.'));
   assert.ok(home.includes('World of Warcraft: Forever') && home.includes('Classes, talents, leveling routes and dungeon preparation.'));
   assert.ok(home.includes('Explore Guides'));
   assert.equal(h.app.readRoute(cardLinks[0]).view, 'game');
   assert.equal(h.app.readRoute(cardLinks[1]).view, 'wow-home');
   assert.equal(h.app.readRoute(cardLinks[2]).view, 'preview');
+  assert.equal(h.app.readRoute(cardLinks[3]).view, 'preview');
 
-  const comingSoon = home.match(/<article class="home-game-card is-coming"[\s\S]*?<\/article>/g) || [];
-  assert.equal(comingSoon.length, 1);
-  assert.ok(comingSoon[0].includes('Darkest Dungeon II'));
-  assert.ok(comingSoon.every(card => card.includes('Coming Soon')));
+  const dd2Card = home.match(/<a class="home-game-card" href="#game\/darkest-dungeon-2"[\s\S]*?<\/a>/)?.[0] || '';
+  assert.ok(dd2Card.includes('Darkest Dungeon II'));
+  assert.ok(dd2Card.includes('Coming Soon'));
+  assert.ok(dd2Card.includes('Heroes, journeys and strategies. Guides coming later.'));
+  assert.ok(dd2Card.includes('home-game-art--darkest-dungeon-2'));
+  assert.match(dd2Card, /aria-label="Darkest Dungeon II, coming soon"/);
   assert.ok(!home.includes('home-coming-grid'), 'coming-soon games are integrated into the game row');
   assert.equal(h.app.readRoute('#game/darkest-dungeon-2').view, 'preview');
   assert.match(home, /id="home-game-strip"[^>]*role="region"[^>]*tabindex="0"/);
@@ -559,7 +562,7 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.equal((await readFile(resolve(root, 'dist', leagueArt.src))).subarray(0, 2).toString('hex'), 'ffd8');
 });
 
-test('League of Legends carousel card opens its artwork-led Coming Soon route', () => {
+test('League of Legends and Darkest Dungeon II Coming Soon routes work', () => {
   const home = h.app.renderPage(h.app.readRoute('#home'));
   const leagueCard = home.match(/<a class="home-game-card" href="#game\/league-of-legends"[\s\S]*?<\/a>/)?.[0] || '';
   assert.ok(leagueCard.includes('League of Legends') && leagueCard.includes('Coming Soon'));
@@ -576,9 +579,17 @@ test('League of Legends carousel card opens its artwork-led Coming Soon route', 
   assert.ok(page.includes('assets/images/home/league-of-legends-ahri.jpg'));
   assert.doesNotMatch(page, /tier list|champion guide/i, 'the Coming Soon page adds no League guide content');
 
-  const dd2 = home.match(/<article class="home-game-card is-coming"[\s\S]*?<\/article>/)?.[0] || '';
-  assert.ok(dd2.includes('Darkest Dungeon II'));
-  assert.doesNotMatch(dd2, /<a\b/);
+  const dd2Card = home.match(/<a class="home-game-card" href="#game\/darkest-dungeon-2"[\s\S]*?<\/a>/)?.[0] || '';
+  assert.ok(dd2Card.includes('home-game-art--darkest-dungeon-2'));
+  assert.equal(h.app.readRoute('#game/darkest-dungeon-2').preview.id, 'darkest-dungeon-2');
+  const dd2Page = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon-2'));
+  assert.ok(dd2Page.includes('Darkest Dungeon II artwork coming soon'));
+  assert.ok(dd2Page.includes('id="page-title"') && dd2Page.includes('Darkest Dungeon II'));
+  assert.ok(dd2Page.includes('Coming Soon'));
+  assert.ok(dd2Page.includes('A future guide collection for heroes, skills, journeys, combat and strategies.'));
+  assert.match(dd2Page, /href="#home"[^>]*>← Back to Home<\/a>/);
+  assert.doesNotMatch(dd2Page, /assets\/images\/home\/(?:darkest-dungeon-i|wow-classic|league-of-legends)/);
+  assert.doesNotMatch(dd2Page, /hero guide|build guide|skill guide/i, 'the preview does not add gameplay guides');
 });
 
 for (const failure of ['network', 'http', 'json', 'shape']) {

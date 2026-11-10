@@ -15,7 +15,8 @@ export const portalGames = [
     categories: ['Champions', 'Roles', 'Builds', 'Items', 'Team Compositions'] },
   { id: 'darkest-dungeon-2', name: 'Darkest Dungeon II', theme: 'ember', motif: 'horizon', label: 'Beyond the ruin',
     available: false, action: 'Explore the preview', href: '#game/darkest-dungeon-2',
-    description: 'Follow the embers into the unknown. Preview a future field guide to heroes and the journey ahead.',
+    description: 'A future guide collection for heroes, skills, journeys, combat and strategies.',
+    homeDescription: 'Heroes, journeys and strategies. Guides coming later.',
     categories: ['Heroes', 'Paths', 'Combat', 'Trinkets', 'Expeditions'] }
 ];
 
