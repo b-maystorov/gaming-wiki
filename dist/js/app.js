@@ -10,6 +10,7 @@ import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
 import { renderWowPage, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
 import { renderWowDungeonPrep, loadDungeonPrepProgress, saveDungeonPrepProgress, setDungeonPrepFaction, setDungeonPrepLevel } from './wow-dungeon-prep.js';
+import { initializeSiteNavigation } from './site-navigation.js';
 
 let structuredGameContent = null;
 try {
@@ -1605,7 +1606,7 @@ function renderPage(route) {
 }
 
 function updateNavigation(route) {
-  const activePage = route.game ? 'game' : route.view.startsWith('wow-') ? 'wow' : route.preview || route.library ? 'universes' : route.view;
+  const activePage = route.game || route.view.startsWith('wow-') ? 'guides' : route.preview || route.library ? 'universes' : route.view;
   document.querySelectorAll('[data-site-page]').forEach(link => {
     const active = link.dataset.sitePage === activePage;
     if (active) link.setAttribute('aria-current', 'location');
@@ -2178,6 +2179,7 @@ document.addEventListener('change', event => {
   if (event.target.id === 'encyclopedia-filter' || event.target.matches('[data-encyclopedia-filter]')) filterEncyclopedia();
   if (['team-region-filter', 'team-boss-filter', 'team-category-filter'].includes(event.target.id)) filterTeamCompositions();
 });
+initializeSiteNavigation();
 initializeHeroGallery(main, heroes);
 
 // Reuse the router, including its same-route focus/scroll behavior.

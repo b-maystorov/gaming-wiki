@@ -15,11 +15,24 @@
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="#home"><span class="portal-header-brand"><img src="assets/images/bm-mark.svg" width="38" height="38" alt=""><span>BM <span class="brand-detail">Gaming Wiki</span></span></span></a>
-    <nav class="site-nav" aria-label="Main navigation">
-      <a href="#home/games" data-site-page="universes">Universes</a>
-    </nav>
-    <div class="header-tools"><span class="header-status"><span aria-hidden="true"></span>2 active wikis</span><button id="open-command-center" class="command-trigger" type="button" aria-label="Search the wiki" aria-haspopup="dialog" aria-controls="command-center" aria-keyshortcuts="/" title="Search the wiki"><span class="search-symbol" aria-hidden="true"></span><span class="command-trigger-label">Search</span></button></div>
+    <div id="site-header-inner" class="site-header-inner">
+      <a class="brand" href="#home"><span class="portal-header-brand"><img src="assets/images/bm-mark.svg" width="38" height="38" alt=""><span>BM <span class="brand-detail">Gaming Wiki</span></span></span></a>
+      <button id="mobile-navigation-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
+      <nav id="primary-navigation" class="site-nav" aria-label="Main navigation">
+        <details id="universes-menu" class="universes-menu">
+          <summary data-site-page="universes" aria-haspopup="true" aria-controls="universes-dropdown" aria-expanded="false">Universes <span class="universes-chevron" aria-hidden="true">⌄</span></summary>
+          <div id="universes-dropdown" class="universes-dropdown">
+            <a href="#game/darkest-dungeon"><span>Darkest Dungeon I</span><small>Guides available</small></a>
+            <a href="#game/world-of-warcraft"><span>World of Warcraft: Forever</span><small>Guides available</small></a>
+            <a href="#game/league-of-legends"><span>League of Legends</span><small>In development</small></a>
+            <a href="#game/darkest-dungeon-2"><span>Darkest Dungeon II</span><small>In development</small></a>
+          </div>
+        </details>
+        <a href="#game/world-of-warcraft" data-site-page="guides">Guides</a>
+        <a class="site-nav-github" href="https://github.com/b-maystorov/gaming-wiki" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="header-tools"><button id="open-command-center" class="command-trigger" type="button" aria-label="Search the wiki" aria-haspopup="dialog" aria-controls="command-center" aria-keyshortcuts="/" title="Search the wiki"><span class="search-symbol" aria-hidden="true"></span><span class="command-trigger-label">Search</span></button></div>
+    </div>
   </header>
   <dialog id="command-center" class="command-center" aria-labelledby="command-title" aria-describedby="command-hints">
     <div class="command-heading"><div><img src="assets/images/bm-mark.svg" width="34" height="34" alt=""><div><p>BM Gaming Wiki</p><h2 id="command-title">Command Center</h2></div></div><button id="close-command-center" type="button" aria-label="Close search">×</button></div>

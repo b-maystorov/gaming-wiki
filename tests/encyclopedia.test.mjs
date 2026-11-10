@@ -535,10 +535,18 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.doesNotMatch(home, /data-preview-game|game-showcase|portal-hero-vista|portal-selectors|data-explore-games/);
 
   const shell = await readFile(resolve(root, 'dist/index.html'), 'utf8');
-  const mainNavigation = shell.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)?.[0] || '';
-  assert.equal((mainNavigation.match(/<a\b/g) || []).length, 1);
-  assert.match(mainNavigation, /href="#home\/games"[^>]*>Universes<\/a>/);
-  assert.doesNotMatch(mainNavigation, /Darkest Dungeon|WoW: Forever|Dungeons/);
+  const mainNavigation = shell.match(/<nav\b[^>]*class="site-nav"[\s\S]*?<\/nav>/)?.[0] || '';
+  assert.equal((mainNavigation.match(/<a\b/g) || []).length, 6, 'dropdown lists four games plus Guides and GitHub');
+  assert.match(mainNavigation, /<details id="universes-menu" class="universes-menu">[\s\S]*?<summary[^>]*data-site-page="universes"[^>]*>Universes/);
+  for (const [target, name] of [['darkest-dungeon', 'Darkest Dungeon I'], ['world-of-warcraft', 'World of Warcraft: Forever'], ['league-of-legends', 'League of Legends'], ['darkest-dungeon-2', 'Darkest Dungeon II']]) {
+    assert.ok(mainNavigation.includes(`href="#game/${target}"`) && mainNavigation.includes(name), `${name} appears in the dropdown`);
+    assert.notEqual(h.app.readRoute(`#game/${target}`).view, 'missing', `${name} route remains valid`);
+  }
+  assert.match(mainNavigation, /href="#game\/world-of-warcraft" data-site-page="guides">Guides<\/a>/);
+  assert.equal(h.app.readRoute('#game/world-of-warcraft').view, 'wow-home', 'Guides opens the existing guide directory');
+  assert.match(mainNavigation, /href="https:\/\/github\.com\/b-maystorov\/gaming-wiki"/);
+  assert.doesNotMatch(mainNavigation, /discord/i, 'Discord is omitted because no project URL is configured');
+  assert.match(shell, /id="mobile-navigation-toggle"[^>]*aria-expanded="false"[^>]*aria-controls="primary-navigation"/);
   assert.match(shell, /class="command-trigger-label">Search<\/span>/);
   const searchTrigger = shell.match(/<button id="open-command-center"[^>]*>[\s\S]*?<\/button>/)?.[0] || '';
   assert.match(searchTrigger, /aria-controls="command-center"/);
@@ -548,6 +556,10 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.doesNotMatch(searchTrigger, /<kbd|>\/</, 'the visual slash badge is removed');
   assert.match(searchTrigger, /title="Search the wiki"/);
   const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  assert.match(portalStyles, /\.site-header\s*\{[^}]*background:#0b101b/);
+  assert.match(portalStyles, /\.universes-dropdown\s*\{[^}]*position:absolute/);
+  assert.match(portalStyles, /@media\(max-width:760px\)[\s\S]*?\.site-header-inner\[data-menu-open="true"\] \.site-nav\s*\{\s*display:flex/);
+  assert.match(portalStyles, /\.site-header a:focus-visible, \.site-header summary:focus-visible, \.mobile-nav-toggle:focus-visible/);
   assert.match(portalStyles, /scroll-snap-type:\s*x mandatory/);
   assert.match(portalStyles, /grid-auto-flow:\s*column/);
   assert.match(portalStyles, /\.home-game-art > img\s*\{[^}]*object-fit:\s*cover/);
@@ -619,6 +631,57 @@ test('League of Legends and Darkest Dungeon II Coming Soon routes work', () => {
   assert.ok(dd2Page.includes('A future guide collection for heroes, skills, journeys, combat and strategies.'));
   assert.match(dd2Page, /href="#home"[^>]*>← Back to Home<\/a>/);
   assert.doesNotMatch(dd2Page, /hero guide|build guide|skill guide/i, 'the preview does not add gameplay guides');
+});
+
+test('global navigation dropdown and mobile menu support dismissal and focus return', async () => {
+  const navigationModule = h.modules.get(resolve(root, 'dist/js/site-navigation.js')).namespace;
+  const makeElement = () => ({
+    dataset: {}, attributes: {}, listeners: {}, open: false, focused: false,
+    addEventListener(type, callback) { this.listeners[type] = callback; },
+    setAttribute(name, value) { this.attributes[name] = value; },
+    focus() { this.focused = true; },
+    contains(target) { return target === this || (this.children || []).includes(target); }
+  });
+  const header = makeElement();
+  const navigation = makeElement();
+  const menuToggle = makeElement();
+  const dropdown = makeElement();
+  const summary = makeElement();
+  const dropdownLink = makeElement();
+  const navLink = makeElement();
+  navLink.closest = selector => selector === 'a' ? navLink : null;
+  dropdown.children = [summary, dropdownLink];
+  navigation.children = [dropdown, navLink];
+  dropdown.querySelector = selector => selector === 'summary' ? summary : null;
+  const documentListeners = {};
+  const documentObject = {
+    getElementById(id) { return ({ 'site-header-inner': header, 'primary-navigation': navigation, 'mobile-navigation-toggle': menuToggle, 'universes-menu': dropdown })[id]; },
+    addEventListener(type, callback) { documentListeners[type] = callback; }
+  };
+
+  assert.equal(navigationModule.initializeSiteNavigation(documentObject), true);
+  dropdown.open = true;
+  dropdown.listeners.toggle();
+  assert.equal(summary.attributes['aria-expanded'], 'true', 'native disclosure state is reflected to assistive tech');
+  documentListeners.keydown({ key: 'Escape' });
+  assert.equal(dropdown.open, false, 'Escape closes the dropdown');
+  assert.equal(summary.focused, true, 'Escape returns focus to the dropdown trigger');
+
+  dropdown.open = true;
+  documentListeners.click({ target: makeElement() });
+  assert.equal(dropdown.open, false, 'outside click closes the dropdown');
+  menuToggle.listeners.click();
+  assert.equal(header.dataset.menuOpen, 'true');
+  assert.equal(menuToggle.attributes['aria-expanded'], 'true');
+  documentListeners.keydown({ key: 'Escape' });
+  assert.equal(header.dataset.menuOpen, 'false', 'Escape closes the mobile menu');
+  assert.equal(menuToggle.focused, true, 'Escape returns focus to the mobile menu button');
+
+  menuToggle.listeners.click();
+  dropdown.open = true;
+  navigation.listeners.click({ target: navLink });
+  assert.equal(dropdown.open, false, 'following a game link closes the dropdown');
+  assert.equal(header.dataset.menuOpen, 'false', 'following a game link closes the mobile menu');
 });
 
 test('global footer links, project information routes, logo, and background rails are available', async () => {
