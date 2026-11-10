@@ -689,6 +689,99 @@ test('global navigation dropdown and mobile menu support dismissal and focus ret
   assert.equal(header.dataset.menuOpen, 'false', 'following a game link closes the mobile menu');
 });
 
+test('global utility controls offer truthful dialogs, existing search and implemented milestone routes', async () => {
+  const shell = await readFile(resolve(root, 'dist/index.html'), 'utf8');
+  assert.match(shell, /<\/header>\s*<nav id="site-utility-bar"/, 'utilities immediately follow the main header');
+  const utilities = shell.match(/<nav id="site-utility-bar"[\s\S]*?<\/nav>/)?.[0] || '';
+  const controls = [...utilities.matchAll(/<button\b[\s\S]*?<\/button>/g)].map(match => match[0]);
+  assert.equal(controls.length, 4);
+  for (const [index, label] of ['Download App', 'Discord', 'Database', 'Updates'].entries()) {
+    assert.ok(controls[index].includes(`<span>${label}</span>`), label);
+    assert.match(controls[index], /type="button"[^>]*aria-haspopup="dialog"/);
+    assert.match(controls[index], /<svg[^>]*aria-hidden="true"/);
+  }
+  assert.match(controls[2], /aria-controls="command-center"/, 'Database reuses real wiki search');
+  const dialog = shell.match(/<dialog id="utility-dialog"[\s\S]*?<\/dialog>/)?.[0] || '';
+  assert.match(dialog, /aria-labelledby="utility-title"/);
+  assert.match(dialog, /data-utility-content="app"[\s\S]*?Coming Soon[\s\S]*?no app to download yet/);
+  assert.match(dialog, /Community Coming Soon[\s\S]*?invite has not been configured/);
+  assert.doesNotMatch(utilities + dialog, /\bdownload=|discord\.gg|discord\.com\/invite|\bdatetime=/, 'no download, invite or release date is invented');
+  const updates = dialog.match(/<ul class="utility-updates">[\s\S]*?<\/ul>/)?.[0] || '';
+  assert.equal((updates.match(/<li>/g) || []).length, 3);
+  assert.ok(pack.bosses.length && pack.enemies.length && pack.curios.length, 'the encyclopedia milestone has actual reference data');
+  assert.ok(wowPack.classes.length && wowClientData.races.length && wowClientData.classes.length, 'the WoW milestone has actual class, race and talent data');
+  const announcement = shell.match(/<aside class="site-announcement"[\s\S]*?<\/aside>/)?.[0] || '';
+  assert.match(announcement, /Explore Guides/);
+  for (const [, href] of (updates + announcement).matchAll(/href="(#[^"]+)"/g)) {
+    const route = h.app.readRoute(href);
+    assert.notEqual(route.view, 'missing', href);
+    assert.doesNotMatch(h.app.renderPage(route), /Page not found/, href);
+  }
+});
+
+test('utility dialogs dismiss, restore focus and let update links navigate; Database opens existing search', () => {
+  const utilityModule = h.modules.get(resolve(root, 'dist/js/utility-bar.js')).namespace;
+  let activeElement = null;
+  const makeElement = (dataset = {}) => ({
+    dataset, listeners: {}, hidden: true, isConnected: true,
+    addEventListener(type, callback) { this.listeners[type] = callback; },
+    focus() { activeElement = this; }
+  });
+  const triggers = ['app', 'community', 'updates'].map(utilityPanel => makeElement({ utilityPanel }));
+  const titles = ['Download App', 'Community Coming Soon', 'Project Updates'];
+  const panels = triggers.map((trigger, index) => makeElement({ utilityContent: trigger.dataset.utilityPanel, utilityTitle: titles[index] }));
+  const updateLinks = [makeElement(), makeElement(), makeElement()];
+  panels.forEach((panel, index) => { panel.querySelectorAll = () => index === 2 ? updateLinks : []; });
+  const bar = { querySelectorAll: () => triggers };
+  const dialog = Object.assign(makeElement(), {
+    open: false,
+    querySelectorAll: () => panels,
+    showModal() { this.open = true; },
+    close() { this.open = false; this.listeners.close(); }
+  });
+  const title = makeElement();
+  const closeButton = makeElement();
+  const databaseButton = makeElement();
+  const bodyClasses = new Set();
+  const documentObject = {
+    get activeElement() { return activeElement; },
+    getElementById: id => ({ 'site-utility-bar': bar, 'utility-dialog': dialog, 'utility-title': title, 'close-utility-dialog': closeButton, 'utility-database': databaseButton })[id],
+    body: { classList: { add: name => bodyClasses.add(name), remove: name => bodyClasses.delete(name) } }
+  };
+  let searchOpener = null;
+  assert.equal(utilityModule.initializeUtilityBar({ documentObject, openSearch() { searchOpener = activeElement; } }), true);
+  for (const [index, trigger] of triggers.entries()) {
+    trigger.listeners.click();
+    assert.equal(dialog.open, true);
+    assert.equal(title.textContent, titles[index]);
+    assert.deepEqual(panels.map(panel => panel.hidden), panels.map((_, panelIndex) => panelIndex !== index));
+    assert.equal(activeElement, closeButton, 'the modal has a focused close control');
+    let tabPrevented = false;
+    dialog.listeners.keydown({ key: 'Tab', shiftKey: true, preventDefault() { tabPrevented = true; } });
+    assert.equal(tabPrevented, true, 'Shift+Tab stays inside the active modal');
+    assert.equal(activeElement, index === 2 ? updateLinks.at(-1) : closeButton);
+    dialog.listeners.keydown({ key: 'Tab', shiftKey: false, preventDefault() {} });
+    assert.equal(activeElement, closeButton, 'Tab wraps to the close control from the last visible link');
+    if (index === 0) {
+      let prevented = false;
+      dialog.listeners.cancel({ preventDefault() { prevented = true; } });
+      assert.equal(prevented, true, 'native Escape/cancel uses the same dismissal and cleanup');
+    } else closeButton.listeners.click();
+    assert.equal(dialog.open, false);
+    assert.equal(activeElement, trigger, 'dismissal returns focus to the control that opened the modal');
+    assert.equal(bodyClasses.size, 0, 'closing never leaves page scrolling locked');
+  }
+  triggers[2].listeners.click();
+  const destinationHeading = makeElement();
+  destinationHeading.focus();
+  dialog.listeners.click({ target: { closest: () => ({ href: '#game/world-of-warcraft' }) } });
+  assert.equal(dialog.open, false, 'following an update link dismisses the panel');
+  assert.equal(activeElement, destinationHeading, 'link navigation does not restore focus to the old opener');
+  assert.equal(bodyClasses.size, 0);
+  databaseButton.listeners.click();
+  assert.equal(searchOpener, databaseButton, 'existing search receives the Database button as its focus-return target');
+});
+
 test('global footer links, project information routes, logo, and background rails are available', async () => {
   const shell = await readFile(resolve(root, 'dist/index.html'), 'utf8');
   const footer = shell.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)?.[0] || '';

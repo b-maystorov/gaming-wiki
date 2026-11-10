@@ -203,5 +203,5 @@ export function initializeCommandCenter({ navigate, bosses = [], content = null 
       open();
     }
   });
-  return { close };
+  return { open, close };
 }

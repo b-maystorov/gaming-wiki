@@ -11,6 +11,7 @@ import { loadStructuredGameContent } from './content-adapter.js';
 import { renderWowPage, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
 import { renderWowDungeonPrep, loadDungeonPrepProgress, saveDungeonPrepProgress, setDungeonPrepFaction, setDungeonPrepLevel } from './wow-dungeon-prep.js';
 import { initializeSiteNavigation } from './site-navigation.js';
+import { initializeUtilityBar } from './utility-bar.js';
 
 let structuredGameContent = null;
 try {
@@ -2191,4 +2192,5 @@ const commandCenter = initializeCommandCenter({
     else location.hash = href;
   }
 });
+initializeUtilityBar({ openSearch: commandCenter.open });
 showRoute();
