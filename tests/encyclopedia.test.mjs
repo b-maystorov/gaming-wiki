@@ -585,7 +585,7 @@ test('homepage features direct game routes and records its local game artwork', 
   const wowHome = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft'));
   assert.match(wowHome, /class="wow-home-hero-art"[^>]*><img src="assets\/images\/wow-forever\/wow-forever-banner\.png"[^>]*width="860" height="484"/);
   assert.match(portalStyles, /\.wow-home-hero-art\s*\{[^}]*display:block[^}]*z-index:0/);
-  assert.match(portalStyles, /\.wow-home-hero-art img\s*\{[^}]*visibility:visible[^}]*height:auto[^}]*object-fit:contain/);
+  assert.match(portalStyles, /\.wow-home-hero-art img\s*\{[^}]*visibility:visible[^}]*height:100%[^}]*object-fit:contain/);
   assert.equal(leagueArt.width / leagueArt.height, 16 / 9);
   assert.equal(leagueArt.sourceFileName, 'Ahri_0.jpg');
   assert.match(leagueArt.usageStatus, /not been independently verified/i);
@@ -1355,22 +1355,29 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.equal(homeArt.usageStatus, 'User-provided; redistribution rights unverified.');
   assert.ok(landing.includes(`<img src="${homeArt.src}" alt="${homeArt.alt}" width="860" height="484"`), 'landing renders the image at its native aspect ratio');
   const heroStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
-  assert.ok(heroStyles.includes('.wow-home-hero-art img { display:block; visibility:visible; width:100%; max-width:860px; height:auto; object-fit:contain; }'));
+  assert.ok(heroStyles.includes('.wow-home-hero-art img { display:block; visibility:visible; width:100%; height:100%; object-fit:contain; }'));
   assert.ok(landing.includes('<h1 id="page-title" tabindex="-1">World of Warcraft: Forever</h1>'));
   assert.ok(landing.includes('Your adventure across Azeroth starts here.'));
   assert.ok(landing.includes('Explore Classes') && landing.includes('Continue My Journey'));
   assert.ok(landing.includes('href="#game/world-of-warcraft/classes"'), 'Explore Classes remains a working route');
   assert.ok(landing.includes('href="#game/world-of-warcraft/my-journey"'), 'Continue My Journey remains a working route');
   assert.ok(!landing.includes('wow-scene') && !landing.includes('wow-moon'), 'old ambient circles are omitted from the landing hero');
+  assert.ok(!landing.includes('<nav class="wow-nav"'), 'the redundant in-game navigation row is omitted from the landing page');
   for (const destination of ['classes', 'races', 'talent-planner', 'leveling', 'dungeons-raids', 'tier-lists']) {
     const target = `#game/world-of-warcraft/${destination}`;
     assert.ok(landing.includes(`href="${target}"`), `landing directory links to ${destination}`);
     assert.notEqual(route(target).view, 'missing', `${destination} route resolves`);
   }
-  assert.equal((landing.match(/class="wow-home-destination"/g) || []).length, 6, 'landing has six focused directory cards');
+  const destinationCards = [...landing.matchAll(/<a class="wow-home-destination" href="([^"]+)"[\s\S]*?<\/a>/g)];
+  assert.equal(destinationCards.length, 6, 'landing has six full-card guide links');
+  for (const [, target] of destinationCards) assert.notEqual(route(target).view, 'missing', `${target} resolves`);
+  assert.equal((landing.match(/class="wow-home-destination-icon-img"/g) || []).length, 6, 'each card has a local game icon');
+  for (const [, iconPath] of landing.matchAll(/class="wow-home-destination-icon-img" src="([^"]+)"/g)) assert.ok(await readFile(resolve(root, 'dist', iconPath)), `${iconPath} exists locally`);
+  assert.equal((landing.match(/class="wow-home-destination-action"/g) || []).length, 6, 'each card has a visible Explore action');
+  assert.ok(!landing.includes('wow-home-destination-number'), 'guide cards have no generic numbered labels');
   const classOverview = render(route('#game/world-of-warcraft/classes'));
-  assert.ok(classOverview.includes(`<img class="wow-banner-art" src="${homeArt.src}" alt="" aria-hidden="true" width="860" height="484">`), 'the supplied WoW banner is reused in game-page headers');
-  assert.ok(heroStyles.includes('.wow-banner-art { position:absolute; z-index:0;') && heroStyles.includes('pointer-events:none;'), 'shared banner artwork stays behind and cannot block page navigation');
+  assert.ok(classOverview.includes('<nav class="wow-nav"'), 'other WoW pages retain their navigation row');
+  assert.ok(!classOverview.includes('wow-banner-art'), 'landing artwork is scoped to the WoW landing hero');
   const classCardArt = wowArtwork.records.filter(record => record.kind === 'class-card');
   assert.equal(classCardArt.length, 9, 'each documented class has dedicated overview art');
   for (const item of wowPack.classes) {
