@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "gameId": "darkest-dungeon-2",
+  "records": [
+    {
+      "id": "darkest-dungeon-2:homepage:featured",
+      "kind": "homepage",
+      "src": "assets/images/home/darkest-dungeon-2.png",
+      "alt": "Darkest Dungeon II promotional artwork provided for the homepage.",
+      "width": 1600,
+      "height": 900,
+      "originalWidth": 860,
+      "originalHeight": 484,
+      "sourceUrl": null,
+      "sourceFileName": "darkest-dungeon-2.png",
+      "sourcePage": "User-provided local asset; external source not supplied.",
+      "provenance": "User-provided image at dist/assets/images/home/darkest-dungeon-2.png. Displayed locally without image re-encoding.",
+      "usageStatus": "User-provided; redistribution rights unverified.",
+      "usage": "No independent permission or redistribution license is asserted."
+    }
+  ]
+}

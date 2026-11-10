@@ -31,6 +31,7 @@ const darkestDungeonArtwork = await loadArtworkManifest();
 let wowData = null;
 let wowArtwork = null;
 let leagueArtwork = null;
+let darkestDungeon2Artwork = null;
 let wowClientData = null;
 let wowGuidedData = null;
 let wowDungeonPrep = null;
@@ -61,6 +62,13 @@ try {
   leagueArtwork = await leagueArtworkResponse.json();
 } catch (error) {
   console.error('Could not load League of Legends artwork:', error);
+}
+try {
+  const darkestDungeon2ArtworkResponse = await fetch('./data/games/darkest-dungeon-2-artwork.json');
+  if (!darkestDungeon2ArtworkResponse.ok) throw new Error(`Darkest Dungeon II artwork request failed: ${darkestDungeon2ArtworkResponse.status}`);
+  darkestDungeon2Artwork = await darkestDungeon2ArtworkResponse.json();
+} catch (error) {
+  console.error('Could not load Darkest Dungeon II artwork:', error);
 }
 try {
   const clientDataResponse = await fetch('./data/games/world-of-warcraft-forever-client-data.json');
@@ -152,7 +160,9 @@ function renderHome() {
       ? darkestDungeonArtwork?.homepageArtwork?.primary
       : game.id === 'world-of-warcraft'
         ? wowArtwork?.records.find(record => record.id === 'wow-forever:homepage:featured')
-        : leagueArtwork?.records?.find(record => record.id === 'league-of-legends:homepage:featured');
+        : game.id === 'league-of-legends'
+          ? leagueArtwork?.records?.find(record => record.id === 'league-of-legends:homepage:featured')
+          : darkestDungeon2Artwork?.records?.find(record => record.id === 'darkest-dungeon-2:homepage:featured');
     const title = game.homeTitle || game.name;
     if (game.id === 'league-of-legends') return `<a class="home-game-card" href="${escapeHtml(game.href)}" aria-label="League of Legends, coming soon">
       <span class="home-game-art" data-home-art>
@@ -162,7 +172,10 @@ function renderHome() {
       <span class="home-game-copy"><span class="home-game-label">In development</span><strong>League of Legends</strong><span class="home-game-description">League guides are coming later.</span><span class="home-coming-status">Coming Soon</span></span>
     </a>`;
     if (game.id === 'darkest-dungeon-2') return `<a class="home-game-card" href="${escapeHtml(game.href)}" aria-label="Darkest Dungeon II, coming soon">
-      <span class="home-game-art home-game-art--darkest-dungeon-2" role="img" aria-label="Darkest Dungeon II artwork coming soon"><span>Artwork coming soon</span></span>
+      <span class="home-game-art" data-home-art>
+        <img data-home-art-image src="${escapeHtml(artwork?.src || '')}" alt="${escapeHtml(artwork?.alt || 'Darkest Dungeon II artwork unavailable')}" width="1600" height="900" loading="lazy">
+        <span data-home-art-fallback hidden>Artwork unavailable</span>
+      </span>
       <span class="home-game-copy"><span class="home-game-label">In development</span><strong>Darkest Dungeon II</strong><span class="home-game-description">Heroes, journeys and strategies. Guides coming later.</span><span class="home-coming-status">Coming Soon</span></span>
     </a>`;
     if (!game.available) return `<article class="home-game-card is-coming" aria-label="${escapeHtml(title)}, coming soon">
@@ -206,10 +219,16 @@ function renderGamePreview(game) {
       <div class="league-coming-copy"><p class="home-section-kicker">Coming Soon</p><h1 id="page-title" tabindex="-1">League of Legends</h1><p>League of Legends guides are coming later.</p><a class="league-coming-back" href="#home">← Back to Home</a></div>
     </section></div>`;
   }
-  if (game.id === 'darkest-dungeon-2') return `<div class="portal"><section class="league-coming-page darkest-dungeon-2-coming-page" aria-labelledby="page-title">
-      <figure class="league-coming-art darkest-dungeon-2-coming-art" role="img" aria-label="Darkest Dungeon II artwork coming soon"><span>Artwork coming soon</span></figure>
+  if (game.id === 'darkest-dungeon-2') {
+    const artwork = darkestDungeon2Artwork?.records?.find(record => record.id === 'darkest-dungeon-2:homepage:featured');
+    return `<div class="portal"><section class="league-coming-page darkest-dungeon-2-coming-page" aria-labelledby="page-title">
+      <figure class="league-coming-art" data-home-art>
+        <img data-home-art-image src="${escapeHtml(artwork?.src || '')}" alt="${escapeHtml(artwork?.alt || 'Darkest Dungeon II artwork unavailable')}" width="1600" height="900">
+        <span data-home-art-fallback hidden>Artwork unavailable</span>
+      </figure>
       <div class="league-coming-copy"><p class="home-section-kicker">Coming Soon</p><h1 id="page-title" tabindex="-1">Darkest Dungeon II</h1><p>A future guide collection for heroes, skills, journeys, combat and strategies.</p><a class="league-coming-back" href="#home">← Back to Home</a></div>
     </section></div>`;
+  }
   return `<div class="portal"><section class="portal-preview" data-portal-theme="${escapeHtml(game.theme)}">
     <a class="portal-return" href="#home/games">← All game universes</a>
     <div class="portal-scene portal-preview-scene">

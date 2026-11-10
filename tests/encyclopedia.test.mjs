@@ -10,6 +10,7 @@ const pack = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-du
 const wowPack = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8'));
 const wowArtwork = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8'));
 const leagueArtwork = JSON.parse(await readFile(resolve(root, 'dist/data/games/league-of-legends-artwork.json'), 'utf8'));
+const darkestDungeon2Artwork = JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-dungeon-2-artwork.json'), 'utf8'));
 const wowClientData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8'));
 const wowGuidedData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8'));
 const dungeonPrepData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-dungeon-prep.json'), 'utf8'));
@@ -33,6 +34,7 @@ async function harness(failure = null, storageMode = 'available') {
       if (String(url).endsWith('world-of-warcraft-forever.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8')) };
       if (String(url).endsWith('league-of-legends-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/league-of-legends-artwork.json'), 'utf8')) };
+      if (String(url).endsWith('darkest-dungeon-2-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/darkest-dungeon-2-artwork.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-client-data.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-guided-builds.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-dungeon-prep.json')) return { ok: true, json: async () => structuredClone(dungeonPrepData) };
@@ -517,7 +519,13 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.ok(dd2Card.includes('Darkest Dungeon II'));
   assert.ok(dd2Card.includes('Coming Soon'));
   assert.ok(dd2Card.includes('Heroes, journeys and strategies. Guides coming later.'));
-  assert.ok(dd2Card.includes('home-game-art--darkest-dungeon-2'));
+  const dd2Art = darkestDungeon2Artwork.records.find(record => record.id === 'darkest-dungeon-2:homepage:featured');
+  assert.ok(dd2Art, 'the DDII homepage artwork has a dedicated manifest record');
+  assert.ok(dd2Card.includes(dd2Art.src));
+  assert.ok(await readFile(resolve(root, 'dist', dd2Art.src)), 'the user-provided artwork exists locally');
+  assert.equal(dd2Art.sourceFileName, 'darkest-dungeon-2.png');
+  assert.match(dd2Art.provenance, /user-provided/i);
+  assert.match(dd2Art.usageStatus, /redistribution rights unverified/i);
   assert.match(dd2Card, /aria-label="Darkest Dungeon II, coming soon"/);
   assert.ok(!home.includes('home-coming-grid'), 'coming-soon games are integrated into the game row');
   assert.equal(h.app.readRoute('#game/darkest-dungeon-2').view, 'preview');
@@ -536,6 +544,8 @@ test('homepage features direct game routes and records its local game artwork', 
   const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
   assert.match(portalStyles, /scroll-snap-type:\s*x mandatory/);
   assert.match(portalStyles, /grid-auto-flow:\s*column/);
+  assert.match(portalStyles, /\.home-game-art > img\s*\{[^}]*object-fit:\s*cover/);
+  assert.match(portalStyles, /\.league-coming-art img\s*\{[^}]*object-fit:\s*cover/);
   const appSource = await readFile(resolve(root, 'dist/js/app.js'), 'utf8');
   assert.match(appSource, /data-home-games-scroll/);
   assert.match(appSource, /strip\.scrollBy/);
@@ -580,15 +590,14 @@ test('League of Legends and Darkest Dungeon II Coming Soon routes work', () => {
   assert.doesNotMatch(page, /tier list|champion guide/i, 'the Coming Soon page adds no League guide content');
 
   const dd2Card = home.match(/<a class="home-game-card" href="#game\/darkest-dungeon-2"[\s\S]*?<\/a>/)?.[0] || '';
-  assert.ok(dd2Card.includes('home-game-art--darkest-dungeon-2'));
+  assert.ok(dd2Card.includes('assets/images/home/darkest-dungeon-2.png'));
   assert.equal(h.app.readRoute('#game/darkest-dungeon-2').preview.id, 'darkest-dungeon-2');
   const dd2Page = h.app.renderPage(h.app.readRoute('#game/darkest-dungeon-2'));
-  assert.ok(dd2Page.includes('Darkest Dungeon II artwork coming soon'));
+  assert.ok(dd2Page.includes('assets/images/home/darkest-dungeon-2.png'));
   assert.ok(dd2Page.includes('id="page-title"') && dd2Page.includes('Darkest Dungeon II'));
   assert.ok(dd2Page.includes('Coming Soon'));
   assert.ok(dd2Page.includes('A future guide collection for heroes, skills, journeys, combat and strategies.'));
   assert.match(dd2Page, /href="#home"[^>]*>← Back to Home<\/a>/);
-  assert.doesNotMatch(dd2Page, /assets\/images\/home\/(?:darkest-dungeon-i|wow-classic|league-of-legends)/);
   assert.doesNotMatch(dd2Page, /hero guide|build guide|skill guide/i, 'the preview does not add gameplay guides');
 });
 
