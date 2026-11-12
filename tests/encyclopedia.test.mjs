@@ -1780,27 +1780,34 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.equal(render(route('#game/world-of-warcraft/leveling')).includes('Levels null'), false);
 });
 
-test('Explore Azeroth uses local scene images and original game-icon panels without substitute illustrations', async () => {
+test('Explore Azeroth uses a unique scene and quiet fallbacks without collages or duplicate banners', async () => {
   const landing = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft'));
   const cards = [...landing.matchAll(/<a class="wow-home-destination" href="([^"]+)"[\s\S]*?<\/a>/g)];
   assert.equal(cards.length, 6);
   const scenes = [];
-  const panelSizes = [];
+  let backgroundOnlyCards = 0;
   for (const [card] of cards) {
-    assert.match(card, /class="wow-home-destination-media"[^>]*aria-hidden="true"/, 'visual panels are decorative; the original title names the link');
-    assert.match(card, /class="wow-home-destination-heading"[\s\S]*?class="wow-home-destination-icon"[\s\S]*?<h3>/, 'the original icon sits beside the title below the media');
+    assert.match(card, /class="wow-home-destination-heading"[\s\S]*?class="wow-home-destination-icon"[\s\S]*?<h3>/, 'the original supporting icon stays beside the title');
     assert.equal((card.match(/class="wow-home-destination-icon-img"/g) || []).length, 1);
     const scene = card.match(/class="wow-home-destination-scene" src="([^"]+)"/);
-    if (scene) scenes.push(scene[1]);
-    else panelSizes.push((card.match(/class="wow-home-media-icon"/g) || []).length);
+    assert.ok((card.match(/class="wow-home-destination-scene"/g) || []).length <= 1, 'each card has at most one main image');
+    if (scene) {
+      scenes.push(scene[1]);
+      assert.match(card, /class="wow-home-destination-media"[^>]*aria-hidden="true"/, 'the scene is decorative; the title names the link');
+    } else {
+      backgroundOnlyCards += 1;
+      assert.doesNotMatch(card, /class="wow-home-destination-media"/, 'fallback cards do not reserve an empty image panel');
+    }
     for (const [, path] of card.matchAll(/<img[^>]*src="([^"]+)"/g)) {
       assert.match(path, /^assets\/images\/(home|wow-forever)\/.*\.(png|jpg)$/);
       assert.ok((await readFile(resolve(root, 'dist', path))).length > 0, `${path} exists locally`);
     }
     assert.doesNotMatch(card, /<svg\b|https?:\/\/|<button\b|tabindex="-1"/, 'cards contain no substitute SVG art, hotlinks or nested controls');
+    assert.doesNotMatch(card, /wow-home-media-(icons|token|icon)|wow-forever-banner\.png/, 'collage tiles and the repeated hero banner are absent');
   }
-  assert.deepEqual(scenes, ['assets/images/home/wow-classic-stormwind.jpg', 'assets/images/wow-forever/wow-forever-banner.png']);
-  assert.deepEqual(panelSizes, [6, 3, 3, 6], 'the remaining visuals use race, talent, preparation and class icons');
+  assert.deepEqual(scenes, ['assets/images/home/wow-classic-stormwind.jpg']);
+  assert.equal(new Set(scenes).size, scenes.length, 'no main image is shared between cards');
+  assert.equal(backgroundOnlyCards, 5);
 });
 
 test('WoW Forever race, class icon, talent planner, storage, and share data stay valid', async () => {

@@ -597,19 +597,19 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
   if (route.view === 'wow-home') {
     const destinations = [
       { view: 'classes', title: 'Classes', description: 'Explore all nine classes.', icon: catalog?.classes?.find(item => item.id === 'warrior')?.icon, iconAlt: 'Warrior class icon', artwork: { src: 'assets/images/home/wow-classic-stormwind.jpg', width: 1600, height: 900 } },
-      { view: 'races', title: 'Races', description: 'Compare Alliance and Horde options.', icon: catalog?.races?.find(item => item.id === 'human')?.icon, iconAlt: 'Human race icon', mediaIcons: catalog?.races?.filter(race => race.icon).slice(0, 6).map(race => race.icon) },
-      { view: 'talent-planner', title: 'Talent Builds', description: 'Find talents and leveling builds.', icon: catalog?.classes?.find(item => item.id === 'warrior')?.trees?.find(tree => tree.id === 'arms')?.icon, iconAlt: 'Arms talent icon', mediaIcons: catalog?.classes?.find(item => item.id === 'warrior')?.trees?.map(tree => tree.icon).filter(Boolean) },
-      { view: 'leveling', title: 'Leveling Zones', description: 'Discover where to level next.', icon: 'assets/images/wow-forever/icons/achievement_zone_barrens_01.jpg', iconAlt: 'Barrens zone achievement icon', artwork: wowHeroArt },
-      { view: 'dungeons-raids', title: 'Dungeon Guides', description: 'Quests, preparation and rewards.', icon: 'assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg', iconAlt: 'Warrior Shield Wall game icon', mediaIcons: ['assets/images/wow-forever/icons/inv_scroll_07.jpg', 'assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg', 'assets/images/wow-forever/icons/inv_sword_27.jpg'] },
-      { view: 'tier-lists', title: 'Tier Lists', description: 'Compare available class and role recommendations.', icon: 'assets/images/wow-forever/icons/achievement_raidprimalist_windelemental.jpg', iconAlt: 'Raid achievement icon', mediaIcons: catalog?.classes?.slice(0, 6).map(item => item.icon).filter(Boolean) }
+      { view: 'races', title: 'Races', description: 'Compare Alliance and Horde options.', icon: catalog?.races?.find(item => item.id === 'human')?.icon, iconAlt: 'Human race icon' },
+      { view: 'talent-planner', title: 'Talent Builds', description: 'Find talents and leveling builds.', icon: catalog?.classes?.find(item => item.id === 'warrior')?.trees?.find(tree => tree.id === 'arms')?.icon, iconAlt: 'Arms talent icon' },
+      { view: 'leveling', title: 'Leveling Zones', description: 'Discover where to level next.', icon: 'assets/images/wow-forever/icons/achievement_zone_barrens_01.jpg', iconAlt: 'Barrens zone achievement icon' },
+      { view: 'dungeons-raids', title: 'Dungeon Guides', description: 'Quests, preparation and rewards.', icon: 'assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg', iconAlt: 'Warrior Shield Wall game icon' },
+      { view: 'tier-lists', title: 'Tier Lists', description: 'Compare available class and role recommendations.', icon: 'assets/images/wow-forever/icons/achievement_raidprimalist_windelemental.jpg', iconAlt: 'Raid achievement icon' }
     ];
     const cards = destinations.map(item => {
-      // Only two local scene images are available; other panels use real game icons, not substitute illustrations or invented rankings.
+      // Keep the hero's banner exclusive to the hero; quiet backgrounds replace missing unique scene artwork.
       const media = item.artwork
-        ? `<img class="wow-home-destination-scene" src="${escapeHtml(item.artwork.src)}" alt="" width="${item.artwork.width}" height="${item.artwork.height}" loading="lazy" decoding="async" data-home-art-image>`
-        : `<span class="wow-home-media-icons">${(item.mediaIcons || []).map(icon => `<span class="wow-home-media-token">${renderWowIcon(icon, '', escapeHtml, 'wow-home-media-icon')}</span>`).join('')}</span>`;
-      return `<a class="wow-home-destination" href="${href(item.view)}">
-        <span class="wow-home-destination-media" data-directory-visual="${item.view}" data-home-art aria-hidden="true">${media}</span>
+        ? `<span class="wow-home-destination-media" data-home-art aria-hidden="true"><img class="wow-home-destination-scene" src="${escapeHtml(item.artwork.src)}" alt="" width="${item.artwork.width}" height="${item.artwork.height}" loading="lazy" decoding="async" data-home-art-image></span>`
+        : '';
+      return `<a class="wow-home-destination" href="${href(item.view)}" data-directory-visual="${item.view}">
+        ${media}
         <div class="wow-home-destination-copy"><div class="wow-home-destination-heading"><span class="wow-home-destination-icon">${renderWowIcon(item.icon, '', escapeHtml, 'wow-home-destination-icon-img')}</span><h3>${escapeHtml(item.title)}</h3></div><p>${escapeHtml(item.description)}</p><span class="wow-home-destination-action">Explore <span aria-hidden="true">→</span></span></div>
       </a>`;
     }).join('');
