@@ -54,6 +54,8 @@ async function harness(failure = null, storageMode = 'available', unavailableFil
   async function load(path) {
     if (modules.has(path)) return modules.get(path);
     let source = await readFile(path, 'utf8');
+    // Another import may populate the cache while this file is being read.
+    if (modules.has(path)) return modules.get(path);
     if (path.endsWith('/app.js')) {
       source = source.slice(0, source.indexOf("document.querySelector('.skip-link')"));
       source += '\nexport { renderPage, readRoute, renderEncyclopediaDetail, renderEncyclopediaCollection, filterEncyclopedia, renderSearchResults, getTrinkets, teamMatchesFilters, getOwnedTrinketIds, setOwnedTrinket, clearOwnedTrinkets, renderTrinketOwnershipControl, renderTeamEquipmentReadinessContent, plannerBosses, updateExpeditionPlannerOptions, renderPlannerTeam, renderPlannerEquipmentStep, selectExpeditionTeam, sortedPlannerTeams, getExpeditionRoster, saveExpeditionRoster, renderExpeditionPlanner, renderPlannerRegionRecords, renderExpeditionPlannerResults, updateBackToTop, scrollBackToTop };';
@@ -1776,6 +1778,29 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   const journey = render(route('#game/world-of-warcraft/my-journey'));
   assert.ok(journey.includes('Save my character') && journey.includes('Choose a class, faction and level above'));
   assert.equal(render(route('#game/world-of-warcraft/leveling')).includes('Levels null'), false);
+});
+
+test('Explore Azeroth uses local scene images and original game-icon panels without substitute illustrations', async () => {
+  const landing = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft'));
+  const cards = [...landing.matchAll(/<a class="wow-home-destination" href="([^"]+)"[\s\S]*?<\/a>/g)];
+  assert.equal(cards.length, 6);
+  const scenes = [];
+  const panelSizes = [];
+  for (const [card] of cards) {
+    assert.match(card, /class="wow-home-destination-media"[^>]*aria-hidden="true"/, 'visual panels are decorative; the original title names the link');
+    assert.match(card, /class="wow-home-destination-heading"[\s\S]*?class="wow-home-destination-icon"[\s\S]*?<h3>/, 'the original icon sits beside the title below the media');
+    assert.equal((card.match(/class="wow-home-destination-icon-img"/g) || []).length, 1);
+    const scene = card.match(/class="wow-home-destination-scene" src="([^"]+)"/);
+    if (scene) scenes.push(scene[1]);
+    else panelSizes.push((card.match(/class="wow-home-media-icon"/g) || []).length);
+    for (const [, path] of card.matchAll(/<img[^>]*src="([^"]+)"/g)) {
+      assert.match(path, /^assets\/images\/(home|wow-forever)\/.*\.(png|jpg)$/);
+      assert.ok((await readFile(resolve(root, 'dist', path))).length > 0, `${path} exists locally`);
+    }
+    assert.doesNotMatch(card, /<svg\b|https?:\/\/|<button\b|tabindex="-1"/, 'cards contain no substitute SVG art, hotlinks or nested controls');
+  }
+  assert.deepEqual(scenes, ['assets/images/home/wow-classic-stormwind.jpg', 'assets/images/wow-forever/wow-forever-banner.png']);
+  assert.deepEqual(panelSizes, [6, 3, 3, 6], 'the remaining visuals use race, talent, preparation and class icons');
 });
 
 test('WoW Forever race, class icon, talent planner, storage, and share data stay valid', async () => {
