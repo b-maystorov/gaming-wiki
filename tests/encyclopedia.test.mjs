@@ -1638,7 +1638,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.ok(landing.includes(`<img src="${homeArt.src}" alt="${homeArt.alt}" width="860" height="484"`), 'landing renders the image at its native aspect ratio');
   const heroStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
   assert.ok(heroStyles.includes('.wow-home-hero-art img { display:block; visibility:visible; width:100%; height:100%; object-fit:contain; }'));
-  assert.ok(landing.includes('<h1 id="page-title" tabindex="-1">World of Warcraft: Forever</h1>'));
+  assert.ok(landing.includes('<h1 id="page-title" tabindex="-1" class="visually-hidden">World of Warcraft: Forever</h1>'), 'the image supplies the visible branding while the page retains an accessible heading');
   assert.ok(landing.includes('Your adventure across Azeroth starts here.'));
   assert.ok(landing.includes('Explore Classes') && landing.includes('Continue My Journey'));
   assert.ok(landing.includes('href="#game/world-of-warcraft/classes"'), 'Explore Classes remains a working route');
