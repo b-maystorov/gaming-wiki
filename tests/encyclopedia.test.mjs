@@ -748,7 +748,7 @@ test('global navigation dropdown and mobile menu support dismissal and focus ret
   assert.equal(header.dataset.menuOpen, 'false', 'following a game link closes the mobile menu');
 });
 
-test('global utility controls offer truthful dialogs, existing search and implemented milestone routes', async () => {
+test('global utility controls offer truthful dialogs, database navigation and implemented milestone routes', async () => {
   const shell = await readFile(resolve(root, 'dist/index.html'), 'utf8');
   assert.match(shell, /<\/header>\s*<nav id="site-utility-bar"/, 'utilities immediately follow the main header');
   const utilities = shell.match(/<nav id="site-utility-bar"[\s\S]*?<\/nav>/)?.[0] || '';
@@ -756,10 +756,11 @@ test('global utility controls offer truthful dialogs, existing search and implem
   assert.equal(controls.length, 4);
   for (const [index, label] of ['Download App', 'Discord', 'Database', 'Updates'].entries()) {
     assert.ok(controls[index].includes(`<span>${label}</span>`), label);
-    assert.match(controls[index], /type="button"[^>]*aria-haspopup="dialog"/);
+    assert.match(controls[index], /type="button"/);
+    if (label !== 'Database') assert.match(controls[index], /aria-haspopup="dialog"/);
     assert.match(controls[index], /<svg[^>]*aria-hidden="true"/);
   }
-  assert.match(controls[2], /aria-controls="command-center"/, 'Database reuses real wiki search');
+  assert.doesNotMatch(controls[2], /aria-haspopup|aria-controls/, 'Database navigates rather than opening a dialog');
   const dialog = shell.match(/<dialog id="utility-dialog"[\s\S]*?<\/dialog>/)?.[0] || '';
   assert.match(dialog, /aria-labelledby="utility-title"/);
   assert.match(dialog, /data-utility-content="app"[\s\S]*?Coming Soon[\s\S]*?no app to download yet/);
@@ -778,7 +779,7 @@ test('global utility controls offer truthful dialogs, existing search and implem
   }
 });
 
-test('utility dialogs dismiss, restore focus and let update links navigate; Database opens existing search', () => {
+test('utility dialogs preserve dismissal and focus behavior; Database opens its landing route', () => {
   const utilityModule = h.modules.get(resolve(root, 'dist/js/utility-bar.js')).namespace;
   let activeElement = null;
   const makeElement = (dataset = {}) => ({
@@ -807,8 +808,8 @@ test('utility dialogs dismiss, restore focus and let update links navigate; Data
     getElementById: id => ({ 'site-utility-bar': bar, 'utility-dialog': dialog, 'utility-title': title, 'close-utility-dialog': closeButton, 'utility-database': databaseButton })[id],
     body: { classList: { add: name => bodyClasses.add(name), remove: name => bodyClasses.delete(name) } }
   };
-  let searchOpener = null;
-  assert.equal(utilityModule.initializeUtilityBar({ documentObject, openSearch() { searchOpener = activeElement; } }), true);
+  const destinations = [];
+  assert.equal(utilityModule.initializeUtilityBar({ documentObject, navigate(href) { destinations.push(href); } }), true);
   for (const [index, trigger] of triggers.entries()) {
     trigger.listeners.click();
     assert.equal(dialog.open, true);
@@ -838,7 +839,9 @@ test('utility dialogs dismiss, restore focus and let update links navigate; Data
   assert.equal(activeElement, destinationHeading, 'link navigation does not restore focus to the old opener');
   assert.equal(bodyClasses.size, 0);
   databaseButton.listeners.click();
-  assert.equal(searchOpener, databaseButton, 'existing search receives the Database button as its focus-return target');
+  assert.deepEqual(destinations, ['#game/world-of-warcraft/database']);
+  assert.equal(dialog.open, false, 'Database navigation does not open a utility dialog');
+  assert.equal(bodyClasses.size, 0, 'Database navigation leaves scrolling unlocked');
 });
 
 test('global footer links, project information routes, logo, and background rails are available', async () => {
@@ -1561,6 +1564,65 @@ test('regional artwork falls back without private images and section navigation 
   const css = await readFile(resolve(root, 'dist/css/styles.css'), 'utf8');
   assert.ok(css.includes('@media (max-width: 950px) { .region-card-grid, .region-overview-facts { grid-template-columns: 1fr; } }'));
   assert.ok(css.includes('@media (prefers-reduced-motion: reduce) { .region-enemy-card'));
+});
+
+test('WoW database route renders six categories with existing local artwork', async () => {
+  const route = h.app.readRoute('#game/world-of-warcraft/database');
+  assert.equal(route.view, 'wow-database');
+  assert.equal(h.app.readRoute('#game/world-of-warcraft/database/unknown').view, 'missing');
+  const page = h.app.renderPage(route);
+  assert.match(page, /<h1 id="page-title" tabindex="-1">WoW: Forever Database<\/h1>/);
+  assert.ok(page.includes('Explore quests, dungeons, items and other recorded game information.'));
+  assert.equal((page.match(/<h1\b/g) || []).length, 1);
+  assert.deepEqual([...page.matchAll(/data-database-category="([^"]+)"/g)].map(match => match[1]),
+    ['quests', 'dungeons', 'items', 'classes', 'talents', 'zones']);
+  const images = [...page.matchAll(/<img[^>]*src="([^"]+)"/g)].map(match => match[1]);
+  assert.equal(images.length, 7, 'one existing WoW banner and six category icons');
+  for (const path of images) {
+    assert.ok(path.startsWith('assets/images/wow-forever/'), 'database imagery stays local');
+    assert.ok((await readFile(resolve(root, 'dist', path))).length > 0, path);
+  }
+  assert.doesNotMatch(page, /<input\b|<time\b/, 'no pretend search or publishing dates');
+});
+
+for (const category of [
+  { id: 'dungeons', href: '#game/world-of-warcraft/dungeons-raids', view: 'wow-dungeons', content: /wow-dungeon-prep-link/ },
+  { id: 'classes', href: '#game/world-of-warcraft/classes', view: 'wow-classes', content: /wow-class-grid/ },
+  { id: 'talents', href: '#game/world-of-warcraft/talent-planner', view: 'wow-talents', content: /data-wow-talent-planner/ },
+  { id: 'zones', href: '#game/world-of-warcraft/leveling', view: 'wow-leveling', content: /wow-zone-grid/ }
+]) {
+  test(`WoW database ${category.id} category opens an implemented page`, () => {
+    const database = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/database'));
+    const card = [...database.matchAll(/<a class="wow-database-card" data-database-category="([^"]+)" href="([^"]+)"[\s\S]*?<\/a>/g)]
+      .find(match => match[1] === category.id);
+    assert.ok(card, `${category.id}: a native keyboard-accessible link is rendered`);
+    assert.equal(card[2], category.href);
+    const route = h.app.readRoute(card[2]);
+    assert.equal(route.view, category.view);
+    const page = h.app.renderPage(route);
+    assert.match(page, category.content);
+    assert.doesNotMatch(page, /Page not found|Guide in preparation|could not be loaded/);
+  });
+}
+
+test('WoW database quest and item indexes remain informational development cards', () => {
+  const page = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/database'));
+  for (const id of ['quests', 'items']) {
+    const card = [...page.matchAll(/<article class="wow-database-card is-unavailable" data-database-category="([^"]+)"[\s\S]*?<\/article>/g)]
+      .find(match => match[1] === id)?.[0];
+    assert.ok(card, `${id}: the unfinished index is clearly marked`);
+    assert.match(card, /In Development/);
+    assert.doesNotMatch(card, /href=|tabindex=|role="button"/, 'unavailable categories do not pretend to be interactive');
+  }
+  assert.equal((page.match(/<a class="wow-database-card"/g) || []).length, 4);
+});
+
+test('WoW database disables the talent link when required talent records cannot load', async () => {
+  const local = await harness(null, 'available', ['world-of-warcraft-forever-client-data.json']);
+  const page = local.app.renderPage(local.app.readRoute('#game/world-of-warcraft/database'));
+  assert.match(page, /<article[^>]*data-database-category="talents"[\s\S]*?Records unavailable[\s\S]*?<\/article>/);
+  assert.doesNotMatch(page, /href="#game\/world-of-warcraft\/talent-planner"/);
+  assert.equal((page.match(/<a class="wow-database-card"/g) || []).length, 3);
 });
 
 test('WoW: Forever landing, categories, nine classes, zones, and tier lists have working routes', async () => {

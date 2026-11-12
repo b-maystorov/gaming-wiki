@@ -1535,7 +1535,7 @@ function readRoute(hash) {
   }
   if (parts[0] === 'game' && parts[1] === 'world-of-warcraft') {
     if (parts.length === 2) return { view: 'wow-home' };
-    const categoryViews = { 'my-journey': 'wow-journey', classes: 'wow-classes', races: 'wow-races', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-dungeons', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
+    const categoryViews = { database: 'wow-database', 'my-journey': 'wow-journey', classes: 'wow-classes', races: 'wow-races', leveling: 'wow-leveling', 'tier-lists': 'wow-tier-lists', 'build-finder': 'wow-build-finder', 'talent-planner': 'wow-talents', 'dungeons-raids': 'wow-dungeons', 'gear-professions': 'wow-upcoming-gear-professions', 'beginner-guides': 'wow-upcoming-beginner-guides', specializations: 'wow-upcoming-specializations' };
     if (parts.length === 4 && parts[2] === 'dungeons') return { view: 'wow-dungeon-prep', dungeonId: parts[3] };
     if (parts.length === 3 && categoryViews[parts[2]]) return { view: categoryViews[parts[2]] };
     if (parts.length === 4 && parts[2] === 'talent-planner') return { view: 'wow-talents', sharedBuildToken: parts[3] };
@@ -1688,7 +1688,7 @@ function showRoute() {
     updateExpeditionPlannerOptions();
     refreshExpeditionPlanner();
   }
-  document.title = route.view.startsWith('wow-') ? `${route.classRecord?.name || 'World of Warcraft: Forever'} · BM Gaming Wiki` : route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Team Guide · BM Gaming Wiki` :
+  document.title = route.view === 'wow-database' ? 'WoW: Forever Database · BM Gaming Wiki' : route.view.startsWith('wow-') ? `${route.classRecord?.name || 'World of Warcraft: Forever'} · BM Gaming Wiki` : route.preview ? `${route.preview.name} · BM Gaming Wiki` : route.hero ? `${route.hero.name} · Gaming Wiki` : route.boss ? `${route.boss.name} · Boss Guide · BM Gaming Wiki` : route.kind && route.record ? `${route.record.name} · ${collectionConfig[route.kind].title} · BM Gaming Wiki` : route.view === 'team-detail' ? `${route.team.name} · Team Guide · BM Gaming Wiki` :
     route.view === 'home' ? 'BM Gaming Wiki' : `${pageTitles[route.view] || 'Encyclopedia unavailable'} · Gaming Wiki`;
   updateNavigation(route);
   // Every route change, including Back/Forward, lands keyboard focus in its content.
@@ -2229,5 +2229,10 @@ const commandCenter = initializeCommandCenter({
     else location.hash = href;
   }
 });
-initializeUtilityBar({ openSearch: commandCenter.open });
+initializeUtilityBar({
+  navigate(href) {
+    if (location.hash === href) showRoute();
+    else location.hash = href;
+  }
+});
 showRoute();

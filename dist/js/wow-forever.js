@@ -549,7 +549,32 @@ function renderRelatedGuides(classRecord, currentSpecialization, artworkManifest
   return `<section class="wow-related-guides" aria-labelledby="wow-related-guides-title" style="--class-accent:${escapeHtml(classRecord.color)}"><div class="wow-related-guides-heading"><p class="wow-eyebrow">Continue your research</p><h3 id="wow-related-guides-title">Related Guides</h3></div><div class="wow-related-guide-grid">${cards.map(card => `<a class="wow-related-guide-card" href="${escapeHtml(card.href)}"${card.plannerAttributes ? ` ${card.plannerAttributes}` : ''}><span class="wow-related-guide-visual">${card.icon}</span><span class="wow-related-guide-copy"><small>${escapeHtml(card.type)}</small><strong>${escapeHtml(card.title)}</strong><span>${escapeHtml(card.description)}</span></span><span class="wow-related-guide-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></section>`;
 }
 
+function renderWowDatabase(artworkManifest, catalog, escapeHtml) {
+  const artwork = artworkManifest?.records?.find(record => record.id === 'wow-forever:homepage:featured');
+  const categories = [
+    { id: 'quests', title: 'Quests', icon: 'inv_scroll_07.jpg', description: 'Quest records currently live in dungeon preparation guides. A dedicated index is in development.' },
+    { id: 'dungeons', title: 'Dungeons', icon: 'ability_warrior_shieldwall.jpg', description: 'Browse dungeon guides, preparation checklists and recorded quest rewards.', href: 'dungeons-raids', action: 'Browse dungeons' },
+    { id: 'items', title: 'Items', icon: 'inv_sword_27.jpg', description: 'Some rewards are recorded in dungeon guides. A dedicated item index is in development.' },
+    { id: 'classes', title: 'Classes', icon: 'ability_warrior_devastate.jpg', description: 'Explore the class directory and implemented specialization guides.', href: 'classes', action: 'Explore classes' },
+    { id: 'talents', title: 'Talents', icon: 'spell_nature_lightningshield.jpg', description: 'Inspect Forever talent trees and plan builds with the existing talent planner.', href: catalog?.classes?.length ? 'talent-planner' : null, action: 'Open talent planner', status: 'Records unavailable' },
+    { id: 'zones', title: 'Zones', icon: 'achievement_zone_barrens_01.jpg', description: 'Browse recorded zones with the existing faction and level filters.', href: 'leveling', action: 'Explore zones' }
+  ];
+  // Unimplemented indexes stay informational; only working destinations become links.
+  const cards = categories.map(category => {
+    const content = `<span class="wow-database-icon" aria-hidden="true">${renderWowIcon(`assets/images/wow-forever/icons/${category.icon}`, '', escapeHtml, 'wow-database-icon-image')}</span><h3>${escapeHtml(category.title)}</h3><p>${escapeHtml(category.description)}</p>${category.href ? `<span class="wow-database-action">${escapeHtml(category.action)} <span aria-hidden="true">→</span></span>` : `<span class="wow-database-status">${escapeHtml(category.status || 'In Development')}</span>`}`;
+    return category.href
+      ? `<a class="wow-database-card" data-database-category="${category.id}" href="#game/world-of-warcraft/${category.href}">${content}</a>`
+      : `<article class="wow-database-card is-unavailable" data-database-category="${category.id}">${content}</article>`;
+  }).join('');
+  return `<div class="wow-page wow-database-page">
+    <a class="wow-database-return" href="#game/world-of-warcraft">← WoW: Forever</a>
+    <header class="wow-database-header"><div><p class="wow-database-kicker">BM Gaming Wiki · Recorded references</p><h1 id="page-title" tabindex="-1">WoW: Forever Database</h1><p class="wow-database-subtitle">Explore quests, dungeons, items and other recorded game information.</p></div>${artwork ? `<figure class="wow-database-header-art" data-home-art><img data-home-art-image src="${escapeHtml(artwork.src)}" alt="${escapeHtml(artwork.alt)}" width="${artwork.width}" height="${artwork.height}"><span data-home-art-fallback hidden>Artwork unavailable</span></figure>` : ''}</header>
+    <section class="wow-database-directory" aria-labelledby="database-categories-title"><h2 id="database-categories-title">Browse the database</h2><div class="wow-database-grid">${cards}</div></section>
+  </div>`;
+}
+
 export function renderWowPage(route, data, escapeHtml, artworkManifest = null, profile = {}, progress = loadWowGuideProgress(), catalog = null, guidedData = null) {
+  if (route.view === 'wow-database') return renderWowDatabase(artworkManifest, catalog, escapeHtml);
   const href = view => `#game/world-of-warcraft/${view}`;
   const scene = `<div class="wow-scene" aria-hidden="true"><div class="wow-moon"></div><div class="wow-spires"></div></div>`;
   const categories = [

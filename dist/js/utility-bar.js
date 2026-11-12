@@ -1,10 +1,10 @@
-export function initializeUtilityBar({ openSearch, documentObject = globalThis.document } = {}) {
+export function initializeUtilityBar({ navigate, documentObject = globalThis.document } = {}) {
   const bar = documentObject?.getElementById('site-utility-bar');
   const dialog = documentObject?.getElementById('utility-dialog');
   const title = documentObject?.getElementById('utility-title');
   const closeButton = documentObject?.getElementById('close-utility-dialog');
   const databaseButton = documentObject?.getElementById('utility-database');
-  if (!bar || !dialog || !title || !closeButton || !databaseButton || typeof openSearch !== 'function') return false;
+  if (!bar || !dialog || !title || !closeButton || !databaseButton || typeof navigate !== 'function') return false;
 
   const panels = [...dialog.querySelectorAll('[data-utility-content]')];
   let returnTarget = null;
@@ -31,8 +31,7 @@ export function initializeUtilityBar({ openSearch, documentObject = globalThis.d
   });
 
   databaseButton.addEventListener('click', () => {
-    databaseButton.focus({ preventScroll: true });
-    openSearch();
+    navigate('#game/world-of-warcraft/database');
   });
   closeButton.addEventListener('click', () => close());
   dialog.addEventListener('cancel', event => { event.preventDefault(); close(); });
