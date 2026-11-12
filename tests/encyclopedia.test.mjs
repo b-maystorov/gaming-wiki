@@ -17,7 +17,7 @@ const dungeonPrepData = JSON.parse(await readFile(resolve(root, 'dist/data/games
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
-async function harness(failure = null, storageMode = 'available') {
+async function harness(failure = null, storageMode = 'available', unavailableFiles = []) {
   const elements = new Map();
   const storedValues = new Map();
   let cards = [];
@@ -31,6 +31,7 @@ async function harness(failure = null, storageMode = 'available') {
         : selector === '[data-encyclopedia-filter]' ? extraFilters : []
     },
     fetch: async url => {
+      if (unavailableFiles.some(file => String(url).endsWith(file))) return { ok: false, status: 404 };
       if (String(url).endsWith('world-of-warcraft-forever.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8')) };
       if (String(url).endsWith('league-of-legends-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/league-of-legends-artwork.json'), 'utf8')) };
@@ -607,6 +608,64 @@ test('homepage features direct game routes and records its local game artwork', 
   assert.equal(leagueArt.sourceFileName, 'Ahri_0.jpg');
   assert.match(leagueArt.usageStatus, /not been independently verified/i);
   assert.equal((await readFile(resolve(root, 'dist', leagueArt.src))).subarray(0, 2).toString('hex'), 'ffd8');
+});
+
+test('latest wiki updates sit below the carousel with three local, keyboard-accessible guide links', async () => {
+  const home = h.app.renderPage(h.app.readRoute('#home'));
+  const section = home.match(/<section class="home-updates"[\s\S]*?<\/section>/)?.[0] || '';
+  assert.ok(section.includes('Latest Wiki Updates') && section.includes('Explore our newest guides and tools'));
+  assert.match(home, /id="home-game-strip"[\s\S]*?<\/section>\s*<section class="home-updates"/);
+  const cards = [...section.matchAll(/<a class="home-update-card" href="([^"]+)"[\s\S]*?<\/a>/g)];
+  assert.deepEqual(cards.map(match => match[1]), [
+    '#hero/highwayman/overview', '#game/world-of-warcraft/talent-planner', '#game/world-of-warcraft/dungeons/deadmines'
+  ]);
+  assert.doesNotMatch(section, /<time\b|Coming Soon|In development|tabindex="-1"|<button\b/);
+  for (const [card] of cards) {
+    const path = card.match(/<img[^>]*src="([^"]+)"/)?.[1];
+    assert.ok(path?.startsWith('assets/'), 'each card uses a local image');
+    assert.ok((await readFile(resolve(root, 'dist', path))).length > 0);
+    assert.match(card, /<h3>[^<]+<\/h3>/, 'the native link has a visible, accessible title');
+    assert.match(card, /loading="lazy"/);
+  }
+});
+
+for (const destination of [
+  { title: 'Highwayman', href: '#hero/highwayman/overview', view: 'hero', content: /The moving duelist/ },
+  { title: 'Talent Planner', href: '#game/world-of-warcraft/talent-planner', view: 'wow-talents', content: /data-wow-talent-planner/ },
+  { title: 'Deadmines · Before You Enter', href: '#game/world-of-warcraft/dungeons/deadmines', view: 'wow-dungeon-prep', content: /Quest records/ }
+]) {
+  test(`homepage update opens the implemented ${destination.title} guide`, () => {
+    const home = h.app.renderPage(h.app.readRoute('#home'));
+    const cards = [...home.matchAll(/<a class="home-update-card" href="([^"]+)"[\s\S]*?<\/a>/g)];
+    const matchingCards = cards.filter(match => match[1] === destination.href);
+    assert.equal(matchingCards.length, 1, 'the destination appears exactly once in the updates section');
+    assert.ok(matchingCards[0][0].includes(`<h3>${destination.title}</h3>`));
+    const route = h.app.readRoute(destination.href);
+    assert.equal(route.view, destination.view);
+    const page = h.app.renderPage(route);
+    assert.match(page, destination.content, 'the destination renders its implemented guide or tool');
+    assert.doesNotMatch(page, /Page not found|Dungeon preparation unavailable|Azeroth guide unavailable|talent records could not be loaded/);
+  });
+}
+
+test('homepage updates exclude unavailable guides and omit an empty section', async () => {
+  for (const [file, hiddenHref] of [
+    ['world-of-warcraft-forever.json', '#game/world-of-warcraft/talent-planner'],
+    ['world-of-warcraft-forever-client-data.json', '#game/world-of-warcraft/talent-planner'],
+    ['world-of-warcraft-forever-dungeon-prep.json', '#game/world-of-warcraft/dungeons/deadmines']
+  ]) {
+    const local = await harness(null, 'available', [file]);
+    const home = local.app.renderPage(local.app.readRoute('#home'));
+    const links = [...home.matchAll(/<a class="home-update-card" href="([^"]+)"/g)].map(match => match[1]);
+    assert.equal(links.length, 2, `${file}: other available guides remain visible`);
+    assert.ok(!links.includes(hiddenHref), `${file}: no link to the unavailable guide`);
+  }
+  const local = await harness(null, 'available', ['world-of-warcraft-forever-client-data.json', 'world-of-warcraft-forever-dungeon-prep.json']);
+  const localHeroes = local.modules.get(resolve(root, 'dist/js/heroes.js')).namespace.heroes;
+  localHeroes.find(hero => hero.id === 'highwayman').contentUnavailable = true;
+  const home = local.app.renderPage(local.app.readRoute('#home'));
+  assert.doesNotMatch(home, /class="home-updates"/);
+  assert.ok(home.includes('id="home-game-strip"'), 'the approved carousel still renders');
 });
 
 test('League of Legends and Darkest Dungeon II Coming Soon routes work', () => {

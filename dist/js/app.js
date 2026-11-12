@@ -156,6 +156,42 @@ function renderList(items, ordered = false) {
   return `<${tag}>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</${tag}>`;
 }
 
+function renderHomeUpdates() {
+  // Curated links are shown only when the destination's required content is loaded.
+  const updates = [
+    {
+      available: heroes.some(hero => hero.id === 'highwayman' && hero.guide && !hero.contentUnavailable),
+      href: '#hero/highwayman/overview', game: 'Darkest Dungeon I', title: 'Highwayman',
+      description: 'Explore skills, builds, team compositions and trinket recommendations.',
+      image: 'assets/images/home/darkest-dungeon-i-key-art.jpg', width: 1600, height: 900
+    },
+    {
+      available: wowData && wowClientData?.classes?.length > 0,
+      href: '#game/world-of-warcraft/talent-planner', game: 'WoW: Forever', title: 'Talent Planner',
+      description: 'Explore Forever talent trees, plan point allocations and save custom builds.',
+      image: 'assets/images/wow-forever/wow-forever-banner.png', width: 860, height: 484
+    },
+    {
+      available: wowDungeonPrep?.dungeons?.some(dungeon => dungeon.id === 'deadmines' && dungeon.quests?.length),
+      href: '#game/world-of-warcraft/dungeons/deadmines', game: 'WoW: Forever', title: 'Deadmines · Before You Enter',
+      description: 'Review quest checklists, entrance notes and recorded rewards before your run.',
+      image: 'assets/images/home/wow-classic-stormwind.jpg', width: 1600, height: 900
+    }
+  ].filter(update => update.available);
+  if (!updates.length) return '';
+
+  return `<section class="home-updates" aria-labelledby="latest-updates-title">
+    <header class="home-updates-heading"><h2 id="latest-updates-title">Latest Wiki Updates</h2><p>Explore our newest guides and tools</p></header>
+    <div class="home-updates-grid">${updates.map(update => `<a class="home-update-card" href="${escapeHtml(update.href)}">
+      <span class="home-update-art" data-home-art>
+        <img data-home-art-image src="${escapeHtml(update.image)}" alt="" width="${update.width}" height="${update.height}" loading="lazy" decoding="async">
+        <span data-home-art-fallback hidden>Artwork unavailable</span>
+      </span>
+      <div class="home-update-copy"><p class="home-update-game">${escapeHtml(update.game)}</p><h3>${escapeHtml(update.title)}</h3><p class="home-update-description">${escapeHtml(update.description)}</p><span class="home-update-action">Open guide <span aria-hidden="true">→</span></span></div>
+    </a>`).join('')}</div>
+  </section>`;
+}
+
 function renderHome() {
   const gameCards = portalGames.map(game => {
     const artwork = game.id === 'darkest-dungeon'
@@ -203,6 +239,7 @@ function renderHome() {
       <div class="home-section-heading"><div><p class="home-section-kicker">Start playing</p><h2 id="featured-games-title">Featured games</h2></div><div class="home-game-controls" role="group" aria-label="Browse games"><button type="button" data-home-games-scroll="-1" aria-label="Scroll games left">‹</button><button type="button" data-home-games-scroll="1" aria-label="Scroll games right">›</button></div></div>
       <div class="home-featured-grid" id="home-game-strip" role="region" aria-label="Games" tabindex="0">${gameCards}</div>
     </section>
+    ${renderHomeUpdates()}
   </div>`;
 }
 

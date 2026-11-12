@@ -291,6 +291,29 @@ body.portal-page:has(.home-page) main::before { display: none; }
 .home-game-controls button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #34516e; border-radius: 3px; color: #afd6fa; background: #101c2a; font: 1.5rem/1 system-ui, sans-serif; cursor: pointer; }
 .home-game-controls button:hover { border-color: #5daef2; background: #1b3048; }
 .home-game-controls button:focus-visible { outline: 2px solid #85c9ff; outline-offset: 3px; }
+/* Homepage guide links have their own styles so the approved carousel stays unchanged. */
+.home-updates { margin-top: 2rem; padding-top: 1.6rem; border-top: 1px solid #263d55; }
+.home-updates-heading { margin-bottom: 1.2rem; }
+.home-updates-heading h2 { color: #edf4fc; font: 500 1.65rem/1.25 Georgia, serif; }
+.home-updates-heading p { margin-top: .45rem; color: var(--home-muted); font-size: .9rem; }
+.home-updates-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.home-update-card { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid #304b68; border-radius: 6px; color: #edf4fc; background: #0f1c2d; text-decoration: none; box-shadow: 0 8px 22px #0003; transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease; }
+.home-update-card:hover { border-color: #62b5ff; color: #edf4fc; background: #13263c; box-shadow: 0 10px 28px #0004, 0 0 0 1px #4aa8ff33; }
+.home-update-card:focus-visible { outline: 3px solid #85c9ff; outline-offset: 4px; border-color: #85c9ff; }
+.home-update-art { position: relative; display: block; flex: none; overflow: hidden; aspect-ratio: 16 / 9; border-bottom: 1px solid #304b68; background: #0b1420; }
+.home-update-art img { width: 100%; height: 100%; object-fit: cover; }
+.home-update-art [data-home-art-fallback]:not([hidden]) { position: absolute; inset: 0; display: grid; place-items: center; color: #c1cbd4; background: #0b1420; font-size: .85rem; pointer-events: none; }
+.home-update-copy { display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: .65rem; padding: 1.2rem; }
+.home-update-game { color: #83c4ff; font-size: .65rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.home-update-copy h3 { color: #edf4fc; font: 650 1.13rem/1.35 system-ui, sans-serif; letter-spacing: -.015em; }
+.home-update-copy .home-update-description { margin: 0; color: var(--home-muted); font-size: .88rem; line-height: 1.65; }
+.home-update-action { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; margin-top: auto; padding-top: 1rem; color: #9bd2ff; font-size: .8rem; font-weight: 650; }
+@media (max-width: 800px) {
+  .home-updates-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-update-card { transition: none; }
+}
 @media (max-width: 680px) {
   .home-page { padding-top: .7rem; }
   .home-welcome { min-height:0; max-height:none; padding:1.25rem; }
