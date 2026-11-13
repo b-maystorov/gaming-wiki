@@ -939,6 +939,18 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-home-destination-media { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
 .wow-home-destination-media::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#0b1829f2,#0b1829c9 38%,#0b182966 70%,#0b182933),linear-gradient(0deg,#0b1829f2,transparent 75%); pointer-events:none; }
 .wow-home-destination-scene { display:block; width:100%; height:100%; object-fit:cover; object-position:left top; transform:scale(1.5); transform-origin:left top; }
+/* Keep the character clear of the text; this treatment belongs only to the Classes card. */
+.wow-home-destination[data-directory-visual="classes"] { border-color:#3a6384; }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-scene { object-position:left 12%; transform:scale(1.55); }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-media::after { background:linear-gradient(90deg,#081728f5,#081728db 34%,#08172870 62%,#08172826),linear-gradient(180deg,#08172833,#0817280d 36%,#081728e6); }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-copy { padding:1.25rem; }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-heading { gap:.8rem; }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-heading h3 { font-size:1.125rem; font-weight:700; }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-icon { width:48px; height:48px; border-color:#6aa7d5; background:#0b1a2bea; }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-copy p { max-width:22ch; color:#d3e1ef; }
+.wow-home-destination[data-directory-visual="classes"] .wow-home-destination-action { color:#b9e0ff; border-top-color:#6792b944; }
+.wow-home-destination[data-directory-visual="classes"]:is(:hover,:focus-visible) { border-color:#7bc4ff; box-shadow:0 5px 16px #0004,inset 0 0 0 1px #7bc4ff14; }
+.wow-home-destination[data-directory-visual="classes"]:focus-visible { outline-color:#a1d8ff; }
 /* Background-only fallbacks keep the cards compact without repeating artwork or reserving empty image panels. */
 .wow-home-destination[data-directory-visual="races"] { background:radial-gradient(ellipse at 100% 0%,#31596d33,transparent 70%),linear-gradient(145deg,#14283b,#0d1928); }
 .wow-home-destination[data-directory-visual="talent-planner"] { background:radial-gradient(ellipse at 100% 0%,#394f6b30,transparent 70%),linear-gradient(145deg,#142439,#0d1928); }
