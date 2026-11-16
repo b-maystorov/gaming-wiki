@@ -1864,7 +1864,7 @@ test('WoW guide hub uses three distinct supplied illustrations without changing 
   assert.deepEqual(images, expected.map(([, , , , source]) => source));
   assert.equal(new Set(images).size, 3, 'each visual is unique');
   const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
-  assert.match(portalStyles, /\.wow-home-destination-media\s*\{[^}]*height:250px/s, 'the existing media height stays unchanged');
+  assert.match(portalStyles, /\.wow-home-destination-media\s*\{[^}]*position:absolute;[^}]*inset:0;[^}]*height:100%/s, 'guide artwork covers the full card behind the caption');
   assert.match(portalStyles, /\.wow-home-destination-scene\s*\{[^}]*object-fit:cover;[^}]*object-position:center/s, 'all supplied scenes use a centered cover crop');
 });
 

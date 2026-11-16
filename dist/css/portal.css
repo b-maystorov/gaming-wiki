@@ -928,36 +928,48 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-home-actions .wow-home-action-primary { border-color:#448fc9; color:#edf7ff; background:linear-gradient(135deg,#205a86,#173c5c); }
 .wow-home-actions a:hover { border-color:#68b8ff; background:#192d43; box-shadow:0 0 0 1px #68b8ff35; }
 .wow-home-actions a:focus-visible { outline:2px solid #75bcff; outline-offset:3px; }
-.wow-home-class-shortcuts { max-width:1280px; margin:1.25rem auto 0; padding:0 clamp(1rem,3vw,2.4rem); }
-.wow-home-class-shortcuts h2 { margin:0 0 .6rem; color:#e5f2ff; font:650 1.05rem/1.4 system-ui,sans-serif; }
+.wow-home-class-shortcuts { position:relative; isolation:isolate; max-width:1280px; margin:1.25rem auto 0; padding:1.15rem clamp(1rem,3vw,2.4rem); }
+.wow-home-class-shortcuts::before { content:''; position:absolute; inset:0 clamp(1rem,3vw,2.4rem); z-index:-1; border:1px solid #294a66; border-radius:8px; background:linear-gradient(135deg,#0c1c2e,#0a1726); }
+.wow-home-class-shortcuts h2 { position:relative;margin:0 0 .75rem; padding-bottom:.75rem; border-bottom:1px solid #3075a3; color:#e5f2ff; font:650 1.05rem/1.4 system-ui,sans-serif; }
+.wow-home-class-shortcuts h2::after { content:''; position:absolute; bottom:-2px; left:0; width:28px; height:3px; background:#68b8ff; }
 .wow-home-class-shortcut-grid { display:grid; grid-template-columns:repeat(9,minmax(0,1fr)); gap:.4rem; }
-.wow-home-class-shortcut { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5rem; min-width:0; padding:.6rem .25rem; border:1px solid transparent; border-radius:6px; color:#d5e4f3; text-decoration:none; transition:background-color 160ms ease,border-color 160ms ease,color 160ms ease; }
-.wow-home-class-shortcut-frame { display:grid; place-items:center; flex:none; width:48px; height:48px; padding:1px; overflow:hidden; border:1px solid var(--shortcut-accent); border-radius:6px; background:#081421; box-shadow:0 3px 8px #0004; }
+.wow-home-class-shortcut { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.55rem; min-width:0; min-height:88px; padding:.7rem .25rem .55rem; border:1px solid transparent; border-radius:6px; color:#d5e4f3; cursor:pointer; text-decoration:none; transition:background-color 200ms ease,border-color 200ms ease,color 200ms ease; }
+.wow-home-class-shortcut-frame { display:grid; place-items:center; flex:none; width:48px; height:48px; padding:1px; overflow:hidden; border:1px solid #3a5672; border-radius:6px; background:#081421; box-shadow:0 2px 6px #0004; transition:border-color 200ms ease,box-shadow 200ms ease; }
 .wow-home-class-shortcut-icon { display:block; width:100%; height:100%; object-fit:contain; border-radius:4px; }
-.wow-home-class-shortcut-name { font-size:.8rem; font-weight:600; line-height:1.3; }
-.wow-home-class-shortcut:hover { border-color:#38688e; color:#eef8ff; background-color:#16314c80; }
-.wow-home-class-shortcut:focus-visible { outline:2px solid #85c9ff; outline-offset:3px; border-color:#38688e; color:#eef8ff; background-color:#16314c80; }
-@media(max-width:1050px) { .wow-home-class-shortcut-grid { grid-template-columns:repeat(5,minmax(0,1fr)); } }
+.wow-home-class-shortcut-name { position:relative; padding-bottom:.35rem; font-size:.8rem; font-weight:600; line-height:1.3; }
+.wow-home-class-shortcut-name::after { content:''; position:absolute; bottom:0; left:17%; width:66%; height:2px; background:var(--shortcut-accent); opacity:0; transform:scaleX(0); transform-origin:center; transition:transform 200ms ease,opacity 200ms ease; pointer-events:none; }
+.wow-home-class-shortcut:hover { border-color:color-mix(in srgb,var(--shortcut-accent)45%,#263d54d); color:#eef8ff; background-color:color-mix(in srgb,var(--shortcut-accent)9%,#12243a); }
+.wow-home-class-shortcut:hover .wow-home-class-shortcut-frame { border-color:var(--shortcut-accent); box-shadow:0 0 0 1px color-mix(in srgb,var(--shortcut-accent)12%,transparent); }
+.wow-home-class-shortcut:hover .wow-home-class-shortcut-name::after { opacity:1; transform:scaleX(1); }
+.wow-home-class-shortcut:focus-visible { outline:2px solid #85c9ff; outline-offset:3px; color:#eef8ff; background:#16314c; }
+@media(max-width:1050px) { .wow-home-class-shortcut-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 @media(max-width:560px) { .wow-home-class-shortcut-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(prefers-reduced-motion:reduce) { .wow-home-class-shortcut, .wow-home-class-shortcut-frame, .wow-home-class-shortcut-name::after { transition:none; } }
 .wow-home-directory { max-width:1280px; margin:0 auto; padding:clamp(1.8rem,4vw,2.8rem) clamp(1rem,3vw,2.4rem) 1rem; }
 .wow-home-section-heading { display:flex; flex-direction:column; align-items:flex-start; gap:.35rem; padding-bottom:.95rem; border-bottom:1px solid #28425b; }
 .wow-home-section-heading .wow-eyebrow { color:#83c4ff; font-size:.65rem; letter-spacing:.12em; }
 .wow-home-section-heading h2 { color:#edf5ff; font:500 clamp(1.7rem,2.6vw,2rem) Georgia,serif; }
 .wow-home-directory-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:1fr; align-items:stretch; gap:1.1rem; margin-top:1.1rem; }
-.wow-home-destination { position:relative; display:flex; flex-direction:column; min-width:0; min-height:430px; padding:0; overflow:hidden; border:1px solid #304e6b; border-radius:8px; color:#edf5ff; background:linear-gradient(145deg,#14283b,#0d1928); box-shadow:0 6px 18px #0002; text-decoration:none; transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease,background-color 180ms ease; }
-.wow-home-destination:hover { transform:translateY(-2px); border-color:#69baff; background-color:#13263a; box-shadow:0 12px 28px #0004; }
-.wow-home-destination:focus-visible { outline:3px solid #85c9ff; outline-offset:4px; border-color:#85c9ff; }
-.wow-home-destination-media { position:relative; display:grid; place-items:center; flex:none; width:100%; height:250px; overflow:hidden; background:radial-gradient(ellipse at 50% 30%,#234d6e66,transparent 75%),#0c1929; pointer-events:none; }
-.wow-home-destination-media::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,#0d1928b3); pointer-events:none; }
-.wow-home-destination-scene { display:block; width:100%; height:100%; object-fit:cover; object-position:center; }
+.wow-home-destination { position:relative; isolation:isolate; display:flex; flex-direction:column; min-width:0; min-height:400px; padding:0; overflow:hidden; border:1px solid #34577b; border-radius:10px; color:#edf5ff; background:#07111e; box-shadow:0 10px 24px #020b1644; text-decoration:none; transition:border-color 225ms ease,box-shadow 225ms ease; }
+.wow-home-destination:focus-visible { outline:3px solid #9bd7ff; outline-offset:4px; border-color:#65baff; box-shadow:0 14px 32px #020b1666; }
+/* The caption stays in normal flow, allowing longer text to grow without overlap. */
+.wow-home-destination-media { position:absolute; inset:0; display:grid; place-items:center; width:100%; height:100%; overflow:hidden; background:#0c1929; pointer-events:none; }
+.wow-home-destination-media::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#050e1909 0%,rgba(6,16,30,.08) 32%,rgba(7,17,31,.55) 52%,rgba(7,17,31,.94) 76%,#07111e 100%); pointer-events:none; }
+.wow-home-destination-scene { display:block; width:100%; height:100%; object-fit:cover; object-position:center; transform:scale(1); transition:transform 225ms ease; }
 .wow-home-destination-media [data-home-art-fallback]:not([hidden]) { position:absolute; inset:0; display:grid; place-items:center; color:#c1d0e0; font-size:.85rem; }
-.wow-home-destination-copy { position:relative; display:flex; flex:1; flex-direction:column; gap:.65rem; width:100%; padding:1.1rem 1.25rem 1.25rem; }
-.wow-home-destination-copy h3 { margin:0; color:#edf5ff; font:650 1.2rem/1.3 system-ui,sans-serif; letter-spacing:-.01em; }
-.wow-home-destination-copy p { margin:0; color:#c1d0e0; font-size:.875rem; line-height:1.55; }
-.wow-home-destination-action { display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%; margin-top:auto; padding-top:.5rem; border-top:1px solid #35516a55; color:#8fc8ff; font-size:.8rem; font-weight:650; }
-.wow-home-destination:hover .wow-home-destination-action { color:#c4e4ff; }
+.wow-home-destination-copy { position:relative; z-index:1; display:flex; flex-direction:column; gap:.65rem; width:100%; margin-top:auto; padding:1.5rem; background:transparent; }
+.wow-home-destination-copy h3 { margin:0; color:#f4f8ff; font:700 clamp(1.25rem,2vw,1.4rem)/1.22 system-ui,sans-serif; letter-spacing:-.02em; }
+.wow-home-destination-copy p { margin:0; color:#d2dfef; font-size:.9rem; line-height:1.55; overflow-wrap:anywhere; }
+.wow-home-destination-action { display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%; margin-top:.9rem; padding-top:.85rem; border-top:1px solid #7894ae33; color:#8fcbff; font-size:.8rem; font-weight:700; letter-spacing:.03em; transition:color 225ms ease; }
+.wow-home-destination-action span[aria-hidden] { display:inline-block; transition:transform 225ms ease; }
+@media(hover:hover) and (pointer:fine) {
+  .wow-home-destination:hover { border-color:#59b7ff; box-shadow:0 16px 36px #020b1688; }
+  .wow-home-destination:hover .wow-home-destination-scene { transform:scale(1.03); }
+  .wow-home-destination:hover .wow-home-destination-action { color:#b8e3ff; }
+  .wow-home-destination:hover .wow-home-destination-action span[aria-hidden] { transform:translateX(4px); }
+}
 @media(max-width:900px) { .wow-home-directory-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-@media(prefers-reduced-motion:reduce) { .wow-home-destination { transition:none; } .wow-home-destination:hover { transform:none; } }
+@media(prefers-reduced-motion:reduce) { .wow-home-destination, .wow-home-destination-scene, .wow-home-destination-action, .wow-home-destination-action span[aria-hidden] { transition:none; } .wow-home-destination:hover .wow-home-destination-scene, .wow-home-destination:hover .wow-home-destination-action span[aria-hidden] { transform:none; } }
 @media(max-width:760px) { .wow-home-hero { grid-template-columns:1fr; gap:1.1rem; } .wow-home-hero-copy { text-align:center; } .wow-home-hero-copy > p:not(.wow-eyebrow) { margin-inline:auto; } .wow-home-actions { justify-content:center; } }
 @media(max-width:560px) { .wow-home-hero { padding:1rem; } .wow-home-actions a { flex:1 1 100%; } .wow-home-directory-grid { grid-template-columns:1fr; gap:.9rem; } }
 @media(max-width:1050px) { .wow-talent-trees { grid-template-columns:repeat(2,minmax(0,1fr)); } }
