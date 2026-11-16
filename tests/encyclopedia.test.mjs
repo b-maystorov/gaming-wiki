@@ -1627,6 +1627,51 @@ test('WoW database disables the talent link when required talent records cannot 
   assert.equal((page.match(/<a class="wow-database-card"/g) || []).length, 3);
 });
 
+test('WoW landing places a named, nine-class navigation strip between the hero and guide hub', () => {
+  const landing = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft'));
+  const shortcuts = landing.match(/<nav class="wow-home-class-shortcuts" aria-labelledby="wow-class-shortcuts-title">[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(shortcuts);
+  assert.match(shortcuts, /<h2 id="wow-class-shortcuts-title">Choose Your Class<\/h2>/);
+  const links = [...shortcuts.matchAll(/<a class="wow-home-class-shortcut" href="([^"]+)"[\s\S]*?<\/a>/g)];
+  assert.deepEqual(links.map(([, target]) => target.split('/').at(-1)), ['warrior', 'paladin', 'hunter', 'rogue', 'priest', 'shaman', 'mage', 'warlock', 'druid']);
+  assert.doesNotMatch(shortcuts, /<button|tabindex=|role="button"|onclick=/, 'native links provide keyboard activation without nested controls');
+  assert.ok(landing.indexOf('class="wow-home-hero"') < landing.indexOf(shortcuts));
+  assert.ok(landing.indexOf(shortcuts) < landing.indexOf('class="wow-home-directory"'));
+});
+
+for (const classRecord of wowPack.classes) {
+  test(`WoW ${classRecord.name} shortcut uses its local icon and existing class guide route`, async () => {
+    const landing = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft'));
+    const target = `#game/world-of-warcraft/classes/${classRecord.id}`;
+    const shortcut = [...landing.matchAll(/<a class="wow-home-class-shortcut" href="([^"]+)"[\s\S]*?<\/a>/g)]
+      .find(([, href]) => href === target)?.[0];
+    assert.ok(shortcut, `${classRecord.name} has a full native link`);
+    assert.ok(shortcut.includes(`--shortcut-accent:${classRecord.color}`));
+    assert.ok(shortcut.includes(`<span class="wow-home-class-shortcut-name">${classRecord.name}</span>`));
+    const icon = wowClientData.classes.find(record => record.id === classRecord.id).icon;
+    assert.ok(shortcut.includes(`src="${icon}" alt=""`), 'the visible class name labels the link without a duplicate icon announcement');
+    assert.ok(await readFile(resolve(root, 'dist', icon)), 'the original class icon exists locally');
+    const route = h.app.readRoute(target);
+    assert.equal(route.view, 'wow-class');
+    assert.equal(route.classRecord.id, classRecord.id);
+    const guide = h.app.renderPage(route);
+    assert.ok(guide.includes(`Starting your journey as ${classRecord.name}`));
+    assert.ok(guide.includes(classRecord.starterGuide.reason), 'the destination renders the implemented class guide');
+    assert.doesNotMatch(guide, /class="wow-home-class-shortcuts"/, 'the strip is limited to the landing page');
+  });
+}
+
+test('WoW class shortcuts retain local icons and guide links when the optional client catalog is unavailable', async () => {
+  const local = await harness(null, 'available', ['world-of-warcraft-forever-client-data.json']);
+  const landing = local.app.renderPage(local.app.readRoute('#game/world-of-warcraft'));
+  const shortcuts = landing.match(/<nav class="wow-home-class-shortcuts"[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(shortcuts);
+  for (const record of wowPack.classes) {
+    assert.ok(shortcuts.includes(`href="#game/world-of-warcraft/classes/${record.id}"`));
+    assert.ok(shortcuts.includes(`src="${wowArtwork.classEmblems[record.id].src}"`));
+  }
+});
+
 test('WoW: Forever landing, categories, nine classes, zones, and tier lists have working routes', async () => {
   const route = h.app.readRoute;
   const render = h.app.renderPage;
@@ -1642,22 +1687,22 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.ok(heroStyles.includes('.wow-home-hero-art img { display:block; visibility:visible; width:100%; height:100%; object-fit:contain; }'));
   assert.ok(landing.includes('<h1 id="page-title" tabindex="-1" class="visually-hidden">World of Warcraft: Forever</h1>'), 'the image supplies the visible branding while the page retains an accessible heading');
   assert.ok(landing.includes('Your adventure across Azeroth starts here.'));
-  assert.ok(landing.includes('Explore Classes') && landing.includes('Continue My Journey'));
-  assert.ok(landing.includes('href="#game/world-of-warcraft/classes"'), 'Explore Classes remains a working route');
+  assert.ok(landing.includes('Continue My Journey'));
+  assert.doesNotMatch(landing, /Explore Classes|href="#game\/world-of-warcraft\/classes"|data-directory-visual="classes"/, 'class navigation is provided by the nine shortcuts without duplicate hero or directory links');
   assert.ok(landing.includes('href="#game/world-of-warcraft/my-journey"'), 'Continue My Journey remains a working route');
   assert.ok(!landing.includes('wow-scene') && !landing.includes('wow-moon'), 'old ambient circles are omitted from the landing hero');
   assert.ok(!landing.includes('<nav class="wow-nav"'), 'the redundant in-game navigation row is omitted from the landing page');
-  for (const destination of ['classes', 'races', 'talent-planner', 'leveling', 'dungeons-raids', 'tier-lists']) {
+  assert.match(landing, /<h2 id="wow-directory-title">Explore WoW: Forever<\/h2>/);
+  assert.doesNotMatch(landing, /data-directory-visual="(?:races|talent-planner)"/, 'races and talent navigation are removed only from the landing hub');
+  for (const destination of ['leveling', 'dungeons-raids', 'tier-lists']) {
     const target = `#game/world-of-warcraft/${destination}`;
     assert.ok(landing.includes(`href="${target}"`), `landing directory links to ${destination}`);
     assert.notEqual(route(target).view, 'missing', `${destination} route resolves`);
   }
   const destinationCards = [...landing.matchAll(/<a class="wow-home-destination" href="([^"]+)"[\s\S]*?<\/a>/g)];
-  assert.equal(destinationCards.length, 6, 'landing has six full-card guide links');
+  assert.deepEqual(destinationCards.map(([, target]) => target), ['leveling', 'dungeons-raids', 'tier-lists'].map(view => `#game/world-of-warcraft/${view}`), 'three guide cards open their existing destinations');
   for (const [, target] of destinationCards) assert.notEqual(route(target).view, 'missing', `${target} resolves`);
-  assert.equal((landing.match(/class="wow-home-destination-icon-img"/g) || []).length, 6, 'each card has a local game icon');
-  for (const [, iconPath] of landing.matchAll(/class="wow-home-destination-icon-img" src="([^"]+)"/g)) assert.ok(await readFile(resolve(root, 'dist', iconPath)), `${iconPath} exists locally`);
-  assert.equal((landing.match(/class="wow-home-destination-action"/g) || []).length, 6, 'each card has a visible Explore action');
+  assert.equal((landing.match(/class="wow-home-destination-action">Explore Guides/g) || []).length, 3, 'each card has a visible Explore Guides action');
   assert.ok(!landing.includes('wow-home-destination-number'), 'guide cards have no generic numbered labels');
   const classOverview = render(route('#game/world-of-warcraft/classes'));
   assert.ok(classOverview.includes('<nav class="wow-nav"'), 'other WoW pages retain their navigation row');
@@ -1780,34 +1825,57 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
   assert.equal(render(route('#game/world-of-warcraft/leveling')).includes('Levels null'), false);
 });
 
-test('Explore Azeroth uses a unique scene and quiet fallbacks without collages or duplicate banners', async () => {
+test('WoW guide hub uses three distinct supplied illustrations without changing guide destinations', async () => {
   const landing = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft'));
   const cards = [...landing.matchAll(/<a class="wow-home-destination" href="([^"]+)"[\s\S]*?<\/a>/g)];
-  assert.equal(cards.length, 6);
-  const scenes = [];
-  let backgroundOnlyCards = 0;
-  for (const [card] of cards) {
-    assert.match(card, /class="wow-home-destination-heading"[\s\S]*?class="wow-home-destination-icon"[\s\S]*?<h3>/, 'the original supporting icon stays beside the title');
-    assert.equal((card.match(/class="wow-home-destination-icon-img"/g) || []).length, 1);
-    const scene = card.match(/class="wow-home-destination-scene" src="([^"]+)"/);
-    assert.ok((card.match(/class="wow-home-destination-scene"/g) || []).length <= 1, 'each card has at most one main image');
-    if (scene) {
-      scenes.push(scene[1]);
-      assert.match(card, /class="wow-home-destination-media"[^>]*aria-hidden="true"/, 'the scene is decorative; the title names the link');
-    } else {
-      backgroundOnlyCards += 1;
-      assert.doesNotMatch(card, /class="wow-home-destination-media"/, 'fallback cards do not reserve an empty image panel');
-    }
+  assert.equal(cards.length, 3);
+  const images = [];
+  const expected = [
+    ['Leveling Guides', 'Find the best zones and routes for your next adventure.', 'wow-leveling', 'leveling', 'assets/images/wow-forever/guide-leveling-landscape.png', 1024, 831],
+    ['Dungeon Guides', 'Prepare for dungeons, complete questlines and discover rewards.', 'wow-dungeons', 'dungeons-raids', 'assets/images/wow-forever/guide-dungeon-entrance.png', 640, 360],
+    ['Tier Lists', 'Compare classes, specializations and available recommendations.', 'wow-tier-lists', 'tier-lists', 'assets/images/wow-forever/guide-tier-list-classes.png', 540, 180]
+  ];
+  let index = 0;
+  for (const [card, target] of cards) {
+    const [title, description, view, artworkKey, source, width, height] = expected[index++];
+    assert.ok(card.includes(`<h3>${title}</h3>`));
+    assert.ok(card.includes(`<p>${description}</p>`));
+    assert.equal(h.app.readRoute(target).view, view);
+    assert.match(card, /class="wow-home-destination-media[^\"]*"[^>]*aria-hidden="true"/, 'the title labels the link while its artwork is decorative');
+    assert.equal((card.match(/<img\b/g) || []).length, 1, 'one image per card, without collages');
+    assert.ok(card.includes(`src="${source}"`));
+    assert.ok(card.includes(`width="${width}" height="${height}"`), 'image attributes preserve the supplied dimensions');
+    assert.match(card, /class="wow-home-destination-scene"[^>]*alt=""[^>]*loading="lazy"[^>]*data-home-art-image/);
+    assert.match(card, /data-home-art-fallback hidden>Artwork unavailable/);
+    const metadata = wowArtwork.guideCards[artworkKey];
+    assert.equal(metadata.src, source);
+    assert.equal(metadata.originalWidth, width);
+    assert.equal(metadata.originalHeight, height);
+    assert.match(metadata.provenance, /User-provided illustration/);
+    assert.match(metadata.usageStatus, /rights unverified/);
     for (const [, path] of card.matchAll(/<img[^>]*src="([^"]+)"/g)) {
+      images.push(path);
       assert.match(path, /^assets\/images\/(home|wow-forever)\/.*\.(png|jpg)$/);
       assert.ok((await readFile(resolve(root, 'dist', path))).length > 0, `${path} exists locally`);
     }
     assert.doesNotMatch(card, /<svg\b|https?:\/\/|<button\b|tabindex="-1"/, 'cards contain no substitute SVG art, hotlinks or nested controls');
-    assert.doesNotMatch(card, /wow-home-media-(icons|token|icon)|wow-forever-banner\.png/, 'collage tiles and the repeated hero banner are absent');
+    assert.doesNotMatch(card, /wow-home-media-(icons|token|icon)|wow-home-destination-fallback-icon|wow-forever-banner\.png|Eingefügtes Bild \(4\)\.png/, 'placeholder icons, repeated hero artwork and the unused fourth image are absent');
   }
-  assert.deepEqual(scenes, ['assets/images/home/wow-classic-stormwind.jpg']);
-  assert.equal(new Set(scenes).size, scenes.length, 'no main image is shared between cards');
-  assert.equal(backgroundOnlyCards, 5);
+  assert.deepEqual(images, expected.map(([, , , , source]) => source));
+  assert.equal(new Set(images).size, 3, 'each visual is unique');
+  const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+  assert.match(portalStyles, /\.wow-home-destination-media\s*\{[^}]*height:250px/s, 'the existing media height stays unchanged');
+  assert.match(portalStyles, /\.wow-home-destination-scene\s*\{[^}]*object-fit:cover;[^}]*object-position:center/s, 'all supplied scenes use a centered cover crop');
+});
+
+test('WoW guide images render when the optional artwork manifest cannot load', async () => {
+  const local = await harness(null, 'available', ['world-of-warcraft-forever-artwork.json']);
+  const landing = local.app.renderPage(local.app.readRoute('#game/world-of-warcraft'));
+  assert.equal((landing.match(/class="wow-home-destination-scene"/g) || []).length, 3);
+  for (const filename of ['guide-leveling-landscape.png', 'guide-dungeon-entrance.png', 'guide-tier-list-classes.png']) {
+    assert.ok(landing.includes(`src="assets/images/wow-forever/${filename}"`));
+  }
+  assert.doesNotMatch(landing, /class="wow-home-destination-media is-fallback"/);
 });
 
 test('WoW Forever race, class icon, talent planner, storage, and share data stay valid', async () => {

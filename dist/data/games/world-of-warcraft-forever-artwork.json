@@ -262,6 +262,44 @@
       "usage": "No independent permission or redistribution license is asserted."
     }
   ],
+  "guideCards": {
+    "leveling": {
+      "src": "assets/images/wow-forever/guide-leveling-landscape.png",
+      "width": 1024,
+      "height": 831,
+      "originalWidth": 1024,
+      "originalHeight": 831,
+      "subject": "Golden fields surrounding a village and stone tower.",
+      "sourcePage": "User-provided local file; external source not supplied.",
+      "provenance": "User-provided illustration. ASCII-named PNG copy preserves original bytes; depicted location not independently verified.",
+      "usageStatus": "User-provided; redistribution rights unverified.",
+      "sourceFileName": "Eingefügtes Bild.png"
+    },
+    "dungeons-raids": {
+      "src": "assets/images/wow-forever/guide-dungeon-entrance.png",
+      "width": 640,
+      "height": 360,
+      "originalWidth": 640,
+      "originalHeight": 360,
+      "subject": "Torchlit dungeon entrance with carved stone skulls.",
+      "sourcePage": "User-provided local file; external source not supplied.",
+      "provenance": "User-provided illustration. ASCII-named PNG copy preserves original bytes; depicted location not independently verified.",
+      "usageStatus": "User-provided; redistribution rights unverified.",
+      "sourceFileName": "Eingefügtes Bild (2).png"
+    },
+    "tier-lists": {
+      "src": "assets/images/wow-forever/guide-tier-list-classes.png",
+      "width": 540,
+      "height": 180,
+      "originalWidth": 540,
+      "originalHeight": 180,
+      "subject": "Three armored and spellcasting class characters.",
+      "sourcePage": "User-provided local file; external source not supplied.",
+      "provenance": "User-provided illustration. ASCII-named PNG copy preserves original bytes; depicted location not independently verified.",
+      "usageStatus": "User-provided; redistribution rights unverified.",
+      "sourceFileName": "Eingefügtes Bild (3).png"
+    }
+  },
   "fallbacks": {
     "class": "Original class-themed SVG illustration; explicitly labeled as BM Gaming Wiki original art, not game art.",
     "specialization": "CSS scene plus class sigil",

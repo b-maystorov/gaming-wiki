@@ -596,28 +596,29 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
   let body = '';
   if (route.view === 'wow-home') {
     const destinations = [
-      { view: 'classes', title: 'Classes', description: 'Explore all nine classes.', icon: catalog?.classes?.find(item => item.id === 'warrior')?.icon, iconAlt: 'Warrior class icon', artwork: { src: 'assets/images/home/wow-classic-stormwind.jpg', width: 1600, height: 900 } },
-      { view: 'races', title: 'Races', description: 'Compare Alliance and Horde options.', icon: catalog?.races?.find(item => item.id === 'human')?.icon, iconAlt: 'Human race icon' },
-      { view: 'talent-planner', title: 'Talent Builds', description: 'Find talents and leveling builds.', icon: catalog?.classes?.find(item => item.id === 'warrior')?.trees?.find(tree => tree.id === 'arms')?.icon, iconAlt: 'Arms talent icon' },
-      { view: 'leveling', title: 'Leveling Zones', description: 'Discover where to level next.', icon: 'assets/images/wow-forever/icons/achievement_zone_barrens_01.jpg', iconAlt: 'Barrens zone achievement icon' },
-      { view: 'dungeons-raids', title: 'Dungeon Guides', description: 'Quests, preparation and rewards.', icon: 'assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg', iconAlt: 'Warrior Shield Wall game icon' },
-      { view: 'tier-lists', title: 'Tier Lists', description: 'Compare available class and role recommendations.', icon: 'assets/images/wow-forever/icons/achievement_raidprimalist_windelemental.jpg', iconAlt: 'Raid achievement icon' }
+      { view: 'leveling', title: 'Leveling Guides', description: 'Find the best zones and routes for your next adventure.', artwork: {"src": "assets/images/wow-forever/guide-leveling-landscape.png", "width": 1024, "height": 831} },
+      { view: 'dungeons-raids', title: 'Dungeon Guides', description: 'Prepare for dungeons, complete questlines and discover rewards.', artwork: {"src": "assets/images/wow-forever/guide-dungeon-entrance.png", "width": 640, "height": 360} },
+      { view: 'tier-lists', title: 'Tier Lists', description: 'Compare classes, specializations and available recommendations.', artwork: {"src": "assets/images/wow-forever/guide-tier-list-classes.png", "width": 540, "height": 180} }
     ];
     const cards = destinations.map(item => {
-      // Keep the hero's banner exclusive to the hero; quiet backgrounds replace missing unique scene artwork.
+      // These local images load independently of the optional artwork metadata.
       const media = item.artwork
-        ? `<span class="wow-home-destination-media" data-home-art aria-hidden="true"><img class="wow-home-destination-scene" src="${escapeHtml(item.artwork.src)}" alt="" width="${item.artwork.width}" height="${item.artwork.height}" loading="lazy" decoding="async" data-home-art-image></span>`
-        : '';
+        ? `<span class="wow-home-destination-media" data-home-art aria-hidden="true"><img class="wow-home-destination-scene" src="${escapeHtml(item.artwork.src)}" alt="" width="${item.artwork.width}" height="${item.artwork.height}" loading="lazy" decoding="async" data-home-art-image><span data-home-art-fallback hidden>Artwork unavailable</span></span>`
+        : `<span class="wow-home-destination-media is-fallback" aria-hidden="true">Artwork unavailable</span>`;
       return `<a class="wow-home-destination" href="${href(item.view)}" data-directory-visual="${item.view}">
         ${media}
-        <div class="wow-home-destination-copy"><div class="wow-home-destination-heading"><span class="wow-home-destination-icon">${renderWowIcon(item.icon, '', escapeHtml, 'wow-home-destination-icon-img')}</span><h3>${escapeHtml(item.title)}</h3></div><p>${escapeHtml(item.description)}</p><span class="wow-home-destination-action">Explore <span aria-hidden="true">→</span></span></div>
+        <div class="wow-home-destination-copy"><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p><span class="wow-home-destination-action">Explore Guides <span aria-hidden="true">→</span></span></div>
       </a>`;
+    }).join('');
+    const classShortcuts = data.classes.map(item => {
+      const icon = catalog?.classes?.find(record => record.id === item.id)?.icon || artworkManifest?.classEmblems?.[item.id]?.src;
+      return `<a class="wow-home-class-shortcut" href="${href(`classes/${item.id}`)}" style="--shortcut-accent:${escapeHtml(item.color)}"><span class="wow-home-class-shortcut-frame" aria-hidden="true">${renderWowIcon(icon, '', escapeHtml, 'wow-home-class-shortcut-icon')}</span><span class="wow-home-class-shortcut-name">${escapeHtml(item.name)}</span></a>`;
     }).join('');
     body = `<section class="wow-home-hero" aria-labelledby="page-title">
       <h1 id="page-title" tabindex="-1" class="visually-hidden">World of Warcraft: Forever</h1>
       ${wowHeroArt ? `<div class="wow-home-hero-art" data-home-art><img src="${escapeHtml(wowHeroArt.src)}" alt="${escapeHtml(wowHeroArt.alt)}" width="${wowHeroArt.width}" height="${wowHeroArt.height}" fetchpriority="high" data-home-art-image><span data-home-art-fallback hidden>World of Warcraft: Forever · Artwork unavailable</span></div>` : ''}
-      <div class="wow-home-hero-copy"><p class="wow-eyebrow">BM Gaming Wiki · Azeroth</p><p>Your adventure across Azeroth starts here.</p><div class="wow-home-actions"><a class="wow-home-action-primary" href="${href('classes')}">Explore Classes <span aria-hidden="true">→</span></a><a class="wow-home-action-secondary" href="${href('my-journey')}">Continue My Journey</a></div></div>
-    </section><section class="wow-home-directory" aria-labelledby="wow-directory-title"><div class="wow-home-section-heading"><p class="wow-eyebrow">The field guide</p><h2 id="wow-directory-title">Explore Azeroth</h2></div><div class="wow-home-directory-grid">${cards}</div></section>`;
+      <div class="wow-home-hero-copy"><p class="wow-eyebrow">BM Gaming Wiki · Azeroth</p><p>Your adventure across Azeroth starts here.</p><div class="wow-home-actions"><a class="wow-home-action-secondary" href="${href('my-journey')}">Continue My Journey</a></div></div>
+    </section><nav class="wow-home-class-shortcuts" aria-labelledby="wow-class-shortcuts-title"><h2 id="wow-class-shortcuts-title">Choose Your Class</h2><div class="wow-home-class-shortcut-grid">${classShortcuts}</div></nav><section class="wow-home-directory" aria-labelledby="wow-directory-title"><div class="wow-home-section-heading"><p class="wow-eyebrow">The field guide</p><h2 id="wow-directory-title">Explore WoW: Forever</h2></div><div class="wow-home-directory-grid">${cards}</div></section>`;
   }
   if (route.view === 'wow-journey') body = renderWowJourney(data, artworkManifest, catalog, profile, progress, escapeHtml);
   if (route.view === 'wow-classes') body = `<p class="wow-lede">Choose your class and get practical Forever-specific tips for your first levels.</p><p class="wow-note">${escapeHtml(data.classNotes)}</p><div class="wow-class-grid">${data.classes.map(item => {
