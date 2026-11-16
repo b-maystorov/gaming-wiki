@@ -135,6 +135,17 @@
       "status": "Forever-specific quest guide; some chains differ by faction and race."
     },
     {
+      "id": "method-warrior-leveling",
+      "title": "WoW Forever Warrior Leveling Guide & Talents",
+      "url": "https://www.method.gg/wow-forever/wow-forever-warrior-leveling-guide-and-talents",
+      "publisher": "Method",
+      "updatedDate": "2026-11-14",
+      "accessed": "2026-11-16",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Consulted for broad profession advice only. No talent allocations, unlock levels or item sources imported."
+    },
+    {
       "id": "icy-warrior-leveling",
       "title": "Fury Warrior Leveling Guide",
       "url": "https://www.icy-veins.com/wow-forever/fury-warrior-leveling",
@@ -311,6 +322,12 @@
       ],
       "sourceId": "classes-priest-warrior",
       "starterGuide": {
+        "professionRecommendation": {
+          "name": "First Aid",
+          "advice": "Learn First Aid and keep bandages ready for recovery between pulls. Consider it an optional starting point for a new Warrior.",
+          "type": "recommendation",
+          "sourceId": "method-warrior-leveling"
+        },
         "specialization": "Fury",
         "reason": "A two-weapon path that grows stronger as its key talents come online; the guide notes slower early progress and stresses weapon upgrades.",
         "combat": [

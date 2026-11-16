@@ -573,6 +573,80 @@ function renderWowDatabase(artworkManifest, catalog, escapeHtml) {
   </div>`;
 }
 
+export function initializeWarriorGuide(root) {
+  const guide = root.querySelector('[data-warrior-guide]');
+  if (!guide || guide.dataset.warriorInitialized) return;
+  guide.dataset.warriorInitialized = 'true';
+  const navigation = guide.querySelector('.wow-warrior-nav');
+  guide.addEventListener('click', event => {
+    const control = event.target.closest?.('[data-warrior-section]');
+    if (!control || !guide.contains(control)) return;
+    const sectionId = control.dataset.warriorSection;
+    if (!/^warrior-[a-z-]+$/.test(sectionId)) return;
+    const section = guide.querySelector('#' + sectionId);
+    if (!section) return;
+    event.preventDefault();
+    for (const button of navigation.querySelectorAll('[data-warrior-section]')) {
+      if (button.dataset.warriorSection === sectionId) button.setAttribute('aria-current', 'location');
+      else button.removeAttribute('aria-current');
+    }
+    section.focus({ preventScroll: true });
+    const reduced = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    section.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' });
+  });
+}
+
+function renderWarriorSectionButton(sectionId, label, className = '', hint = '', current = false) {
+  return `<button type="button"${className ? ` class="${className}"` : ''} data-warrior-section="${sectionId}" aria-controls="${sectionId}"${current ? ' aria-current="location"' : ''}><span>${label}</span>${hint ? `<small>${hint}</small>` : ''}</button>`;
+}
+
+function renderWarriorHeader(item, catalog, artworkManifest, escapeHtml) {
+  const icon = catalog?.classes?.find(record => record.id === item.id)?.icon || artworkManifest?.classEmblems?.warrior?.src || 'assets/images/wow-forever/icons/class_warrior.jpg';
+  return `<header class="wow-warrior-header"><a class="wow-warrior-back" href="#game/world-of-warcraft">← WoW: Forever</a>
+    <div class="wow-warrior-heading"><span class="wow-warrior-icon" aria-hidden="true"><img src="${escapeHtml(icon)}" alt="" width="56" height="56"></span><div><h1 id="page-title" tabindex="-1">${escapeHtml(item.name)}</h1><p class="wow-warrior-subtitle">Complete Leveling Guide · 1–60</p><p>${escapeHtml(item.description)}</p></div></div>
+    <dl class="wow-warrior-facts"><div><dt>Roles</dt><dd>${escapeHtml(item.roles.join(' / '))}</dd></div><div><dt>Specializations</dt><dd>${escapeHtml(item.specializations.map(spec => spec.name).join(' / '))}</dd></div></dl>
+    <p class="wow-warrior-phase">Phase 1 · Handbook in progress. The local roadmap covers levels 1–30; detailed levels 31–60 and level-60 coverage are coming later.</p>
+    <div class="wow-warrior-actions">${renderWarriorSectionButton('warrior-leveling', 'Start Leveling', 'wow-warrior-primary')}${renderWarriorSectionButton('warrior-talents', 'Talent Builds', 'wow-warrior-secondary')}</div>
+  </header>`;
+}
+
+function renderWarriorNavigation() {
+  const available = [
+    ['warrior-overview', 'Overview', '', true],
+    ['warrior-leveling', 'Leveling 1–60', '1–30 ready'],
+    ['warrior-talents', 'Talents'],
+    ['warrior-combat', 'Combat'],
+    ['warrior-gear', 'Gear &amp; Weapons'],
+    ['', 'Dungeons'],
+    ['warrior-professions', 'Professions', 'Quick start'],
+    ['', 'Level 60']
+  ];
+  return `<nav class="wow-warrior-nav" aria-label="Warrior handbook sections">${available.map(([id, label, hint, current]) => id
+    ? renderWarriorSectionButton(id, label, '', hint, current)
+    : `<button type="button" disabled><span>${label}</span><small>Coming later</small></button>`).join('')}</nav>`;
+}
+
+function renderWarriorQuickStart(item, data, escapeHtml) {
+  const guide = item.starterGuide;
+  const profession = guide.professionRecommendation;
+  const professionSource = data.sources.find(source => source.id === profession?.sourceId);
+  const recommendation = item.specializations.find(spec => spec.name === guide.specialization);
+  const otherSpecs = item.specializations.filter(spec => spec.name !== guide.specialization);
+  return `<section class="wow-warrior-quick-start" id="warrior-overview" tabindex="-1" aria-labelledby="warrior-quick-start-title">
+    <h2 id="warrior-quick-start-title">Warrior Quick Start</h2>
+    <p class="wow-warrior-recommendation">Current local recommendation: ${escapeHtml(guide.specialization)} · ${escapeHtml(guide.confidence)} confidence. These are starter recommendations, not a complete level 1–60 talent allocation.</p>
+    <div class="wow-warrior-quick-grid">
+      <article class="wow-warrior-quick-item"><span>Local leveling recommendation</span><h3>${escapeHtml(guide.specialization)} path</h3><p>${escapeHtml(guide.reason)}</p></article>
+      <article class="wow-warrior-quick-item"><span>Other available paths</span><h3>Choose your role</h3>${otherSpecs.map(spec => `<p><strong>${escapeHtml(spec.name)}</strong> · ${escapeHtml(spec.focus)}</p>`).join('')}</article>
+      <article class="wow-warrior-quick-item"><span>Equipment priority</span><h3>Weapon upgrades matter</h3><p>${escapeHtml(guide.gear)}</p></article>
+      <article class="wow-warrior-quick-item"><span>Resource reminder</span><h3>Manage your Rage</h3><p>${escapeHtml(guide.resource)}</p></article>
+      <article class="wow-warrior-quick-item"><span>Survival habit</span><h3>Choose safe pulls</h3><p>${escapeHtml(guide.levelingBands[0].combat)}</p></article>
+      <article class="wow-warrior-quick-item" id="warrior-professions" tabindex="-1"><span>Beginner recommendation</span><h3>${escapeHtml(profession?.name || 'Professions')}</h3><p>${escapeHtml(profession?.advice || 'A profession recommendation is not recorded locally yet.')}</p>${professionSource ? `<a class="wow-warrior-profession-source" href="${escapeHtml(professionSource.url)}" target="_blank" rel="noreferrer">Profession reference · ${escapeHtml(professionSource.publisher)} ↗</a>` : ''}</article>
+    </div>
+    <div class="wow-warrior-tools"><a href="#game/world-of-warcraft/talent-planner" data-wow-build-class="warrior" data-wow-build-spec="${escapeHtml(recommendation?.id || 'fury')}">Open Warrior talent planner →</a><a href="#game/world-of-warcraft/leveling">Open leveling helper →</a></div>
+  </section>`;
+}
+
 export function renderWowPage(route, data, escapeHtml, artworkManifest = null, profile = {}, progress = loadWowGuideProgress(), catalog = null, guidedData = null) {
   if (route.view === 'wow-database') return renderWowDatabase(artworkManifest, catalog, escapeHtml);
   const href = view => `#game/world-of-warcraft/${view}`;
@@ -629,6 +703,7 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
   if (route.view === 'wow-race') body = renderWowRaceDetail(route.raceRecord, data, catalog, escapeHtml);
   if (route.view === 'wow-class') {
     const item = route.classRecord;
+    const sectionAttributes = section => item.id === 'warrior' ? ` id="warrior-${section}" tabindex="-1"` : '';
     const source = data.sources.find(entry => entry.id === item.sourceId);
     const guide = item.starterGuide;
     const guideSource = data.sources.find(entry => entry.id === guide?.sourceId);
@@ -640,9 +715,13 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
     const specializations = item.specializations.map(spec => `<a class="wow-spec-card" href="${href(`builds/${item.id}/${spec.id}`)}">${art ? `<img src="${escapeHtml(art.src)}" alt="" width="480" height="220" loading="lazy">` : ''}<span>${escapeHtml(spec.role)}</span><h3>${escapeHtml(spec.name)}</h3><p>${escapeHtml(spec.focus)}</p><small>${escapeHtml(spec.name === guide?.specialization ? 'Leveling guide available' : 'Read path overview')} →</small></a>`).join('');
     const bullets = values => `<ul>${values.map(value => `<li>${escapeHtml(value)}</li>`).join('')}</ul>`;
     const abilityChips = guide?.quickAbilities?.map(name => { const icon = catalog?.classAbilities?.[item.id]?.find(record => record.name === name)?.icon || catalog?.classes?.find(record => record.id === item.id)?.trees.flatMap(tree => tree.talents).find(talent => talent.name === name)?.icon; return `<span class="wow-ability-chip">${icon ? renderWowIcon(icon, `${name} game icon`, escapeHtml, 'wow-chip-icon') : ''}${escapeHtml(name)}</span>`; }).join('') || '';
-    body = `<header class="wow-class-hero wow-class-hero-illustrated" style="--class-accent:${escapeHtml(item.color)}">${art ? `<img src="${escapeHtml(art.src)}" alt="${escapeHtml(art.alt)}" width="960" height="640" fetchpriority="high">` : `<div class="wow-class-art-fallback" role="img" aria-label="${escapeHtml(item.name)} class-themed decorative illustration fallback"><span aria-hidden="true">${escapeHtml(item.name.slice(0, 1))}</span></div>`}<div class="wow-class-hero-heading">${renderClassEmblem(item.id,catalog,escapeHtml,'wow-class-emblem-large')}<p class="wow-eyebrow">World of Warcraft: Forever · Class field guide</p><h2>${escapeHtml(item.name)}</h2><p>${escapeHtml(item.description)}</p><span class="wow-art-caption">Original BM Gaming Wiki illustration · not official in-game art</span></div></header>
-      <section class="wow-starter-guide" aria-labelledby="starter-guide-title"><div class="wow-subsection-heading"><div><p class="wow-eyebrow">First levels · Forever-specific guide</p><h3 id="starter-guide-title">Starting your journey as ${escapeHtml(item.name)}</h3></div>${guideSource ? `<a class="wow-guide-source" href="${escapeHtml(guideSource.url)}" target="_blank" rel="noreferrer">Open full leveling guide ↗</a>` : ''}</div><div class="wow-starter-summary"><article><span>Suggested path</span><h4>${escapeHtml(guide?.specialization || 'Class path')}</h4><p>${escapeHtml(guide?.reason || item.description)}</p></article><article><span>Quick combat reference</span><div class="wow-ability-row">${abilityChips}</div><ol>${bullets(guide?.combat || item.soloTips || [])}</ol></article></div><section class="wow-level-roadmap" aria-label="${escapeHtml(item.name)} leveling roadmap"><div class="wow-subsection-heading"><div><p class="wow-eyebrow">Early journey · levels 1–30</p><h3>Leveling roadmap</h3></div></div><div class="wow-level-roadmap-grid">${(guide?.levelingBands || []).map(band => `<article><span>${escapeHtml(band.range)}</span><p>${escapeHtml(band.combat)}</p><p><strong>Stay safe:</strong> ${escapeHtml(band.survival)}</p><small>${escapeHtml(band.milestones)}</small></article>`).join('')}</div></section><div class="wow-starter-grid"><article><h4>Resource and pacing</h4><p>${escapeHtml(guide?.resource || 'See the linked Forever guide for current resource advice.')}</p></article><article><h4>Class quests and unlocks</h4><p>${escapeHtml(guide?.classMilestones || 'Check the class quest guide for your race and level.')}</p></article><article><h4>Weapons and gear</h4><p>${escapeHtml(guide?.gear || 'Use current level-appropriate gear and the linked guide for detailed priorities.')}</p></article><article><h4>Beginner traps</h4>${bullets(guide?.beginnerMistakes || [])}</article></div>${guide?.talentPriorities?.length ? `<details class="wow-talent-tips"><summary>Early talent priorities from the guide</summary>${bullets(guide.talentPriorities)}<small>Recommendations are copied as names and milestones only; this page does not claim a full talent allocation.</small></details>` : ''}<div class="wow-start-zones"><strong>Where to quest</strong><p>${escapeHtml(guide?.zoneAdvice || 'Use the leveling directory and choose a faction/level-matched zone.')}</p><a href="${href('leveling')}">Open leveling helper →</a></div></section>
-      <div class="wow-detail-grid"><article><h3>Roles</h3><p>${escapeHtml(item.roles.join(' · '))}</p></article><article><h3>Strengths</h3>${renderBullets(item.strengths, escapeHtml)}</article><article><h3>Limitations</h3>${renderBullets(item.limitations, escapeHtml)}</article><article><h3>Group utility</h3>${renderBullets(item.groupUtility, escapeHtml)}</article><article><h3>Available tools</h3>${renderBullets(item.abilities, escapeHtml)}</article></div><section class="wow-subsection"><div class="wow-subsection-heading"><p class="wow-eyebrow">Forever talent paths</p><h3>Specializations</h3></div><div class="wow-spec-grid">${specializations}</div></section><section class="wow-subsection"><h3>Race and faction options</h3><div class="wow-race-list">${raceGroups}</div><p class="wow-note">Skyborne access and starting experience require the Heroic Pack or higher.</p><a href="#game/world-of-warcraft/races">Open race details and compatibility →</a></section>${renderWowSpellbook(item,catalog,escapeHtml)}${renderRelatedGuides(item,null,artworkManifest,catalog,escapeHtml)}${source ? `<p class="wow-source-link">Class details: <a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)}</a></p>` : ''}`;
+    const classHeader = `<header class="wow-class-hero wow-class-hero-illustrated" style="--class-accent:${escapeHtml(item.color)}">${art ? `<img src="${escapeHtml(art.src)}" alt="${escapeHtml(art.alt)}" width="960" height="640" fetchpriority="high">` : `<div class="wow-class-art-fallback" role="img" aria-label="${escapeHtml(item.name)} class-themed decorative illustration fallback"><span aria-hidden="true">${escapeHtml(item.name.slice(0, 1))}</span></div>`}<div class="wow-class-hero-heading">${renderClassEmblem(item.id,catalog,escapeHtml,'wow-class-emblem-large')}<p class="wow-eyebrow">World of Warcraft: Forever · Class field guide</p><h2>${escapeHtml(item.name)}</h2><p>${escapeHtml(item.description)}</p><span class="wow-art-caption">Original BM Gaming Wiki illustration · not official in-game art</span></div></header>
+      `;
+    body = `<section class="wow-starter-guide" aria-labelledby="starter-guide-title"><div class="wow-subsection-heading"><div><p class="wow-eyebrow">First levels · Forever-specific guide</p><h3 id="starter-guide-title">Starting your journey as ${escapeHtml(item.name)}</h3></div>${guideSource ? `<a class="wow-guide-source" href="${escapeHtml(guideSource.url)}" target="_blank" rel="noreferrer">Open full leveling guide ↗</a>` : ''}</div><div class="wow-starter-summary"><article><span>Suggested path</span><h4>${escapeHtml(guide?.specialization || 'Class path')}</h4><p>${escapeHtml(guide?.reason || item.description)}</p></article><article${sectionAttributes('combat')}><span>Quick combat reference</span><div class="wow-ability-row">${abilityChips}</div><ol>${bullets(guide?.combat || item.soloTips || [])}</ol></article></div><section class="wow-level-roadmap"${sectionAttributes('leveling')} aria-label="${escapeHtml(item.name)} leveling roadmap"><div class="wow-subsection-heading"><div><p class="wow-eyebrow">Early journey · levels 1–30</p><h3>Leveling roadmap</h3></div></div><div class="wow-level-roadmap-grid">${(guide?.levelingBands || []).map(band => `<article><span>${escapeHtml(band.range)}</span><p>${escapeHtml(band.combat)}</p><p><strong>Stay safe:</strong> ${escapeHtml(band.survival)}</p><small>${escapeHtml(band.milestones)}</small></article>`).join('')}</div></section><div class="wow-starter-grid"><article><h4>Resource and pacing</h4><p>${escapeHtml(guide?.resource || 'See the linked Forever guide for current resource advice.')}</p></article><article><h4>Class quests and unlocks</h4><p>${escapeHtml(guide?.classMilestones || 'Check the class quest guide for your race and level.')}</p></article><article${sectionAttributes('gear')}><h4>Weapons and gear</h4><p>${escapeHtml(guide?.gear || 'Use current level-appropriate gear and the linked guide for detailed priorities.')}</p></article><article><h4>Beginner traps</h4>${bullets(guide?.beginnerMistakes || [])}</article></div>${guide?.talentPriorities?.length ? `<details class="wow-talent-tips"><summary>Early talent priorities from the guide</summary>${bullets(guide.talentPriorities)}<small>Recommendations are copied as names and milestones only; this page does not claim a full talent allocation.</small></details>` : ''}<div class="wow-start-zones"><strong>Where to quest</strong><p>${escapeHtml(guide?.zoneAdvice || 'Use the leveling directory and choose a faction/level-matched zone.')}</p><a href="${href('leveling')}">Open leveling helper →</a></div></section>
+      <div class="wow-detail-grid"><article><h3>Roles</h3><p>${escapeHtml(item.roles.join(' · '))}</p></article><article><h3>Strengths</h3>${renderBullets(item.strengths, escapeHtml)}</article><article><h3>Limitations</h3>${renderBullets(item.limitations, escapeHtml)}</article><article><h3>Group utility</h3>${renderBullets(item.groupUtility, escapeHtml)}</article><article><h3>Available tools</h3>${renderBullets(item.abilities, escapeHtml)}</article></div><section class="wow-subsection"${sectionAttributes('talents')}><div class="wow-subsection-heading"><p class="wow-eyebrow">Forever talent paths</p><h3>Specializations</h3></div><div class="wow-spec-grid">${specializations}</div></section><section class="wow-subsection"><h3>Race and faction options</h3><div class="wow-race-list">${raceGroups}</div><p class="wow-note">Skyborne access and starting experience require the Heroic Pack or higher.</p><a href="#game/world-of-warcraft/races">Open race details and compatibility →</a></section>${renderWowSpellbook(item,catalog,escapeHtml)}${renderRelatedGuides(item,null,artworkManifest,catalog,escapeHtml)}${source ? `<p class="wow-source-link">Class details: <a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)}</a></p>` : ''}`;
+    body = item.id === 'warrior'
+      ? renderWarriorHeader(item,catalog,artworkManifest,escapeHtml) + renderWarriorNavigation() + renderWarriorQuickStart(item,data,escapeHtml) + `<div class="wow-warrior-existing-guide">${body}</div>`
+      : classHeader + body;
   }
   if (route.view === 'wow-build-finder') body = `<p class="wow-lede">Explore source-backed specialization paths by role. This finder does not claim that a complete talent loadout or rotation is verified.</p><form class="wow-build-form" data-wow-build-finder><label>Class<select name="classId"><option value="all">Choose a class</option>${data.classes.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('')}</select></label><label>Playstyle<select name="playstyle">${data.playstyles.map(style => `<option value="${escapeHtml(style.id)}">${escapeHtml(style.label)}</option>`).join('')}</select></label><label>Current level<input name="level" type="number" min="1" max="60" value="1"></label><label>Preferred specialization<select name="specialization"><option value="all">Any specialization</option>${data.classes.flatMap(item => item.specializations.map(spec => `<option value="${escapeHtml(item.id)}:${escapeHtml(spec.id)}">${escapeHtml(item.name)} · ${escapeHtml(spec.name)}</option>`)).join('')}</select></label><label>Faction<select name="faction"><option value="all">Choose later</option><option>Alliance</option><option>Horde</option></select></label><label class="wow-hardcore"><input type="checkbox" disabled> Hardcore preference <small>Unavailable in this guide until its release status is verified.</small></label></form><div id="wow-build-results" aria-live="polite">${renderWowBuildResults(data, { classId: 'all', playstyle: 'solo-leveling', level: '1', specialization: 'all', faction: 'all' }, escapeHtml, catalog)}</div>`;
   if (route.view === 'wow-build-detail') {
@@ -657,6 +736,7 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
   if (route.view === 'wow-dungeons') body = renderWowDungeons(data, escapeHtml);
   if (route.view.startsWith('wow-upcoming')) body = `<div class="wow-note"><h2>Guide in preparation</h2><p>This destination is active and ready for version-specific records. No guide data is published yet.</p></div>`;
   const wowNav = `<nav class="wow-nav" aria-label="World of Warcraft: Forever"><a href="#game/world-of-warcraft">Azeroth</a><a href="${href('my-journey')}">My Journey</a><a href="${href('classes')}">Classes</a><a href="${href('races')}">Races</a><a href="${href('build-finder')}">Find My Build</a><a href="${href('talent-planner')}">Talents</a><a href="${href('leveling')}">Leveling</a><a href="${href('dungeons-raids')}">Dungeons</a><a href="${href('tier-lists')}">Tier Lists</a></nav>`;
+  if (route.view === 'wow-class' && route.classRecord.id === 'warrior') return `<div class="wow-page wow-warrior-page"><article class="wow-warrior-guide" data-warrior-guide style="--class-accent:${escapeHtml(route.classRecord.color)};--warrior-accent:#c79c6e">${body}</article></div>`;
   return `<div class="wow-page">${route.view === 'wow-home' ? '' : scene}${route.view === 'wow-home' ? body : `<section class="wow-banner"><p class="wow-eyebrow">BM Gaming Wiki <span>✦</span> World of Warcraft: Forever</p><h1 id="page-title" tabindex="-1">${escapeHtml(title)}</h1><p>Explore a reimagined original Azeroth, one well-prepared adventure at a time.</p>${wowNav}</section><section class="wow-content"><a class="wow-back" href="#game/world-of-warcraft">← WoW: Forever</a><h2>${escapeHtml(title)}</h2>${body}</section>`}</div>`;
 }
 

@@ -1733,7 +1733,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     const classRoute = route(`#game/world-of-warcraft/classes/${item.id}`);
     assert.equal(classRoute.view, 'wow-class', item.id);
     const classHtml = render(classRoute);
-    assert.ok(classHtml.includes(`<h2>${item.name}</h2>`));
+    assert.ok(classHtml.includes(item.id === 'warrior' ? '<h1 id="page-title" tabindex="-1">Warrior</h1>' : `<h2>${item.name}</h2>`));
     assert.ok(classHtml.includes('Starting your journey'));
     assert.ok(classHtml.includes(item.starterGuide.specialization));
     assert.ok(classHtml.includes(item.starterGuide.reason));
@@ -1741,7 +1741,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     assert.ok(classHtml.includes('Beginner traps'));
     assert.ok(classHtml.includes('Where to quest'));
     assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.starterGuide.sourceId).url));
-    assert.ok(classHtml.includes('Original BM Gaming Wiki illustration'));
+    if (item.id !== 'warrior') assert.ok(classHtml.includes('Original BM Gaming Wiki illustration'));
     const art = wowArtwork.records.find(record => record.classId === item.id);
     assert.ok(art, `missing local class illustration for ${item.id}`);
     const svg = await readFile(resolve(root, 'dist', art.src), 'utf8');
@@ -2261,4 +2261,100 @@ test('WoW dungeon preparation routes, quest relationships, faction filtering, lo
   assert.ok(deadminesPage.includes('Dungeon drops (not quest rewards)'));
   assert.ok(deadminesPage.includes('The Unsent Letter for a pre-run pickup'));
   assert.ok(deadminesPage.includes('data-count-ready'));
+});
+
+test('Warrior handbook has one icon-led header and real section navigation', () => {
+  const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+  const header = html.match(/<header class="wow-warrior-header">[\s\S]*?<\/header>/)?.[0];
+  assert.ok(header);
+  assert.equal((html.match(/<h1\b/g) || []).length, 1);
+  assert.match(header, /<h1 id="page-title" tabindex="-1">Warrior<\/h1>/);
+  assert.ok(header.includes('Complete Leveling Guide · 1–60'));
+  assert.ok(header.includes('Damage / Tank'));
+  assert.ok(header.includes('Arms / Fury / Protection'));
+  assert.match(header, /src="assets\/images\/wow-forever\/icons\/class_warrior\.jpg"/);
+  assert.ok(header.includes('href="#game/world-of-warcraft"'));
+  assert.doesNotMatch(html, /class="wow-banner"|class="wow-nav"|class="wow-scene"|wow-class-hero-illustrated/);
+  assert.doesNotMatch(header, /<svg|wow-class-art-fallback|warrior\.svg/);
+  const navigation = html.match(/<nav class="wow-warrior-nav"[\s\S]*?<\/nav>/)?.[0];
+  const controls = [...navigation.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)];
+  assert.equal(controls.length, 8);
+  assert.equal((navigation.match(/aria-current="location"/g) || []).length, 1);
+  for (const [control, attributes] of controls) {
+    const target = attributes.match(/data-warrior-section="([^"]+)"/)?.[1];
+    if (target) {
+      assert.ok(attributes.includes(`aria-controls="${target}"`));
+      assert.equal((html.match(new RegExp(` id="${target}"`, 'g')) || []).length, 1, target);
+      assert.ok(html.includes(`id="${target}" tabindex="-1"`));
+    } else {
+      assert.match(attributes, /disabled/);
+      assert.match(control, /Dungeons|Level 60/);
+      assert.match(control, /Coming later/);
+    }
+  }
+  assert.ok(html.indexOf(header) < html.indexOf(navigation));
+  assert.ok(html.indexOf(navigation) < html.indexOf('Warrior Quick Start'));
+  assert.ok(html.includes('detailed levels 31–60 and level-60 coverage are coming later'));
+  assert.doesNotMatch(html, /id="warrior-dungeons"|id="warrior-level-60"/);
+});
+
+test('Warrior handbook preserves existing guide content and integrations', async () => {
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guide = warrior.starterGuide;
+  const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+  for (const heading of ['Starting your journey as Warrior', 'Leveling roadmap', 'Strengths', 'Limitations', 'Specializations', 'Race and faction options', 'Open Forever trainer spellbook', 'Related Guides']) assert.ok(html.includes(heading), heading);
+  for (const text of [...warrior.strengths, ...warrior.limitations, ...warrior.groupUtility, ...guide.combat, guide.reason, guide.resource, guide.gear, guide.classMilestones, guide.zoneAdvice]) assert.ok(html.includes(text), text);
+  for (const band of guide.levelingBands) for (const text of [band.range,band.combat,band.survival,band.milestones]) assert.ok(html.includes(text), text);
+  for (const spec of warrior.specializations) assert.ok(html.includes(`#game/world-of-warcraft/builds/warrior/${spec.id}`));
+  assert.match(html, /href="#game\/world-of-warcraft\/talent-planner" data-wow-build-class="warrior" data-wow-build-spec="fury"/);
+  assert.ok(html.includes('href="#game/world-of-warcraft/leveling"'));
+  assert.ok(html.includes(guide.professionRecommendation.advice));
+  assert.ok(html.includes(wowPack.sources.find(source => source.id === guide.professionRecommendation.sourceId).url));
+  const icon = await readFile(resolve(root, 'dist/assets/images/wow-forever/icons/class_warrior.jpg'));
+  assert.ok(icon.length > 0);
+  for (const item of wowPack.classes.filter(item => item.id !== 'warrior')) {
+    const other = h.app.renderPage(h.app.readRoute(`#game/world-of-warcraft/classes/${item.id}`));
+    assert.doesNotMatch(other, /data-warrior-guide|wow-warrior-header|warrior-overview/);
+    assert.ok(other.includes('class="wow-banner"'));
+  }
+});
+
+test('Warrior section controls focus and scroll local targets without changing the route', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const sections = new Map();
+  const buttons = ['overview', 'leveling', 'talents', 'combat', 'gear', 'professions'].map(name => ({ dataset: { warriorSection: `warrior-${name}` }, attributes: new Map(), setAttribute(name,value) { this.attributes.set(name,value); }, removeAttribute(name) { this.attributes.delete(name); } }));
+  const listeners = [];
+  const navigation = { querySelectorAll: () => buttons };
+  const guide = { dataset: {}, contains: control => buttons.includes(control), querySelector: selector => selector === '.wow-warrior-nav' ? navigation : sections.get(selector.slice(1)), addEventListener: (type, listener) => listeners.push(listener) };
+  const originalHash = h.context.location.hash;
+  const originalMotion = h.context.matchMedia;
+  const calls = [];
+  for (const button of buttons) sections.set(button.dataset.warriorSection, { focus: options => calls.push(['focus', button.dataset.warriorSection, options.preventScroll]), scrollIntoView: options => calls.push(['scroll', button.dataset.warriorSection, options.behavior, options.block]) });
+  try {
+    module.initializeWarriorGuide({ querySelector: () => guide });
+    module.initializeWarriorGuide({ querySelector: () => guide });
+    assert.equal(listeners.length, 1, 'initializing the same DOM twice does not duplicate listeners');
+    h.context.matchMedia = () => ({ matches: true });
+    let prevented = 0;
+    listeners[0]({ target: { closest: () => buttons[1] }, preventDefault: () => { prevented += 1; } });
+    assert.equal(prevented, 1);
+    assert.deepEqual(calls[0], ['focus', 'warrior-leveling', true]);
+    assert.deepEqual(calls[1], ['scroll', 'warrior-leveling', 'instant', 'start']);
+    assert.equal(buttons[1].attributes.get('aria-current'), 'location');
+    assert.ok(buttons.filter(button => button.attributes.has('aria-current')).length === 1);
+    h.context.matchMedia = () => ({ matches: false });
+    listeners[0]({ target: { closest: () => buttons[3] }, preventDefault() {} });
+    assert.deepEqual(calls[3], ['scroll', 'warrior-combat', 'smooth', 'start']);
+    assert.equal(h.context.location.hash, originalHash);
+  } finally {
+    h.context.matchMedia = originalMotion;
+  }
+});
+
+test('Warrior class icon remains local when optional artwork metadata is unavailable', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const route = h.app.readRoute('#game/world-of-warcraft/classes/warrior');
+  const html = module.renderWowPage(route, wowPack, String, null, {}, {}, null);
+  assert.match(html, /wow-warrior-icon" aria-hidden="true"><img src="assets\/images\/wow-forever\/icons\/class_warrior\.jpg"/);
+  assert.doesNotMatch(html, /wow-class-art-fallback/);
 });

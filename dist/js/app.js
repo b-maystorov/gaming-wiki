@@ -8,7 +8,7 @@ import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
-import { renderWowPage, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
+import { renderWowPage, initializeWarriorGuide, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
 import { renderWowDungeonPrep, loadDungeonPrepProgress, saveDungeonPrepProgress, setDungeonPrepFaction, setDungeonPrepLevel } from './wow-dungeon-prep.js';
 import { initializeSiteNavigation } from './site-navigation.js';
 import { initializeUtilityBar } from './utility-bar.js';
@@ -1678,10 +1678,11 @@ function showRoute() {
   const route = readRoute(location.hash);
   updateBackToTop(route, 0);
   document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview' || route.view.startsWith('wow-'));
-  const viewKey = route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.kind && route.record ? `${route.kind}/${route.record.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
+  const viewKey = route.view === 'wow-class' && route.classRecord?.id === 'warrior' ? 'wow-class/warrior' : route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.kind && route.record ? `${route.kind}/${route.record.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
   const changed = viewKey !== currentView;
   if (changed) {
     main.innerHTML = renderPage(route);
+    initializeWarriorGuide(main);
     currentView = viewKey;
   }
   if (route.view === 'expedition-planner') {
