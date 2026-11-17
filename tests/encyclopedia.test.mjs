@@ -2263,6 +2263,84 @@ test('WoW dungeon preparation routes, quest relationships, faction filtering, lo
   assert.ok(deadminesPage.includes('data-count-ready'));
 });
 
+test('leveling companion updates its level, specialization, and tab and persists the selection', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
+  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, talentClass };
+  const stored = new Map();
+  const handlers = {};
+  const attributes = new Map();
+  const levelInput = { value: '1', matches: selector => selector === '[data-companion-level-input]', setAttribute: (name, value) => attributes.set(name, value) };
+  const levelOutput = { value: '1', textContent: '1' };
+  const levelBadge = { textContent: 'Level 1' };
+  const specializationSelect = { value: 'fury', matches: selector => selector === '[data-companion-spec]' };
+  const panel = { innerHTML: '', setAttribute: (name, value) => attributes.set(name, value) };
+  const status = { textContent: '' };
+  const tabs = ['overview', 'talents', 'gear'].map(tab => ({ dataset: { companionTab: tab }, tabIndex: -1, attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); }, focus() {} }));
+  const companion = {
+    dataset: {},
+    querySelector(selector) {
+      return ({ '[data-companion-level-input]': levelInput, '[data-companion-level]': levelOutput, '[data-companion-level-badge]': levelBadge, '[data-companion-spec]': specializationSelect, '[data-companion-panel]': panel, '[data-companion-status]': status })[selector];
+    },
+    querySelectorAll: () => tabs,
+    addEventListener: (type, handler) => { handlers[type] = handler; }
+  };
+  companionModule.initializeLevelingCompanion({ querySelector: () => companion }, { classId: 'warrior', currentLevel: 1, selectedSpecialization: 'fury', guideData, storage: { getItem: key => stored.get(key) || null, setItem: (key, value) => stored.set(key, value) } });
+
+  levelInput.value = '20';
+  handlers.input({ target: levelInput });
+  assert.equal(levelOutput.value, '20');
+  assert.equal(levelBadge.textContent, 'Level 20');
+  assert.ok(panel.innerHTML.includes('Fury · Level 20'));
+  assert.ok(panel.innerHTML.includes('Dual Wield training at level 20'));
+  assert.ok(panel.innerHTML.includes('Ruins of Lordaeron · levels 15–20'));
+
+  specializationSelect.value = 'arms';
+  handlers.change({ target: specializationSelect });
+  assert.ok(panel.innerHTML.includes('Arms · Level 20'));
+  assert.ok(panel.innerHTML.includes('Guide data coming soon for this specialization'));
+  assert.ok(!panel.innerHTML.includes('two-weapon path'));
+
+  const talentsTab = tabs.find(tab => tab.dataset.companionTab === 'talents');
+  handlers.click({ target: { closest: () => talentsTab } });
+  assert.equal(talentsTab.attributes.get('aria-selected'), 'true');
+  assert.ok(panel.innerHTML.includes('Arms talent reference'));
+  assert.ok(panel.innerHTML.includes('Improved Heroic Strike'));
+  const saved = companionModule.loadCompanionState('warrior', {}, warrior.specializations, { getItem: key => stored.get(key) || null });
+  assert.deepEqual(JSON.parse(JSON.stringify(saved)), { classId: 'warrior', level: 20, specializationId: 'arms', tab: 'talents' });
+  const gearTab = tabs.find(tab => tab.dataset.companionTab === 'gear');
+  handlers.click({ target: { closest: () => gearTab } });
+  assert.equal(gearTab.attributes.get('aria-selected'), 'true');
+  assert.ok(panel.innerHTML.includes('Arms gear'));
+  assert.ok(panel.innerHTML.includes('Guide data coming soon for this specialization’s gear'));
+});
+
+test('leveling companion reports missing data and safely handles blocked storage', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const specs = warrior.specializations;
+  const missing = companionModule.getCompanionPanel({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { classRecord: warrior });
+  assert.match(missing.notices.join(' '), /Guide data coming soon/);
+  assert.equal(companionModule.saveCompanionState({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { setItem() { throw new Error('Storage denied'); } }), false);
+  const fallback = companionModule.loadCompanionState('warrior', { level: 17, specializationId: 'fury' }, specs, { getItem() { throw new Error('Storage denied'); } });
+  assert.deepEqual(JSON.parse(JSON.stringify(fallback)), { classId: 'warrior', level: 17, specializationId: 'fury', tab: 'overview' });
+});
+
+test('leveling companion accepts reusable class-specific data and renders accessible controls', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const paladin = wowPack.classes.find(item => item.id === 'paladin');
+  const guideData = { classRecord: paladin, guides: { retribution: paladin.starterGuide }, zones: [], dungeons: [] };
+  const html = companionModule.renderLevelingCompanion({ classId: 'paladin', currentLevel: 8, selectedSpecialization: 'retribution', guideData });
+  assert.ok(html.includes('data-class-id="paladin"'));
+  assert.ok(html.includes('Paladin · Retribution · Level 8'));
+  assert.ok(html.includes('role="tablist"'));
+  assert.ok(html.includes('aria-selected="true"'));
+  assert.ok(!html.includes('data-warrior-guide'));
+  const gear = companionModule.getCompanionPanel({ classId: 'paladin', level: 8, specializationId: 'retribution', tab: 'gear' }, guideData);
+  assert.ok(gear.sections[0].text.includes(paladin.starterGuide.gear));
+});
+
 test('Warrior handbook has one icon-led header and real section navigation', () => {
   const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
   const header = html.match(/<header class="wow-warrior-header">[\s\S]*?<\/header>/)?.[0];
@@ -2302,6 +2380,12 @@ test('Warrior handbook preserves existing guide content and integrations', async
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const guide = warrior.starterGuide;
   const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+  const navigationPosition = html.indexOf('class="wow-warrior-nav"');
+  const companionPosition = html.indexOf('class="wow-leveling-companion"');
+  const quickStartPosition = html.indexOf('class="wow-warrior-quick-start"');
+  assert.ok(navigationPosition < companionPosition && companionPosition < quickStartPosition);
+  assert.match(html, /id="warrior-companion-level" type="range" min="1" max="60"/);
+  for (const tab of ['overview', 'talents', 'gear']) assert.ok(html.includes(`data-companion-tab="${tab}"`));
   for (const heading of ['Starting your journey as Warrior', 'Leveling roadmap', 'Strengths', 'Limitations', 'Specializations', 'Race and faction options', 'Open Forever trainer spellbook', 'Related Guides']) assert.ok(html.includes(heading), heading);
   for (const text of [...warrior.strengths, ...warrior.limitations, ...warrior.groupUtility, ...guide.combat, guide.reason, guide.resource, guide.gear, guide.classMilestones, guide.zoneAdvice]) assert.ok(html.includes(text), text);
   for (const band of guide.levelingBands) for (const text of [band.range,band.combat,band.survival,band.milestones]) assert.ok(html.includes(text), text);
