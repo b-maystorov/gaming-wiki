@@ -2305,8 +2305,9 @@ test('leveling companion updates its level, specialization, and tab and persists
   const talentsTab = tabs.find(tab => tab.dataset.companionTab === 'talents');
   handlers.click({ target: { closest: () => talentsTab } });
   assert.equal(talentsTab.attributes.get('aria-selected'), 'true');
-  assert.ok(panel.innerHTML.includes('Arms talent reference'));
-  assert.ok(panel.innerHTML.includes('Improved Heroic Strike'));
+  assert.ok(panel.innerHTML.includes('Arms talent progression'));
+  assert.ok(panel.innerHTML.includes('Talent progression not yet verified.'));
+  assert.ok(!panel.innerHTML.includes('Improved Heroic Strike'));
   const saved = companionModule.loadCompanionState('warrior', {}, warrior.specializations, { getItem: key => stored.get(key) || null });
   assert.deepEqual(JSON.parse(JSON.stringify(saved)), { classId: 'warrior', level: 20, specializationId: 'arms', tab: 'talents' });
   const gearTab = tabs.find(tab => tab.dataset.companionTab === 'gear');
@@ -2320,11 +2321,79 @@ test('leveling companion reports missing data and safely handles blocked storage
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const specs = warrior.specializations;
-  const missing = companionModule.getCompanionPanel({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { classRecord: warrior });
-  assert.match(missing.notices.join(' '), /Guide data coming soon/);
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const engine = { builds: wowGuidedData.builds, catalog: wowClientData, resolve: wowModule.resolveWowGuidedBuild, availablePoints: wowModule.availableWowTalentPoints };
+  const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
+  for (const spec of specs) {
+    const missing = companionModule.getCompanionPanel({ classId: 'warrior', level: 15, specializationId: spec.id, tab: 'talents' }, { classRecord: warrior, talentClass }, engine);
+    assert.deepEqual(JSON.parse(JSON.stringify(missing.sections[0])), { title: 'Talent points available', text: '6 base points at level 15. No allocation is shown without a verified progression.' });
+    assert.deepEqual(JSON.parse(JSON.stringify(missing.notices)), ['Talent progression not yet verified.']);
+    assert.equal(missing.talents, undefined);
+  }
+  assert.equal(wowGuidedData.builds.filter(build => build.classId === 'warrior').length, 0);
+  const shaman = wowPack.classes.find(item => item.id === 'shaman');
+  const shamanTalentClass = wowClientData.classes.find(item => item.id === 'shaman');
+  const partialShaman = companionModule.getCompanionPanel({ classId: 'shaman', level: 20, specializationId: 'enhancement', tab: 'talents' }, { classRecord: shaman, talentClass: shamanTalentClass }, engine);
+  assert.deepEqual(JSON.parse(JSON.stringify(partialShaman.notices)), ['Talent progression not yet verified.']);
   assert.equal(companionModule.saveCompanionState({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { setItem() { throw new Error('Storage denied'); } }), false);
   const fallback = companionModule.loadCompanionState('warrior', { level: 17, specializationId: 'fury' }, specs, { getItem() { throw new Error('Storage denied'); } });
   assert.deepEqual(JSON.parse(JSON.stringify(fallback)), { classId: 'warrior', level: 17, specializationId: 'fury', tab: 'overview' });
+});
+
+test('WoW Forever talent point budget follows the level-10 through level-60 rule', () => {
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  for (const [level, expected] of [[1, 0], [9, 0], [10, 1], [15, 6], [60, 51]]) {
+    assert.equal(wowModule.availableWowTalentPoints(level, 0), expected, `level ${level}`);
+  }
+});
+
+test('companion renders resolver-provided ranks, local icons, descriptions, and next points', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  // Synthetic test-only adapter data exercises rendering; it is not a game build or recommendation.
+  const fixtureClass = {
+    id: 'fixture', name: 'Fixture', color: '#aabbcc',
+    specializations: [{ id: 'path', name: 'Path', role: 'Damage' }],
+    trees: [{ id: 'path', talents: [
+      { id: 'fixture-learned', name: 'Learned Talent', maxRank: 3, rankEffects: ['Rank one text', 'Rank two text', 'Rank three text'], icon: 'assets/images/wow-forever/icons/ability_warrior_charge.jpg' },
+      { id: 'fixture-next', name: 'Next Talent', maxRank: 1, rankEffects: ['Next description'], icon: 'assets/images/wow-forever/icons/ability_warrior_devastate.jpg' }
+    ] }]
+  };
+  const build = { id: 'fixture-only', classId: 'fixture', specializationId: 'path', verificationStatus: 'verified', coverage: { status: 'complete', highestDocumentedLevel: 60 } };
+  const html = companionModule.renderLevelingCompanion({
+    classId: 'fixture', currentLevel: 15, selectedSpecialization: 'path',
+    guideData: { classRecord: fixtureClass, talentClass: fixtureClass },
+    progressionEngine: {
+      builds: [build], catalog: { classes: [fixtureClass] }, availablePoints: level => Math.max(0, level - 9),
+      resolve: () => ({ valid: true, snapshotLevel: 15, total: 2, covered: true, allocation: { 'fixture-learned': 2 }, nextChange: { level: 16, talentId: 'fixture-next', rankAdded: 1 } })
+    },
+    storage: { getItem: () => JSON.stringify({ level: 15, specializationId: 'path', tab: 'talents' }) }
+  });
+  assert.ok(html.includes('2 / 6'));
+  assert.ok(html.includes('Learned Talent'));
+  assert.ok(html.includes('2/3'));
+  assert.ok(html.includes('Rank two text'));
+  assert.ok(html.includes('assets/images/wow-forever/icons/ability_warrior_charge.jpg'));
+  assert.ok(html.includes('<details class="wow-companion-talent">'));
+  assert.ok(html.includes('Level 16 · Next Talent'));
+});
+
+test('guided progression validates prerequisites and maximum talent ranks', () => {
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const warrior = wowClientData.classes.find(item => item.id === 'warrior');
+  const arms = warrior.trees.find(tree => tree.id === 'arms');
+  const child = arms.talents.find(talent => talent.prerequisite);
+  const cappedTalent = arms.talents.find(talent => talent.maxRank === 1);
+  const build = allocation => ({
+    id: 'test-only-validator-fixture', classId: 'warrior', specializationId: 'arms',
+    levelRange: { from: 10, through: 10 }, coverage: { highestDocumentedLevel: 10 },
+    allocations: [allocation]
+  });
+  const unmetPrerequisite = wowModule.validateWowGuidedBuild(build({ level: 10, talentId: child.id, rankAdded: 1 }), wowClientData);
+  assert.equal(unmetPrerequisite.valid, false);
+  assert.match(unmetPrerequisite.issues.join(' '), new RegExp(child.prerequisite));
+  const excessRank = wowModule.validateWowGuidedBuild(build({ level: 10, talentId: cappedTalent.id, rankAdded: cappedTalent.maxRank + 1 }), wowClientData);
+  assert.equal(excessRank.valid, false);
+  assert.match(excessRank.issues.join(' '), /invalid rank change/);
 });
 
 test('leveling companion accepts reusable class-specific data and renders accessible controls', () => {

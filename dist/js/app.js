@@ -8,7 +8,8 @@ import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
-import { renderWowPage, initializeWarriorGuide, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
+import { renderWowPage, initializeWarriorGuide, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, resolveWowGuidedBuild, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
+import { initializeLevelingCompanion } from './wow-leveling-companion.js';
 import { renderWowDungeonPrep, loadDungeonPrepProgress, saveDungeonPrepProgress, setDungeonPrepFaction, setDungeonPrepLevel } from './wow-dungeon-prep.js';
 import { initializeSiteNavigation } from './site-navigation.js';
 import { initializeUtilityBar } from './utility-bar.js';
@@ -1683,6 +1684,30 @@ function showRoute() {
   if (changed) {
     main.innerHTML = renderPage(route);
     initializeWarriorGuide(main);
+    if (route.view === 'wow-class' && route.classRecord?.id === 'warrior' && wowData) {
+      const profile = loadWowProfile();
+      const selectedSpecialization = profile.classId === 'warrior' && profile.specializationId
+        ? profile.specializationId
+        : route.classRecord.specializations.find(spec => spec.name === route.classRecord.starterGuide?.specialization)?.id;
+      initializeLevelingCompanion(main, {
+        classId: 'warrior',
+        currentLevel: profile.currentLevel || 1,
+        selectedSpecialization,
+        guideData: {
+          classRecord: route.classRecord,
+          guide: route.classRecord.starterGuide,
+          zones: wowData.zones,
+          dungeons: wowData.dungeons,
+          talentClass: wowClientData?.classes?.find(record => record.id === 'warrior')
+        },
+        progressionEngine: {
+          builds: wowGuidedData?.builds || [],
+          catalog: wowClientData,
+          resolve: resolveWowGuidedBuild,
+          availablePoints: availableWowTalentPoints
+        }
+      });
+    }
     currentView = viewKey;
   }
   if (route.view === 'expedition-planner') {

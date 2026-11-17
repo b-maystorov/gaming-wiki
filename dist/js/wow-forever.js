@@ -741,6 +741,12 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
         dungeons: data.dungeons,
         talentClass: catalog?.classes?.find(record => record.id === item.id)
       },
+      progressionEngine: {
+        builds: guidedData?.builds || [],
+        catalog,
+        resolve: resolveWowGuidedBuild,
+        availablePoints: availableWowTalentPoints
+      },
       escapeHtml
     }) : '';
     body = item.id === 'warrior'

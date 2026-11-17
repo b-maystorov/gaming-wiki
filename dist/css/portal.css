@@ -1056,6 +1056,17 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-companion-result h4 { margin:0 0 .2rem; color:#b9c9d7; font-size:.68rem; font-weight:750; letter-spacing:.045em; }
 .wow-warrior-guide .wow-companion-result p,.wow-warrior-guide .wow-companion-result li { color:#c8d3df; font-size:.76rem; line-height:1.5; }
 .wow-warrior-guide .wow-companion-result ul { display:grid; gap:.2rem; margin:.25rem 0 0; padding-left:1rem; }
+.wow-warrior-guide .wow-companion-learned,.wow-warrior-guide .wow-companion-next-talent { grid-column:1/-1; }
+.wow-warrior-guide .wow-companion-learned > h4,.wow-warrior-guide .wow-companion-next-talent > h4 { margin:0 0 .35rem; color:#c7a977; font-size:.7rem; font-weight:750; letter-spacing:.05em; }
+.wow-warrior-guide .wow-companion-talent { margin:.25rem 0; border:1px solid #33475a; border-radius:4px; background:#101c29; }
+.wow-warrior-guide .wow-companion-talent summary { display:grid; grid-template-columns:2rem minmax(0,1fr) auto; align-items:center; gap:.55rem; min-height:42px; padding:.3rem .55rem; color:#dce6ef; font-size:.77rem; cursor:pointer; list-style:none; }
+.wow-warrior-guide .wow-companion-talent summary::-webkit-details-marker { display:none; }
+.wow-warrior-guide .wow-companion-talent summary img { width:2rem; height:2rem; border:1px solid #45596d; border-radius:3px; object-fit:cover; }
+.wow-warrior-guide .wow-companion-talent summary strong { color:#e1c18d; font-size:.72rem; font-variant-numeric:tabular-nums; }
+.wow-warrior-guide .wow-companion-talent summary:focus-visible { outline:2px solid #a8d5fa; outline-offset:2px; }
+.wow-warrior-guide .wow-companion-talent > p { margin:0; padding:.1rem .7rem .65rem 3.05rem; color:#b9c8d6; font-size:.74rem; line-height:1.5; }
+.wow-warrior-guide .wow-companion-next-talent { padding:.6rem .75rem; border-left:2px solid #a78c65; background:linear-gradient(100deg,#382c1c66,transparent); }
+.wow-warrior-guide .wow-companion-next-talent p { margin:0; color:#e4d2b4; font-size:.78rem; }
 .wow-warrior-guide .wow-companion-note,.wow-warrior-guide .wow-companion-missing { margin:.45rem 0 0; color:#9eb2c5; font-size:.72rem; }
 .wow-warrior-guide .wow-companion-missing { color:#d0b27e; }
 .wow-warrior-guide .wow-warrior-quick-start { margin-top:1.5rem; padding:clamp(1rem,2.6vw,1.4rem); border:1px solid #394354; border-top:2px solid #a78c65; border-radius:6px; background:radial-gradient(ellipse at 100% 0,#b3926b0d,transparent 42%),linear-gradient(145deg,#111d2b,#0b1522); box-shadow:inset 0 1px #ffffff08,0 10px 24px #0002; }
