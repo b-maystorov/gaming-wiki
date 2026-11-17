@@ -2504,9 +2504,10 @@ test('Warrior handbook has one icon-led header and real section navigation', () 
   assert.ok(header.includes('Damage / Tank'));
   assert.ok(header.includes('Arms / Fury / Protection'));
   assert.match(header, /src="assets\/images\/wow-forever\/icons\/class_warrior\.jpg"/);
-  assert.ok(header.includes('href="#game/world-of-warcraft"'));
+  assert.ok(html.includes('href="#game/world-of-warcraft"'));
   assert.doesNotMatch(html, /class="wow-banner"|class="wow-nav"|class="wow-scene"|wow-class-hero-illustrated/);
-  assert.doesNotMatch(header, /<svg|wow-class-art-fallback|warrior\.svg/);
+  assert.match(header, /src="assets\/images\/wow-forever\/warrior\.svg"/);
+  assert.match(header, /src="assets\/images\/wow-forever\/wow-forever-banner\.png"/);
   const navigation = html.match(/<nav class="wow-warrior-nav"[\s\S]*?<\/nav>/)?.[0];
   const controls = [...navigation.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)];
   assert.equal(controls.length, 8);
@@ -2525,8 +2526,45 @@ test('Warrior handbook has one icon-led header and real section navigation', () 
   }
   assert.ok(html.indexOf(header) < html.indexOf(navigation));
   assert.ok(html.indexOf(navigation) < html.indexOf('Warrior Quick Start'));
+  assert.match(html, /<details class="wow-warrior-leveling-details" id="warrior-leveling" tabindex="-1">/);
+  assert.equal((html.match(/data-warrior-spec-tab=/g) || []).length, 3);
+  assert.ok(html.includes('Related Guides &amp; Tier Lists'));
+  assert.ok(html.includes('Related Class Guides'));
+  assert.ok(html.includes('Changelog'));
   assert.ok(html.includes('detailed levels 31–60 and level-60 coverage are coming later'));
   assert.doesNotMatch(html, /id="warrior-dungeons"|id="warrior-level-60"/);
+});
+
+test('Warrior specialization tabs update their selected panel with mouse and keyboard', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const handlers = {};
+  const panels = ['arms', 'fury', 'protection'].map(id => ({ dataset: { warriorSpecPanel: id }, hidden: id !== 'arms' }));
+  const tabs = ['arms', 'fury', 'protection'].map((id, index) => ({
+    dataset: { warriorSpecTab: id }, tabIndex: index ? -1 : 0, attributes: new Map(), focused: false,
+    setAttribute(name, value) { this.attributes.set(name, value); },
+    focus() { this.focused = true; }
+  }));
+  const navigation = { querySelectorAll: () => [] };
+  const guide = {
+    dataset: {},
+    contains: element => tabs.includes(element),
+    querySelector: selector => selector === '.wow-warrior-nav' ? navigation : null,
+    querySelectorAll: selector => selector === '[data-warrior-spec-tab]' ? tabs : panels,
+    addEventListener: (type, handler) => { handlers[type] = handler; }
+  };
+  const targetFor = (element, selector) => ({ closest: candidate => candidate === selector ? element : null });
+  module.initializeWarriorGuide({ querySelector: () => guide });
+  handlers.click({ target: targetFor(tabs[1], '[data-warrior-spec-tab]') });
+  assert.equal(tabs[1].attributes.get('aria-selected'), 'true');
+  assert.equal(tabs[1].tabIndex, 0);
+  assert.equal(panels[0].hidden, true);
+  assert.equal(panels[1].hidden, false);
+  let prevented = false;
+  handlers.keydown({ target: targetFor(tabs[1], '[data-warrior-spec-tab]'), key: 'ArrowRight', preventDefault() { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(tabs[2].focused, true);
+  assert.equal(tabs[2].attributes.get('aria-selected'), 'true');
+  assert.equal(panels[2].hidden, false);
 });
 
 test('Warrior handbook preserves existing guide content and integrations', async () => {
@@ -2570,7 +2608,7 @@ test('Warrior section controls focus and scroll local targets without changing t
   try {
     module.initializeWarriorGuide({ querySelector: () => guide });
     module.initializeWarriorGuide({ querySelector: () => guide });
-    assert.equal(listeners.length, 1, 'initializing the same DOM twice does not duplicate listeners');
+    assert.equal(listeners.length, 2, 'initializing the same DOM twice does not duplicate click or keyboard listeners');
     h.context.matchMedia = () => ({ matches: true });
     let prevented = 0;
     listeners[0]({ target: { closest: () => buttons[1] }, preventDefault: () => { prevented += 1; } });
