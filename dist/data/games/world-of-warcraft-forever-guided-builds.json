@@ -24,6 +24,20 @@
       "url": "https://topbuilds.gg/wow-forever/shaman/enhancement/",
       "updated": "2026-11-04",
       "use": "Cross-check for client-era talent names, rank caps, and the level-30 beta endpoint."
+    },
+    {
+      "id": "wow-forever-outpost-arms-leveling-2026-11",
+      "title": "WoW Forever Outpost · Arms Warrior, level 10 to 60 point-by-point",
+      "url": "https://wofwforever.com/en/guides/wow-forever-warrior-leveling-talents/",
+      "updated": "2026-11-09",
+      "use": "Exact Arms talent order and level ranges, checked by the author against Wowhead WoW Forever talent data (client 1.60.1). The guide calls the order its editorial recommendation and says it was not tested in game."
+    },
+    {
+      "id": "icy-veins-arms-leveling-2026-11",
+      "title": "Icy Veins · World of Warcraft: Forever Arms Warrior Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/arms-warrior-leveling",
+      "updated": "2026-11-04",
+      "use": "Independent comparison. It confirms an Arms leveling guide exists but publishes a different early talent order, so it is not used to fill or merge this point-by-point progression."
     }
   ],
   "builds": [
@@ -34,7 +48,10 @@
       "specializationId": "enhancement",
       "playstyle": "solo-leveling",
       "role": "Melee damage",
-      "levelRange": { "from": 10, "through": 30 },
+      "levelRange": {
+        "from": 10,
+        "through": 30
+      },
       "coverage": {
         "status": "partial",
         "label": "Point progression to level 30 · not verified beyond the beta cap",
@@ -51,36 +68,437 @@
       "verificationStatus": "Partial · manual in-game verification still needed",
       "summary": "An original no-respec solo route that brings the published level-20 Shamanistic Focus milestone forward, secures Stormstrike at level 25, and takes Improved Ghost Wolf before finishing the early Improved Stormstrike pickup. It is a BM Gaming Wiki synthesis, not a copied source build.",
       "allocations": [
-        { "level": 10, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
-        { "level": 11, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
-        { "level": 12, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
-        { "level": 13, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
-        { "level": 14, "talentId": "shaman-enhancement-thundering-strikes", "rankAdded": 1 },
-        { "level": 15, "talentId": "shaman-enhancement-improved-lightning-shield", "rankAdded": 1 },
-        { "level": 16, "talentId": "shaman-enhancement-improved-lightning-shield", "rankAdded": 1 },
-        { "level": 17, "talentId": "shaman-enhancement-improved-lightning-shield", "rankAdded": 1 },
-        { "level": 18, "talentId": "shaman-enhancement-mental-dexterity", "rankAdded": 1 },
-        { "level": 19, "talentId": "shaman-enhancement-mental-dexterity", "rankAdded": 1 },
-        { "level": 20, "talentId": "shaman-enhancement-shamanistic-focus", "rankAdded": 1 },
-        { "level": 21, "talentId": "shaman-enhancement-elemental-weapons", "rankAdded": 1 },
-        { "level": 22, "talentId": "shaman-enhancement-elemental-weapons", "rankAdded": 1 },
-        { "level": 23, "talentId": "shaman-enhancement-elemental-weapons", "rankAdded": 1 },
-        { "level": 24, "talentId": "shaman-enhancement-mental-dexterity", "rankAdded": 1 },
-        { "level": 25, "talentId": "shaman-enhancement-stormstrike", "rankAdded": 1 },
-        { "level": 26, "talentId": "shaman-enhancement-improved-ghost-wolf", "rankAdded": 1 },
-        { "level": 27, "talentId": "shaman-enhancement-improved-ghost-wolf", "rankAdded": 1 },
-        { "level": 28, "talentId": "shaman-enhancement-flurry", "rankAdded": 1 },
-        { "level": 29, "talentId": "shaman-enhancement-flurry", "rankAdded": 1 },
-        { "level": 30, "talentId": "shaman-enhancement-improved-stormstrike", "rankAdded": 1 }
+        {
+          "level": 10,
+          "talentId": "shaman-enhancement-thundering-strikes",
+          "rankAdded": 1
+        },
+        {
+          "level": 11,
+          "talentId": "shaman-enhancement-thundering-strikes",
+          "rankAdded": 1
+        },
+        {
+          "level": 12,
+          "talentId": "shaman-enhancement-thundering-strikes",
+          "rankAdded": 1
+        },
+        {
+          "level": 13,
+          "talentId": "shaman-enhancement-thundering-strikes",
+          "rankAdded": 1
+        },
+        {
+          "level": 14,
+          "talentId": "shaman-enhancement-thundering-strikes",
+          "rankAdded": 1
+        },
+        {
+          "level": 15,
+          "talentId": "shaman-enhancement-improved-lightning-shield",
+          "rankAdded": 1
+        },
+        {
+          "level": 16,
+          "talentId": "shaman-enhancement-improved-lightning-shield",
+          "rankAdded": 1
+        },
+        {
+          "level": 17,
+          "talentId": "shaman-enhancement-improved-lightning-shield",
+          "rankAdded": 1
+        },
+        {
+          "level": 18,
+          "talentId": "shaman-enhancement-mental-dexterity",
+          "rankAdded": 1
+        },
+        {
+          "level": 19,
+          "talentId": "shaman-enhancement-mental-dexterity",
+          "rankAdded": 1
+        },
+        {
+          "level": 20,
+          "talentId": "shaman-enhancement-shamanistic-focus",
+          "rankAdded": 1
+        },
+        {
+          "level": 21,
+          "talentId": "shaman-enhancement-elemental-weapons",
+          "rankAdded": 1
+        },
+        {
+          "level": 22,
+          "talentId": "shaman-enhancement-elemental-weapons",
+          "rankAdded": 1
+        },
+        {
+          "level": 23,
+          "talentId": "shaman-enhancement-elemental-weapons",
+          "rankAdded": 1
+        },
+        {
+          "level": 24,
+          "talentId": "shaman-enhancement-mental-dexterity",
+          "rankAdded": 1
+        },
+        {
+          "level": 25,
+          "talentId": "shaman-enhancement-stormstrike",
+          "rankAdded": 1
+        },
+        {
+          "level": 26,
+          "talentId": "shaman-enhancement-improved-ghost-wolf",
+          "rankAdded": 1
+        },
+        {
+          "level": 27,
+          "talentId": "shaman-enhancement-improved-ghost-wolf",
+          "rankAdded": 1
+        },
+        {
+          "level": 28,
+          "talentId": "shaman-enhancement-flurry",
+          "rankAdded": 1
+        },
+        {
+          "level": 29,
+          "talentId": "shaman-enhancement-flurry",
+          "rankAdded": 1
+        },
+        {
+          "level": 30,
+          "talentId": "shaman-enhancement-improved-stormstrike",
+          "rankAdded": 1
+        }
       ],
       "respecEvents": [],
       "milestones": [
-        { "level": 14, "talentId": "shaman-enhancement-thundering-strikes", "ranks": "5/5", "note": "Finish the early critical-strike investment." },
-        { "level": 20, "talentId": "shaman-enhancement-shamanistic-focus", "ranks": "1/1", "note": "Reach the source-highlighted Shock-cost milestone." },
-        { "level": 25, "talentId": "shaman-enhancement-stormstrike", "ranks": "1/1", "note": "Take Stormstrike at the first level the guide identifies as available." },
-        { "level": 30, "talentId": "shaman-enhancement-improved-stormstrike", "ranks": "1/2", "note": "Begin the Improved Stormstrike mana and reset investment; later ranks are outside this route's coverage." }
+        {
+          "level": 14,
+          "talentId": "shaman-enhancement-thundering-strikes",
+          "ranks": "5/5",
+          "note": "Finish the early critical-strike investment."
+        },
+        {
+          "level": 20,
+          "talentId": "shaman-enhancement-shamanistic-focus",
+          "ranks": "1/1",
+          "note": "Reach the source-highlighted Shock-cost milestone."
+        },
+        {
+          "level": 25,
+          "talentId": "shaman-enhancement-stormstrike",
+          "ranks": "1/1",
+          "note": "Take Stormstrike at the first level the guide identifies as available."
+        },
+        {
+          "level": 30,
+          "talentId": "shaman-enhancement-improved-stormstrike",
+          "ranks": "1/2",
+          "note": "Begin the Improved Stormstrike mana and reset investment; later ranks are outside this route's coverage."
+        }
       ],
       "respecDisclosure": "This route does not respec. Icy Veins also describes an optional Restoration-first route and respec at 25, but its written guide does not publish that route's complete rank allocation; it is not offered here as an automatic build."
+    },
+    {
+      "id": "bm-warrior-arms-leveling-10-60",
+      "companionOnly": true,
+      "name": "Arms leveling · source-published point order",
+      "classId": "warrior",
+      "specializationId": "arms",
+      "playstyle": "solo-leveling",
+      "role": "Damage",
+      "levelRange": {
+        "from": 10,
+        "through": 60
+      },
+      "coverage": {
+        "status": "complete",
+        "label": "Exact point order documented from level 10 through 60",
+        "highestDocumentedLevel": 60
+      },
+      "sourceIds": [
+        "wow-forever-outpost-arms-leveling-2026-11"
+      ],
+      "sourceTitle": "WoW Forever Outpost · Arms Warrior, level 10 to 60 point-by-point",
+      "sourceUrl": "https://wofwforever.com/en/guides/wow-forever-warrior-leveling-talents/",
+      "gameClientVersion": "1.60.1.70755",
+      "confidence": "This is WoW Forever Outpost’s editorial point order, not Blizzard advice, and the author says it was not tested in game. Icy Veins publishes a different early point order; this route is shown as one sourced recommendation, not a consensus build. Talent IDs, ranks, prerequisites, and available points are checked against the local Forever client dataset.",
+      "verificationStatus": "source-supported",
+      "summary": "Two-handed Arms leveling order published by WoW Forever Outpost. Treat it as a sourced editorial recommendation rather than an in-game-verified build.",
+      "allocations": [
+        {
+          "level": 10,
+          "talentId": "warrior-arms-improved-rend",
+          "rankAdded": 1
+        },
+        {
+          "level": 11,
+          "talentId": "warrior-arms-improved-rend",
+          "rankAdded": 1
+        },
+        {
+          "level": 12,
+          "talentId": "warrior-arms-improved-rend",
+          "rankAdded": 1
+        },
+        {
+          "level": 13,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 14,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 15,
+          "talentId": "warrior-arms-improved-tactical-mastery",
+          "rankAdded": 1
+        },
+        {
+          "level": 16,
+          "talentId": "warrior-arms-improved-tactical-mastery",
+          "rankAdded": 1
+        },
+        {
+          "level": 17,
+          "talentId": "warrior-arms-improved-tactical-mastery",
+          "rankAdded": 1
+        },
+        {
+          "level": 18,
+          "talentId": "warrior-arms-improved-overpower",
+          "rankAdded": 1
+        },
+        {
+          "level": 19,
+          "talentId": "warrior-arms-improved-overpower",
+          "rankAdded": 1
+        },
+        {
+          "level": 20,
+          "talentId": "warrior-arms-anger-management",
+          "rankAdded": 1
+        },
+        {
+          "level": 21,
+          "talentId": "warrior-arms-deep-wounds",
+          "rankAdded": 1
+        },
+        {
+          "level": 22,
+          "talentId": "warrior-arms-deep-wounds",
+          "rankAdded": 1
+        },
+        {
+          "level": 23,
+          "talentId": "warrior-arms-deep-wounds",
+          "rankAdded": 1
+        },
+        {
+          "level": 24,
+          "talentId": "warrior-arms-improved-charge",
+          "rankAdded": 1
+        },
+        {
+          "level": 25,
+          "talentId": "warrior-arms-spearing-strike",
+          "rankAdded": 1
+        },
+        {
+          "level": 26,
+          "talentId": "warrior-arms-two-handed-weapon-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 27,
+          "talentId": "warrior-arms-two-handed-weapon-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 28,
+          "talentId": "warrior-arms-two-handed-weapon-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 29,
+          "talentId": "warrior-arms-improved-charge",
+          "rankAdded": 1
+        },
+        {
+          "level": 30,
+          "talentId": "warrior-arms-sweeping-strikes",
+          "rankAdded": 1
+        },
+        {
+          "level": 31,
+          "talentId": "warrior-arms-bloodthrill",
+          "rankAdded": 1
+        },
+        {
+          "level": 32,
+          "talentId": "warrior-arms-bloodthrill",
+          "rankAdded": 1
+        },
+        {
+          "level": 33,
+          "talentId": "warrior-arms-weaponmaster",
+          "rankAdded": 1
+        },
+        {
+          "level": 34,
+          "talentId": "warrior-arms-weaponmaster",
+          "rankAdded": 1
+        },
+        {
+          "level": 35,
+          "talentId": "warrior-arms-weaponmaster",
+          "rankAdded": 1
+        },
+        {
+          "level": 36,
+          "talentId": "warrior-arms-weaponmaster",
+          "rankAdded": 1
+        },
+        {
+          "level": 37,
+          "talentId": "warrior-arms-weaponmaster",
+          "rankAdded": 1
+        },
+        {
+          "level": 38,
+          "talentId": "warrior-arms-improved-slam",
+          "rankAdded": 1
+        },
+        {
+          "level": 39,
+          "talentId": "warrior-arms-improved-slam",
+          "rankAdded": 1
+        },
+        {
+          "level": 40,
+          "talentId": "warrior-arms-mortal-strike",
+          "rankAdded": 1
+        },
+        {
+          "level": 41,
+          "talentId": "warrior-arms-impale",
+          "rankAdded": 1
+        },
+        {
+          "level": 42,
+          "talentId": "warrior-arms-impale",
+          "rankAdded": 1
+        },
+        {
+          "level": 43,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 44,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 45,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 46,
+          "talentId": "warrior-arms-improved-heroic-strike",
+          "rankAdded": 1
+        },
+        {
+          "level": 47,
+          "talentId": "warrior-arms-improved-heroic-strike",
+          "rankAdded": 1
+        },
+        {
+          "level": 48,
+          "talentId": "warrior-arms-improved-heroic-strike",
+          "rankAdded": 1
+        },
+        {
+          "level": 49,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 50,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 51,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 52,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 53,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 54,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 55,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 56,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 57,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 58,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 59,
+          "talentId": "warrior-fury-booming-voice",
+          "rankAdded": 1
+        },
+        {
+          "level": 60,
+          "talentId": "warrior-fury-booming-voice",
+          "rankAdded": 1
+        }
+      ],
+      "respecEvents": [],
+      "milestones": [],
+      "tierRuleDisclosure": "The guide’s exact order is checked against Wowhead Forever data. The Forever client export does not independently confirm row point gates; the tree view applies its documented five-points-per-row rule.",
+      "comparisonSources": [
+        "icy-veins-arms-leveling-2026-11"
+      ],
+      "comparisonSourceDetails": [
+        {
+          "title": "Icy Veins Arms Warrior Leveling Guide",
+          "url": "https://www.icy-veins.com/wow-forever/arms-warrior-leveling",
+          "note": "publishes a different early point order"
+        }
+      ]
     }
   ]
 }

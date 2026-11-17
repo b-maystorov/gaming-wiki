@@ -1,6 +1,5 @@
 const COMPANION_TABS = ['overview', 'talents', 'gear'];
 const COMPANION_STORAGE_PREFIX = 'bm-wow-leveling-companion-v1:';
-const COMPANION_TALENT_STORAGE_PREFIX = 'bm-wow-leveling-talents-v1:';
 
 function escapeText(value) {
   return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
@@ -23,7 +22,6 @@ export function normalizeCompanionState(classId, state = {}, specializations = [
     level: validLevel(state.level ?? state.currentLevel, 1),
     specializationId: ids.includes(state.specializationId) ? state.specializationId : fallbackSpec,
     tab: COMPANION_TABS.includes(state.tab) ? state.tab : 'overview',
-    talentMode: state.talentMode === 'recommended' ? 'recommended' : 'manual',
     selectedTalentId: typeof state.selectedTalentId === 'string' ? state.selectedTalentId : ''
   };
 }
@@ -52,7 +50,6 @@ export function saveCompanionState(state, storage) {
       level: validLevel(state.level),
       specializationId: state.specializationId,
       tab: COMPANION_TABS.includes(state.tab) ? state.tab : 'overview',
-      talentMode: state.talentMode === 'recommended' ? 'recommended' : 'manual'
     }));
     return true;
   } catch {
@@ -80,45 +77,6 @@ function selectedData(guideData, state) {
   const guide = specializationGuide || guideData?.guide || classRecord.starterGuide || null;
   const guideMatchesSpec = Boolean(guide && specialization && (specializationGuide || guide.specialization === specialization.name));
   return { classRecord, specializations, specialization, guide, guideMatchesSpec };
-}
-
-export function companionTalentStorageKey(classId, specializationId) {
-  return `${COMPANION_TALENT_STORAGE_PREFIX}${classId}:${specializationId}`;
-}
-
-export function loadCompanionTalentAllocation(classId, specializationId, storage) {
-  try {
-    const store = storage ?? globalThis.localStorage;
-    const saved = JSON.parse(store?.getItem(companionTalentStorageKey(classId, specializationId)) || '{}');
-    return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {};
-  } catch { return {}; }
-}
-
-export function saveCompanionTalentAllocation(classId, specializationId, allocation, storage) {
-  try {
-    const store = storage ?? globalThis.localStorage;
-    if (!store?.setItem) return false;
-    store.setItem(companionTalentStorageKey(classId, specializationId), JSON.stringify(allocation || {}));
-    return true;
-  } catch { return false; }
-}
-
-function createTalentStorage(storage) {
-  const sessionValues = new Map();
-  return {
-    getItem(key) {
-      try {
-        const value = (storage ?? globalThis.localStorage)?.getItem(key);
-        if (value !== null && value !== undefined) sessionValues.set(key, value);
-        return value ?? sessionValues.get(key) ?? null;
-      } catch { return sessionValues.get(key) ?? null; }
-    },
-    setItem(key, value) {
-      const serialized = String(value);
-      sessionValues.set(key, serialized);
-      try { (storage ?? globalThis.localStorage)?.setItem(key, serialized); } catch { /* Keep this session usable when browser storage is blocked. */ }
-    }
-  };
 }
 
 function treePoints(tree, allocation) {
@@ -154,10 +112,10 @@ export function validateCompanionTalentTiers(tree, allocation) {
     .map(talent => `${talent.name} requires ${Math.max(0, (Number(talent.row) - 1) * 5)} points in this tree.`);
 }
 
-function verifiedBuildFor(state, progressionEngine) {
+function sourceSupportedBuildFor(state, progressionEngine) {
   return progressionEngine?.builds?.find(build => build.classId === state.classId
     && build.specializationId === state.specializationId
-    && build.verificationStatus === 'verified'
+    && ['verified', 'source-supported'].includes(build.verificationStatus)
     && build.coverage?.status === 'complete') || null;
 }
 
@@ -171,23 +129,26 @@ export function findCompanionTalentTree(classRecord, specializationId, specializ
   return trees.find(tree => normalizedName(tree.id).startsWith(specKey) || normalizedName(tree.name) === nameKey || normalizedName(tree.name).startsWith(nameKey)) || null;
 }
 
-function getManualTalentData(state, guideData, progressionEngine) {
+function getAutomaticTalentData(state, guideData, progressionEngine) {
   const classRecord = guideData.talentClass || progressionEngine?.catalog?.classes?.find(item => item.id === state.classId);
   const specialization = (guideData.classRecord?.specializations || guideData.specializations || []).find(item => item.id === state.specializationId);
   const tree = findCompanionTalentTree(classRecord, state.specializationId, specialization?.name);
   const availablePoints = progressionEngine?.availablePoints?.(state.level, 0) ?? 0;
-  const build = verifiedBuildFor(state, progressionEngine);
+  const build = sourceSupportedBuildFor(state, progressionEngine);
   const recommended = build && progressionEngine?.resolve
     ? progressionEngine.resolve(build, progressionEngine.catalog, state.level)
     : null;
-  const allocation = state.talentMode === 'recommended' && recommended?.valid
-    ? recommended.allocation
-    : loadCompanionTalentAllocation(state.classId, state.specializationId, progressionEngine?.storage);
-  const selectedTalent = tree?.talents?.find(talent => talent.id === state.selectedTalentId) || tree?.talents?.[0] || null;
-  const validation = classRecord && progressionEngine?.validate
+  const allocation = recommended?.valid ? recommended.allocation : {};
+  const allTrees = classRecord?.trees || [];
+  const selectedTalent = allTrees.flatMap(item => item.talents || []).find(talent => talent.id === state.selectedTalentId)
+    || tree?.talents?.[0] || null;
+  const selectedTree = allTrees.find(item => item.talents?.some(talent => talent.id === selectedTalent?.id)) || tree;
+  const baseValidation = classRecord && progressionEngine?.validate
     ? progressionEngine.validate(classRecord, allocation, availablePoints)
     : { total: treePoints(tree, allocation), valid: true, issues: [] };
-  return { classRecord, tree, availablePoints, allocation, selectedTalent, validation, build, recommended };
+  const tierIssues = allTrees.flatMap(item => validateCompanionTalentTiers(item, allocation));
+  const validation = { ...baseValidation, valid: baseValidation.valid && !tierIssues.length, issues: [...baseValidation.issues, ...tierIssues] };
+  return { classRecord, tree, allTrees, selectedTree, availablePoints, allocation, selectedTalent, validation, build, recommended };
 }
 
 export function getCompanionPanel(state, guideData = {}, progressionEngine = {}) {
@@ -227,7 +188,7 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
   }
 
   if (state.tab === 'talents') {
-    const treeData = getManualTalentData(state, guideData, progressionEngine);
+    const treeData = getAutomaticTalentData(state, guideData, progressionEngine);
     return {
       heading: `${specName} talent tree · Level ${state.level}`,
       treeData,
@@ -235,7 +196,7 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       notices: treeData.tree
         ? (treeData.recommended?.valid ? [] : ['Talent progression not yet verified.'])
         : ['Talent tree data coming soon for this specialization.'],
-      note: 'Tier gates use the five-points-per-row rule. Budget excludes Talented Legacy bonus points.'
+      note: 'Talent points start at level 10 and exclude Talented Legacy bonus points.'
     };
   }
 
@@ -248,24 +209,27 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
 }
 
 function renderTalentTree(state, treeData, escapeHtml) {
-  const { tree, allocation, availablePoints, validation, selectedTalent, build } = treeData;
+  const { tree, allTrees, selectedTree, allocation, validation, selectedTalent } = treeData;
   if (!tree) return '';
-  const maxRow = Math.max(...tree.talents.map(talent => talent.row));
-  const maxColumn = Math.max(...tree.talents.map(talent => talent.column));
-  const nodes = tree.talents.map(talent => {
-    const rank = Number(allocation[talent.id]) || 0;
-    const lock = companionTalentLock(talent, tree, allocation);
-    const cannotAdd = lock.locked || rank >= talent.maxRank || validation.total >= availablePoints;
-    const classes = ['wow-companion-tree-node', rank ? 'is-spent' : '', lock.locked ? 'is-locked' : ''].filter(Boolean).join(' ');
-    const lockHint = lock.tierLocked
-      ? `Requires ${lock.requiredPoints} points spent in this tree.`
-      : lock.prerequisiteLocked ? `Requires ${talent.prerequisite} at full rank.` : '';
-    return `<article class="${classes}" style="grid-row:${talent.row};grid-column:${talent.column}"><button type="button" class="wow-companion-tree-icon" data-companion-talent="${escapeHtml(talent.id)}" data-cannot-add="${cannotAdd}" aria-label="${escapeHtml(talent.name)}, rank ${rank} of ${talent.maxRank}${lockHint ? `, locked: ${lockHint}` : cannotAdd ? ', cannot add a rank at this level' : ''}" aria-pressed="${talent.id === state.selectedTalentId}" title="${escapeHtml(lockHint || talent.name)}">${talent.icon ? `<img src="${escapeHtml(talent.icon)}" alt="" width="48" height="48" loading="lazy">` : `<span>${escapeHtml(talent.name.slice(0, 1))}</span>`}<strong>${rank}/${talent.maxRank}</strong></button><span class="wow-companion-tree-name">${escapeHtml(talent.name)}</span><button type="button" class="wow-companion-tree-minus" data-companion-talent-remove="${escapeHtml(talent.id)}" aria-label="Remove one point from ${escapeHtml(talent.name)}"${rank === 0 ? ' disabled' : ''}>−</button></article>`;
-  }).join('');
+  const renderTree = currentTree => {
+    const maxRow = Math.max(...currentTree.talents.map(talent => talent.row));
+    const maxColumn = Math.max(...currentTree.talents.map(talent => talent.column));
+    const nodes = currentTree.talents.map(talent => {
+      const rank = Number(allocation[talent.id]) || 0;
+      const lock = companionTalentLock(talent, currentTree, allocation);
+      const classes = ['wow-companion-tree-node', rank ? 'is-spent' : '', lock.locked ? 'is-locked' : ''].filter(Boolean).join(' ');
+      const lockHint = lock.tierLocked
+        ? `Requires ${lock.requiredPoints} points spent in this tree.`
+        : lock.prerequisiteLocked ? `Requires ${talent.prerequisite} at full rank.` : '';
+      return `<article class="${classes}" style="grid-row:${talent.row};grid-column:${talent.column}"><button type="button" class="wow-companion-tree-icon" data-companion-talent="${escapeHtml(talent.id)}" aria-label="Inspect ${escapeHtml(talent.name)}, rank ${rank} of ${talent.maxRank}${lockHint ? `, locked: ${lockHint}` : ''}" aria-pressed="${talent.id === state.selectedTalentId}" title="${escapeHtml(lockHint || talent.name)}">${talent.icon ? `<img src="${escapeHtml(talent.icon)}" alt="" width="56" height="56" loading="lazy">` : `<span>${escapeHtml(talent.name.slice(0, 1))}</span>`}<strong>${rank}/${talent.maxRank}</strong></button><span class="wow-companion-tree-name">${escapeHtml(talent.name)}</span></article>`;
+    }).join('');
+    return `<section class="wow-companion-tree${currentTree.id === tree.id ? ' is-primary' : ' is-secondary'}" aria-label="${escapeHtml(currentTree.name)} talent tree"><header><h4>${escapeHtml(currentTree.name)}</h4><span>${treePoints(currentTree, allocation)} points</span></header><div class="wow-companion-tree-scroll"><div class="wow-companion-tree-grid" style="--talent-columns:${maxColumn};--talent-rows:${maxRow}">${nodes}</div></div></section>`;
+  };
+  const visibleTrees = (allTrees || [tree]).filter(currentTree => currentTree.id === tree.id || treePoints(currentTree, allocation) > 0);
   const selectedRank = selectedTalent ? Number(allocation[selectedTalent.id]) || 0 : 0;
-  const selectedLock = selectedTalent ? companionTalentLock(selectedTalent, tree, allocation) : null;
+  const selectedLock = selectedTalent ? companionTalentLock(selectedTalent, selectedTree, allocation) : null;
   const detail = selectedTalent ? `<aside class="wow-companion-talent-detail" aria-live="polite"><div class="wow-companion-talent-detail-heading">${selectedTalent.icon ? `<img src="${escapeHtml(selectedTalent.icon)}" alt="" width="48" height="48">` : ''}<div><h4>${escapeHtml(selectedTalent.name)}</h4><p>Rank ${selectedRank} / ${selectedTalent.maxRank}</p></div></div><p>${escapeHtml(selectedTalent.rankEffects?.[Math.max(0, selectedRank - 1)] || selectedTalent.rankEffects?.[0] || 'Description not recorded.')}</p>${selectedTalent.rankEffects?.length > 1 ? `<ol>${selectedTalent.rankEffects.map((effect, index) => `<li${index + 1 === selectedRank ? ' aria-current="true"' : ''}><strong>Rank ${index + 1}:</strong> ${escapeHtml(effect)}</li>`).join('')}</ol>` : ''}${selectedLock?.locked ? `<p class="wow-companion-tree-lock-note">${selectedLock.tierLocked ? `Spend ${selectedLock.requiredPoints} points in this tree to unlock this row.` : `Requires ${escapeHtml(selectedTalent.prerequisite)} at full rank.`}</p>` : ''}</aside>` : '';
-  return `<div class="wow-companion-tree-layout"><section class="wow-companion-tree" aria-label="${escapeHtml(tree.name)} talent tree"><header><h4>${escapeHtml(tree.name)}</h4><span>${treePoints(tree, allocation)} tree points</span></header><div class="wow-companion-tree-scroll"><div class="wow-companion-tree-grid" style="--talent-columns:${maxColumn};--talent-rows:${maxRow}">${nodes}</div></div></section>${detail}</div>`;
+  return `<div class="wow-companion-tree-layout"><div class="wow-companion-tree-stack">${visibleTrees.map(renderTree).join('')}</div>${detail}</div>`;
 }
 
 function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage) {
@@ -273,11 +237,13 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
   const notices = (panel.notices || []).map(notice => `<p class="wow-companion-missing" role="status">${escapeHtml(notice)}</p>`).join('');
   const treeData = panel.treeData;
-  const recommendedAvailable = Boolean(treeData?.build && treeData?.recommended?.valid);
   const nextRecommended = treeData?.recommended?.valid && treeData.recommended.nextChange
-    ? `<p class="wow-companion-next-talent">Next recommended point · Level ${treeData.recommended.nextChange.level} · ${escapeHtml(treeData.tree.talents.find(talent => talent.id === treeData.recommended.nextChange.talentId)?.name || 'Talent')}</p>`
+    ? `<p class="wow-companion-next-talent">Next recommended talent · Unlocks at level ${treeData.recommended.nextChange.level} · ${escapeHtml(treeData.tree.talents.find(talent => talent.id === treeData.recommended.nextChange.talentId)?.name || 'Talent')}</p>`
     : '';
-  const talentPanel = treeData ? `<div class="wow-companion-build-modes" aria-label="Talent build mode"><button type="button" data-companion-talent-mode="manual" aria-pressed="${state.talentMode !== 'recommended'}">Manual Build</button><button type="button" data-companion-talent-mode="recommended" aria-pressed="${state.talentMode === 'recommended'}"${recommendedAvailable ? '' : ' disabled'} title="${recommendedAvailable ? 'Load the verified progression' : 'Recommended Build is unavailable until verified point-by-point data is added.'}">Recommended Build</button></div>${recommendedAvailable ? '' : '<p class="wow-companion-missing">Recommended Build is disabled until verified point-by-point data is added.</p>'}${renderTalentTree(state, treeData, escapeHtml)}${nextRecommended}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Current build needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}<p class="wow-companion-tier-source">Tier rules follow the currently documented five-points-per-row behavior; Blizzard has not separately confirmed this inherited rule for Forever.</p>` : '';
+  const sourceAttribution = treeData?.build?.sourceUrl
+    ? `<p class="wow-companion-build-source">Source: <a href="${escapeHtml(treeData.build.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(treeData.build.sourceTitle || treeData.build.name)}</a>. ${escapeHtml(treeData.build.confidence || '')}${treeData.build.comparisonSourceDetails?.map(source => ` <span>Comparison: <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a> (${escapeHtml(source.note)}).</span>`).join('') || ''}</p>`
+    : '';
+  const talentPanel = treeData ? `${treeData.recommended?.valid ? renderTalentTree(state, treeData, escapeHtml) : ''}${nextRecommended}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${treeData.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : ''}` : '';
   return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${sections || ''}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}`;
 }
 
@@ -293,8 +259,6 @@ export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpe
 }
 
 export function initializeLevelingCompanion(root, { classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, storage } = {}) {
-  const talentStorage = createTalentStorage(storage);
-  progressionEngine = { ...progressionEngine, storage: talentStorage };
   const companion = root.querySelector('[data-leveling-companion]');
   if (!companion || companion.dataset.companionInitialized) return;
   companion.dataset.companionInitialized = 'true';
@@ -338,25 +302,11 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
   companion.addEventListener('click', event => {
     const tab = event.target.closest?.('[data-companion-tab]');
     if (tab) update({ tab: tab.dataset.companionTab });
-    const mode = event.target.closest?.('[data-companion-talent-mode]');
-    if (mode && !mode.disabled) update({ talentMode: mode.dataset.companionTalentMode });
-    const removeButton = event.target.closest?.('[data-companion-talent-remove]');
-    if (removeButton) adjustTalent(removeButton.dataset.companionTalentRemove, -1);
     const talentButton = event.target.closest?.('[data-companion-talent]');
     if (talentButton) {
       const talentId = talentButton.dataset.companionTalent;
-      const data = getManualTalentData(state, guideData, progressionEngine);
-      state = { ...state, selectedTalentId: talentId };
-      if (!talentButton.dataset.cannotAdd || talentButton.dataset.cannotAdd !== 'true') adjustTalent(talentId, 1, false);
-      else update({ selectedTalentId: talentId });
+      update({ selectedTalentId: talentId });
     }
-  });
-  companion.addEventListener('contextmenu', event => {
-    const talentButton = event.target.closest?.('[data-companion-talent]');
-    if (!talentButton) return;
-    event.preventDefault();
-    state = { ...state, selectedTalentId: talentButton.dataset.companionTalent };
-    adjustTalent(talentButton.dataset.companionTalent, -1, false);
   });
   companion.addEventListener('keydown', event => {
     const currentIndex = tabs.indexOf(event.target.closest?.('[data-companion-tab]'));
@@ -371,33 +321,4 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
     tabs[nextIndex].focus();
     update({ tab: tabs[nextIndex].dataset.companionTab });
   });
-
-  function adjustTalent(talentId, change, select = true) {
-    if (state.talentMode === 'recommended') state = { ...state, talentMode: 'manual' };
-    const data = getManualTalentData(state, guideData, progressionEngine);
-    const talent = data.tree?.talents?.find(item => item.id === talentId);
-    if (!talent || !data.classRecord || !progressionEngine.adjust) return;
-    if (change > 0) {
-      const lock = companionTalentLock(talent, data.tree, data.allocation);
-      if (lock.locked) {
-        update({ selectedTalentId: talentId });
-        if (status) status.textContent = lock.tierLocked
-          ? `${talent.name} is locked until ${lock.requiredPoints} points are spent in this tree.`
-          : `${talent.name} requires ${talent.prerequisite} at full rank.`;
-        return;
-      }
-    }
-    const result = progressionEngine.adjust(data.classRecord, data.allocation, talentId, change, data.availablePoints);
-    if (!result.error && validateCompanionTalentTiers(data.tree, result.allocation).length) {
-      result.error = 'Remove points from deeper talent rows first.';
-    }
-    if (result.error) {
-      update({ selectedTalentId: talentId });
-      if (status) status.textContent = result.error;
-      return;
-    }
-    const savedAllocation = saveCompanionTalentAllocation(classId, state.specializationId, result.allocation, talentStorage);
-    update({ selectedTalentId: select ? talentId : state.selectedTalentId });
-    if (!savedAllocation && status) status.textContent = 'This browser could not save the talent allocation.';
-  }
 }

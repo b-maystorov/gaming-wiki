@@ -324,7 +324,7 @@ function renderWowSpellbook(classRecord, catalog, escapeHtml) {
 
 function renderWowTalentPlanner(data, catalog, profile, route, escapeHtml, guidedData = null) {
   if (!catalog?.classes?.length) return '<p class="wow-note">The Forever talent records could not be loaded. No Classic-era talent tree is substituted.</p>';
-  const guidedBuilds = guidedData?.builds || [];
+  const guidedBuilds = (guidedData?.builds || []).filter(build => !build.companionOnly);
   const savedDraft = loadWowTalentDraft();
   const shared = route.sharedBuildToken && !savedDraft ? decodeWowTalentBuild(route.sharedBuildToken, catalog) : null;
   let state = savedDraft || shared || {
