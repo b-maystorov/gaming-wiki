@@ -745,7 +745,9 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
         builds: guidedData?.builds || [],
         catalog,
         resolve: resolveWowGuidedBuild,
-        availablePoints: availableWowTalentPoints
+        availablePoints: availableWowTalentPoints,
+        adjust: adjustWowTalentRank,
+        validate: validateWowTalentAllocation
       },
       escapeHtml
     }) : '';

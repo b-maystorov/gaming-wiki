@@ -1704,7 +1704,9 @@ function showRoute() {
           builds: wowGuidedData?.builds || [],
           catalog: wowClientData,
           resolve: resolveWowGuidedBuild,
-          availablePoints: availableWowTalentPoints
+          availablePoints: availableWowTalentPoints,
+          adjust: adjustWowTalentRank,
+          validate: validateWowTalentAllocation
         }
       });
     }
