@@ -287,6 +287,39 @@
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
       "status": "Stat mechanics sourced from a Forever client-data extraction (build 1.60.1.70938); use for mechanic descriptions, not Arms stat weights."
+    },
+    {
+      "id": "icy-warrior-arms-stats",
+      "title": "Forever Arms Warrior Stat Priority",
+      "url": "https://www.icy-veins.com/wow-forever/arms-warrior-melee-dps-pve-stat-priority",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "accessed": "2026-11-18",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Level-60 PvE starting priority with target-context Hit and Expertise notes; not numerical stat weights."
+    },
+    {
+      "id": "icy-warrior-fury-stats",
+      "title": "Forever Fury Warrior Stat Priority",
+      "url": "https://www.icy-veins.com/wow-forever/fury-warrior-melee-dps-pve-stat-priority",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "accessed": "2026-11-18",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Level-60 PvE starting priority with dual-wield Hit and Expertise context; not numerical stat weights."
+    },
+    {
+      "id": "icy-warrior-protection-stats",
+      "title": "Forever Protection Warrior Stat Priority",
+      "url": "https://www.icy-veins.com/wow-forever/protection-warrior-tank-pve-stat-priority",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "accessed": "2026-11-18",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Level-60 PvE offensive and defensive tank stat starting orders; not numerical stat weights."
     }
   ],
   "classes": [
@@ -441,31 +474,6 @@
                 }
               ]
             },
-            "stats": {
-              "sourceIds": [
-                "icy-arms-leveling",
-                "foreverdb-stats"
-              ],
-              "sections": [
-                {
-                  "title": "Leveling priority · no stat weights published",
-                  "items": [
-                    "Weapon damage: keep a strong weapon current; at similar DPS, a slower two-handed weapon improves damage-per-swing attacks. Do not reject a large DPS upgrade for speed or type.",
-                    "Hit and Expertise: reduce missed attacks and enemy dodges/parries; take them when available without giving up a major weapon upgrade.",
-                    "Agility and Critical Strike: improve critical strikes; Agility also contributes armor and dodge. Critical auto-attacks generate additional Rage.",
-                    "Strength and Attack Power: Strength gives Warriors 2 Attack Power per point in the Forever stat reference. Attack Power increases weapon damage."
-                  ]
-                },
-                {
-                  "title": "Stamina",
-                  "text": "Stamina increases maximum health (ForeverDB documents 10 health per point after the first 20). The Arms leveling source does not assign it a damage priority or a stat weight; treat it as a survivability choice."
-                },
-                {
-                  "title": "No fabricated weights",
-                  "text": "The source gives an ordering, not numerical stat weights or a simulation result."
-                }
-              ]
-            },
             "gear": {
               "sourceIds": [
                 "icy-arms-leveling"
@@ -596,6 +604,207 @@
             }
           }
         }
+      },
+      "statsGuide": {
+        "sourceIds": [
+          "foreverdb-stats",
+          "icy-warrior-arms-stats",
+          "icy-warrior-fury-stats",
+          "icy-warrior-protection-stats"
+        ],
+        "attributes": [
+          {
+            "id": "strength",
+            "name": "Strength",
+            "icon": "assets/images/wow-forever/icons/spell_nature_strengthofearthtotem02.jpg",
+            "summary": "Each point gives 2 melee Attack Power; every 20 Strength also gives 1 Block Value for Warriors.",
+            "sourceIds": [
+              "foreverdb-stats"
+            ]
+          },
+          {
+            "id": "agility",
+            "name": "Agility",
+            "icon": "assets/images/wow-forever/icons/ability_rogue_ambush.jpg",
+            "summary": "At level 60, 20 Agility gives 1% melee crit; each point adds 2 Armor and some Dodge. Warriors gain no melee Attack Power from it.",
+            "sourceIds": [
+              "foreverdb-stats"
+            ]
+          },
+          {
+            "id": "stamina",
+            "name": "Stamina",
+            "icon": "assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg",
+            "summary": "The first 20 points each give 1 health; each additional point gives 10 health before buffs. It supports survival, especially for tanks.",
+            "sourceIds": [
+              "foreverdb-stats",
+              "icy-warrior-protection-stats"
+            ]
+          },
+          {
+            "id": "attack-power",
+            "name": "Attack Power",
+            "icon": "assets/images/wow-forever/icons/ability_warrior_focusedrage.jpg",
+            "summary": "Every 14 Attack Power adds 1 weapon DPS before modifiers; it also improves abilities that scale with Attack Power.",
+            "sourceIds": [
+              "foreverdb-stats"
+            ]
+          },
+          {
+            "id": "critical-strike",
+            "name": "Critical Strike",
+            "icon": "assets/images/wow-forever/icons/ability_criticalstrike.jpg",
+            "summary": "Increases the chance attacks crit. Critical auto-attacks generate more Rage; Fury also uses crits to trigger Flurry.",
+            "sourceIds": [
+              "icy-warrior-arms-stats",
+              "icy-warrior-fury-stats"
+            ]
+          },
+          {
+            "id": "hit-chance",
+            "name": "Hit Chance",
+            "icon": "assets/images/wow-forever/icons/ability_warrior_shieldbash.jpg",
+            "summary": "Reduces attack misses. Missed auto-attacks deal no damage and generate no Rage.",
+            "sourceIds": [
+              "icy-warrior-arms-stats",
+              "icy-warrior-fury-stats",
+              "icy-warrior-protection-stats"
+            ]
+          },
+          {
+            "id": "weapon-damage",
+            "name": "Weapon Damage",
+            "icon": "assets/images/wow-forever/icons/inv_sword_27.jpg",
+            "summary": "Weapon DPS and per-swing damage affect attacks differently; compare the whole weapon and its stats.",
+            "sourceIds": [
+              "icy-warrior-arms-stats",
+              "icy-warrior-fury-stats"
+            ]
+          },
+          {
+            "id": "expertise",
+            "name": "Expertise",
+            "icon": "assets/images/wow-forever/icons/ability_warrior_riposte.jpg",
+            "summary": "Reduces enemy dodges and parries. It addresses a different miss result from Hit Chance.",
+            "sourceIds": [
+              "icy-warrior-arms-stats",
+              "icy-warrior-fury-stats",
+              "icy-warrior-protection-stats"
+            ]
+          },
+          {
+            "id": "defense",
+            "name": "Defense",
+            "icon": "assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg",
+            "summary": "Above the level-based baseline, Defense improves Dodge, Parry and Block while reducing enemy Hit and Critical Strike chance.",
+            "sourceIds": [
+              "foreverdb-stats",
+              "icy-warrior-protection-stats"
+            ]
+          },
+          {
+            "id": "armor",
+            "name": "Armor",
+            "icon": "assets/images/wow-forever/icons/spell_nature_spiritarmor.jpg",
+            "summary": "Reduces incoming physical damage; it does not reduce magic damage.",
+            "sourceIds": [
+              "icy-warrior-protection-stats"
+            ]
+          },
+          {
+            "id": "block-value",
+            "name": "Block Value",
+            "icon": "assets/images/wow-forever/icons/inv_shield_06.jpg",
+            "summary": "Reduces damage when blocking and improves Shield Slam damage.",
+            "sourceIds": [
+              "icy-warrior-protection-stats"
+            ]
+          }
+        ],
+        "priorities": {
+          "arms": {
+            "label": "Arms · Level 60 PvE starting order",
+            "items": [
+              "Weapon DPS",
+              "Hit Chance",
+              "Expertise",
+              "Critical Strike",
+              "Strength"
+            ],
+            "note": "A guide ordering, not a numerical stat weight. The existing leveling guide gives separate general leveling advice.",
+            "sourceIds": [
+              "icy-warrior-arms-stats"
+            ]
+          },
+          "fury": {
+            "label": "Fury · Level 60 PvE starting order",
+            "items": [
+              "Weapon DPS",
+              "Hit Chance",
+              "Expertise",
+              "Critical Strike",
+              "Strength"
+            ],
+            "note": "A guide ordering, not a numerical stat weight. Dual-wield auto-attacks and special attacks have different Hit behavior.",
+            "sourceIds": [
+              "icy-warrior-fury-stats"
+            ]
+          },
+          "protection": {
+            "label": "Protection · Level 60 PvE tank starting orders",
+            "offense": [
+              "Expertise",
+              "Hit Chance",
+              "Agility",
+              "Strength",
+              "Stamina"
+            ],
+            "defense": [
+              "Stamina",
+              "Armor",
+              "Agility",
+              "Avoidance",
+              "Defense"
+            ],
+            "note": "The source separates threat and survival priorities. These are guide orders, not numerical stat weights.",
+            "sourceIds": [
+              "icy-warrior-protection-stats"
+            ]
+          }
+        },
+        "explanations": [
+          {
+            "title": "Hit, Expertise and target level",
+            "text": "For level-60 PvE against level-63 raid bosses, the cited guides use 8% Hit for special attacks and two-handed attacks. Dual-wield auto-attacks can continue to miss beyond that point. Expertise reduces dodges and parries rather than misses; 6.5% dodge reduction is the cited behind-target reference for level-63 bosses. These are not universal leveling caps.",
+            "sourceIds": [
+              "icy-warrior-arms-stats",
+              "icy-warrior-fury-stats",
+              "icy-warrior-protection-stats"
+            ]
+          },
+          {
+            "title": "Weapon damage, speed and Rage",
+            "text": "Weapon DPS describes average damage over time; damage per swing affects weapon-based attacks such as Mortal Strike. At similar DPS, a slower weapon hits harder per swing, but speed alone is not a reason to reject a clear DPS upgrade. In Forever, normal-swing Rage depends on weapon speed, not damage dealt.",
+            "sourceIds": [
+              "icy-warrior-arms-stats",
+              "icy-warrior-fury-stats"
+            ]
+          },
+          {
+            "title": "Tank survival: Armor, Defense and Block",
+            "text": "Armor reduces physical damage. Defense improves avoidance and blocking while reducing incoming hit and crit chance; the Forever reference lists 440 total Defense for raid-boss critical immunity, while the Protection guide explains Shield Block can temporarily fill the combat table. Block Value reduces blocked damage and contributes to Shield Slam.",
+            "sourceIds": [
+              "foreverdb-stats",
+              "icy-warrior-protection-stats"
+            ]
+          }
+        ],
+        "upgradeAdvice": "Compare a weapon upgrade using its DPS, per-swing damage and other stats together. A clearly stronger weapon is usually more meaningful than a small secondary-stat gain; at similar DPS, weapon speed can matter to weapon-damage attacks. For other slots, use the selected role’s guide order and consider survival needs. No stat weights are stored here.",
+        "upgradeSourceIds": [
+          "icy-warrior-arms-stats",
+          "icy-warrior-fury-stats",
+          "icy-warrior-protection-stats"
+        ]
       }
     },
     {
