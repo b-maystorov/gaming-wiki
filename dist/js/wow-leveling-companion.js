@@ -319,7 +319,7 @@ function renderTalentTree(state, treeData, escapeHtml) {
   return `<div class="wow-companion-tree-layout"><div class="wow-companion-tree-stack">${visibleTrees.map(renderTree).join('')}</div>${detail}</div>`;
 }
 
-function renderStatsGuide(statsGuide, priority, escapeHtml) {
+function renderStatsGuide(statsGuide, priority, escapeHtml, hideSourceLinks = false) {
   if (!statsGuide || !priority) return '';
   const renderPriority = (title, items) => `<section class="wow-stat-priority-group"><h4>${escapeHtml(title)}</h4><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></section>`;
   const priorities = priority.items
@@ -327,7 +327,7 @@ function renderStatsGuide(statsGuide, priority, escapeHtml) {
     : `${renderPriority('Threat & damage', priority.offense || [])}${renderPriority('Survival', priority.defense || [])}`;
   const rows = statsGuide.attributes.map(stat => `<li class="wow-stat-row"><img src="${escapeHtml(stat.icon)}" alt="" width="36" height="36" loading="lazy"><strong>${escapeHtml(stat.name)}</strong><span>${escapeHtml(stat.summary)}</span></li>`).join('');
   const explanations = statsGuide.explanations.map(item => {
-    const sources = (item.sourceIds || []).map(id => statsGuide.sourceCatalog?.[id]).filter(Boolean);
+    const sources = hideSourceLinks ? [] : (item.sourceIds || []).map(id => statsGuide.sourceCatalog?.[id]).filter(Boolean);
     const links = sources.length ? `<span class="wow-stat-explanation-sources">Sources: ${sources.map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a>`).join(' · ')}</span>` : '';
     return `<details class="wow-stat-explanation"><summary>${escapeHtml(item.title)}</summary><p>${escapeHtml(item.text)}</p>${links}</details>`;
   }).join('');
@@ -341,23 +341,25 @@ function renderOverviewHighlights(highlights, escapeHtml) {
 
 function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage) {
   const panel = getCompanionPanel(state, guideData, progressionEngine);
+  const hideSourceReferences = guideData.classRecord?.id === 'warrior';
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
   const notices = (panel.notices || []).map(notice => `<p class="wow-companion-missing" role="status">${escapeHtml(notice)}</p>`).join('');
   const sources = (panel.sourceIds || []).map(sourceId => guideData.sources?.find(source => source.id === sourceId)).filter(Boolean);
-  const sourceLinks = sources.length ? `<p class="wow-companion-guide-sources">Sources: ${sources.map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a>`).join(' · ')}</p>` : '';
+  const sourceLinks = !hideSourceReferences && sources.length ? `<p class="wow-companion-guide-sources">Sources: ${sources.map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a>`).join(' · ')}</p>` : '';
   const treeData = panel.treeData;
   const statsGuide = panel.statsGuide ? { ...panel.statsGuide, sourceCatalog: Object.fromEntries((guideData.sources || []).map(source => [source.id, source])) } : null;
-  const statsPanel = statsGuide ? renderStatsGuide(statsGuide, panel.priority, escapeHtml) : '';
+  const statsPanel = statsGuide ? renderStatsGuide(statsGuide, panel.priority, escapeHtml, hideSourceReferences) : '';
   const overviewContent = panel.overviewHighlights
     ? `<div class="wow-warrior-overview"><div class="wow-warrior-overview-context">${sections}</div>${renderOverviewHighlights(panel.overviewHighlights, escapeHtml)}</div>`
     : sections;
   const nextRecommended = treeData?.recommended?.valid && treeData.recommended.nextChange
     ? `<p class="wow-companion-next-talent">Next recommended talent · Unlocks at level ${treeData.recommended.nextChange.level} · ${escapeHtml(treeData.tree.talents.find(talent => talent.id === treeData.recommended.nextChange.talentId)?.name || 'Talent')}</p>`
     : '';
-  const sourceAttribution = treeData?.build?.sourceUrl
+  const sourceAttribution = !hideSourceReferences && treeData?.build?.sourceUrl
     ? `<p class="wow-companion-build-source">Source: <a href="${escapeHtml(treeData.build.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(treeData.build.sourceTitle || treeData.build.name)}</a>. ${escapeHtml(treeData.build.confidence || '')}${treeData.build.comparisonSourceDetails?.map(source => ` <span>Comparison: <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a> (${escapeHtml(source.note)}).</span>`).join('') || ''}</p>`
     : '';
-  const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${treeData.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : ''}` : '';
+  const tierDisclosure = !hideSourceReferences && treeData?.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : '';
+  const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${tierDisclosure}` : '';
   return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
 }
 

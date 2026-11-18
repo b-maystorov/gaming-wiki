@@ -2316,7 +2316,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   handlers.click({ target: { closest: () => talentsTab } });
   assert.equal(talentsTab.attributes.get('aria-selected'), 'true');
   assert.ok(panel.innerHTML.includes('Arms talent tree · Level 20'));
-  assert.ok(panel.innerHTML.includes('Source:'));
+  assert.ok(!panel.innerHTML.includes('wow-companion-build-source'));
   assert.ok(panel.innerHTML.includes('Improved Rend'));
   assert.ok(panel.innerHTML.includes('3/3'));
   const saved = companionModule.loadCompanionState('warrior', {}, warrior.specializations, { getItem: key => stored.get(key) || null });
@@ -2340,7 +2340,8 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.ok(panel.innerHTML.includes('What should I upgrade next?'));
   assert.equal((panel.innerHTML.match(/<details class="wow-stat-explanation">/g) || []).length, 3);
   assert.ok(panel.innerHTML.includes('<summary>Hit, Expertise and target level</summary>'), 'native details summaries provide keyboard-expandable explanations');
-  assert.ok(panel.innerHTML.includes('foreverdb.net/stats'));
+  assert.ok(!panel.innerHTML.includes('foreverdb.net/stats'), 'Warrior Stats citations are not repeated in the visible tab');
+  assert.ok(warrior.statsGuide.sourceIds.every(id => wowPack.sources.some(source => source.id === id)), 'Stats attribution remains in the guide data');
   specializationSelect.value = 'fury';
   handlers.change({ target: specializationSelect });
   assert.ok(panel.innerHTML.includes('data-stats-specialization="fury"'));
@@ -2458,10 +2459,31 @@ test('Warrior route loads the guided-build JSON and renders automatic Arms alloc
       assert.ok(html.includes('marker-end="url(#companion-arrow-arms'), 'prerequisite connectors include arrows');
       assert.ok(html.indexOf('class="wow-companion-tree-stack"') < html.indexOf('class="wow-companion-talent-detail"'), 'talent details follow all three trees');
       assert.ok(html.includes('assets/images/wow-forever/icons/ability_warrior_'));
-      assert.ok(html.includes(build.sourceTitle));
-      assert.ok(html.includes('not Blizzard advice'));
+      assert.ok(!html.includes(build.sourceTitle), 'source citations are omitted from the Warrior tab UI');
+      assert.ok(!html.includes('wow-companion-build-source'));
       assert.ok((html.match(/class="wow-companion-tree-node is-spent"/g) || []).length > 0, `level ${level} highlights allocated talents`);
     }
+  } finally {
+    if (saved === undefined) h.storedValues.delete(key);
+    else h.storedValues.set(key, saved);
+  }
+});
+
+test('Warrior companion tabs omit visible source references while source metadata remains available', () => {
+  const key = 'bm-wow-leveling-companion-v1:warrior';
+  const saved = h.storedValues.get(key);
+  const sourceIds = wowPack.classes.find(item => item.id === 'warrior').specializationGuides.arms.sourceIds;
+  try {
+    for (const tab of ['overview', 'stats', 'talents', 'gear', 'leveling', 'professions']) {
+      h.storedValues.set(key, JSON.stringify({ level: 20, specializationId: 'arms', tab }));
+      const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+      assert.ok(!html.includes('wow-companion-guide-sources'), `${tab} omits generic citations`);
+      assert.ok(!html.includes('wow-stat-explanation-sources'), `${tab} omits inline citations`);
+      assert.ok(!html.includes('wow-companion-build-source'), `${tab} omits build citations`);
+      assert.ok(!html.includes('wow-companion-tier-source'), `${tab} omits source disclosure citations`);
+    }
+    assert.ok(sourceIds.every(id => wowPack.sources.some(source => source.id === id)), 'source attribution remains in structured guide data');
+    assert.ok(h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior')).includes('Open full leveling guide'));
   } finally {
     if (saved === undefined) h.storedValues.delete(key);
     else h.storedValues.set(key, saved);
@@ -2567,7 +2589,7 @@ test('companion automatically updates sourced talent ranks with level and specia
   });
   const targetFor = (selector, element) => ({ closest: candidate => candidate === selector ? element : null });
   handlers.click({ target: targetFor('[data-companion-tab]', tabs[1]) });
-  assert.ok(panel.innerHTML.includes('Arms Warrior, level 10 to 60 point-by-point'));
+  assert.ok(!panel.innerHTML.includes('Arms Warrior, level 10 to 60 point-by-point'));
   assert.ok(panel.innerHTML.includes('1 / 1'));
   assert.ok(!panel.innerHTML.includes('Manual Build'));
   assert.ok(!panel.innerHTML.includes('data-companion-talent-remove'));
