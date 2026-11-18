@@ -265,6 +265,28 @@
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
       "status": "Version-specific dungeon index; the source notes some quest/loot records await in-game discovery."
+    },
+    {
+      "id": "icy-arms-leveling",
+      "title": "Arms Warrior Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/arms-warrior-leveling",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "accessed": "2026-11-17",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific Arms guide covering playstyle, leveling advice, stat priorities, items, quests, abilities and professions. Its talent order differs from the source-backed automatic build already integrated in the companion; the two recommendations are kept distinct."
+    },
+    {
+      "id": "foreverdb-stats",
+      "title": "Stats explained: what each stat does in WoW Forever",
+      "url": "https://foreverdb.net/stats",
+      "publisher": "ForeverDB",
+      "updatedDate": "2026-11-17",
+      "accessed": "2026-11-17",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Stat mechanics sourced from a Forever client-data extraction (build 1.60.1.70938); use for mechanic descriptions, not Arms stat weights."
     }
   ],
   "classes": [
@@ -378,6 +400,202 @@
             "milestones": "Dual Wield training at level 20."
           }
         ]
+      },
+      "specializationGuides": {
+        "arms": {
+          "title": "Arms Warrior Guide",
+          "sourceIds": [
+            "icy-arms-leveling"
+          ],
+          "sections": {
+            "overview": {
+              "sourceIds": [
+                "icy-arms-leveling"
+              ],
+              "sections": [
+                {
+                  "title": "Role",
+                  "text": "Damage dealer. This leveling guide is written around a two-handed weapon."
+                },
+                {
+                  "title": "Playstyle",
+                  "text": "Fight mainly in Battle Stance. Use Rend and Overpower, manage Rage between pulls, then use Sweeping Strikes to cleave a second target once the talent is available."
+                },
+                {
+                  "title": "Strengths",
+                  "items": [
+                    "Strong damage against two nearby enemies with Sweeping Strikes.",
+                    "Overpower can deal efficient damage for little Rage.",
+                    "Weaponmaster supports multiple main weapon types without a respec.",
+                    "Strong opening damage when entering a fight with Rage already pooled."
+                  ]
+                },
+                {
+                  "title": "Weaknesses",
+                  "items": [
+                    "Limited self-healing can increase downtime between pulls.",
+                    "Slow weapon swings make missed attacks costly.",
+                    "Bleed-immune enemies reduce the value of Rend and Bloodthrill.",
+                    "Changing targets can waste Overpower opportunities."
+                  ]
+                }
+              ]
+            },
+            "stats": {
+              "sourceIds": [
+                "icy-arms-leveling",
+                "foreverdb-stats"
+              ],
+              "sections": [
+                {
+                  "title": "Leveling priority · no stat weights published",
+                  "items": [
+                    "Weapon damage: keep a strong weapon current; at similar DPS, a slower two-handed weapon improves damage-per-swing attacks. Do not reject a large DPS upgrade for speed or type.",
+                    "Hit and Expertise: reduce missed attacks and enemy dodges/parries; take them when available without giving up a major weapon upgrade.",
+                    "Agility and Critical Strike: improve critical strikes; Agility also contributes armor and dodge. Critical auto-attacks generate additional Rage.",
+                    "Strength and Attack Power: Strength gives Warriors 2 Attack Power per point in the Forever stat reference. Attack Power increases weapon damage."
+                  ]
+                },
+                {
+                  "title": "Stamina",
+                  "text": "Stamina increases maximum health (ForeverDB documents 10 health per point after the first 20). The Arms leveling source does not assign it a damage priority or a stat weight; treat it as a survivability choice."
+                },
+                {
+                  "title": "No fabricated weights",
+                  "text": "The source gives an ordering, not numerical stat weights or a simulation result."
+                }
+              ]
+            },
+            "gear": {
+              "sourceIds": [
+                "icy-arms-leveling"
+              ],
+              "sections": [
+                {
+                  "title": "Weapon approach",
+                  "text": "Use a two-handed weapon and keep its skill trained. Compare actual DPS first; a slower weapon is preferred when DPS is similar. The source warns not to pass up a large DPS upgrade just for weapon speed or type."
+                },
+                {
+                  "title": "Sourced weapon options",
+                  "items": [
+                    "Defender of Dalaran — Alliance quest reward from Heart of Disruption in the City of Dalaran.",
+                    "Corpsemaker — drops from Overlord Ramtusk in Razorfen Kraul.",
+                    "Heavehammer — Alliance or Horde quest reward from Wetlands Excavation Site quest chains.",
+                    "Strike of the Hydra — drops from Aku’mai in Blackfathom Deeps.",
+                    "Heavy Copper Maul — crafted with Blacksmithing."
+                  ]
+                },
+                {
+                  "title": "Equipment coverage",
+                  "text": "The source lists additional crafted armor and quest/dungeon equipment, but says gear recommendations beyond level 35 are not fully known. No level-specific best-in-slot list or stat weights are recorded here."
+                }
+              ]
+            },
+            "leveling": {
+              "sourceIds": [
+                "icy-arms-leveling"
+              ],
+              "zoneSourceDisclosure": "The linked source offers level-sensitive zone and dungeon choices. This compact content record does not preserve its exact level brackets, so the zone suggestions below are not presented as a level-by-level route.",
+              "zones": {
+                "Alliance": [
+                  "Loch Modan",
+                  "Darkshore",
+                  "Westfall",
+                  "Redridge Mountains",
+                  "Duskwood",
+                  "Ashenvale",
+                  "Wetlands"
+                ],
+                "Horde": [
+                  "The Barrens",
+                  "Silverpine Forest",
+                  "Stonetalon Mountains",
+                  "Hillsbrad Foothills",
+                  "Wetlands",
+                  "Thousand Needles"
+                ]
+              },
+              "dungeons": [
+                "Hall of Thanes",
+                "Ragefire Chasm",
+                "Ruins of Lordaeron",
+                "The Deadmines",
+                "Wailing Caverns",
+                "The Stockade",
+                "Shadowfang Keep",
+                "Blackfathom Deeps",
+                "Excavation Site: Wetlands",
+                "Gnomeregan",
+                "Razorfen Kraul",
+                "City of Dalaran"
+              ],
+              "milestones": [
+                {
+                  "level": 10,
+                  "kind": "Class quest",
+                  "text": "Complete the Defensive Stance class quest; the guide also identifies Taunt and Sunder Armor as available."
+                },
+                {
+                  "level": 12,
+                  "kind": "Ability unlock",
+                  "text": "Overpower and Shield Bash become available."
+                },
+                {
+                  "level": 20,
+                  "kind": "Ability unlock",
+                  "text": "Slam, Victory Rush and Retaliation become available."
+                },
+                {
+                  "level": 30,
+                  "kind": "Class quest",
+                  "text": "Complete the Berserker Stance class quest; this unlocks access to Intercept and Berserker Rage."
+                },
+                {
+                  "level": 36,
+                  "kind": "Ability unlock",
+                  "text": "Whirlwind becomes available and requires Berserker Stance."
+                },
+                {
+                  "level": 38,
+                  "kind": "Ability unlock",
+                  "text": "Pummel becomes available and requires Berserker Stance."
+                },
+                {
+                  "level": 40,
+                  "kind": "Training and build milestone",
+                  "text": "Plate Armor training and 60% mount availability; Mortal Strike is a milestone in the cited Arms leveling build."
+                }
+              ]
+            },
+            "professions": {
+              "sourceIds": [
+                "icy-arms-leveling"
+              ],
+              "sections": [
+                {
+                  "title": "Gathering and crafting",
+                  "items": [
+                    "Mining + Blacksmithing — gather materials for crafted weapons, armor and weapon stones; compare crafts with current gear before investing.",
+                    "Mining + Engineering — Mining supplies materials for Engineering explosives and gadgets useful in dungeons and PvP.",
+                    "Herbalism + Alchemy — gather herbs for potions and other consumables."
+                  ]
+                },
+                {
+                  "title": "Other useful choices",
+                  "items": [
+                    "Skinning — the guide recommends it as an early source of vendor gold; it can be replaced later.",
+                    "First Aid — the guide recommends bandages to reduce downtime between Victory Rush triggers. It is a secondary profession recommendation, not a class requirement.",
+                    "Cooking + Fishing — provide food and ingredients, but the guide notes leveling both takes additional time."
+                  ]
+                },
+                {
+                  "title": "Recommendation label",
+                  "text": "These are the cited guide’s profession recommendations and crafting pairings, not required Warrior mechanics."
+                }
+              ]
+            }
+          }
+        }
       }
     },
     {

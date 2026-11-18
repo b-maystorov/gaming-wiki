@@ -1,4 +1,5 @@
-const COMPANION_TABS = ['overview', 'talents', 'gear'];
+const COMPANION_TABS = ['overview', 'stats', 'talents', 'gear', 'leveling', 'professions'];
+const COMPANION_TAB_LABELS = { overview: 'Overview', stats: 'Stats', talents: 'Talents', gear: 'Weapons & Gear', leveling: 'Leveling', professions: 'Professions' };
 const COMPANION_STORAGE_PREFIX = 'bm-wow-leveling-companion-v1:';
 
 function escapeText(value) {
@@ -76,7 +77,10 @@ function selectedData(guideData, state) {
     : configuredGuides?.[state.specializationId];
   const guide = specializationGuide || guideData?.guide || classRecord.starterGuide || null;
   const guideMatchesSpec = Boolean(guide && specialization && (specializationGuide || guide.specialization === specialization.name));
-  return { classRecord, specializations, specialization, guide, guideMatchesSpec };
+  const specializationGuideContent = guideData?.specializationGuides?.[state.specializationId]
+    || classRecord.specializationGuides?.[state.specializationId]
+    || null;
+  return { classRecord, specializations, specialization, guide, guideMatchesSpec, specializationGuideContent };
 }
 
 function treePoints(tree, allocation) {
@@ -131,13 +135,29 @@ export function findCompanionTalentTree(classRecord, specializationId, specializ
 
 function getAutomaticTalentData(state, guideData, progressionEngine) {
   const classRecord = guideData.talentClass || progressionEngine?.catalog?.classes?.find(item => item.id === state.classId);
+  const catalog = progressionEngine?.catalog || { classes: classRecord ? [classRecord] : [] };
   const specialization = (guideData.classRecord?.specializations || guideData.specializations || []).find(item => item.id === state.specializationId);
   const tree = findCompanionTalentTree(classRecord, state.specializationId, specialization?.name);
   const availablePoints = progressionEngine?.availablePoints?.(state.level, 0) ?? 0;
+  const matchingBuilds = (progressionEngine?.builds || []).filter(build => build.classId === state.classId && build.specializationId === state.specializationId);
   const build = sourceSupportedBuildFor(state, progressionEngine);
-  const recommended = build && progressionEngine?.resolve
-    ? progressionEngine.resolve(build, progressionEngine.catalog, state.level)
+  let recommended = build && progressionEngine?.resolve
+    ? progressionEngine.resolve(build, catalog, state.level)
     : null;
+  let availabilityReason = '';
+  if (!tree) availabilityReason = `The ${specialization?.name || state.specializationId} talent tree is missing from the loaded Forever client data.`;
+  else if (!matchingBuilds.length) availabilityReason = `No automatic leveling build for ${classRecord?.name || state.classId} ${specialization?.name || state.specializationId} was loaded.`;
+  else if (!build) {
+    const candidate = matchingBuilds[0];
+    availabilityReason = !['verified', 'source-supported'].includes(candidate.verificationStatus)
+      ? `The saved build is not eligible for automatic use (status: ${candidate.verificationStatus || 'not recorded'}).`
+      : `The saved build does not have complete coverage (status: ${candidate.coverage?.status || 'not recorded'}).`;
+  } else if (!progressionEngine?.resolve) availabilityReason = 'The guided-build resolver is unavailable.';
+  else if (!recommended?.valid) availabilityReason = `The saved build failed validation: ${(recommended?.issues || ['the resolver returned no allocation']).join(' ')}`;
+  else if (state.level >= (build.levelRange?.from || 1) && recommended.total !== availablePoints) {
+    recommended = { ...recommended, valid: false };
+    availabilityReason = `The saved build allocates ${recommended.total} of ${availablePoints} available talent points at level ${state.level}.`;
+  }
   const allocation = recommended?.valid ? recommended.allocation : {};
   const allTrees = classRecord?.trees || [];
   const selectedTalent = allTrees.flatMap(item => item.talents || []).find(talent => talent.id === state.selectedTalentId)
@@ -148,12 +168,43 @@ function getAutomaticTalentData(state, guideData, progressionEngine) {
     : { total: treePoints(tree, allocation), valid: true, issues: [] };
   const tierIssues = allTrees.flatMap(item => validateCompanionTalentTiers(item, allocation));
   const validation = { ...baseValidation, valid: baseValidation.valid && !tierIssues.length, issues: [...baseValidation.issues, ...tierIssues] };
-  return { classRecord, tree, allTrees, selectedTree, availablePoints, allocation, selectedTalent, validation, build, recommended };
+  if (recommended?.valid && !validation.valid) {
+    recommended = { ...recommended, valid: false };
+    availabilityReason = `The saved build failed talent validation: ${validation.issues.join(' ')}`;
+  }
+  return { classRecord, tree, allTrees, selectedTree, availablePoints, allocation, selectedTalent, validation, build, recommended, availabilityReason };
 }
 
 export function getCompanionPanel(state, guideData = {}, progressionEngine = {}) {
-  const { classRecord, specialization, guide, guideMatchesSpec } = selectedData(guideData, state);
+  const { classRecord, specialization, guide, guideMatchesSpec, specializationGuideContent } = selectedData(guideData, state);
   const specName = specialization?.name || 'Specialization';
+  if (state.tab !== 'talents' && specializationGuideContent) {
+    const tabContent = specializationGuideContent.sections?.[state.tab];
+    const sourceIds = tabContent?.sourceIds || specializationGuideContent.sourceIds || [];
+    if (state.tab === 'leveling') {
+      const milestones = tabContent?.milestones || [];
+      const learned = milestones.filter(milestone => milestone.level <= state.level);
+      const next = milestones.find(milestone => milestone.level > state.level);
+      const sections = [];
+      if (learned.length) sections.push({ title: `Recorded milestones through level ${state.level}`, items: learned.map(item => `Level ${item.level} · ${item.kind} · ${item.text}`) });
+      if (next) sections.push({ title: `Next recorded milestone · Level ${next.level}`, text: next.text });
+      const factionZones = Object.entries(tabContent?.zones || {}).map(([faction, zones]) => `${faction}: ${zones.join(' · ')}`);
+      if (factionZones.length) sections.push({ title: 'Source-listed zone options · level brackets not retained', items: factionZones });
+      if (tabContent?.dungeons?.length) sections.push({ title: 'Dungeons named by the leveling source', items: tabContent.dungeons });
+      return {
+        heading: `${specName} leveling · Level ${state.level}`,
+        sections,
+        notices: tabContent?.zoneSourceDisclosure ? [tabContent.zoneSourceDisclosure] : [],
+        sourceIds
+      };
+    }
+    if (tabContent?.sections?.length) return {
+      heading: `${specName} · ${COMPANION_TAB_LABELS[state.tab] || state.tab}`,
+      sections: tabContent.sections,
+      notices: [],
+      sourceIds
+    };
+  }
   if (state.tab === 'overview') {
     const sections = [];
     if (guideMatchesSpec && guide?.reason) sections.push({ title: 'Existing class recommendation', text: guide.reason });
@@ -194,11 +245,17 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       treeData,
       sections: [{ title: 'Talent points spent / available', text: `${treeData.validation.total} / ${treeData.availablePoints}` }],
       notices: treeData.tree
-        ? (treeData.recommended?.valid ? [] : ['Talent progression not yet verified.'])
-        : ['Talent tree data coming soon for this specialization.'],
+        ? (treeData.recommended?.valid ? [] : [treeData.availabilityReason || 'Automatic talent allocation is unavailable for this specialization.'])
+        : [treeData.availabilityReason || 'Talent tree data coming soon for this specialization.'],
       note: 'Talent points start at level 10 and exclude Talented Legacy bonus points.'
     };
   }
+
+  if (state.tab !== 'gear') return {
+    heading: `${specName} · ${COMPANION_TAB_LABELS[state.tab] || state.tab}`,
+    sections: [],
+    notices: ['Guide data coming soon for this specialization.']
+  };
 
   const gear = guideMatchesSpec ? guide?.gear : '';
   return {
@@ -214,6 +271,13 @@ function renderTalentTree(state, treeData, escapeHtml) {
   const renderTree = currentTree => {
     const maxRow = Math.max(...currentTree.talents.map(talent => talent.row));
     const maxColumn = Math.max(...currentTree.talents.map(talent => talent.column));
+    const talentsByName = new Map(currentTree.talents.map(talent => [talent.name, talent]));
+    const connectors = currentTree.talents.flatMap(talent => {
+      const prerequisite = talentsByName.get(talent.prerequisite);
+      if (!prerequisite) return [];
+      const active = Number(allocation[talent.id]) > 0;
+      return [`<line class="wow-companion-connector${active ? ' is-active' : ''}" marker-end="url(#companion-arrow-${currentTree.id}${active ? '-active' : ''})" x1="${prerequisite.column - 0.5}" y1="${prerequisite.row - 0.5}" x2="${talent.column - 0.5}" y2="${talent.row - 0.5}"></line>`];
+    }).join('');
     const nodes = currentTree.talents.map(talent => {
       const rank = Number(allocation[talent.id]) || 0;
       const lock = companionTalentLock(talent, currentTree, allocation);
@@ -223,9 +287,10 @@ function renderTalentTree(state, treeData, escapeHtml) {
         : lock.prerequisiteLocked ? `Requires ${talent.prerequisite} at full rank.` : '';
       return `<article class="${classes}" style="grid-row:${talent.row};grid-column:${talent.column}"><button type="button" class="wow-companion-tree-icon" data-companion-talent="${escapeHtml(talent.id)}" aria-label="Inspect ${escapeHtml(talent.name)}, rank ${rank} of ${talent.maxRank}${lockHint ? `, locked: ${lockHint}` : ''}" aria-pressed="${talent.id === state.selectedTalentId}" title="${escapeHtml(lockHint || talent.name)}">${talent.icon ? `<img src="${escapeHtml(talent.icon)}" alt="" width="56" height="56" loading="lazy">` : `<span>${escapeHtml(talent.name.slice(0, 1))}</span>`}<strong>${rank}/${talent.maxRank}</strong></button><span class="wow-companion-tree-name">${escapeHtml(talent.name)}</span></article>`;
     }).join('');
-    return `<section class="wow-companion-tree${currentTree.id === tree.id ? ' is-primary' : ' is-secondary'}" aria-label="${escapeHtml(currentTree.name)} talent tree"><header><h4>${escapeHtml(currentTree.name)}</h4><span>${treePoints(currentTree, allocation)} points</span></header><div class="wow-companion-tree-scroll"><div class="wow-companion-tree-grid" style="--talent-columns:${maxColumn};--talent-rows:${maxRow}">${nodes}</div></div></section>`;
+    const selectedPath = currentTree.id === tree.id;
+    return `<section class="wow-companion-tree${selectedPath ? ' is-primary' : ' is-secondary'} tree-${escapeHtml(currentTree.id)}" aria-label="${escapeHtml(currentTree.name)} talent tree"${selectedPath ? ' aria-current="true"' : ''}><header><h4>${escapeHtml(currentTree.name)}</h4><span>${selectedPath ? 'Selected path · ' : ''}${treePoints(currentTree, allocation)} points</span></header><div class="wow-companion-tree-scroll"><div class="wow-companion-tree-grid" style="--talent-columns:${maxColumn};--talent-rows:${maxRow}"><svg class="wow-companion-connectors" viewBox="0 0 ${maxColumn} ${maxRow}" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="companion-arrow-${escapeHtml(currentTree.id)}" viewBox="0 0 4 3" refX="3.4" refY="1.5" markerWidth="4" markerHeight="3" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 4 1.5 L 0 3 z" fill="#49657f"></path></marker><marker id="companion-arrow-${escapeHtml(currentTree.id)}-active" viewBox="0 0 4 3" refX="3.4" refY="1.5" markerWidth="4" markerHeight="3" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 4 1.5 L 0 3 z" fill="#d6a34e"></path></marker></defs>${connectors}</svg>${nodes}</div></div></section>`;
   };
-  const visibleTrees = (allTrees || [tree]).filter(currentTree => currentTree.id === tree.id || treePoints(currentTree, allocation) > 0);
+  const visibleTrees = allTrees?.length ? allTrees : [tree];
   const selectedRank = selectedTalent ? Number(allocation[selectedTalent.id]) || 0 : 0;
   const selectedLock = selectedTalent ? companionTalentLock(selectedTalent, selectedTree, allocation) : null;
   const detail = selectedTalent ? `<aside class="wow-companion-talent-detail" aria-live="polite"><div class="wow-companion-talent-detail-heading">${selectedTalent.icon ? `<img src="${escapeHtml(selectedTalent.icon)}" alt="" width="48" height="48">` : ''}<div><h4>${escapeHtml(selectedTalent.name)}</h4><p>Rank ${selectedRank} / ${selectedTalent.maxRank}</p></div></div><p>${escapeHtml(selectedTalent.rankEffects?.[Math.max(0, selectedRank - 1)] || selectedTalent.rankEffects?.[0] || 'Description not recorded.')}</p>${selectedTalent.rankEffects?.length > 1 ? `<ol>${selectedTalent.rankEffects.map((effect, index) => `<li${index + 1 === selectedRank ? ' aria-current="true"' : ''}><strong>Rank ${index + 1}:</strong> ${escapeHtml(effect)}</li>`).join('')}</ol>` : ''}${selectedLock?.locked ? `<p class="wow-companion-tree-lock-note">${selectedLock.tierLocked ? `Spend ${selectedLock.requiredPoints} points in this tree to unlock this row.` : `Requires ${escapeHtml(selectedTalent.prerequisite)} at full rank.`}</p>` : ''}</aside>` : '';
@@ -236,6 +301,8 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const panel = getCompanionPanel(state, guideData, progressionEngine);
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
   const notices = (panel.notices || []).map(notice => `<p class="wow-companion-missing" role="status">${escapeHtml(notice)}</p>`).join('');
+  const sources = (panel.sourceIds || []).map(sourceId => guideData.sources?.find(source => source.id === sourceId)).filter(Boolean);
+  const sourceLinks = sources.length ? `<p class="wow-companion-guide-sources">Sources: ${sources.map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a>`).join(' · ')}</p>` : '';
   const treeData = panel.treeData;
   const nextRecommended = treeData?.recommended?.valid && treeData.recommended.nextChange
     ? `<p class="wow-companion-next-talent">Next recommended talent · Unlocks at level ${treeData.recommended.nextChange.level} · ${escapeHtml(treeData.tree.talents.find(talent => talent.id === treeData.recommended.nextChange.talentId)?.name || 'Talent')}</p>`
@@ -243,8 +310,8 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const sourceAttribution = treeData?.build?.sourceUrl
     ? `<p class="wow-companion-build-source">Source: <a href="${escapeHtml(treeData.build.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(treeData.build.sourceTitle || treeData.build.name)}</a>. ${escapeHtml(treeData.build.confidence || '')}${treeData.build.comparisonSourceDetails?.map(source => ` <span>Comparison: <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a> (${escapeHtml(source.note)}).</span>`).join('') || ''}</p>`
     : '';
-  const talentPanel = treeData ? `${treeData.recommended?.valid ? renderTalentTree(state, treeData, escapeHtml) : ''}${nextRecommended}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${treeData.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : ''}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${sections || ''}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}`;
+  const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${treeData.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : ''}` : '';
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${sections || ''}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
 }
 
 export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, escapeHtml = escapeText, storage } = {}) {
@@ -254,8 +321,12 @@ export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpe
   const state = loadCompanionState(classId, { level: currentLevel, specializationId: selectedSpecialization, tab: 'overview' }, specializations, storage);
   const prefix = String(classId || 'class').replace(/[^a-z0-9-]/gi, '-');
   const options = specializations.map(spec => `<option value="${escapeHtml(spec.id)}"${spec.id === state.specializationId ? ' selected' : ''}>${escapeHtml(spec.name)} · ${escapeHtml(spec.role)}</option>`).join('');
-  const tabs = COMPANION_TABS.map(tab => `<button type="button" role="tab" id="${prefix}-companion-tab-${tab}" aria-controls="${prefix}-companion-panel" aria-selected="${state.tab === tab}" tabindex="${state.tab === tab ? '0' : '-1'}" data-companion-tab="${tab}">${tab[0].toUpperCase()}${tab.slice(1)}</button>`).join('');
-  return `<section class="wow-leveling-companion" data-leveling-companion data-class-id="${escapeHtml(classId)}" style="--class-accent:${escapeHtml(classRecord.color || '#c79c6e')}" aria-labelledby="${prefix}-companion-title"><header><div><p class="wow-companion-kicker">Field companion · ${escapeHtml(classRecord.name || classId)}</p><h2 id="${prefix}-companion-title">Leveling Companion</h2></div><span data-companion-level-badge>Level ${state.level}</span></header><div class="wow-companion-controls"><label for="${prefix}-companion-level">Current level <output data-companion-level>${state.level}</output></label><input id="${prefix}-companion-level" type="range" min="1" max="60" step="1" value="${state.level}" aria-label="Current level" aria-valuetext="Level ${state.level}" data-companion-level-input><label for="${prefix}-companion-spec">Specialization</label><select id="${prefix}-companion-spec" data-companion-spec>${options}</select></div><div class="wow-companion-tabs" role="tablist" aria-label="${escapeHtml(classRecord.name || classId)} companion guide">${tabs}</div><div class="wow-companion-panel" id="${prefix}-companion-panel" role="tabpanel" tabindex="0" aria-labelledby="${prefix}-companion-tab-${state.tab}" data-companion-panel>${renderPanel(state, guideData, escapeHtml, progressionEngine, storage)}</div><span class="visually-hidden" data-companion-status role="status" aria-live="polite"></span></section>`;
+  const tabs = COMPANION_TABS.map(tab => `<button type="button" role="tab" id="${prefix}-companion-tab-${tab}" aria-controls="${prefix}-companion-panel" aria-selected="${state.tab === tab}" tabindex="${state.tab === tab ? '0' : '-1'}" data-companion-tab="${tab}">${COMPANION_TAB_LABELS[tab]}</button>`).join('');
+  const title = classId === 'warrior' ? 'Warrior Guide' : 'Leveling Companion';
+  const specializationControl = classId === 'warrior'
+    ? `<select id="${prefix}-companion-spec" data-companion-spec hidden aria-hidden="true" tabindex="-1">${options}</select>`
+    : `<label for="${prefix}-companion-spec">Specialization</label><select id="${prefix}-companion-spec" data-companion-spec>${options}</select>`;
+  return `<section class="wow-leveling-companion" data-leveling-companion data-class-id="${escapeHtml(classId)}" style="--class-accent:${escapeHtml(classRecord.color || '#c79c6e')}" aria-labelledby="${prefix}-companion-title"><header><div><p class="wow-companion-kicker">Field guide · ${escapeHtml(classRecord.name || classId)}</p><h2 id="${prefix}-companion-title">${title}</h2></div><span data-companion-level-badge>Level ${state.level}</span></header><div class="wow-companion-controls"><label for="${prefix}-companion-level">Current level <output data-companion-level>${state.level}</output></label><input id="${prefix}-companion-level" type="range" min="1" max="60" step="1" value="${state.level}" aria-label="Current level" aria-valuetext="Level ${state.level}" data-companion-level-input>${specializationControl}</div><div class="wow-companion-tabs" role="tablist" aria-label="${escapeHtml(classRecord.name || classId)} companion guide">${tabs}</div><div class="wow-companion-panel" id="${prefix}-companion-panel" role="tabpanel" tabindex="0" aria-labelledby="${prefix}-companion-tab-${state.tab}" data-companion-panel>${renderPanel(state, guideData, escapeHtml, progressionEngine, storage)}</div><span class="visually-hidden" data-companion-status role="status" aria-live="polite"></span></section>`;
 }
 
 export function initializeLevelingCompanion(root, { classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, storage } = {}) {

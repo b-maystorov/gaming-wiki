@@ -14,6 +14,7 @@ const darkestDungeon2Artwork = JSON.parse(await readFile(resolve(root, 'dist/dat
 const wowClientData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-client-data.json'), 'utf8'));
 const wowGuidedData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8'));
 const dungeonPrepData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-dungeon-prep.json'), 'utf8'));
+const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
@@ -22,6 +23,7 @@ async function harness(failure = null, storageMode = 'available', unavailableFil
   const storedValues = new Map();
   let cards = [];
   let extraFilters = [];
+  const fetchRequests = [];
   const globals = { console: { error() {} }, URL,
     location: { hash: '' },
     document: {
@@ -31,6 +33,7 @@ async function harness(failure = null, storageMode = 'available', unavailableFil
         : selector === '[data-encyclopedia-filter]' ? extraFilters : []
     },
     fetch: async url => {
+      fetchRequests.push(String(url));
       if (unavailableFiles.some(file => String(url).endsWith(file))) return { ok: false, status: 404 };
       if (String(url).endsWith('world-of-warcraft-forever.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever.json'), 'utf8')) };
       if (String(url).endsWith('world-of-warcraft-forever-artwork.json')) return { ok: true, json: async () => JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-artwork.json'), 'utf8')) };
@@ -68,7 +71,7 @@ async function harness(failure = null, storageMode = 'available', unavailableFil
   }
   const app = await load(resolve(root, 'dist/js/app.js'));
   await app.evaluate();
-  return { app: app.namespace, modules, context, storedValues, elements,
+  return { app: app.namespace, modules, context, storedValues, elements, fetchRequests,
     filter(kind, value, records, extras = []) {
       context.location.hash = `#game/darkest-dungeon/${kind}`;
       elements.set('encyclopedia-filter', { value });
@@ -1754,8 +1757,11 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.sourceId).title));
     for (const specialization of item.specializations) {
       const href = `#game/world-of-warcraft/builds/${item.id}/${specialization.id}`;
-      assert.ok(classHtml.includes(href));
-      assert.equal(route(href).view, 'wow-build-detail');
+      if (item.id === 'warrior') assert.ok(classHtml.includes(`data-warrior-spec-tab="${specialization.id}"`));
+      else {
+        assert.ok(classHtml.includes(href));
+        assert.equal(route(href).view, 'wow-build-detail');
+      }
     }
   }
   assert.equal(wowPack.classes.length, 9);
@@ -2049,13 +2055,16 @@ test('WoW class and specialization pages link related guide cards only to implem
 
   for (const classRecord of wowPack.classes) {
     const classHtml = h.app.renderPage(h.app.readRoute(`#game/world-of-warcraft/classes/${classRecord.id}`));
-    const classSection = sectionLinks(classHtml);
-    assert.ok(classSection.links.includes('#game/world-of-warcraft/talent-planner'));
-    const classPlannerAnchor = classSection.section.match(/<a class="wow-related-guide-card" href="#game\/world-of-warcraft\/talent-planner"([^>]*)>/)?.[1] || '';
-    assert.match(classPlannerAnchor, new RegExp(`data-wow-build-class="${classRecord.id}"`), 'planner link carries the relevant class selection');
-    assert.ok(classSection.links.includes('#game/world-of-warcraft/leveling'));
-    assert.ok(!classSection.links.includes(`#game/world-of-warcraft/classes/${classRecord.id}`), 'class overview does not link to itself');
-    for (const spec of classRecord.specializations) assert.ok(classSection.links.includes(`#game/world-of-warcraft/builds/${classRecord.id}/${spec.id}`));
+    if (classRecord.id === 'warrior') assert.doesNotMatch(classHtml, /class="wow-related-guides"/);
+    else {
+      const classSection = sectionLinks(classHtml);
+      assert.ok(classSection.links.includes('#game/world-of-warcraft/talent-planner'));
+      const classPlannerAnchor = classSection.section.match(/<a class="wow-related-guide-card" href="#game\/world-of-warcraft\/talent-planner"([^>]*)>/)?.[1] || '';
+      assert.match(classPlannerAnchor, new RegExp(`data-wow-build-class="${classRecord.id}"`), 'planner link carries the relevant class selection');
+      assert.ok(classSection.links.includes('#game/world-of-warcraft/leveling'));
+      assert.ok(!classSection.links.includes(`#game/world-of-warcraft/classes/${classRecord.id}`), 'class overview does not link to itself');
+      for (const spec of classRecord.specializations) assert.ok(classSection.links.includes(`#game/world-of-warcraft/builds/${classRecord.id}/${spec.id}`));
+    }
 
     for (const spec of classRecord.specializations) {
       const specRoute = h.app.readRoute(`#game/world-of-warcraft/builds/${classRecord.id}/${spec.id}`);
@@ -2267,7 +2276,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
-  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, talentClass };
+  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, sources: wowPack.sources, talentClass };
   const stored = new Map();
   const handlers = {};
   const attributes = new Map();
@@ -2277,7 +2286,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const specializationSelect = { value: 'fury', matches: selector => selector === '[data-companion-spec]' };
   const panel = { innerHTML: '', setAttribute: (name, value) => attributes.set(name, value) };
   const status = { textContent: '' };
-  const tabs = ['overview', 'talents', 'gear'].map(tab => ({ dataset: { companionTab: tab }, tabIndex: -1, attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); }, focus() {} }));
+  const tabs = ['overview', 'stats', 'talents', 'gear', 'leveling', 'professions'].map(tab => ({ dataset: { companionTab: tab }, tabIndex: -1, attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); }, focus() {} }));
   const companion = {
     dataset: {},
     querySelector(selector) {
@@ -2299,8 +2308,8 @@ test('leveling companion updates its level, specialization, and tab and persists
 
   specializationSelect.value = 'arms';
   handlers.change({ target: specializationSelect });
-  assert.ok(panel.innerHTML.includes('Arms · Level 20'));
-  assert.ok(panel.innerHTML.includes('Guide data coming soon for this specialization'));
+  assert.ok(panel.innerHTML.includes('Arms · Overview'));
+  assert.ok(panel.innerHTML.includes('two-handed weapon'));
   assert.ok(!panel.innerHTML.includes('two-weapon path'));
 
   const talentsTab = tabs.find(tab => tab.dataset.companionTab === 'talents');
@@ -2315,8 +2324,24 @@ test('leveling companion updates its level, specialization, and tab and persists
   const gearTab = tabs.find(tab => tab.dataset.companionTab === 'gear');
   handlers.click({ target: { closest: () => gearTab } });
   assert.equal(gearTab.attributes.get('aria-selected'), 'true');
-  assert.ok(panel.innerHTML.includes('Arms gear'));
-  assert.ok(panel.innerHTML.includes('Guide data coming soon for this specialization’s gear'));
+  assert.ok(panel.innerHTML.includes('Arms · Weapons &amp; Gear'));
+  assert.ok(panel.innerHTML.includes('Defender of Dalaran'));
+
+  const statsTab = tabs.find(tab => tab.dataset.companionTab === 'stats');
+  handlers.click({ target: { closest: () => statsTab } });
+  assert.ok(panel.innerHTML.includes('Arms · Stats'));
+  assert.ok(panel.innerHTML.includes('Stamina increases maximum health'));
+  assert.ok(panel.innerHTML.includes('not numerical stat weights'));
+  assert.ok(panel.innerHTML.includes('foreverdb.net/stats'));
+
+  const levelingTab = tabs.find(tab => tab.dataset.companionTab === 'leveling');
+  handlers.click({ target: { closest: () => levelingTab } });
+  assert.ok(panel.innerHTML.includes('Arms leveling · Level 20'));
+  assert.ok(panel.innerHTML.includes('Level 20 · Ability unlock'));
+  const professionsTab = tabs.find(tab => tab.dataset.companionTab === 'professions');
+  handlers.click({ target: { closest: () => professionsTab } });
+  assert.ok(panel.innerHTML.includes('Mining + Blacksmithing'));
+  assert.ok(panel.innerHTML.includes('recommendations and crafting pairings'));
 });
 
 test('leveling companion renders only complete source-backed builds and safely handles blocked storage', () => {
@@ -2334,7 +2359,7 @@ test('leveling companion renders only complete source-backed builds and safely h
       assert.equal(missing.treeData.validation.total, 6);
     } else {
       assert.deepEqual(JSON.parse(JSON.stringify(missing.sections[0])), { title: 'Talent points spent / available', text: '0 / 6' });
-      assert.deepEqual(JSON.parse(JSON.stringify(missing.notices)), ['Talent progression not yet verified.']);
+      assert.deepEqual(JSON.parse(JSON.stringify(missing.notices)), [`No automatic leveling build for Warrior ${spec.name} was loaded.`]);
       assert.equal(missing.treeData.validation.total, 0);
     }
   }
@@ -2342,7 +2367,7 @@ test('leveling companion renders only complete source-backed builds and safely h
   const shaman = wowPack.classes.find(item => item.id === 'shaman');
   const shamanTalentClass = wowClientData.classes.find(item => item.id === 'shaman');
   const partialShaman = companionModule.getCompanionPanel({ classId: 'shaman', level: 20, specializationId: 'enhancement', tab: 'talents' }, { classRecord: shaman, talentClass: shamanTalentClass }, engine);
-  assert.deepEqual(JSON.parse(JSON.stringify(partialShaman.notices)), ['Talent progression not yet verified.']);
+  assert.deepEqual(JSON.parse(JSON.stringify(partialShaman.notices)), ['The saved build is not eligible for automatic use (status: Partial · manual in-game verification still needed).']);
   assert.equal(companionModule.saveCompanionState({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { setItem() { throw new Error('Storage denied'); } }), false);
   const fallback = companionModule.loadCompanionState('warrior', { level: 17, specializationId: 'fury' }, specs, { getItem() { throw new Error('Storage denied'); } });
   assert.deepEqual(JSON.parse(JSON.stringify(fallback)), { classId: 'warrior', level: 17, specializationId: 'fury', tab: 'overview', selectedTalentId: '' });
@@ -2362,7 +2387,7 @@ test('Arms automatic progression matches the published point order and validates
   assert.equal(build.verificationStatus, 'source-supported');
   assert.equal(build.allocations.length, 51);
   assert.deepEqual(JSON.parse(JSON.stringify(wowModule.validateWowGuidedBuild(build, wowClientData))), { valid: true, issues: [] });
-  for (const [level, expected] of [[9, 0], [10, 1], [15, 6], [60, 51]]) {
+  for (const [level, expected] of [[9, 0], [10, 1], [15, 6], [35, 26], [60, 51]]) {
     const result = wowModule.resolveWowGuidedBuild(build, wowClientData, level);
     assert.equal(result.valid, true, `level ${level}: ${result.issues.join('; ')}`);
     assert.equal(result.total, expected, `level ${level}`);
@@ -2373,6 +2398,10 @@ test('Arms automatic progression matches the published point order and validates
     'warrior-arms-deflection': 2,
     'warrior-arms-improved-tactical-mastery': 1
   });
+  const at35 = wowModule.resolveWowGuidedBuild(build, wowClientData, 35);
+  assert.equal(at35.valid, true);
+  assert.equal(at35.total, 26);
+  assert.equal(at35.allocation['warrior-arms-weaponmaster'], 3);
   const at60 = wowModule.resolveWowGuidedBuild(build, wowClientData, 60);
   assert.equal(at60.allocation['warrior-fury-cruelty'], 5);
   assert.equal(at60.allocation['warrior-fury-unbridled-wrath'], 5);
@@ -2383,6 +2412,47 @@ test('Arms automatic progression matches the published point order and validates
       assert.deepEqual(JSON.parse(JSON.stringify(h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace.validateCompanionTalentTiers(tree, allocation))), [], `tier requirements at level ${level}, ${tree.name}`);
     }
   }
+});
+
+test('Warrior route loads the guided-build JSON and renders automatic Arms allocations at each level', () => {
+  const key = 'bm-wow-leveling-companion-v1:warrior';
+  const saved = h.storedValues.get(key);
+  try {
+    assert.ok(h.fetchRequests.includes('./data/games/world-of-warcraft-forever-guided-builds.json'));
+    const build = wowGuidedData.builds.find(item => item.classId === 'warrior' && item.specializationId === 'arms');
+    assert.ok(build, 'the app load path provides the Arms build to the Warrior route');
+    assert.equal(build.verificationStatus, 'source-supported');
+    for (const [level, total] of [[10, 1], [15, 6], [17, 8], [35, 26], [60, 51]]) {
+      h.storedValues.set(key, JSON.stringify({ level, specializationId: 'arms', tab: 'talents' }));
+      const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+      assert.ok(html.includes(`${total} / ${total}`), `level ${level} renders ${total} / ${total} points`);
+      assert.ok(html.includes(`Arms talent tree · Level ${level}`));
+      assert.match(html, /class="wow-companion-tree is-primary tree-arms"/);
+      assert.match(html, /aria-label="Arms talent tree" aria-current="true"/);
+      assert.match(html, /aria-label="Fury talent tree"/);
+      assert.match(html, /aria-label="Protection talent tree"/);
+      assert.equal((html.match(/class="wow-companion-tree is-(?:primary|secondary) tree-(?:arms|fury|protection)"/g) || []).length, 3, 'all Warrior trees remain visible together');
+      assert.ok(html.includes('wow-companion-connectors'));
+      assert.ok(html.includes('marker-end="url(#companion-arrow-arms'), 'prerequisite connectors include arrows');
+      assert.ok(html.indexOf('class="wow-companion-tree-stack"') < html.indexOf('class="wow-companion-talent-detail"'), 'talent details follow all three trees');
+      assert.ok(html.includes('assets/images/wow-forever/icons/ability_warrior_'));
+      assert.ok(html.includes(build.sourceTitle));
+      assert.ok(html.includes('not Blizzard advice'));
+      assert.ok((html.match(/class="wow-companion-tree-node is-spent"/g) || []).length > 0, `level ${level} highlights allocated talents`);
+    }
+  } finally {
+    if (saved === undefined) h.storedValues.delete(key);
+    else h.storedValues.set(key, saved);
+  }
+});
+
+test('Warrior talent layout uses full-width equal trees without desktop overflow and stacks responsively', () => {
+  assert.match(portalStyles, /\.wow-warrior-guide \.wow-companion-panel:has\(\.wow-companion-tree\) \{ grid-template-columns:minmax\(0,1fr\); \}/);
+  assert.match(portalStyles, /\.wow-leveling-companion \.wow-companion-tree-stack \{ display:grid; grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(portalStyles, /\.wow-leveling-companion \.wow-companion-tree-scroll \{ overflow:visible;/);
+  assert.match(portalStyles, /\.wow-leveling-companion \.wow-companion-tree-grid \{[^}]*grid-template-columns:repeat\(var\(--talent-columns\),minmax\(0,1fr\)\)[^}]*width:100%;/);
+  assert.match(portalStyles, /@media\(max-width:900px\) \{\s*\.wow-leveling-companion \.wow-companion-tree-stack \{ grid-template-columns:repeat\(2,minmax\(0,1fr\)\); \}/);
+  assert.match(portalStyles, /@media\(max-width:580px\) \{\s*\.wow-leveling-companion \.wow-companion-tree-stack \{ grid-template-columns:1fr; \}/);
 });
 
 test('companion automatically updates sourced talent ranks with level and specialization', () => {
@@ -2460,18 +2530,39 @@ test('companion automatically updates sourced talent ranks with level and specia
   handlers.input({ target: levelInput });
   assert.match(panel.innerHTML, /6 \/ 6/);
   assert.match(panel.innerHTML, /3\/3/);
+  assert.match(panel.innerHTML, /class="wow-companion-tree-node is-spent"[^>]*>[\s\S]*?3\/3/);
+  levelInput.value = '35';
+  handlers.input({ target: levelInput });
+  assert.match(panel.innerHTML, /26 \/ 26/);
+  assert.match(panel.innerHTML, /Arms talent tree · Level 35/);
+  assert.match(panel.innerHTML, /class="wow-companion-tree is-primary tree-arms"/);
+  levelInput.value = '60';
+  handlers.input({ target: levelInput });
+  assert.match(panel.innerHTML, /51 \/ 51/);
+  levelInput.value = '35';
+  handlers.input({ target: levelInput });
+  assert.match(panel.innerHTML, /26 \/ 26/);
+  levelInput.value = '15';
+  handlers.input({ target: levelInput });
+  assert.match(panel.innerHTML, /6 \/ 6/);
   const inspectableTalent = arms.talents.find(talent => talent.name === 'Improved Rend');
   const rankBeforeInspect = panel.innerHTML.match(/3\/3/)?.[0];
   handlers.click({ target: targetFor('[data-companion-talent]', { dataset: { companionTalent: inspectableTalent.id } }) });
   assert.ok(panel.innerHTML.includes('Rank 3 / 3'));
   assert.equal(panel.innerHTML.match(/3\/3/)?.[0], rankBeforeInspect, 'inspecting an icon does not change its allocated rank');
+  levelInput.value = '10';
+  handlers.input({ target: levelInput });
+  assert.match(panel.innerHTML, /1 \/ 1/);
+  levelInput.value = '1';
+  handlers.input({ target: levelInput });
+  assert.match(panel.innerHTML, /0 \/ 0/);
   levelInput.value = '9';
   handlers.input({ target: levelInput });
   assert.match(panel.innerHTML, /0 \/ 0/);
   specSelect.value = 'fury';
   handlers.change({ target: specSelect });
   assert.ok(panel.innerHTML.includes('Fury talent tree · Level 9'));
-  assert.ok(panel.innerHTML.includes('Talent progression not yet verified.'));
+  assert.ok(panel.innerHTML.includes('No automatic leveling build for Warrior Fury was loaded.'));
 });
 
 test('companion renders resolver-provided ranks, local icons, descriptions, and next points', () => {
@@ -2490,12 +2581,12 @@ test('companion renders resolver-provided ranks, local icons, descriptions, and 
     classId: 'fixture', currentLevel: 15, selectedSpecialization: 'path',
     guideData: { classRecord: fixtureClass, talentClass: fixtureClass },
     progressionEngine: {
-      builds: [build], catalog: { classes: [fixtureClass] }, availablePoints: level => Math.max(0, level - 9),
+      builds: [build], catalog: { classes: [fixtureClass] }, availablePoints: () => 2,
       resolve: () => ({ valid: true, snapshotLevel: 15, total: 2, covered: true, allocation: { 'fixture-learned': 2 }, nextChange: { level: 16, talentId: 'fixture-next', rankAdded: 1 } })
     },
     storage: { getItem: () => JSON.stringify({ level: 15, specializationId: 'path', tab: 'talents', talentMode: 'recommended' }) }
   });
-  assert.ok(html.includes('2 / 6'));
+  assert.ok(html.includes('2 / 2'));
   assert.ok(html.includes('Learned Talent'));
   assert.ok(html.includes('2/3'));
   assert.ok(html.includes('Rank two text'));
@@ -2536,7 +2627,7 @@ test('leveling companion accepts reusable class-specific data and renders access
   assert.ok(gear.sections[0].text.includes(paladin.starterGuide.gear));
 });
 
-test('Warrior handbook has one icon-led header and real section navigation', () => {
+test('Warrior guide keeps its header and opens the in-page specialization tabs directly', () => {
   const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
   const header = html.match(/<header class="wow-warrior-header">[\s\S]*?<\/header>/)?.[0];
   assert.ok(header);
@@ -2548,81 +2639,79 @@ test('Warrior handbook has one icon-led header and real section navigation', () 
   assert.match(header, /src="assets\/images\/wow-forever\/icons\/class_warrior\.jpg"/);
   assert.ok(html.includes('href="#game/world-of-warcraft"'));
   assert.doesNotMatch(html, /class="wow-banner"|class="wow-nav"|class="wow-scene"|wow-class-hero-illustrated/);
-  assert.match(header, /src="assets\/images\/wow-forever\/warrior\.svg"/);
+  assert.doesNotMatch(header, /src="assets\/images\/wow-forever\/warrior\.svg"/);
   assert.match(header, /src="assets\/images\/wow-forever\/wow-forever-banner\.png"/);
-  const navigation = html.match(/<nav class="wow-warrior-nav"[\s\S]*?<\/nav>/)?.[0];
-  const controls = [...navigation.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)];
-  assert.equal(controls.length, 8);
-  assert.equal((navigation.match(/aria-current="location"/g) || []).length, 1);
-  for (const [control, attributes] of controls) {
-    const target = attributes.match(/data-warrior-section="([^"]+)"/)?.[1];
-    if (target) {
-      assert.ok(attributes.includes(`aria-controls="${target}"`));
-      assert.equal((html.match(new RegExp(` id="${target}"`, 'g')) || []).length, 1, target);
-      assert.ok(html.includes(`id="${target}" tabindex="-1"`));
-    } else {
-      assert.match(attributes, /disabled/);
-      assert.match(control, /Dungeons|Level 60/);
-      assert.match(control, /Coming later/);
-    }
-  }
-  assert.ok(html.indexOf(header) < html.indexOf(navigation));
-  assert.ok(html.indexOf(navigation) < html.indexOf('Warrior Quick Start'));
+  assert.doesNotMatch(html, /class="wow-warrior-nav"/);
+  assert.equal((html.match(/<button[^>]+data-warrior-spec-tab=/g) || []).length, 3);
+  assert.match(html, /<button[^>]+role="tab"[^>]+aria-selected="true"[^>]+data-warrior-spec-tab="arms"/);
+  assert.ok(html.indexOf(header) < html.indexOf('class="wow-warrior-spec-grid"'));
+  assert.ok(html.indexOf('class="wow-warrior-spec-grid"') < html.indexOf('class="wow-leveling-companion"'));
   assert.match(html, /<details class="wow-warrior-leveling-details" id="warrior-leveling" tabindex="-1">/);
   assert.equal((html.match(/data-warrior-spec-tab=/g) || []).length, 3);
-  assert.ok(html.includes('Related Guides &amp; Tier Lists'));
-  assert.ok(html.includes('Related Class Guides'));
-  assert.ok(html.includes('Changelog'));
+  assert.doesNotMatch(html, /Related Guides &amp; Tier Lists|Related Class Guides|id="warrior-changelog-title"/);
   assert.ok(html.includes('detailed levels 31–60 and level-60 coverage are coming later'));
   assert.doesNotMatch(html, /id="warrior-dungeons"|id="warrior-level-60"/);
 });
 
-test('Warrior specialization tabs update their selected panel with mouse and keyboard', () => {
+test('Warrior specialization cards activate the guide and stay synchronized with the companion', () => {
   const module = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
   const handlers = {};
-  const panels = ['arms', 'fury', 'protection'].map(id => ({ dataset: { warriorSpecPanel: id }, hidden: id !== 'arms' }));
   const tabs = ['arms', 'fury', 'protection'].map((id, index) => ({
     dataset: { warriorSpecTab: id }, tabIndex: index ? -1 : 0, attributes: new Map(), focused: false,
     setAttribute(name, value) { this.attributes.set(name, value); },
     focus() { this.focused = true; }
   }));
   const navigation = { querySelectorAll: () => [] };
+  const hub = { attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); } };
+  const companionSpec = {
+    value: 'arms',
+    ownerDocument: { defaultView: { Event: class { constructor(type, options) { this.type = type; Object.assign(this, options); } } } },
+    dispatchEvent(event) { this.dispatched = event; return true; }
+  };
   const guide = {
     dataset: {},
     contains: element => tabs.includes(element),
-    querySelector: selector => selector === '.wow-warrior-nav' ? navigation : null,
-    querySelectorAll: selector => selector === '[data-warrior-spec-tab]' ? tabs : panels,
+    querySelector: selector => selector === '.wow-warrior-nav' ? navigation : selector === '#warrior-specialization-guide' ? hub : selector === '[data-companion-spec]' ? companionSpec : null,
+    querySelectorAll: selector => selector === '[data-warrior-spec-tab]' ? tabs : [],
     addEventListener: (type, handler) => { handlers[type] = handler; }
   };
   const targetFor = (element, selector) => ({ closest: candidate => candidate === selector ? element : null });
   module.initializeWarriorGuide({ querySelector: () => guide });
-  handlers.click({ target: targetFor(tabs[1], '[data-warrior-spec-tab]') });
+  let prevented = false;
+  handlers.click({ target: targetFor(tabs[1], '[data-warrior-spec-tab]'), preventDefault() { prevented = true; } });
+  assert.equal(prevented, true, 'specialization card selects the guide in place');
   assert.equal(tabs[1].attributes.get('aria-selected'), 'true');
   assert.equal(tabs[1].tabIndex, 0);
-  assert.equal(panels[0].hidden, true);
-  assert.equal(panels[1].hidden, false);
-  let prevented = false;
+  assert.equal(companionSpec.value, 'fury');
+  assert.equal(companionSpec.dispatched.type, 'change');
+  assert.equal(hub.attributes.get('aria-labelledby'), 'warrior-spec-tab-fury');
+  prevented = false;
   handlers.keydown({ target: targetFor(tabs[1], '[data-warrior-spec-tab]'), key: 'ArrowRight', preventDefault() { prevented = true; } });
   assert.equal(prevented, true);
   assert.equal(tabs[2].focused, true);
   assert.equal(tabs[2].attributes.get('aria-selected'), 'true');
-  assert.equal(panels[2].hidden, false);
+  assert.equal(companionSpec.value, 'protection');
 });
 
 test('Warrior handbook preserves existing guide content and integrations', async () => {
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const guide = warrior.starterGuide;
   const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
-  const navigationPosition = html.indexOf('class="wow-warrior-nav"');
+  const specializationPosition = html.indexOf('class="wow-warrior-spec-grid"');
   const companionPosition = html.indexOf('class="wow-leveling-companion"');
-  const quickStartPosition = html.indexOf('class="wow-warrior-quick-start"');
-  assert.ok(navigationPosition < companionPosition && companionPosition < quickStartPosition);
+  const handbookPosition = html.indexOf('class="wow-warrior-leveling-details"');
+  assert.ok(specializationPosition < companionPosition && companionPosition < handbookPosition);
+  assert.match(html, /id="warrior-specialization-guide" role="tabpanel" aria-labelledby="warrior-spec-tab-arms"/);
+  assert.match(html, /<button[^>]*id="warrior-spec-tab-arms"[^>]*aria-selected="true"/);
+  assert.ok(html.includes('Warrior Guide'));
+  assert.ok(html.includes('Arms · Overview'));
   assert.match(html, /id="warrior-companion-level" type="range" min="1" max="60"/);
+  assert.match(html, /<select id="warrior-companion-spec" data-companion-spec hidden aria-hidden="true" tabindex="-1">/);
   for (const tab of ['overview', 'talents', 'gear']) assert.ok(html.includes(`data-companion-tab="${tab}"`));
-  for (const heading of ['Starting your journey as Warrior', 'Leveling roadmap', 'Strengths', 'Limitations', 'Specializations', 'Race and faction options', 'Open Forever trainer spellbook', 'Related Guides']) assert.ok(html.includes(heading), heading);
+  for (const heading of ['Starting your journey as Warrior', 'Leveling roadmap', 'Strengths', 'Limitations', 'Specializations', 'Race and faction options', 'Open Forever trainer spellbook']) assert.ok(html.includes(heading), heading);
   for (const text of [...warrior.strengths, ...warrior.limitations, ...warrior.groupUtility, ...guide.combat, guide.reason, guide.resource, guide.gear, guide.classMilestones, guide.zoneAdvice]) assert.ok(html.includes(text), text);
   for (const band of guide.levelingBands) for (const text of [band.range,band.combat,band.survival,band.milestones]) assert.ok(html.includes(text), text);
-  for (const spec of warrior.specializations) assert.ok(html.includes(`#game/world-of-warcraft/builds/warrior/${spec.id}`));
+  for (const spec of warrior.specializations) assert.ok(html.includes(`data-warrior-spec-tab="${spec.id}"`));
   assert.match(html, /href="#game\/world-of-warcraft\/talent-planner" data-wow-build-class="warrior" data-wow-build-spec="fury"/);
   assert.ok(html.includes('href="#game/world-of-warcraft/leveling"'));
   assert.ok(html.includes(guide.professionRecommendation.advice));
@@ -2650,7 +2739,7 @@ test('Warrior section controls focus and scroll local targets without changing t
   try {
     module.initializeWarriorGuide({ querySelector: () => guide });
     module.initializeWarriorGuide({ querySelector: () => guide });
-    assert.equal(listeners.length, 2, 'initializing the same DOM twice does not duplicate click or keyboard listeners');
+    assert.equal(listeners.length, 3, 'initializing the same DOM twice does not duplicate click, change, or keyboard listeners');
     h.context.matchMedia = () => ({ matches: true });
     let prevented = 0;
     listeners[0]({ target: { closest: () => buttons[1] }, preventDefault: () => { prevented += 1; } });

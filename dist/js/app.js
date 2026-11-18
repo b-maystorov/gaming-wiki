@@ -1688,7 +1688,7 @@ function showRoute() {
       const profile = loadWowProfile();
       const selectedSpecialization = profile.classId === 'warrior' && profile.specializationId
         ? profile.specializationId
-        : route.classRecord.specializations.find(spec => spec.name === route.classRecord.starterGuide?.specialization)?.id;
+        : (route.classRecord.specializations.find(spec => spec.id === 'arms')?.id || route.classRecord.specializations[0]?.id);
       initializeLevelingCompanion(main, {
         classId: 'warrior',
         currentLevel: profile.currentLevel || 1,
@@ -1698,6 +1698,8 @@ function showRoute() {
           guide: route.classRecord.starterGuide,
           zones: wowData.zones,
           dungeons: wowData.dungeons,
+          sources: wowData.sources,
+          specializationGuides: route.classRecord.specializationGuides,
           talentClass: wowClientData?.classes?.find(record => record.id === 'warrior')
         },
         progressionEngine: {
