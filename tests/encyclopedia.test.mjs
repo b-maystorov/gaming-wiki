@@ -2329,10 +2329,32 @@ test('leveling companion updates its level, specialization, and tab and persists
 
   const statsTab = tabs.find(tab => tab.dataset.companionTab === 'stats');
   handlers.click({ target: { closest: () => statsTab } });
-  assert.ok(panel.innerHTML.includes('Arms · Stats'));
-  assert.ok(panel.innerHTML.includes('Stamina increases maximum health'));
-  assert.ok(panel.innerHTML.includes('not numerical stat weights'));
+  assert.equal(statsTab.attributes.get('aria-selected'), 'true');
+  assert.ok(panel.innerHTML.includes('Arms · Stats &amp; Attributes'));
+  assert.ok(panel.innerHTML.includes('data-stats-specialization="arms"'));
+  assert.ok(panel.innerHTML.includes('Arms · Level 60 PvE starting order'));
+  assert.ok(panel.innerHTML.includes('Weapon DPS'));
+  assert.ok(panel.innerHTML.includes('Strength'));
+  assert.ok(panel.innerHTML.includes('Defense'));
+  assert.ok(panel.innerHTML.includes('not a numerical stat weight'));
+  assert.ok(panel.innerHTML.includes('What should I upgrade next?'));
+  assert.equal((panel.innerHTML.match(/<details class="wow-stat-explanation">/g) || []).length, 3);
+  assert.ok(panel.innerHTML.includes('<summary>Hit, Expertise and target level</summary>'), 'native details summaries provide keyboard-expandable explanations');
   assert.ok(panel.innerHTML.includes('foreverdb.net/stats'));
+  specializationSelect.value = 'fury';
+  handlers.change({ target: specializationSelect });
+  assert.ok(panel.innerHTML.includes('data-stats-specialization="fury"'));
+  assert.ok(panel.innerHTML.includes('Fury · Level 60 PvE starting order'));
+  assert.ok(panel.innerHTML.includes('Dual-wield auto-attacks and special attacks have different Hit behavior.'));
+  specializationSelect.value = 'protection';
+  handlers.change({ target: specializationSelect });
+  assert.ok(panel.innerHTML.includes('data-stats-specialization="protection"'));
+  assert.ok(panel.innerHTML.includes('Protection · Level 60 PvE tank starting orders'));
+  assert.ok(panel.innerHTML.includes('Threat &amp; damage'));
+  assert.ok(panel.innerHTML.includes('Survival'));
+  assert.ok(panel.innerHTML.includes('Block Value'));
+  specializationSelect.value = 'arms';
+  handlers.change({ target: specializationSelect });
 
   const levelingTab = tabs.find(tab => tab.dataset.companionTab === 'leveling');
   handlers.click({ target: { closest: () => levelingTab } });
