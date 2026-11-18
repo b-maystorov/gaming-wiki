@@ -2468,6 +2468,34 @@ test('Warrior route loads the guided-build JSON and renders automatic Arms alloc
   }
 });
 
+test('Warrior Overview presents sourced Strengths and Weaknesses in distinct responsive panels', () => {
+  const key = 'bm-wow-leveling-companion-v1:warrior';
+  const saved = h.storedValues.get(key);
+  const overview = wowPack.classes.find(item => item.id === 'warrior').specializationGuides.arms.sections.overview.sections;
+  try {
+    h.storedValues.set(key, JSON.stringify({ level: 20, specializationId: 'arms', tab: 'overview' }));
+    const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+    const contextPosition = html.indexOf('class="wow-warrior-overview-context"');
+    const strengthsPosition = html.indexOf('class="wow-warrior-overview-points is-strengths"');
+    const weaknessesPosition = html.indexOf('class="wow-warrior-overview-points is-weaknesses"');
+    assert.ok(contextPosition >= 0 && contextPosition < strengthsPosition);
+    assert.ok(strengthsPosition < weaknessesPosition);
+    assert.equal((html.match(/class="wow-warrior-overview-points is-(?:strengths|weaknesses)"/g) || []).length, 2);
+    assert.equal((html.match(/aria-hidden="true">[+−]<\/span>/g) || []).length, 2);
+    assert.ok(!html.includes('wow-warrior-overview-point-sign'));
+    for (const point of [...overview.find(section => section.title === 'Strengths').items, ...overview.find(section => section.title === 'Weaknesses').items]) assert.ok(html.includes(point), point);
+    assert.ok(html.includes('aria-hidden="true">+</span>'));
+    assert.ok(html.includes('aria-hidden="true">−</span>'));
+    assert.match(portalStyles, /\.wow-warrior-overview-panels \{ display:grid; grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+    assert.match(portalStyles, /\.wow-warrior-overview-points \{ display:flex; min-width:0; flex-direction:column;/);
+    assert.match(portalStyles, /\.wow-warrior-overview-points li::before \{ position:absolute;/);
+    assert.match(portalStyles, /@media\(max-width:580px\) \{[\s\S]*?\.wow-warrior-guide \.wow-warrior-overview-context,\.wow-warrior-guide \.wow-warrior-overview-panels \{ grid-template-columns:1fr; \}/);
+  } finally {
+    if (saved === undefined) h.storedValues.delete(key);
+    else h.storedValues.set(key, saved);
+  }
+});
+
 test('Warrior talent layout uses full-width equal trees without desktop overflow and stacks responsively', () => {
   assert.match(portalStyles, /\.wow-warrior-guide \.wow-companion-panel:has\(\.wow-companion-tree\) \{ grid-template-columns:minmax\(0,1fr\); \}/);
   assert.match(portalStyles, /\.wow-leveling-companion \.wow-companion-tree-stack \{ display:grid; grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);

@@ -209,6 +209,17 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
         sourceIds
       };
     }
+    if (state.tab === 'overview' && tabContent?.sections?.length) {
+      const strengths = tabContent.sections.find(section => section.title === 'Strengths');
+      const weaknesses = tabContent.sections.find(section => section.title === 'Weaknesses');
+      if (strengths && weaknesses) return {
+        heading: `${specName} · Overview`,
+        sections: tabContent.sections.filter(section => section !== strengths && section !== weaknesses),
+        overviewHighlights: { strengths: strengths.items || [], weaknesses: weaknesses.items || [] },
+        notices: [],
+        sourceIds
+      };
+    }
     if (tabContent?.sections?.length) return {
       heading: `${specName} · ${COMPANION_TAB_LABELS[state.tab] || state.tab}`,
       sections: tabContent.sections,
@@ -323,6 +334,11 @@ function renderStatsGuide(statsGuide, priority, escapeHtml) {
   return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>${escapeHtml(priority.note || 'Guide order · not stat weights')}</span></div><div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
 }
 
+function renderOverviewHighlights(highlights, escapeHtml) {
+  const renderPanel = (kind, title, sign, items) => `<section class="wow-warrior-overview-points is-${kind}"><h4><span aria-hidden="true">${sign}</span>${title}</h4><ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`;
+  return `<div class="wow-warrior-overview-panels">${renderPanel('strengths', 'Strengths', '+', highlights.strengths)}${renderPanel('weaknesses', 'Weaknesses', '−', highlights.weaknesses)}</div>`;
+}
+
 function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage) {
   const panel = getCompanionPanel(state, guideData, progressionEngine);
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
@@ -332,6 +348,9 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const treeData = panel.treeData;
   const statsGuide = panel.statsGuide ? { ...panel.statsGuide, sourceCatalog: Object.fromEntries((guideData.sources || []).map(source => [source.id, source])) } : null;
   const statsPanel = statsGuide ? renderStatsGuide(statsGuide, panel.priority, escapeHtml) : '';
+  const overviewContent = panel.overviewHighlights
+    ? `<div class="wow-warrior-overview"><div class="wow-warrior-overview-context">${sections}</div>${renderOverviewHighlights(panel.overviewHighlights, escapeHtml)}</div>`
+    : sections;
   const nextRecommended = treeData?.recommended?.valid && treeData.recommended.nextChange
     ? `<p class="wow-companion-next-talent">Next recommended talent · Unlocks at level ${treeData.recommended.nextChange.level} · ${escapeHtml(treeData.tree.talents.find(talent => talent.id === treeData.recommended.nextChange.talentId)?.name || 'Talent')}</p>`
     : '';
@@ -339,7 +358,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
     ? `<p class="wow-companion-build-source">Source: <a href="${escapeHtml(treeData.build.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(treeData.build.sourceTitle || treeData.build.name)}</a>. ${escapeHtml(treeData.build.confidence || '')}${treeData.build.comparisonSourceDetails?.map(source => ` <span>Comparison: <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a> (${escapeHtml(source.note)}).</span>`).join('') || ''}</p>`
     : '';
   const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${treeData.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : ''}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${sections || ''}${statsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
 }
 
 export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, escapeHtml = escapeText, storage } = {}) {
