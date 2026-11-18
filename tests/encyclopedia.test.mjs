@@ -2283,6 +2283,8 @@ test('leveling companion updates its level, specialization, and tab and persists
   const levelInput = { value: '1', matches: selector => selector === '[data-companion-level-input]', setAttribute: (name, value) => attributes.set(name, value) };
   const levelOutput = { value: '1', textContent: '1' };
   const levelBadge = { textContent: 'Level 1' };
+  const previousLevelButton = { disabled: true, dataset: { companionLevelStep: '-1' } };
+  const nextLevelButton = { disabled: false, dataset: { companionLevelStep: '1' } };
   const specializationSelect = { value: 'fury', matches: selector => selector === '[data-companion-spec]' };
   const panel = { innerHTML: '', setAttribute: (name, value) => attributes.set(name, value) };
   const status = { textContent: '' };
@@ -2290,7 +2292,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const companion = {
     dataset: {},
     querySelector(selector) {
-      return ({ '[data-companion-level-input]': levelInput, '[data-companion-level]': levelOutput, '[data-companion-level-badge]': levelBadge, '[data-companion-spec]': specializationSelect, '[data-companion-panel]': panel, '[data-companion-status]': status })[selector];
+      return ({ '[data-companion-level-input]': levelInput, '[data-companion-level]': levelOutput, '[data-companion-level-badge]': levelBadge, '[data-companion-level-step="-1"]': previousLevelButton, '[data-companion-level-step="1"]': nextLevelButton, '[data-companion-spec]': specializationSelect, '[data-companion-panel]': panel, '[data-companion-status]': status })[selector];
     },
     querySelectorAll: () => tabs,
     addEventListener: (type, handler) => { handlers[type] = handler; }
@@ -2302,9 +2304,20 @@ test('leveling companion updates its level, specialization, and tab and persists
   handlers.input({ target: levelInput });
   assert.equal(levelOutput.value, '20');
   assert.equal(levelBadge.textContent, 'Level 20');
+  assert.equal(previousLevelButton.disabled, false);
+  assert.equal(nextLevelButton.disabled, false);
   assert.ok(panel.innerHTML.includes('Fury · Level 20'));
   assert.ok(panel.innerHTML.includes('Dual Wield training at level 20'));
   assert.ok(panel.innerHTML.includes('Ruins of Lordaeron · levels 15–20'));
+  handlers.click({ target: { closest: selector => selector === '[data-companion-level-step]' ? previousLevelButton : null } });
+  assert.equal(levelInput.value, '19');
+  assert.equal(levelOutput.value, '19');
+  assert.equal(levelBadge.textContent, 'Level 19');
+  assert.ok(panel.innerHTML.includes('Fury · Level 19'));
+  handlers.click({ target: { closest: selector => selector === '[data-companion-level-step]' ? nextLevelButton : null } });
+  assert.equal(levelInput.value, '20');
+  assert.equal(levelBadge.textContent, 'Level 20');
+  assert.ok(panel.innerHTML.includes('Fury · Level 20'));
 
   specializationSelect.value = 'arms';
   handlers.change({ target: specializationSelect });
@@ -2313,7 +2326,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.ok(!panel.innerHTML.includes('two-weapon path'));
 
   const talentsTab = tabs.find(tab => tab.dataset.companionTab === 'talents');
-  handlers.click({ target: { closest: () => talentsTab } });
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? talentsTab : null } });
   assert.equal(talentsTab.attributes.get('aria-selected'), 'true');
   assert.ok(panel.innerHTML.includes('Arms talent tree · Level 20'));
   assert.ok(!panel.innerHTML.includes('wow-companion-build-source'));
@@ -2322,13 +2335,13 @@ test('leveling companion updates its level, specialization, and tab and persists
   const saved = companionModule.loadCompanionState('warrior', {}, warrior.specializations, { getItem: key => stored.get(key) || null });
   assert.deepEqual(JSON.parse(JSON.stringify(saved)), { classId: 'warrior', level: 20, specializationId: 'arms', tab: 'talents', selectedTalentId: '' });
   const gearTab = tabs.find(tab => tab.dataset.companionTab === 'gear');
-  handlers.click({ target: { closest: () => gearTab } });
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? gearTab : null } });
   assert.equal(gearTab.attributes.get('aria-selected'), 'true');
   assert.ok(panel.innerHTML.includes('Arms · Weapons &amp; Gear'));
   assert.ok(panel.innerHTML.includes('Defender of Dalaran'));
 
   const statsTab = tabs.find(tab => tab.dataset.companionTab === 'stats');
-  handlers.click({ target: { closest: () => statsTab } });
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? statsTab : null } });
   assert.equal(statsTab.attributes.get('aria-selected'), 'true');
   assert.ok(panel.innerHTML.includes('Arms · Stats &amp; Attributes'));
   assert.ok(panel.innerHTML.includes('data-stats-specialization="arms"'));
@@ -2358,11 +2371,11 @@ test('leveling companion updates its level, specialization, and tab and persists
   handlers.change({ target: specializationSelect });
 
   const levelingTab = tabs.find(tab => tab.dataset.companionTab === 'leveling');
-  handlers.click({ target: { closest: () => levelingTab } });
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? levelingTab : null } });
   assert.ok(panel.innerHTML.includes('Arms leveling · Level 20'));
   assert.ok(panel.innerHTML.includes('Level 20 · Ability unlock'));
   const professionsTab = tabs.find(tab => tab.dataset.companionTab === 'professions');
-  handlers.click({ target: { closest: () => professionsTab } });
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? professionsTab : null } });
   assert.ok(panel.innerHTML.includes('Mining + Blacksmithing'));
   assert.ok(panel.innerHTML.includes('recommendations and crafting pairings'));
 });
@@ -2450,6 +2463,11 @@ test('Warrior route loads the guided-build JSON and renders automatic Arms alloc
       const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
       assert.ok(html.includes(`${total} / ${total}`), `level ${level} renders ${total} / ${total} points`);
       assert.ok(html.includes(`Arms talent tree · Level ${level}`));
+      assert.ok(html.includes('data-companion-level-step="-1"'));
+      assert.ok(html.includes('data-companion-level-step="1"'));
+      assert.doesNotMatch(html, /data-companion-level-step="-1" disabled/);
+      if (level === 60) assert.match(html, /data-companion-level-step="1" disabled/);
+      else assert.doesNotMatch(html, /data-companion-level-step="1" disabled/);
       assert.match(html, /class="wow-companion-tree is-primary tree-arms"/);
       assert.match(html, /aria-label="Arms talent tree" aria-current="true"/);
       assert.match(html, /aria-label="Fury talent tree"/);
@@ -2463,6 +2481,10 @@ test('Warrior route loads the guided-build JSON and renders automatic Arms alloc
       assert.ok(!html.includes('wow-companion-build-source'));
       assert.ok((html.match(/class="wow-companion-tree-node is-spent"/g) || []).length > 0, `level ${level} highlights allocated talents`);
     }
+    h.storedValues.set(key, JSON.stringify({ level: 1, specializationId: 'arms', tab: 'overview' }));
+    const levelOneHtml = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+    assert.match(levelOneHtml, /data-companion-level-step="-1" disabled/);
+    assert.doesNotMatch(levelOneHtml, /data-companion-level-step="1" disabled/);
   } finally {
     if (saved === undefined) h.storedValues.delete(key);
     else h.storedValues.set(key, saved);
@@ -2511,6 +2533,9 @@ test('Warrior Overview presents sourced Strengths and Weaknesses in distinct res
     assert.match(portalStyles, /\.wow-warrior-overview-panels \{ display:grid; grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
     assert.match(portalStyles, /\.wow-warrior-overview-points \{ display:flex; min-width:0; flex-direction:column;/);
     assert.match(portalStyles, /\.wow-warrior-overview-points li::before \{ position:absolute;/);
+    assert.match(portalStyles, /\.wow-warrior-overview-context \{ display:grid; grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+    assert.match(portalStyles, /\.wow-companion-tabs \[role="tab"\].*font:650 \.82rem/);
+    assert.match(portalStyles, /\.wow-companion-level-stepper \{ display:grid; grid-column:1\/-1;/);
     assert.match(portalStyles, /@media\(max-width:580px\) \{[\s\S]*?\.wow-warrior-guide \.wow-warrior-overview-context,\.wow-warrior-guide \.wow-warrior-overview-panels \{ grid-template-columns:1fr; \}/);
   } finally {
     if (saved === undefined) h.storedValues.delete(key);

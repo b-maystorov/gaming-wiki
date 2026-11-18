@@ -375,7 +375,11 @@ export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpe
   const specializationControl = classId === 'warrior'
     ? `<select id="${prefix}-companion-spec" data-companion-spec hidden aria-hidden="true" tabindex="-1">${options}</select>`
     : `<label for="${prefix}-companion-spec">Specialization</label><select id="${prefix}-companion-spec" data-companion-spec>${options}</select>`;
-  return `<section class="wow-leveling-companion" data-leveling-companion data-class-id="${escapeHtml(classId)}" style="--class-accent:${escapeHtml(classRecord.color || '#c79c6e')}" aria-labelledby="${prefix}-companion-title"><header><div><p class="wow-companion-kicker">Field guide · ${escapeHtml(classRecord.name || classId)}</p><h2 id="${prefix}-companion-title">${title}</h2></div><span data-companion-level-badge>Level ${state.level}</span></header><div class="wow-companion-controls"><label for="${prefix}-companion-level">Current level <output data-companion-level>${state.level}</output></label><input id="${prefix}-companion-level" type="range" min="1" max="60" step="1" value="${state.level}" aria-label="Current level" aria-valuetext="Level ${state.level}" data-companion-level-input>${specializationControl}</div><div class="wow-companion-tabs" role="tablist" aria-label="${escapeHtml(classRecord.name || classId)} companion guide">${tabs}</div><div class="wow-companion-panel" id="${prefix}-companion-panel" role="tabpanel" tabindex="0" aria-labelledby="${prefix}-companion-tab-${state.tab}" data-companion-panel>${renderPanel(state, guideData, escapeHtml, progressionEngine, storage)}</div><span class="visually-hidden" data-companion-status role="status" aria-live="polite"></span></section>`;
+  const levelSlider = `<input id="${prefix}-companion-level" type="range" min="1" max="60" step="1" value="${state.level}" aria-label="Current level" aria-valuetext="Level ${state.level}" data-companion-level-input>`;
+  const levelControl = classId === 'warrior'
+    ? `<div class="wow-companion-level-stepper"><button type="button" data-companion-level-step="-1"${state.level <= 1 ? ' disabled' : ''}>← Previous</button>${levelSlider}<button type="button" data-companion-level-step="1"${state.level >= 60 ? ' disabled' : ''}>Next →</button></div>`
+    : levelSlider;
+  return `<section class="wow-leveling-companion" data-leveling-companion data-class-id="${escapeHtml(classId)}" style="--class-accent:${escapeHtml(classRecord.color || '#c79c6e')}" aria-labelledby="${prefix}-companion-title"><header><div><p class="wow-companion-kicker">Field guide · ${escapeHtml(classRecord.name || classId)}</p><h2 id="${prefix}-companion-title">${title}</h2></div><span data-companion-level-badge>Level ${state.level}</span></header><div class="wow-companion-controls"><label for="${prefix}-companion-level">Current level <output data-companion-level>${state.level}</output></label>${levelControl}${specializationControl}</div><div class="wow-companion-tabs" role="tablist" aria-label="${escapeHtml(classRecord.name || classId)} companion guide">${tabs}</div><div class="wow-companion-panel" id="${prefix}-companion-panel" role="tabpanel" tabindex="0" aria-labelledby="${prefix}-companion-tab-${state.tab}" data-companion-panel>${renderPanel(state, guideData, escapeHtml, progressionEngine, storage)}</div><span class="visually-hidden" data-companion-status role="status" aria-live="polite"></span></section>`;
 }
 
 export function initializeLevelingCompanion(root, { classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, storage } = {}) {
@@ -389,6 +393,8 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
   const levelInput = companion.querySelector('[data-companion-level-input]');
   const levelOutput = companion.querySelector('[data-companion-level]');
   const levelBadge = companion.querySelector('[data-companion-level-badge]');
+  const previousLevelButton = companion.querySelector('[data-companion-level-step="-1"]');
+  const nextLevelButton = companion.querySelector('[data-companion-level-step="1"]');
   const specializationSelect = companion.querySelector('[data-companion-spec]');
   const panelElement = companion.querySelector('[data-companion-panel]');
   const status = companion.querySelector('[data-companion-status]');
@@ -401,6 +407,8 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
     levelOutput.value = String(state.level);
     levelOutput.textContent = String(state.level);
     levelBadge.textContent = `Level ${state.level}`;
+    if (previousLevelButton) previousLevelButton.disabled = state.level <= 1;
+    if (nextLevelButton) nextLevelButton.disabled = state.level >= 60;
     specializationSelect.value = state.specializationId;
     for (const tab of tabs) {
       const selected = tab.dataset.companionTab === state.tab;
@@ -420,6 +428,11 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
     if (event.target.matches('[data-companion-spec]')) update({ specializationId: event.target.value });
   });
   companion.addEventListener('click', event => {
+    const levelStep = event.target.closest?.('[data-companion-level-step]');
+    if (levelStep) {
+      update({ level: state.level + Number(levelStep.dataset.companionLevelStep) });
+      return;
+    }
     const tab = event.target.closest?.('[data-companion-tab]');
     if (tab) update({ tab: tab.dataset.companionTab });
     const talentButton = event.target.closest?.('[data-companion-talent]');
