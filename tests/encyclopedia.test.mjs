@@ -15,6 +15,7 @@ const wowClientData = JSON.parse(await readFile(resolve(root, 'dist/data/games/w
 const wowGuidedData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-guided-builds.json'), 'utf8'));
 const dungeonPrepData = JSON.parse(await readFile(resolve(root, 'dist/data/games/world-of-warcraft-forever-dungeon-prep.json'), 'utf8'));
 const portalStyles = await readFile(resolve(root, 'dist/css/portal.css'), 'utf8');
+const appSource = await readFile(resolve(root, 'dist/js/app.js'), 'utf8');
 
 // Execute real ES modules and loading code. Only browser event registration is excluded;
 // the minimal DOM supports filter/render assertions, not browser layout or interaction claims.
@@ -2276,7 +2277,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
-  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, sources: wowPack.sources, talentClass };
+  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, sources: wowPack.sources, talentClass };
   const stored = new Map();
   const handlers = {};
   const attributes = new Map();
@@ -2333,7 +2334,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.ok(panel.innerHTML.includes('Improved Rend'));
   assert.ok(panel.innerHTML.includes('3/3'));
   const saved = companionModule.loadCompanionState('warrior', {}, warrior.specializations, { getItem: key => stored.get(key) || null });
-  assert.deepEqual(JSON.parse(JSON.stringify(saved)), { classId: 'warrior', level: 20, specializationId: 'arms', tab: 'talents', selectedTalentId: '' });
+  assert.deepEqual(JSON.parse(JSON.stringify(saved)), { classId: 'warrior', level: 20, specializationId: 'arms', tab: 'talents', selectedTalentId: '', faction: 'Alliance' });
   const gearTab = tabs.find(tab => tab.dataset.companionTab === 'gear');
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? gearTab : null } });
   assert.equal(gearTab.attributes.get('aria-selected'), 'true');
@@ -2407,11 +2408,87 @@ test('leveling companion updates its level, specialization, and tab and persists
   const levelingTab = tabs.find(tab => tab.dataset.companionTab === 'leveling');
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? levelingTab : null } });
   assert.ok(panel.innerHTML.includes('Arms leveling · Level 20'));
-  assert.ok(panel.innerHTML.includes('Level 20 · Ability unlock'));
+  assert.ok(panel.innerHTML.includes('Where should I go now?'));
+  assert.ok(panel.innerHTML.includes('Westfall'));
+  levelInput.value = '35';
+  handlers.input({ target: levelInput });
+  assert.equal(levelBadge.textContent, 'Level 35');
+  assert.ok(panel.innerHTML.includes('Arms leveling · Level 35'));
+  assert.ok(panel.innerHTML.includes('<h5>Riverglades</h5>'));
+  levelInput.value = '20';
+  handlers.input({ target: levelInput });
+  const factionSelect = { value: 'Horde', matches: selector => selector === '[data-companion-faction]' };
+  handlers.change({ target: factionSelect });
+  assert.ok(panel.innerHTML.includes('<h5>The Barrens</h5>'));
+  assert.ok(!panel.innerHTML.includes('<h5>Westfall</h5>'));
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? statsTab : null } });
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? levelingTab : null } });
+  assert.ok(panel.innerHTML.includes('<option value="Horde" selected>Horde</option>'), 'faction is retained when switching guide tabs');
+  const factionSaved = companionModule.loadCompanionState('warrior', {}, warrior.specializations, { getItem: key => stored.get(key) || null });
+  assert.equal(factionSaved.faction, 'Horde');
   const professionsTab = tabs.find(tab => tab.dataset.companionTab === 'professions');
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? professionsTab : null } });
   assert.ok(panel.innerHTML.includes('Mining + Blacksmithing'));
   assert.ok(panel.innerHTML.includes('recommendations and crafting pairings'));
+});
+
+test('Warrior leveling guide filters faction zones, updates by level, shows upcoming ranges, and handles missing data', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = { classRecord: warrior, warriorLeveling: wowPack.warriorLeveling };
+  const render = (level, faction, guide = warrior.specializationGuides.arms.sections.leveling) => companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: 'arms',
+    guideData: { ...guideData, specializationGuides: warrior.specializationGuides },
+    storage: { getItem: () => JSON.stringify({ level, faction, tab: 'leveling', specializationId: 'arms' }) }
+  });
+
+  const allianceAt20 = render(20, 'Alliance');
+  assert.match(allianceAt20, /Westfall/);
+  assert.match(allianceAt20, /Wetlands/);
+  assert.doesNotMatch(allianceAt20, /<h5>The Barrens<\/h5>/, 'Horde-only zones are filtered out');
+  assert.match(allianceAt20, /Duskwood/);
+  assert.match(allianceAt20, /wow-warrior-level-zone is-upcoming/);
+  assert.match(allianceAt20, /Shadowfang Keep/);
+
+  const hordeAt20 = render(20, 'Horde');
+  assert.match(hordeAt20, /<h5>The Barrens<\/h5>/);
+  assert.match(hordeAt20, /Silverpine Forest/);
+  assert.doesNotMatch(hordeAt20, /<h5>Westfall<\/h5>/, 'Alliance-only zones are filtered out');
+
+  const lowerLevel = render(8, 'Alliance');
+  assert.match(lowerLevel, /Level 8/);
+  assert.match(lowerLevel, /<h5>Elwynn Forest<\/h5>/);
+  assert.match(lowerLevel, /Source-recommended range begins at level 10/);
+  const laterLevel = render(35, 'Horde');
+  assert.match(laterLevel, /Level 35/);
+  assert.match(laterLevel, /<h5>Riverglades<\/h5>/);
+  assert.match(laterLevel, /The Drowned City/);
+
+  const missingRanges = companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: 60, selectedSpecialization: 'arms',
+    guideData: { classRecord: warrior, specializationGuides: warrior.specializationGuides, warriorLeveling: { zones: [], dungeons: [] } },
+    storage: { getItem: () => JSON.stringify({ level: 60, faction: 'Alliance', tab: 'leveling', specializationId: 'arms' }) }
+  });
+  assert.match(missingRanges, /No faction-matched zone with a verified level range is recorded/);
+  assert.match(missingRanges, /No verified dungeon range is recorded for this level/);
+  assert.match(missingRanges, /No later specialization milestones are recorded/);
+  assert.ok(wowPack.warriorLeveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  assert.ok(wowPack.warriorLeveling.dungeonSourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  assert.match(appSource, /guideData:\s*\{[\s\S]*?warriorLeveling:\s*wowData\.warriorLeveling/, 'browser rerender initialization receives the same structured data as initial render');
+
+  for (const level of [12, 23, 35, 45, 55]) {
+    for (const faction of ['Alliance', 'Horde']) {
+      const result = companionModule.renderLevelingCompanion({
+        classId: 'warrior', currentLevel: level, selectedSpecialization: 'arms',
+        guideData: { ...guideData, specializationGuides: warrior.specializationGuides },
+        storage: { getItem: () => JSON.stringify({ level, faction, tab: 'leveling', specializationId: 'arms' }) }
+      });
+      assert.match(result, /class="wow-warrior-level-zone is-current"/, `${faction} has matching zones at level ${level}`);
+      assert.match(result, /class="wow-warrior-level-zone is-upcoming"/, `${faction} has upcoming zones at level ${level}`);
+      if (level < 13) assert.match(result, /No verified dungeon range is recorded for this level/, `${faction} gets an honest no-match at level ${level}`);
+      else assert.match(result, /class="wow-warrior-dungeon-list"/, `${faction} has relevant dungeons at level ${level}`);
+    }
+  }
 });
 
 test('leveling companion renders only complete source-backed builds and safely handles blocked storage', () => {
@@ -2440,7 +2517,7 @@ test('leveling companion renders only complete source-backed builds and safely h
   assert.deepEqual(JSON.parse(JSON.stringify(partialShaman.notices)), ['The saved build is not eligible for automatic use (status: Partial · manual in-game verification still needed).']);
   assert.equal(companionModule.saveCompanionState({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { setItem() { throw new Error('Storage denied'); } }), false);
   const fallback = companionModule.loadCompanionState('warrior', { level: 17, specializationId: 'fury' }, specs, { getItem() { throw new Error('Storage denied'); } });
-  assert.deepEqual(JSON.parse(JSON.stringify(fallback)), { classId: 'warrior', level: 17, specializationId: 'fury', tab: 'overview', selectedTalentId: '' });
+  assert.deepEqual(JSON.parse(JSON.stringify(fallback)), { classId: 'warrior', level: 17, specializationId: 'fury', tab: 'overview', selectedTalentId: '', faction: 'Alliance' });
 });
 
 test('WoW Forever talent point budget follows the level-10 through level-60 rule', () => {
