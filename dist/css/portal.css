@@ -1092,6 +1092,46 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-companion-result p,.wow-warrior-guide .wow-companion-result li { color:#d5dfe8; font-size:.82rem; line-height:1.58; }
 .wow-warrior-guide .wow-companion-result ul { display:grid; gap:.2rem; margin:.25rem 0 0; padding-left:1rem; }
 .wow-warrior-guide .wow-warrior-leveling-guide { display:grid; grid-column:1/-1; gap:.7rem; min-width:0; color:#d8e1e9; }
+.wow-warrior-guide .wow-warrior-professions { display:grid; grid-column:1/-1; gap:.7rem; min-width:0; color:#d8e1e9; }
+.wow-warrior-guide .wow-warrior-professions-intro { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.8rem .9rem; border:1px solid #344c60; border-left:3px solid #b38b56; border-radius:5px; background:linear-gradient(110deg,#182a3a,#111c28); }
+.wow-warrior-guide .wow-warrior-professions-intro .wow-eyebrow { margin:0 0 .2rem; color:#c7a873; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; }
+.wow-warrior-guide .wow-warrior-professions-intro h4,.wow-warrior-guide .wow-warrior-profession-section h4 { margin:0; color:#f0e4cf; font-size:.94rem; }
+.wow-warrior-guide .wow-warrior-professions-intro > span { flex:none; color:#e0c99f; font-size:.75rem; font-weight:700; }
+.wow-warrior-guide .wow-warrior-profession-disclosure,.wow-warrior-guide .wow-warrior-profession-section > p { margin:0; color:#bdc9d4; font-size:.77rem; line-height:1.55; }
+.wow-warrior-guide .wow-warrior-profession-combinations { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; }
+.wow-warrior-guide .wow-warrior-profession-card { min-width:0; padding:.65rem .75rem; border:1px solid #314457; border-left:3px solid #617b8f; border-radius:5px; background:linear-gradient(115deg,#172635,#101b26); }
+.wow-warrior-guide .wow-warrior-profession-card.is-selected { border-color:#90754e; border-left-color:#c09a61; background:linear-gradient(115deg,#29271f,#151e26); box-shadow:inset 0 1px #e4c58b14; }
+.wow-warrior-guide .wow-warrior-profession-choice { display:grid; width:100%; grid-template-columns:2rem minmax(0,1fr) auto; align-items:center; gap:.5rem; padding:0; border:0; color:#edf2f6; background:none; text-align:left; cursor:pointer; }
+.wow-warrior-guide .wow-warrior-profession-choice:focus-visible { outline:2px solid #a8d5fa; outline-offset:3px; border-radius:3px; }
+.wow-warrior-guide .wow-warrior-profession-symbol { display:inline-grid; flex:none; width:1.75rem; height:1.75rem; place-items:center; border:1px solid #756143; border-radius:4px; color:#e3c692; background:#29271f; font-size:1rem; line-height:1; }
+.wow-warrior-guide .wow-warrior-profession-choice strong { display:block; font-size:.83rem; }
+.wow-warrior-guide .wow-warrior-profession-choice small { display:block; margin-top:.12rem; color:#b9a982; font-size:.65rem; }
+.wow-warrior-guide .wow-warrior-profession-selected { color:#aebdca; font-size:.66rem; }
+.wow-warrior-guide .wow-warrior-profession-card.is-selected .wow-warrior-profession-selected { color:#e0c38e; font-weight:700; }
+.wow-warrior-guide .wow-warrior-profession-card > p { margin:.45rem 0 0; color:#d0dbe4; font-size:.75rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-profession-card > p.wow-warrior-profession-tradeoff { color:#aebbc6; }
+.wow-warrior-guide .wow-warrior-profession-tradeoff strong { color:#d8bd8d; }
+.wow-warrior-guide .wow-warrior-profession-section { display:grid; gap:.45rem; min-width:0; padding:.75rem .85rem; border:1px solid #2c4256; border-radius:5px; background:#101c28; }
+.wow-warrior-guide .wow-warrior-profession-table-wrap { overflow-x:auto; }
+.wow-warrior-guide .wow-warrior-profession-section table { width:100%; border-collapse:collapse; text-align:left; font-size:.72rem; }
+.wow-warrior-guide .wow-warrior-profession-section th,.wow-warrior-guide .wow-warrior-profession-section td { padding:.42rem .5rem; border-bottom:1px solid #ffffff10; color:#cbd6df; vertical-align:top; }
+.wow-warrior-guide .wow-warrior-profession-section thead th { color:#dfc89e; font-size:.66rem; font-weight:700; }
+.wow-warrior-guide .wow-warrior-profession-section tbody tr.is-level-ready { background:#b58b5610; }
+.wow-warrior-guide .wow-warrior-profession-section tbody th { color:#e5eaf0; font-weight:700; }
+.wow-warrior-guide .wow-warrior-profession-section tbody th small { display:block; color:#aab8c5; font-size:.62rem; font-weight:500; }
+.wow-warrior-guide .wow-warrior-profession-recipe { padding:.55rem .65rem; border-left:2px solid #7c6747; background:#17222d; }
+.wow-warrior-guide .wow-warrior-profession-recipe > div { display:flex; justify-content:space-between; gap:.5rem; }
+.wow-warrior-guide .wow-warrior-profession-recipe h5 { margin:0; color:#e9edf1; font-size:.8rem; }
+.wow-warrior-guide .wow-warrior-profession-recipe > div span { color:#d8bd8d; font-size:.68rem; }
+.wow-warrior-guide .wow-warrior-profession-recipe p { margin:.35rem 0 0; color:#c2ced8; font-size:.72rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-camp-benefits { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.45rem; margin:0; padding:0; list-style:none; }
+.wow-warrior-guide .wow-warrior-camp-benefits li { display:flex; align-items:flex-start; gap:.45rem; min-width:0; padding:.45rem; border:1px solid #293f52; border-radius:4px; background:#14212d; }
+.wow-warrior-guide .wow-warrior-camp-benefits li strong { color:#e5d2ac; font-size:.7rem; }
+.wow-warrior-guide .wow-warrior-camp-benefits li p { margin:.18rem 0 0; color:#b8c5d0; font-size:.66rem; line-height:1.45; }
+.wow-warrior-guide .wow-warrior-secondary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; }
+.wow-warrior-guide .wow-warrior-secondary-grid article { display:flex; gap:.45rem; padding:.45rem; border:1px solid #293f52; border-radius:4px; background:#14212d; }
+.wow-warrior-guide .wow-warrior-secondary-grid h5 { margin:0; color:#e5d2ac; font-size:.72rem; }
+.wow-warrior-guide .wow-warrior-secondary-grid p,.wow-warrior-guide .wow-warrior-profession-empty { margin:.15rem 0 0; color:#b8c5d0; font-size:.68rem; line-height:1.45; }
 .wow-warrior-guide .wow-warrior-leveling-toolbar { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.8rem .9rem; border:1px solid #344c60; border-left:3px solid #b38b56; border-radius:5px; background:linear-gradient(110deg,#182a3a,#111c28); }
 .wow-warrior-guide .wow-warrior-leveling-toolbar h4,.wow-warrior-guide .wow-warrior-leveling-section h4 { margin:0; color:#f0e4cf; font-size:.94rem; }
 .wow-warrior-guide .wow-warrior-leveling-toolbar p { margin:.2rem 0 0; color:#aebdca; font-size:.75rem; }
@@ -1423,6 +1463,8 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
   .wow-warrior-guide .wow-companion-controls select,.wow-warrior-guide .wow-companion-controls label[for$="-companion-spec"] { grid-column:1; grid-row:auto; }
   .wow-warrior-guide .wow-companion-panel:has(.wow-companion-result) { grid-template-columns:1fr; }
   .wow-warrior-guide .wow-warrior-level-zones { grid-template-columns:1fr; }
+  .wow-warrior-guide .wow-warrior-profession-combinations,.wow-warrior-guide .wow-warrior-secondary-grid { grid-template-columns:1fr; }
+  .wow-warrior-guide .wow-warrior-camp-benefits { grid-template-columns:1fr; }
   .wow-warrior-guide .wow-companion-panel > h3,.wow-warrior-guide .wow-companion-panel > .wow-companion-note,.wow-warrior-guide .wow-companion-panel > .wow-companion-missing { grid-column:1; }
   .wow-warrior-guide .wow-warrior-spec-card { padding:1rem; }
   .wow-warrior-guide .wow-warrior-glance { padding:.85rem; }

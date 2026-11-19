@@ -91,6 +91,20 @@ function buildWarriorLevelingData(state, guideData, tabContent) {
   };
 }
 
+function buildWarriorProfessionGuide(state, guideData) {
+  const reference = guideData.warriorProfessions || null;
+  const specialization = (guideData.classRecord?.specializations || []).find(item => item.id === state.specializationId);
+  const level = state.level;
+  const activityKey = level < 10 ? 'before10' : level < 20 ? 'before20' : level < 25 ? 'before25' : level < 35 ? 'before35' : 'artisan';
+  return {
+    level,
+    specialization: specialization?.name || state.specializationId,
+    reference,
+    activity: reference?.activityNotes?.[activityKey] || '',
+    sourceIds: reference?.sourceIds || []
+  };
+}
+
 function selectedData(guideData, state) {
   const classRecord = guideData?.classRecord || {};
   const specializations = classRecord.specializations || guideData?.specializations || [];
@@ -226,6 +240,16 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       level: state.level,
       notices: [],
       sections: []
+    };
+  }
+  if (state.tab === 'professions' && classRecord.id === 'warrior') {
+    const professionGuide = buildWarriorProfessionGuide(state, guideData);
+    return {
+      heading: `${professionGuide.specialization} · Professions · Level ${state.level}`,
+      warriorProfessionGuide: professionGuide,
+      sections: [],
+      notices: [],
+      sourceIds: professionGuide.sourceIds
     };
   }
   if (state.tab !== 'talents' && specializationGuideContent) {
@@ -456,7 +480,7 @@ function renderOverviewHighlights(highlights, escapeHtml) {
   return `<div class="wow-warrior-overview-panels">${renderPanel('strengths', 'Strengths', '+', highlights.strengths)}${renderPanel('weaknesses', 'Weaknesses', '−', highlights.weaknesses)}</div>`;
 }
 
-function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all') {
+function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all', professionChoice = 'mining-blacksmithing') {
   const panel = getCompanionPanel(state, guideData, progressionEngine);
   const hideSourceReferences = guideData.classRecord?.id === 'warrior';
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
@@ -468,6 +492,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const statsPanel = statsGuide ? renderStatsGuide(statsGuide, panel.priority, escapeHtml, hideSourceReferences) : '';
   const gearPanel = panel.gearGuide ? renderWarriorGearGuide(panel.gearGuide, panel.level, gearFilter, escapeHtml) : '';
   const levelingPanel = panel.warriorLeveling ? renderWarriorLevelingGuide(panel.warriorLeveling, escapeHtml) : '';
+  const professionsPanel = panel.warriorProfessionGuide ? renderWarriorProfessionGuide(panel.warriorProfessionGuide, professionChoice, escapeHtml) : '';
   const overviewContent = panel.overviewHighlights
     ? `<div class="wow-warrior-overview"><div class="wow-warrior-overview-context">${sections}</div>${renderOverviewHighlights(panel.overviewHighlights, escapeHtml)}</div>`
     : sections;
@@ -479,7 +504,31 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
     : '';
   const tierDisclosure = !hideSourceReferences && treeData?.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : '';
   const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${tierDisclosure}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${gearPanel}${levelingPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${gearPanel}${levelingPanel}${professionsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
+}
+
+function renderWarriorProfessionGuide(data, selectedChoice, escapeHtml) {
+  const guide = data.reference;
+  if (!guide) return `<div class="wow-warrior-professions"><p class="wow-companion-missing" role="status">Verified Warrior profession data is not loaded. No profession pairs, recipe requirements or leveling milestones are available.</p></div>`;
+  const combinations = guide.combinations.map(pair => `<article class="wow-warrior-profession-card${pair.id === selectedChoice ? ' is-selected' : ''}"><button type="button" class="wow-warrior-profession-choice" data-profession-choice="${escapeHtml(pair.id)}" aria-pressed="${pair.id === selectedChoice}" aria-label="Select ${escapeHtml(pair.name)} as the pairing to compare"><span class="wow-warrior-profession-symbol" aria-hidden="true">${escapeHtml(pair.symbol)}</span><span><strong>${escapeHtml(pair.name)}</strong><small>${escapeHtml(pair.label)}</small></span><span class="wow-warrior-profession-selected">${pair.id === selectedChoice ? 'Comparing' : 'Compare'}</span></button><p>${escapeHtml(pair.benefit)}</p><p class="wow-warrior-profession-tradeoff"><strong>Tradeoff</strong> ${escapeHtml(pair.tradeoff)}</p></article>`).join('');
+  const gates = guide.rankGates.map(rank => {
+    const requiredSkill = rank.skillRequired == null ? '—' : rank.skillRequired;
+    const gateLabel = requiredLevel => requiredLevel == null
+      ? 'No level gate'
+      : `Level ${requiredLevel} · ${data.level >= requiredLevel ? 'met' : 'upcoming'}`;
+    const craftingLevel = gateLabel(rank.craftingCharacterLevel);
+    const gatheringLevel = gateLabel(rank.gatheringCharacterLevel);
+    const current = rank.craftingCharacterLevel == null || rank.gatheringCharacterLevel == null
+      || data.level >= rank.craftingCharacterLevel || data.level >= rank.gatheringCharacterLevel;
+    return `<tr class="${current ? 'is-level-ready' : ''}"><th scope="row">${escapeHtml(rank.rank)}<small>Cap ${escapeHtml(rank.skillCap)}</small></th><td>${escapeHtml(requiredSkill)}</td><td>${escapeHtml(craftingLevel)}</td><td>${escapeHtml(gatheringLevel)}</td></tr>`;
+  }).join('');
+  const examples = guide.craftExamples.map(recipe => {
+    const levelStatus = data.level >= recipe.characterLevelRequired ? 'Character level met' : `Upcoming · character level ${recipe.characterLevelRequired}`;
+    return `<article class="wow-warrior-profession-recipe"><div><h5>${escapeHtml(recipe.name)}</h5><span>${escapeHtml(levelStatus)}</span></div><p><strong>Profession:</strong> ${escapeHtml(recipe.profession)} skill ${escapeHtml(recipe.professionSkillRequired)} required. This is separate from character level ${escapeHtml(recipe.characterLevelRequired)}.</p><p><strong>Acquisition:</strong> ${escapeHtml(recipe.acquisition)} Recipe source and materials are not recorded.</p></article>`;
+  }).join('');
+  const campBenefits = guide.campBenefits.map(item => `<li><span class="wow-warrior-profession-symbol" aria-hidden="true">${escapeHtml(item.symbol)}</span><div><strong>${escapeHtml(item.profession)} · ${escapeHtml(item.name)}</strong><p>Profession skill ${escapeHtml(item.skillRequired)} · ${escapeHtml(item.benefit)}</p></div></li>`).join('');
+  const secondary = guide.secondaryProfessions.map(item => `<article><span class="wow-warrior-profession-symbol" aria-hidden="true">${escapeHtml(item.symbol)}</span><div><h5>${escapeHtml(item.name)}</h5><p>${escapeHtml(item.benefit)}</p></div></article>`).join('');
+  return `<div class="wow-warrior-professions" data-warrior-professions><div class="wow-warrior-professions-intro"><div><p class="wow-eyebrow">Selected path · ${escapeHtml(data.specialization)}</p><h4>Choose a profession direction</h4></div><span>Character level ${data.level}</span></div><p class="wow-warrior-profession-disclosure">${escapeHtml(guide.recommendationDisclosure)}</p><div class="wow-warrior-profession-combinations" role="group" aria-label="Compare profession combinations">${combinations}</div><section class="wow-warrior-profession-section"><h4>What should I work on now?</h4><p>${escapeHtml(data.activity)}</p><p>Profession skill and character level are separate gates. Being high enough level does not mean your profession skill requirement is met.</p></section><section class="wow-warrior-profession-section"><h4>Profession rank requirements</h4><div class="wow-warrior-profession-table-wrap"><table><thead><tr><th scope="col">Rank</th><th scope="col">Profession skill</th><th scope="col">Crafting character level</th><th scope="col">Gathering character level</th></tr></thead><tbody>${gates}</tbody></table></div></section><section class="wow-warrior-profession-section"><h4>Verified Warrior craft example</h4>${examples || '<p class="wow-warrior-profession-empty">No profession recipe examples are recorded.</p>'}</section><section class="wow-warrior-profession-section"><h4>Warrior camp benefits</h4><ul class="wow-warrior-camp-benefits">${campBenefits}</ul><p class="wow-warrior-profession-empty">Each listed camp feature requires profession skill 20. Profession skill is not character level.</p></section><section class="wow-warrior-profession-section"><h4>Useful secondary skills</h4><div class="wow-warrior-secondary-grid">${secondary}</div><p class="wow-warrior-profession-empty">Secondary skills do not use either primary profession slot.</p></section></div>`;
 }
 
 function renderWarriorLevelingGuide(data, escapeHtml) {
@@ -519,6 +568,7 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
   const escapeHtml = escapeText;
   let state = loadCompanionState(classId, { level: currentLevel, specializationId: selectedSpecialization, tab: 'overview' }, specializations, storage);
   let gearFilter = 'all';
+  let professionChoice = 'mining-blacksmithing';
   const levelInput = companion.querySelector('[data-companion-level-input]');
   const levelOutput = companion.querySelector('[data-companion-level]');
   const levelBadge = companion.querySelector('[data-companion-level-badge]');
@@ -545,7 +595,7 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
       tab.tabIndex = selected ? 0 : -1;
     }
     panelElement.setAttribute('aria-labelledby', `${classId}-companion-tab-${state.tab}`);
-    panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter);
+    panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice);
     if (!saveCompanionState(state, storage) && status) status.textContent = 'This browser could not save companion preferences.';
     else if (status) status.textContent = '';
   };
@@ -561,7 +611,13 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
     const gearFilterButton = event.target.closest?.('[data-companion-gear-filter]');
     if (gearFilterButton) {
       gearFilter = gearFilterButton.dataset.companionGearFilter;
-      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter);
+      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice);
+      return;
+    }
+    const professionButton = event.target.closest?.('[data-profession-choice]');
+    if (professionButton) {
+      professionChoice = professionButton.dataset.professionChoice;
+      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice);
       return;
     }
     const levelStep = event.target.closest?.('[data-companion-level-step]');

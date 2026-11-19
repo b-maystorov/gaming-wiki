@@ -143,7 +143,27 @@
       "accessed": "2026-11-16",
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
-      "status": "Consulted for broad profession advice only. No talent allocations, unlock levels or item sources imported."
+      "status": "Forever-specific Warrior profession and campfire recommendations. No profession recipe materials or acquisition routes inferred."
+    },
+    {
+      "id": "icy-forever-professions",
+      "title": "World of Warcraft: Forever Profession Guide",
+      "url": "https://www.icy-veins.com/wow-forever/professions-overview",
+      "publisher": "Icy Veins",
+      "accessed": "2026-11-19",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific profession rank gates, skill progression and profession pairings."
+    },
+    {
+      "id": "foreverdb-professions",
+      "title": "Professions in WoW Forever: a beginner's guide",
+      "url": "https://foreverdb.net/guide/professions",
+      "publisher": "ForeverDB",
+      "accessed": "2026-11-19",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever client-based profession gathering/crafting relationships and secondary profession slot rules."
     },
     {
       "id": "icy-warrior-leveling",
@@ -1948,6 +1968,69 @@
       {"name":"Stratholme Main Gate","minLevel":58,"maxLevel":60}, {"name":"Stratholme Service Gate","minLevel":58,"maxLevel":60},
       {"name":"Upper Blackrock Spire","minLevel":59,"maxLevel":60}
     ]
+  },
+  "warriorProfessions": {
+    "sourceIds": ["method-warrior-leveling", "icy-arms-leveling", "icy-forever-professions", "foreverdb-professions"],
+    "recommendationDisclosure": "These are sourced suggestions and profession synergies, not required Warrior mechanics or a universal best choice. No profession-specific difference between Arms, Fury and Protection is recorded.",
+    "combinations": [
+      {
+        "id": "mining-blacksmithing",
+        "name": "Mining + Blacksmithing",
+        "symbol": "⚒",
+        "label": "Warrior guide recommendation",
+        "benefit": "Mining gathers ore and stone for Blacksmithing. Blacksmithing makes weapons, mail and plate armor, and weapon stones; the Warrior guide specifically recommends this pairing for its weapon-stone benefit.",
+        "tradeoff": "You spend time gathering and crafting, and a crafted upgrade is only useful when it compares well with current gear. Recipe materials and trainer/drop details are not recorded here."
+      },
+      {
+        "id": "mining-engineering",
+        "name": "Mining + Engineering",
+        "symbol": "⚙",
+        "label": "Sourced profession synergy",
+        "benefit": "Mining supplies ore and stone used by Engineering. Engineering makes explosives, ammunition, scopes, goggles and utility gadgets; Forever also lists the Reagent Bot as a camp feature.",
+        "tradeoff": "This pair focuses on gadgets and utility rather than Warrior armor. Engineering recipes may require specific recipes or workstations; detailed acquisition paths are not stored here."
+      },
+      {
+        "id": "herbalism-alchemy",
+        "name": "Herbalism + Alchemy",
+        "symbol": "⚗",
+        "label": "Sourced gathering/crafting pairing",
+        "benefit": "Herbalism gathers herbs used by Alchemy for potions, elixirs and other consumables.",
+        "tradeoff": "This supports consumables rather than crafting Warrior weapons or armor; detailed Forever recipe lists and skill thresholds are not recorded here."
+      },
+      {
+        "id": "mining-skinning",
+        "name": "Mining + Skinning",
+        "symbol": "⛏",
+        "label": "Two-gatherer option",
+        "benefit": "Both professions gather materials while questing. The Warrior guide recommends Skinning as an early vendor-gold option; gathered materials can be sold or saved for later.",
+        "tradeoff": "There is no paired crafting profession, so you do not turn those materials into your own Blacksmithing or Engineering crafts with this combination."
+      }
+    ],
+    "secondaryProfessions": [
+      {"name":"First Aid","symbol":"＋","benefit":"Makes bandages and Forever adds healing potions, poultices, tourniquets and disease remedies. The Warrior guide recommends First Aid to reduce downtime; secondary professions do not use either primary-profession slot.","sourceIds":["method-warrior-leveling","icy-forever-professions"]},
+      {"name":"Cooking + Fishing","symbol":"♨","benefit":"Cooking makes food and Forever camp supplies; Fishing supplies fish used by Cooking. Both are secondary skills and do not compete for primary-profession slots.","sourceIds":["icy-forever-professions","icy-arms-leveling"]}
+    ],
+    "rankGates": [
+      {"rank":"Apprentice","skillCap":75,"skillRequired":null,"craftingCharacterLevel":null,"gatheringCharacterLevel":null},
+      {"rank":"Journeyman","skillCap":150,"skillRequired":50,"craftingCharacterLevel":10,"gatheringCharacterLevel":null},
+      {"rank":"Expert","skillCap":225,"skillRequired":125,"craftingCharacterLevel":20,"gatheringCharacterLevel":10},
+      {"rank":"Artisan","skillCap":300,"skillRequired":200,"craftingCharacterLevel":35,"gatheringCharacterLevel":25}
+    ],
+    "campBenefits": [
+      {"profession":"Blacksmithing","skillRequired":20,"name":"Sharpening Wheel","benefit":"Grants Strength at a camp; does not stack with Strength of Earth Totem.","symbol":"⚒"},
+      {"profession":"Mining","skillRequired":20,"name":"Lodestone","benefit":"Grants Attack Power at a camp; does not stack with Blessing of Might.","symbol":"⛏"},
+      {"profession":"Skinning","skillRequired":20,"name":"Camp Chair","benefit":"Grants 2% critical strike at a camp; does not stack with Leader of the Pack.","symbol":"◈"}
+    ],
+    "craftExamples": [
+      {"name":"Heavy Copper Maul","profession":"Blacksmithing","characterLevelRequired":11,"professionSkillRequired":80,"acquisition":"Crafted with Blacksmithing.","materials":null,"recipeAcquisition":null,"sourceIds":["icy-arms-leveling"]}
+    ],
+    "activityNotes": {
+      "before10":"Learn the chosen primary professions from trainers and build profession skill separately from character level. Gathering skill rises from gathering; crafting skill rises by making relevant recipes.",
+      "before20":"Check trainer rank gates as you level. Crafting Journeyman needs character level 10 and 50 profession skill; gathering Journeyman has no character-level gate but still needs 50 skill.",
+      "before25":"Expert requires 125 profession skill; its character-level gate is 20 for crafting and 10 for gathering. At character level 25, Gathering Artisan can be trained with 200 skill; Crafting Artisan remains gated until level 35.",
+      "before35":"Gathering Artisan is available from character level 25 with 200 skill. Crafting Artisan opens at character level 35 with 200 profession skill. Character-level gates and profession-skill requirements are separate checks.",
+      "artisan":"At character level 35, the Artisan character-level gates for both gathering and crafting are met; each still requires 200 profession skill and the appropriate trainer rank. The rank raises the cap to 300."
+    }
   },
   "tierCategories": [
     "Leveling",

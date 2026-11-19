@@ -2277,7 +2277,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
-  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, sources: wowPack.sources, talentClass };
+  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, warriorProfessions: wowPack.warriorProfessions, sources: wowPack.sources, talentClass };
   const stored = new Map();
   const handlers = {};
   const attributes = new Map();
@@ -2429,7 +2429,38 @@ test('leveling companion updates its level, specialization, and tab and persists
   const professionsTab = tabs.find(tab => tab.dataset.companionTab === 'professions');
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? professionsTab : null } });
   assert.ok(panel.innerHTML.includes('Mining + Blacksmithing'));
-  assert.ok(panel.innerHTML.includes('recommendations and crafting pairings'));
+  assert.ok(panel.innerHTML.includes('Mining + Engineering'));
+  assert.ok(panel.innerHTML.includes('Character level 20'));
+  assert.ok(panel.innerHTML.includes('Blacksmithing skill 80 required'));
+  assert.ok(panel.innerHTML.includes('Recipe source and materials are not recorded'));
+  const engineeringChoice = { dataset: { professionChoice: 'mining-engineering' } };
+  handlers.click({ target: { closest: selector => selector === '[data-profession-choice]' ? engineeringChoice : null } });
+  assert.ok(panel.innerHTML.includes('data-profession-choice="mining-engineering" aria-pressed="true"'));
+  assert.ok(panel.innerHTML.includes('data-profession-choice="mining-blacksmithing" aria-pressed="false"'));
+  levelInput.value = '35';
+  handlers.input({ target: levelInput });
+  assert.ok(panel.innerHTML.includes('Arms · Professions · Level 35'));
+  assert.ok(panel.innerHTML.includes('Character level met'));
+  specializationSelect.value = 'protection';
+  handlers.change({ target: specializationSelect });
+  assert.ok(panel.innerHTML.includes('Protection · Professions · Level 35'));
+  assert.ok(panel.innerHTML.includes('mining-engineering" aria-pressed="true"'), 'pairing choice remains independent of specialization changes');
+});
+
+test('Warrior profession guidance uses loaded Forever records and explains when that data is missing', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const html = companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: 18, selectedSpecialization: 'fury',
+    guideData: { classRecord: warrior },
+    storage: { getItem: () => JSON.stringify({ level: 18, specializationId: 'fury', tab: 'professions' }) }
+  });
+  assert.match(html, /Fury · Professions · Level 18/);
+  assert.match(html, /Verified Warrior profession data is not loaded/);
+  assert.doesNotMatch(html, /Mining \+ Blacksmithing/);
+  assert.match(appSource, /warriorProfessions:\s*wowData\.warriorProfessions/, 'interactive app setup passes the structured profession records');
+  assert.ok(wowPack.warriorProfessions.sourceIds.every(id => wowPack.sources.some(source => source.id === id)), 'underlying profession attributions resolve');
+  assert.ok(wowPack.warriorProfessions.combinations.some(pair => pair.id === 'mining-engineering'));
 });
 
 test('Warrior leveling guide filters faction zones, updates by level, shows upcoming ranges, and handles missing data', () => {

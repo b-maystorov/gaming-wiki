@@ -816,6 +816,7 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
         zones: data.zones,
         dungeons: data.dungeons,
         warriorLeveling: data.warriorLeveling,
+        warriorProfessions: data.warriorProfessions,
         sources: data.sources,
         specializationGuides: item.specializationGuides,
         talentClass: catalog?.classes?.find(record => record.id === item.id)
