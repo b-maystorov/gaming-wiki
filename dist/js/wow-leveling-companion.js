@@ -319,19 +319,41 @@ function renderTalentTree(state, treeData, escapeHtml) {
   return `<div class="wow-companion-tree-layout"><div class="wow-companion-tree-stack">${visibleTrees.map(renderTree).join('')}</div>${detail}</div>`;
 }
 
+const WARRIOR_STAT_SYMBOLS = {
+  strength: '<path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/>',
+  agility: '<path d="M20.5 3.5C14 3 7 6 5.2 11.1 3.9 14.8 6 18 9.5 18c5.1 0 8.6-7.6 11-14.5Z"/><path d="M4 21 14.8 10.2M8 17l-1-4M12 13l-1-4"/>',
+  stamina: '<path d="M20.8 8.8c0 4.1-8.8 11-8.8 11s-8.8-6.9-8.8-11a4.7 4.7 0 0 1 8.8-2.2 4.7 4.7 0 0 1 8.8 2.2Z"/>',
+  'attack-power': '<path d="m4 3 17 18M20 3 3 20M3 3l4 1 1 4M17 17l1 4 4 1M21 3l-4 1-1 4M7 17l-1 4-4 1"/>',
+  'critical-strike': '<path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z"/>',
+  'hit-chance': '<circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M12 10v4M10 12h4"/>',
+  'weapon-damage': '<path d="M14 4 20 2l2 2-2 6-3-3-9 9-2-2 9-9-1-1Z"/><path d="m6 14-4 4 4 4 4-4"/>',
+  expertise: '<circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="4"/><path d="m14 10 7-7M17 3h4v4"/>',
+  defense: '<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>',
+  armor: '<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m8 11 2.5 2.5L16 8"/>',
+  'block-value': '<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m8 12 2.5 2.5L16 9"/><path d="M12 5v3"/>'
+};
+
+function renderWarriorStatSymbol(statId) {
+  const paths = WARRIOR_STAT_SYMBOLS[statId] || WARRIOR_STAT_SYMBOLS.defense;
+  return `<span class="wow-stat-symbol is-${statId}" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${paths}</svg></span>`;
+}
+
 function renderStatsGuide(statsGuide, priority, escapeHtml, hideSourceLinks = false) {
   if (!statsGuide || !priority) return '';
-  const renderPriority = (title, items) => `<section class="wow-stat-priority-group"><h4>${escapeHtml(title)}</h4><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></section>`;
+  const renderPriority = (title, items) => `<section class="wow-stat-priority-group"><h4>${escapeHtml(title)}</h4><ol>${items.map((item, index) => {
+    const orderFill = Math.round(((items.length - index) / items.length) * 100);
+    return `<li><span class="wow-stat-priority-rank" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span><span class="wow-stat-priority-label">${escapeHtml(item)}</span><span class="wow-stat-order-bar" aria-hidden="true"><span style="width:${orderFill}%"></span></span></li>`;
+  }).join('')}</ol></section>`;
   const priorities = priority.items
     ? renderPriority(priority.label, priority.items)
     : `${renderPriority('Threat & damage', priority.offense || [])}${renderPriority('Survival', priority.defense || [])}`;
-  const rows = statsGuide.attributes.map(stat => `<li class="wow-stat-row"><img src="${escapeHtml(stat.icon)}" alt="" width="36" height="36" loading="lazy"><strong>${escapeHtml(stat.name)}</strong><span>${escapeHtml(stat.summary)}</span></li>`).join('');
+  const rows = statsGuide.attributes.map(stat => `<li class="wow-stat-row" data-stat-id="${escapeHtml(stat.id)}">${renderWarriorStatSymbol(stat.id)}<strong>${escapeHtml(stat.name)}</strong><span>${escapeHtml(stat.summary)}</span></li>`).join('');
   const explanations = statsGuide.explanations.map(item => {
     const sources = hideSourceLinks ? [] : (item.sourceIds || []).map(id => statsGuide.sourceCatalog?.[id]).filter(Boolean);
     const links = sources.length ? `<span class="wow-stat-explanation-sources">Sources: ${sources.map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a>`).join(' · ')}</span>` : '';
     return `<details class="wow-stat-explanation"><summary>${escapeHtml(item.title)}</summary><p>${escapeHtml(item.text)}</p>${links}</details>`;
   }).join('');
-  return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>${escapeHtml(priority.note || 'Guide order · not stat weights')}</span></div><div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
+  return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>${escapeHtml(priority.note || 'Guide order · not stat weights')} Bars indicate ordering only, not numerical stat weights.</span></div><div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
 }
 
 function renderOverviewHighlights(highlights, escapeHtml) {
