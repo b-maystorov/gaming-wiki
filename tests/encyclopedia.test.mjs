@@ -2338,7 +2338,29 @@ test('leveling companion updates its level, specialization, and tab and persists
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? gearTab : null } });
   assert.equal(gearTab.attributes.get('aria-selected'), 'true');
   assert.ok(panel.innerHTML.includes('Arms · Weapons &amp; Gear'));
+  assert.ok(panel.innerHTML.includes('Level 20 · verified records only'));
+  assert.ok(panel.innerHTML.includes('What should I equip?'));
+  assert.ok(panel.innerHTML.includes('Two-handed weapon'));
+  assert.ok(panel.innerHTML.includes('Heavy Copper Maul'));
+  assert.ok(panel.innerHTML.includes('Upcoming · Level 26'));
+  assert.ok(panel.innerHTML.includes('weapon DPS'));
   assert.ok(panel.innerHTML.includes('Defender of Dalaran'));
+  const accessoryFilter = { dataset: { companionGearFilter: 'accessory' } };
+  handlers.click({ target: { closest: selector => selector === '[data-companion-gear-filter]' ? accessoryFilter : null } });
+  assert.ok(panel.innerHTML.includes('data-companion-gear-filter="accessory" aria-pressed="true"'));
+  assert.ok(panel.innerHTML.includes('No verified recommendations are recorded in this equipment category.'));
+  assert.ok(!panel.innerHTML.includes('class="wow-warrior-gear-item"'));
+  const weaponFilter = { dataset: { companionGearFilter: 'weapon' } };
+  handlers.click({ target: { closest: selector => selector === '[data-companion-gear-filter]' ? weaponFilter : null } });
+  assert.ok(panel.innerHTML.includes('data-companion-gear-filter="weapon" aria-pressed="true"'));
+  assert.ok(panel.innerHTML.includes('Defender of Dalaran'));
+  levelInput.value = '26';
+  handlers.input({ target: levelInput });
+  assert.ok(panel.innerHTML.includes('Arms · Weapons &amp; Gear · Level 26'));
+  assert.ok(panel.innerHTML.includes('Available at Level 26'));
+  assert.ok(panel.innerHTML.includes('data-companion-gear-filter="weapon" aria-pressed="true"'), 'filter choice persists as the level changes');
+  levelInput.value = '20';
+  handlers.input({ target: levelInput });
 
   const statsTab = tabs.find(tab => tab.dataset.companionTab === 'stats');
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? statsTab : null } });
@@ -2553,6 +2575,26 @@ test('Warrior Overview presents sourced Strengths and Weaknesses in distinct res
     if (saved === undefined) h.storedValues.delete(key);
     else h.storedValues.set(key, saved);
   }
+});
+
+test('Warrior gear guide follows level and specialization data without filling missing item lists', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const renderGear = (specializationId, level) => companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId,
+    guideData: { classRecord: warrior },
+    storage: { getItem: () => JSON.stringify({ level, specializationId, tab: 'gear' }) }
+  });
+  const furyBeforeDualWield = renderGear('fury', 19);
+  assert.ok(furyBeforeDualWield.includes('Fury · Weapons &amp; Gear · Level 19'));
+  assert.ok(furyBeforeDualWield.includes('Keep your strongest current weapon equipped'));
+  assert.ok(furyBeforeDualWield.includes('No verified named Fury item recommendations'));
+  assert.ok(!furyBeforeDualWield.includes('Corpsemaker'));
+  const furyAfterDualWield = renderGear('fury', 20);
+  assert.ok(furyAfterDualWield.includes('After training Dual Wield at level 20'));
+  const protection = renderGear('protection', 35);
+  assert.ok(protection.includes('Protection · Weapons &amp; Gear · Level 35'));
+  assert.ok(protection.includes('No verified Protection equipment guidance or item records are stored yet.'));
 });
 
 test('Warrior talent layout uses full-width equal trees without desktop overflow and stacks responsively', () => {

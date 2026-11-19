@@ -392,6 +392,19 @@
         "resource": "Rage comes from combat; missed attacks can slow your next ability choices.",
         "classMilestones": "Keep an eye out for the class quest chain; the linked Forever leveling guide includes level-based milestones and zone/dungeon suggestions.",
         "gear": "The guide prioritizes current weapons; Fury depends on two maintained weapons.",
+        "equipmentGuide": {
+          "dualWieldLevel": 20,
+          "weaponBeforeDualWield": "Keep your strongest current weapon equipped; the guide advises waiting on the two-weapon setup until Dual Wield is trained.",
+          "weaponAfterDualWield": "After training Dual Wield at level 20, keep both weapons current.",
+          "weaponAdvice": "Missed attacks also mean less Rage. No level-specific DPS or weapon-speed weights are recorded for Fury.",
+          "importantAttributes": "Compare the actual weapon and its listed attributes with your current equipment; no verified Fury leveling stat weights are stored.",
+          "armorAdvice": "No Fury-specific armor recommendations are recorded.",
+          "survivabilityAdvice": "No verified Fury equipment path for survivability is recorded.",
+          "upgradeRationale": "The existing Fury guide emphasizes keeping both weapons current, but it does not record verified named item upgrades.",
+          "availabilityMessage": "No verified named Fury item recommendations are recorded.",
+          "items": [],
+          "sourceIds": ["icy-warrior-leveling"]
+        },
         "beginnerMistakes": [
           "Fury is slower before key talents and strong weapons.",
           "Frequent stance changes can complicate Rage management."
@@ -478,6 +491,81 @@
               "sourceIds": [
                 "icy-arms-leveling"
               ],
+              "equipmentGuide": {
+                "weaponType": "Two-handed weapon",
+                "weaponAdvice": "Compare current weapon DPS first. When weapon DPS is similar, the guide prefers a slower swing; it cautions against passing a large DPS upgrade for speed or weapon type.",
+                "importantAttributes": "Compare weapon damage, DPS, speed and the listed Strength, Stamina or Attack Power. No level-by-level stat weights are recorded here.",
+                "armorAdvice": "The recorded leveling milestone lists Plate Armor training at level 40. No verified level-specific armor item list is recorded.",
+                "survivabilityAdvice": "Choose armor your character can currently wear and compare its defensive attributes; this guide does not record a sourced armor upgrade path.",
+                "upgradeRationale": "The Arms leveling guide emphasizes weapon upgrades. A listed item is only a candidate: compare its damage, DPS, speed and attributes with your equipped weapon before replacing it.",
+                "items": [
+                  {
+                    "id": "defender-of-dalaran",
+                    "name": "Defender of Dalaran",
+                    "category": "weapon",
+                    "requiredLevel": null,
+                    "requiredLevelStatus": "not-listed",
+                    "itemLevel": 36,
+                    "slot": "Two-Hand",
+                    "attributes": ["82–124 damage · speed 3.30 · 31.2 DPS", "Strength +9", "Intellect +9", "Stamina +13"],
+                    "acquisition": "Alliance quest reward: Heart of Disruption, City of Dalaran.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/279841",
+                    "sourceIds": ["icy-arms-leveling"]
+                  },
+                  {
+                    "id": "corpsemaker",
+                    "name": "Corpsemaker",
+                    "category": "weapon",
+                    "requiredLevel": 29,
+                    "requiredLevelStatus": "listed",
+                    "itemLevel": 34,
+                    "slot": "Two-Hand",
+                    "attributes": ["88–132 damage · speed 3.80 · 28.9 DPS", "Strength +15", "Stamina +8"],
+                    "acquisition": "Dropped by Overlord Ramtusk in Razorfen Kraul.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/6687",
+                    "sourceIds": ["icy-arms-leveling"]
+                  },
+                  {
+                    "id": "heavehammer",
+                    "name": "Heavehammer",
+                    "category": "weapon",
+                    "requiredLevel": null,
+                    "requiredLevelStatus": "not-listed",
+                    "itemLevel": 33,
+                    "slot": "Two-Hand",
+                    "attributes": ["73–110 damage · speed 3.30 · 27.7 DPS", "Equip: Attack Power +32", "Equip: Armor +60"],
+                    "acquisition": "Quest reward: Prehistoric Prism (Alliance) or Earthen Echo (Horde), Excavation Site: Wetlands.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/271766",
+                    "sourceIds": ["icy-arms-leveling"]
+                  },
+                  {
+                    "id": "strike-of-the-hydra",
+                    "name": "Strike of the Hydra",
+                    "category": "weapon",
+                    "requiredLevel": 26,
+                    "requiredLevelStatus": "listed",
+                    "itemLevel": 31,
+                    "slot": "Two-Hand",
+                    "attributes": ["67–102 damage · speed 3.30 · 25.6 DPS", "Chance on hit: Corrosive Poison effect"],
+                    "acquisition": "Dropped by Aku’mai in Blackfathom Deeps.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/6909",
+                    "sourceIds": ["icy-arms-leveling"]
+                  },
+                  {
+                    "id": "heavy-copper-maul",
+                    "name": "Heavy Copper Maul",
+                    "category": "weapon",
+                    "requiredLevel": 11,
+                    "requiredLevelStatus": "listed",
+                    "itemLevel": 16,
+                    "slot": "Two-Hand",
+                    "attributes": ["28–43 damage · speed 3.30 · 10.8 DPS", "Strength +4"],
+                    "acquisition": "Crafted with Blacksmithing (skill 80).",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/6214",
+                    "sourceIds": ["icy-arms-leveling"]
+                  }
+                ]
+              },
               "sections": [
                 {
                   "title": "Weapon approach",

@@ -189,6 +189,21 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       sourceIds: [...new Set(['foreverdb-stats', ...(priority?.sourceIds || []), ...(classRecord.statsGuide.upgradeSourceIds || [])])]
     };
   }
+  if (state.tab === 'gear' && classRecord.id === 'warrior') {
+    const recordedGuide = specializationGuideContent?.sections?.gear?.equipmentGuide
+      || (guideMatchesSpec ? guide?.equipmentGuide : null);
+    const gearGuide = recordedGuide || {
+      items: [],
+      availabilityMessage: `No verified ${specName} equipment guidance or item records are stored yet.`
+    };
+    return {
+      heading: `${specName} · Weapons & Gear · Level ${state.level}`,
+      gearGuide,
+      level: state.level,
+      notices: [],
+      sections: []
+    };
+  }
   if (state.tab !== 'talents' && specializationGuideContent) {
     const tabContent = specializationGuideContent.sections?.[state.tab];
     const sourceIds = tabContent?.sourceIds || specializationGuideContent.sourceIds || [];
@@ -356,12 +371,58 @@ function renderStatsGuide(statsGuide, priority, escapeHtml, hideSourceLinks = fa
   return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>${escapeHtml(priority.note || 'Guide order · not stat weights')} Bars indicate ordering only, not numerical stat weights.</span></div><div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
 }
 
+function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {
+  const items = gearGuide.items || [];
+  const visibleItems = selectedFilter === 'all' ? items : items.filter(item => item.category === selectedFilter);
+  const categories = [
+    ['all', 'All'],
+    ['weapon', 'Weapons'],
+    ['armor', 'Armor'],
+    ['accessory', 'Accessories']
+  ];
+  const categorized = items.reduce((result, item) => {
+    (result[item.category] ||= []).push(item);
+    return result;
+  }, {});
+  const adviceRows = [];
+  if (gearGuide.weaponType) adviceRows.push(['Weapon type', gearGuide.weaponType]);
+  else if (Number.isFinite(gearGuide.dualWieldLevel)) {
+    adviceRows.push(['Weapon type', level < gearGuide.dualWieldLevel ? gearGuide.weaponBeforeDualWield : gearGuide.weaponAfterDualWield]);
+  }
+  if (gearGuide.weaponAdvice) adviceRows.push(['Damage & speed', gearGuide.weaponAdvice]);
+  if (gearGuide.importantAttributes) adviceRows.push(['Important attributes', gearGuide.importantAttributes]);
+  if (gearGuide.armorAdvice) adviceRows.push(['Armor type', gearGuide.armorAdvice]);
+  if (gearGuide.survivabilityAdvice) adviceRows.push(['Survivability', gearGuide.survivabilityAdvice]);
+  const advice = adviceRows.length
+    ? `<section class="wow-warrior-gear-advice"><h4>What should I equip?</h4><dl>${adviceRows.map(([label, text]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text)}</dd></div>`).join('')}</dl></section>`
+    : `<section class="wow-warrior-gear-advice"><h4>What should I equip?</h4><p>${escapeHtml(gearGuide.availabilityMessage || 'No verified equipment guidance is recorded for this specialization.')}</p></section>`;
+  const renderItem = item => {
+    const hasRequirement = Number.isFinite(item.requiredLevel);
+    const requirement = hasRequirement ? `Level ${item.requiredLevel}` : 'Not listed in item record';
+    const status = hasRequirement ? (level >= item.requiredLevel ? `Available at ${requirement}` : `Upcoming · ${requirement}`) : 'Required level not listed';
+    return `<article class="wow-warrior-gear-item" data-gear-category="${escapeHtml(item.category)}"><header><h5>${escapeHtml(item.name)}</h5><span>${escapeHtml(status)}</span></header><div class="wow-warrior-gear-item-facts"><span><strong>Required level</strong>${escapeHtml(requirement)}</span><span><strong>Slot</strong>${escapeHtml(item.slot)}</span>${Number.isFinite(item.itemLevel) ? `<span><strong>Item level</strong>${item.itemLevel}</span>` : ''}</div><p><strong>Relevant attributes</strong> ${escapeHtml(item.attributes?.join(' · ') || 'No item attributes are recorded.')}</p><p><strong>Obtain</strong> ${escapeHtml(item.acquisition || 'Acquisition method not recorded.')}</p></article>`;
+  };
+  const groups = [
+    ['available', `Available at level ${level}`, visibleItems.filter(item => Number.isFinite(item.requiredLevel) && item.requiredLevel <= level).sort((left, right) => left.requiredLevel - right.requiredLevel)],
+    ['upcoming', 'Upcoming level requirements', visibleItems.filter(item => Number.isFinite(item.requiredLevel) && item.requiredLevel > level).sort((left, right) => left.requiredLevel - right.requiredLevel)],
+    ['unknown', 'Required level not listed', visibleItems.filter(item => !Number.isFinite(item.requiredLevel))]
+  ].filter(([, , groupItems]) => groupItems.length);
+  const equipment = groups.map(([id, title, groupItems]) => `<section class="wow-warrior-gear-group" data-gear-group="${id}"><h5>${escapeHtml(title)}</h5>${groupItems.map(renderItem).join('')}</section>`).join('');
+  const filterButtons = categories.map(([category, label]) => `<button type="button" data-companion-gear-filter="${category}" aria-pressed="${category === selectedFilter}">${label}</button>`).join('');
+  const noItems = !items.length;
+  const noVisibleItems = !visibleItems.length;
+  const emptyMessage = noItems
+    ? gearGuide.availabilityMessage || 'No verified item-by-item recommendations are recorded for this specialization.'
+    : 'No verified recommendations are recorded in this equipment category.';
+  return `<div class="wow-warrior-gear-guide" data-warrior-gear-guide>${advice}<section class="wow-warrior-gear-upgrades"><div class="wow-warrior-gear-section-heading"><h4>Equipment upgrades</h4><span>Level ${level} · verified records only</span></div><div class="wow-warrior-gear-filter" role="group" aria-label="Filter equipment by type">${filterButtons}</div><p class="wow-warrior-gear-empty" data-gear-filter-empty role="status"${noVisibleItems ? '' : ' hidden'}>${escapeHtml(emptyMessage)}</p><div class="wow-warrior-gear-groups"${noVisibleItems ? ' hidden' : ''}>${equipment}</div>${gearGuide.upgradeRationale ? `<p class="wow-warrior-gear-rationale"><strong>Why upgrades matter</strong> ${escapeHtml(gearGuide.upgradeRationale)}</p>` : ''}</section></div>`;
+}
+
 function renderOverviewHighlights(highlights, escapeHtml) {
   const renderPanel = (kind, title, sign, items) => `<section class="wow-warrior-overview-points is-${kind}"><h4><span aria-hidden="true">${sign}</span>${title}</h4><ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`;
   return `<div class="wow-warrior-overview-panels">${renderPanel('strengths', 'Strengths', '+', highlights.strengths)}${renderPanel('weaknesses', 'Weaknesses', '−', highlights.weaknesses)}</div>`;
 }
 
-function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage) {
+function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all') {
   const panel = getCompanionPanel(state, guideData, progressionEngine);
   const hideSourceReferences = guideData.classRecord?.id === 'warrior';
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
@@ -371,6 +432,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const treeData = panel.treeData;
   const statsGuide = panel.statsGuide ? { ...panel.statsGuide, sourceCatalog: Object.fromEntries((guideData.sources || []).map(source => [source.id, source])) } : null;
   const statsPanel = statsGuide ? renderStatsGuide(statsGuide, panel.priority, escapeHtml, hideSourceReferences) : '';
+  const gearPanel = panel.gearGuide ? renderWarriorGearGuide(panel.gearGuide, panel.level, gearFilter, escapeHtml) : '';
   const overviewContent = panel.overviewHighlights
     ? `<div class="wow-warrior-overview"><div class="wow-warrior-overview-context">${sections}</div>${renderOverviewHighlights(panel.overviewHighlights, escapeHtml)}</div>`
     : sections;
@@ -382,7 +444,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
     : '';
   const tierDisclosure = !hideSourceReferences && treeData?.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : '';
   const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${tierDisclosure}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${gearPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
 }
 
 export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, escapeHtml = escapeText, storage } = {}) {
@@ -412,6 +474,7 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
   const specializations = classRecord.specializations || guideData.specializations || [];
   const escapeHtml = escapeText;
   let state = loadCompanionState(classId, { level: currentLevel, specializationId: selectedSpecialization, tab: 'overview' }, specializations, storage);
+  let gearFilter = 'all';
   const levelInput = companion.querySelector('[data-companion-level-input]');
   const levelOutput = companion.querySelector('[data-companion-level]');
   const levelBadge = companion.querySelector('[data-companion-level-badge]');
@@ -438,7 +501,7 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
       tab.tabIndex = selected ? 0 : -1;
     }
     panelElement.setAttribute('aria-labelledby', `${classId}-companion-tab-${state.tab}`);
-    panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage);
+    panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter);
     if (!saveCompanionState(state, storage) && status) status.textContent = 'This browser could not save companion preferences.';
     else if (status) status.textContent = '';
   };
@@ -450,6 +513,12 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
     if (event.target.matches('[data-companion-spec]')) update({ specializationId: event.target.value });
   });
   companion.addEventListener('click', event => {
+    const gearFilterButton = event.target.closest?.('[data-companion-gear-filter]');
+    if (gearFilterButton) {
+      gearFilter = gearFilterButton.dataset.companionGearFilter;
+      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter);
+      return;
+    }
     const levelStep = event.target.closest?.('[data-companion-level-step]');
     if (levelStep) {
       update({ level: state.level + Number(levelStep.dataset.companionLevelStep) });
