@@ -2614,7 +2614,7 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
   assert.doesNotMatch(otherClass, /data-companion-tab="dungeons"/, 'the new tab is Warrior-only');
 });
 
-test('leveling companion renders only complete source-backed builds and safely handles blocked storage', () => {
+test('leveling companion renders complete source-backed builds and safely handles blocked storage', () => {
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const specs = warrior.specializations;
@@ -2628,12 +2628,12 @@ test('leveling companion renders only complete source-backed builds and safely h
       assert.deepEqual(JSON.parse(JSON.stringify(missing.notices)), []);
       assert.equal(missing.treeData.validation.total, 6);
     } else {
-      assert.deepEqual(JSON.parse(JSON.stringify(missing.sections[0])), { title: 'Talent points spent / available', text: '0 / 6' });
-      assert.deepEqual(JSON.parse(JSON.stringify(missing.notices)), [`No automatic leveling build for Warrior ${spec.name} was loaded.`]);
-      assert.equal(missing.treeData.validation.total, 0);
+      assert.deepEqual(JSON.parse(JSON.stringify(missing.sections[0])), { title: 'Talent points spent / available', text: '6 / 6' });
+      assert.deepEqual(JSON.parse(JSON.stringify(missing.notices)), []);
+      assert.equal(missing.treeData.validation.total, 6);
     }
   }
-  assert.deepEqual(wowGuidedData.builds.filter(build => build.classId === 'warrior').map(build => build.specializationId), ['arms']);
+  assert.deepEqual(wowGuidedData.builds.filter(build => build.classId === 'warrior').map(build => build.specializationId), ['arms', 'fury', 'protection']);
   const shaman = wowPack.classes.find(item => item.id === 'shaman');
   const shamanTalentClass = wowClientData.classes.find(item => item.id === 'shaman');
   const partialShaman = companionModule.getCompanionPanel({ classId: 'shaman', level: 20, specializationId: 'enhancement', tab: 'talents' }, { classRecord: shaman, talentClass: shamanTalentClass }, engine);
@@ -2650,7 +2650,7 @@ test('WoW Forever talent point budget follows the level-10 through level-60 rule
   }
 });
 
-test('Arms automatic progression matches the published point order and validates every level', () => {
+test('Arms automatic progression stays unchanged and validates every level', () => {
   const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
   const build = wowGuidedData.builds.find(item => item.id === 'bm-warrior-arms-leveling-10-60');
   assert.ok(build);
@@ -2681,6 +2681,34 @@ test('Arms automatic progression matches the published point order and validates
     for (const tree of wowClientData.classes.find(item => item.id === 'warrior').trees) {
       assert.deepEqual(JSON.parse(JSON.stringify(h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace.validateCompanionTalentTiers(tree, allocation))), [], `tier requirements at level ${level}, ${tree.name}`);
     }
+  }
+});
+
+test('all Warrior talent builds resolve level budgets, exact allocation, and specialization changes', () => {
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
+  const expectedLevels = [10, 15, 25, 34, 40, 60];
+  const builds = ['arms', 'fury', 'protection'].map(specializationId => {
+    const build = wowGuidedData.builds.find(item => item.classId === 'warrior' && item.specializationId === specializationId);
+    assert.ok(build, `${specializationId} build exists`);
+    assert.equal(build.allocations.length, 51);
+    assert.deepEqual(JSON.parse(JSON.stringify(wowModule.validateWowGuidedBuild(build, wowClientData))), { valid: true, issues: [] });
+    return build;
+  });
+  for (const build of builds) for (const level of expectedLevels) {
+    const resolved = wowModule.resolveWowGuidedBuild(build, wowClientData, level);
+    const budget = wowModule.availableWowTalentPoints(level, 0);
+    assert.equal(resolved.valid, true, `${build.specializationId} level ${level}: ${resolved.issues.join('; ')}`);
+    assert.equal(resolved.total, budget, `${build.specializationId} level ${level} budget`);
+    assert.equal(Object.values(resolved.allocation).reduce((sum, rank) => sum + rank, 0), budget);
+  }
+  const engine = { builds: wowGuidedData.builds, catalog: wowClientData, resolve: wowModule.resolveWowGuidedBuild, availablePoints: wowModule.availableWowTalentPoints };
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  for (const level of expectedLevels) for (const specializationId of ['arms', 'fury', 'protection']) {
+    const panel = companionModule.getCompanionPanel({ classId: 'warrior', level, specializationId, tab: 'talents' }, { classRecord: warrior, talentClass }, engine);
+    assert.equal(panel.treeData.build.specializationId, specializationId);
+    assert.equal(panel.treeData.recommended.total, wowModule.availableWowTalentPoints(level, 0));
   }
 });
 
@@ -2722,6 +2750,44 @@ test('Warrior route loads the guided-build JSON and renders automatic Arms alloc
   } finally {
     if (saved === undefined) h.storedValues.delete(key);
     else h.storedValues.set(key, saved);
+  }
+});
+
+test('Warrior app data wiring loads level-34 Combat and shared Accessories for every specialization', () => {
+  assert.match(appSource, /warriorCombat:\s*wowData\.warriorCombat/);
+  assert.match(appSource, /warriorEquipment:\s*wowData\.warriorEquipment/);
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = {
+    classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons,
+    warriorLeveling: wowPack.warriorLeveling, warriorEquipment: wowPack.warriorEquipment,
+    warriorCombat: wowPack.warriorCombat, warriorProfessions: wowPack.warriorProfessions,
+    sources: wowPack.sources, specializationGuides: warrior.specializationGuides,
+    talentClass: wowClientData.classes.find(item => item.id === 'warrior'), combatCatalog: wowClientData
+  };
+  const render = (level, specializationId, tab) => companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId, guideData,
+    progressionEngine: { builds: wowGuidedData.builds, catalog: wowClientData,
+      resolve: wowModule.resolveWowGuidedBuild, validate: wowModule.validateWowTalentAllocation,
+      availablePoints: wowModule.availableWowTalentPoints },
+    storage: { getItem: () => JSON.stringify({ level, specializationId, tab }) }
+  });
+  for (const specializationId of ['arms', 'fury', 'protection']) {
+    const combat = render(34, specializationId, 'combat');
+    assert.ok(combat.includes('data-combat-level="34"'));
+    assert.ok(combat.includes(`data-combat-specialization="${specializationId}"`));
+    assert.ok(!combat.includes('Verified combat guidance is not loaded for this specialization.'));
+    for (const level of [10, 15, 25, 34, 40, 60]) {
+      const gear = render(level, specializationId, 'gear');
+      assert.ok(gear.includes('data-gear-category="accessory"'), `${specializationId} shared accessories load at ${level}`);
+      const talents = render(level, specializationId, 'talents');
+      const points = level - 9;
+      assert.ok(talents.includes(`${points} / ${points}`), `${specializationId} level ${level} budget: ${talents.match(/<strong>[^<]*<\/strong><span>points spent[^<]*/)?.[0] || 'no meter'}`);
+      assert.ok(talents.includes(`class="wow-companion-tree is-primary tree-${specializationId}"`));
+      assert.equal((talents.match(/class="wow-companion-tree is-(?:primary|secondary) tree-(?:arms|fury|protection)"/g) || []).length, 3);
+      assert.ok((talents.match(/class="wow-companion-tree-node is-spent"/g) || []).length > 0);
+    }
   }
 });
 
@@ -2826,6 +2892,12 @@ test('Warrior equipment recommendations filter by level, faction, specialization
   const royalSeal = wowPack.warriorEquipment.items.find(item => item.id === 'royal-seal-of-eldrethalas');
   assert.equal(royalSeal.availabilityLevel, 54);
   assert.deepEqual(royalSeal.specializations, ['protection']);
+
+  for (const level of [10, 15, 25, 34, 40, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+    const html = render(level, 'Alliance', specializationId);
+    assert.ok(html.includes('data-gear-category="accessory"'), `${specializationId} has accessory recommendations at level ${level}`);
+    assert.ok(!html.includes('No verified Warrior equipment guidance or item records are stored yet.'), `${specializationId} shared data is wired at level ${level}`);
+  }
 });
 
 test('Warrior Combat filters unlocks by level and switches specialization priorities', async () => {
@@ -2874,6 +2946,13 @@ test('Warrior Combat filters unlocks by level and switches specialization priori
   assert.ok(protectionAtForty.includes('Shield Slam'));
   assert.ok(protectionAtForty.includes('New at this level'));
   assert.ok(protectionAtForty.includes('Shield Block'));
+
+  for (const level of [10, 15, 25, 34, 40, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+    const html = render(level, specializationId);
+    assert.ok(html.includes(`data-combat-level="${level}"`), `${specializationId} combat level ${level} loads`);
+    assert.ok(html.includes(`data-combat-specialization="${specializationId}"`), `${specializationId} combat key resolves at ${level}`);
+    assert.ok(!html.includes('Verified combat guidance is not loaded'), `${specializationId} has sourced combat at ${level}`);
+  }
 
   const otherClass = companionModule.renderLevelingCompanion({ classId: 'paladin', currentLevel: 30, selectedSpecialization: 'retribution', guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') } });
   assert.ok(!otherClass.includes('data-companion-tab="combat"'), 'Combat tab is Warrior-only');
@@ -2995,7 +3074,17 @@ test('companion automatically updates sourced talent ranks with level and specia
   specSelect.value = 'fury';
   handlers.change({ target: specSelect });
   assert.ok(panel.innerHTML.includes('Fury talent tree · Level 9'));
-  assert.ok(panel.innerHTML.includes('No automatic leveling build for Warrior Fury was loaded.'));
+  assert.ok(panel.innerHTML.includes('0 / 0'));
+  levelInput.value = '34';
+  handlers.input({ target: levelInput });
+  assert.ok(panel.innerHTML.includes('25 / 25'));
+  specSelect.value = 'protection';
+  handlers.change({ target: specSelect });
+  assert.ok(panel.innerHTML.includes('Protection talent tree · Level 34'));
+  assert.ok(panel.innerHTML.includes('25 / 25'));
+  levelInput.value = '15';
+  handlers.input({ target: levelInput });
+  assert.ok(panel.innerHTML.includes('6 / 6'), 'lowering the level removes points beyond its budget');
 });
 
 test('companion renders resolver-provided ranks, local icons, descriptions, and next points', () => {

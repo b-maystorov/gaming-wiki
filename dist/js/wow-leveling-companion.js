@@ -405,14 +405,12 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
     const sharedEquipment = guideData.warriorEquipment || {};
     const sharedItems = (sharedEquipment.items || []).filter(item => item.specializations?.includes(state.specializationId)
       && (!item.faction || item.faction === state.faction));
-    const gearGuide = recordedGuide ? {
-      ...recordedGuide,
-      items: [...(recordedGuide.items || []), ...sharedItems],
+    const gearGuide = {
+      ...(recordedGuide || {}),
+      items: [...(recordedGuide?.items || []), ...sharedItems],
       slotCoverage: sharedEquipment.slotCoverage || [],
-      emptyState: sharedEquipment.emptyState || ''
-    } : {
-      items: [],
-      availabilityMessage: `No verified ${specName} equipment guidance or item records are stored yet.`
+      emptyState: sharedEquipment.emptyState || '',
+      availabilityMessage: recordedGuide?.availabilityMessage || (sharedItems.length ? '' : `No verified ${specName} equipment guidance or item records are stored yet.`)
     };
     return {
       heading: `${specName} · Weapons & Gear · Level ${state.level}`,

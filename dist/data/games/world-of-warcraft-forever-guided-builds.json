@@ -38,6 +38,13 @@
       "url": "https://www.icy-veins.com/wow-forever/arms-warrior-leveling",
       "updated": "2026-11-04",
       "use": "Independent comparison. It confirms an Arms leveling guide exists but publishes a different early talent order, so it is not used to fill or merge this point-by-point progression."
+    },
+    {
+      "id": "wow-forever-outpost-warrior-leveling-2026-11",
+      "title": "WoW Forever Outpost · Warrior leveling talents, point by point",
+      "url": "https://wofwforever.com/en/guides/wow-forever-warrior-leveling-talents/",
+      "updated": "2026-11-09",
+      "use": "Exact Fury and Protection talent point orders from levels 10–60. The author identifies them as editorial recommendations checked against Wowhead Forever client 1.60.1 data, not Blizzard recommendations or in-game tested builds."
     }
   ],
   "builds": [
@@ -499,6 +506,576 @@
           "note": "publishes a different early point order"
         }
       ]
+    },
+    {
+      "id": "bm-warrior-fury-leveling-10-60",
+      "companionOnly": true,
+      "name": "Fury leveling · source-published point order",
+      "classId": "warrior",
+      "specializationId": "fury",
+      "playstyle": "solo-leveling",
+      "role": "Damage",
+      "levelRange": {
+        "from": 10,
+        "through": 60
+      },
+      "coverage": {
+        "status": "complete",
+        "label": "Exact point order documented from level 10 through 60",
+        "highestDocumentedLevel": 60
+      },
+      "sourceIds": [
+        "wow-forever-outpost-warrior-leveling-2026-11"
+      ],
+      "gameClientVersion": "1.60.1.70755",
+      "confidence": "This is WoW Forever Outpost’s editorial point order, checked against Wowhead Forever client 1.60.1 talent data; it is not Blizzard advice and the author says it was not tested in game. Talent IDs, ranks, prerequisites, and point budget are checked against the local Forever client dataset.",
+      "verificationStatus": "source-supported",
+      "summary": "Fury leveling order published by WoW Forever Outpost. Treat it as a sourced editorial recommendation rather than an in-game-verified build.",
+      "allocations": [
+        {
+          "level": 10,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 11,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 12,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 13,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 14,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 15,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 16,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 17,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 18,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 19,
+          "talentId": "warrior-fury-unbridled-wrath",
+          "rankAdded": 1
+        },
+        {
+          "level": 20,
+          "talentId": "warrior-fury-piercing-howl",
+          "rankAdded": 1
+        },
+        {
+          "level": 21,
+          "talentId": "warrior-fury-blood-craze",
+          "rankAdded": 1
+        },
+        {
+          "level": 22,
+          "talentId": "warrior-fury-blood-craze",
+          "rankAdded": 1
+        },
+        {
+          "level": 23,
+          "talentId": "warrior-fury-blood-craze",
+          "rankAdded": 1
+        },
+        {
+          "level": 24,
+          "talentId": "warrior-fury-enrage",
+          "rankAdded": 1
+        },
+        {
+          "level": 25,
+          "talentId": "warrior-fury-reckless-swings",
+          "rankAdded": 1
+        },
+        {
+          "level": 26,
+          "talentId": "warrior-fury-dual-wield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 27,
+          "talentId": "warrior-fury-dual-wield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 28,
+          "talentId": "warrior-fury-dual-wield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 29,
+          "talentId": "warrior-fury-dual-wield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 30,
+          "talentId": "warrior-fury-death-wish",
+          "rankAdded": 1
+        },
+        {
+          "level": 31,
+          "talentId": "warrior-fury-gore-drinker",
+          "rankAdded": 1
+        },
+        {
+          "level": 32,
+          "talentId": "warrior-fury-gore-drinker",
+          "rankAdded": 1
+        },
+        {
+          "level": 33,
+          "talentId": "warrior-fury-furious-precision",
+          "rankAdded": 1
+        },
+        {
+          "level": 34,
+          "talentId": "warrior-fury-furious-precision",
+          "rankAdded": 1
+        },
+        {
+          "level": 35,
+          "talentId": "warrior-fury-flurry",
+          "rankAdded": 1
+        },
+        {
+          "level": 36,
+          "talentId": "warrior-fury-flurry",
+          "rankAdded": 1
+        },
+        {
+          "level": 37,
+          "talentId": "warrior-fury-flurry",
+          "rankAdded": 1
+        },
+        {
+          "level": 38,
+          "talentId": "warrior-fury-improved-whirlwind",
+          "rankAdded": 1
+        },
+        {
+          "level": 39,
+          "talentId": "warrior-fury-improved-whirlwind",
+          "rankAdded": 1
+        },
+        {
+          "level": 40,
+          "talentId": "warrior-fury-bloodthirst",
+          "rankAdded": 1
+        },
+        {
+          "level": 41,
+          "talentId": "warrior-fury-enrage",
+          "rankAdded": 1
+        },
+        {
+          "level": 42,
+          "talentId": "warrior-fury-enrage",
+          "rankAdded": 1
+        },
+        {
+          "level": 43,
+          "talentId": "warrior-fury-enrage",
+          "rankAdded": 1
+        },
+        {
+          "level": 44,
+          "talentId": "warrior-fury-enrage",
+          "rankAdded": 1
+        },
+        {
+          "level": 45,
+          "talentId": "warrior-fury-dual-wield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 46,
+          "talentId": "warrior-fury-furious-precision",
+          "rankAdded": 1
+        },
+        {
+          "level": 47,
+          "talentId": "warrior-fury-improved-berserker-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 48,
+          "talentId": "warrior-fury-improved-berserker-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 49,
+          "talentId": "warrior-fury-improved-execute",
+          "rankAdded": 1
+        },
+        {
+          "level": 50,
+          "talentId": "warrior-fury-improved-execute",
+          "rankAdded": 1
+        },
+        {
+          "level": 51,
+          "talentId": "warrior-fury-lingering-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 52,
+          "talentId": "warrior-fury-lingering-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 53,
+          "talentId": "warrior-fury-lingering-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 54,
+          "talentId": "warrior-fury-lingering-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 55,
+          "talentId": "warrior-fury-lingering-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 56,
+          "talentId": "warrior-fury-booming-voice",
+          "rankAdded": 1
+        },
+        {
+          "level": 57,
+          "talentId": "warrior-fury-booming-voice",
+          "rankAdded": 1
+        },
+        {
+          "level": 58,
+          "talentId": "warrior-fury-booming-voice",
+          "rankAdded": 1
+        },
+        {
+          "level": 59,
+          "talentId": "warrior-fury-booming-voice",
+          "rankAdded": 1
+        },
+        {
+          "level": 60,
+          "talentId": "warrior-fury-booming-voice",
+          "rankAdded": 1
+        }
+      ],
+      "respecEvents": [],
+      "milestones": [],
+      "tierRuleDisclosure": "The guide’s exact order is checked against Wowhead Forever data. The Forever client export does not independently confirm row point gates; the tree view applies its documented five-points-per-row rule."
+    },
+    {
+      "id": "bm-warrior-protection-leveling-10-60",
+      "companionOnly": true,
+      "name": "Protection leveling · source-published point order",
+      "classId": "warrior",
+      "specializationId": "protection",
+      "playstyle": "solo-leveling",
+      "role": "Tank",
+      "levelRange": {
+        "from": 10,
+        "through": 60
+      },
+      "coverage": {
+        "status": "complete",
+        "label": "Exact point order documented from level 10 through 60",
+        "highestDocumentedLevel": 60
+      },
+      "sourceIds": [
+        "wow-forever-outpost-warrior-leveling-2026-11"
+      ],
+      "gameClientVersion": "1.60.1.70755",
+      "confidence": "This is WoW Forever Outpost’s editorial point order, checked against Wowhead Forever client 1.60.1 talent data; it is not Blizzard advice and the author says it was not tested in game. Talent IDs, ranks, prerequisites, and point budget are checked against the local Forever client dataset.",
+      "verificationStatus": "source-supported",
+      "summary": "Protection leveling order published by WoW Forever Outpost. Treat it as a sourced editorial recommendation rather than an in-game-verified build.",
+      "allocations": [
+        {
+          "level": 10,
+          "talentId": "warrior-protection-shield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 11,
+          "talentId": "warrior-protection-shield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 12,
+          "talentId": "warrior-protection-shield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 13,
+          "talentId": "warrior-protection-shield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 14,
+          "talentId": "warrior-protection-shield-specialization",
+          "rankAdded": 1
+        },
+        {
+          "level": 15,
+          "talentId": "warrior-protection-improved-revenge",
+          "rankAdded": 1
+        },
+        {
+          "level": 16,
+          "talentId": "warrior-protection-improved-revenge",
+          "rankAdded": 1
+        },
+        {
+          "level": 17,
+          "talentId": "warrior-protection-improved-revenge",
+          "rankAdded": 1
+        },
+        {
+          "level": 18,
+          "talentId": "warrior-protection-improved-thunder-clap",
+          "rankAdded": 1
+        },
+        {
+          "level": 19,
+          "talentId": "warrior-protection-improved-thunder-clap",
+          "rankAdded": 1
+        },
+        {
+          "level": 20,
+          "talentId": "warrior-protection-last-stand",
+          "rankAdded": 1
+        },
+        {
+          "level": 21,
+          "talentId": "warrior-protection-master-of-defense",
+          "rankAdded": 1
+        },
+        {
+          "level": 22,
+          "talentId": "warrior-protection-master-of-defense",
+          "rankAdded": 1
+        },
+        {
+          "level": 23,
+          "talentId": "warrior-protection-improved-thunder-clap",
+          "rankAdded": 1
+        },
+        {
+          "level": 24,
+          "talentId": "warrior-protection-anticipation",
+          "rankAdded": 1
+        },
+        {
+          "level": 25,
+          "talentId": "warrior-protection-vanguard",
+          "rankAdded": 1
+        },
+        {
+          "level": 26,
+          "talentId": "warrior-protection-anticipation",
+          "rankAdded": 1
+        },
+        {
+          "level": 27,
+          "talentId": "warrior-protection-anticipation",
+          "rankAdded": 1
+        },
+        {
+          "level": 28,
+          "talentId": "warrior-protection-anticipation",
+          "rankAdded": 1
+        },
+        {
+          "level": 29,
+          "talentId": "warrior-protection-anticipation",
+          "rankAdded": 1
+        },
+        {
+          "level": 30,
+          "talentId": "warrior-protection-concussion-blow",
+          "rankAdded": 1
+        },
+        {
+          "level": 31,
+          "talentId": "warrior-protection-focused-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 32,
+          "talentId": "warrior-protection-focused-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 33,
+          "talentId": "warrior-protection-focused-rage",
+          "rankAdded": 1
+        },
+        {
+          "level": 34,
+          "talentId": "warrior-protection-improved-bloodrage",
+          "rankAdded": 1
+        },
+        {
+          "level": 35,
+          "talentId": "warrior-protection-bastion",
+          "rankAdded": 1
+        },
+        {
+          "level": 36,
+          "talentId": "warrior-protection-bastion",
+          "rankAdded": 1
+        },
+        {
+          "level": 37,
+          "talentId": "warrior-protection-bastion",
+          "rankAdded": 1
+        },
+        {
+          "level": 38,
+          "talentId": "warrior-protection-bastion",
+          "rankAdded": 1
+        },
+        {
+          "level": 39,
+          "talentId": "warrior-protection-bastion",
+          "rankAdded": 1
+        },
+        {
+          "level": 40,
+          "talentId": "warrior-protection-shield-slam",
+          "rankAdded": 1
+        },
+        {
+          "level": 41,
+          "talentId": "warrior-protection-defiance",
+          "rankAdded": 1
+        },
+        {
+          "level": 42,
+          "talentId": "warrior-protection-defiance",
+          "rankAdded": 1
+        },
+        {
+          "level": 43,
+          "talentId": "warrior-protection-defiance",
+          "rankAdded": 1
+        },
+        {
+          "level": 44,
+          "talentId": "warrior-protection-improved-sunder-armor",
+          "rankAdded": 1
+        },
+        {
+          "level": 45,
+          "talentId": "warrior-protection-improved-sunder-armor",
+          "rankAdded": 1
+        },
+        {
+          "level": 46,
+          "talentId": "warrior-protection-improved-sunder-armor",
+          "rankAdded": 1
+        },
+        {
+          "level": 47,
+          "talentId": "warrior-protection-improved-bloodrage",
+          "rankAdded": 1
+        },
+        {
+          "level": 48,
+          "talentId": "warrior-protection-improved-shield-wall",
+          "rankAdded": 1
+        },
+        {
+          "level": 49,
+          "talentId": "warrior-protection-improved-shield-wall",
+          "rankAdded": 1
+        },
+        {
+          "level": 50,
+          "talentId": "warrior-protection-improved-shield-bash",
+          "rankAdded": 1
+        },
+        {
+          "level": 51,
+          "talentId": "warrior-protection-improved-shield-bash",
+          "rankAdded": 1
+        },
+        {
+          "level": 52,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 53,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 54,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 55,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 56,
+          "talentId": "warrior-arms-deflection",
+          "rankAdded": 1
+        },
+        {
+          "level": 57,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 58,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 59,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        },
+        {
+          "level": 60,
+          "talentId": "warrior-fury-cruelty",
+          "rankAdded": 1
+        }
+      ],
+      "respecEvents": [],
+      "milestones": [],
+      "tierRuleDisclosure": "The guide’s exact order is checked against Wowhead Forever data. The Forever client export does not independently confirm row point gates; the tree view applies its documented five-points-per-row rule."
     }
   ]
 }
