@@ -1699,6 +1699,7 @@ function showRoute() {
           zones: wowData.zones,
           dungeons: wowData.dungeons,
           warriorLeveling: wowData.warriorLeveling,
+          warriorEquipment: wowData.warriorEquipment,
           warriorProfessions: wowData.warriorProfessions,
           dungeonPreparation: wowDungeonPrep,
           sources: wowData.sources,

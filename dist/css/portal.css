@@ -1582,3 +1582,103 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 @media(max-width:580px) {
   .wow-leveling-companion .wow-companion-tree-stack { grid-template-columns:1fr; }
 }
+/* Warrior guide reading sizes: keep compact components, but bring descriptions to readable text sizes. */
+.wow-warrior-guide .wow-leveling-companion { font-size:1rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-intro,
+.wow-warrior-guide .wow-warrior-overview-context .wow-companion-result p,
+.wow-warrior-guide .wow-warrior-overview-points li,
+.wow-warrior-guide .wow-stat-row > span:last-child,
+.wow-warrior-guide .wow-stat-explanation p,
+.wow-warrior-guide .wow-stat-upgrade p,
+.wow-warrior-guide .wow-warrior-gear-advice dd,
+.wow-warrior-guide .wow-warrior-gear-advice > p,
+.wow-warrior-guide .wow-warrior-gear-item p,
+.wow-warrior-guide .wow-warrior-gear-rationale,
+.wow-warrior-guide .wow-warrior-leveling-note,
+.wow-warrior-guide .wow-warrior-leveling-empty,
+.wow-warrior-guide .wow-warrior-level-zone p,
+.wow-warrior-guide .wow-warrior-milestone-list li p,
+.wow-warrior-guide .wow-warrior-profession-disclosure,
+.wow-warrior-guide .wow-warrior-profession-section > p,
+.wow-warrior-guide .wow-warrior-profession-card > p,
+.wow-warrior-guide .wow-warrior-profession-recipe p,
+.wow-warrior-guide .wow-warrior-secondary-grid p,
+.wow-warrior-guide .wow-warrior-dungeon-intro,
+.wow-warrior-guide .wow-warrior-dungeon-disclosure,
+.wow-warrior-guide .wow-warrior-dungeon-card dd,
+.wow-warrior-guide .wow-warrior-dungeon-access,
+.wow-warrior-guide .wow-warrior-dungeon-note,
+.wow-warrior-guide .wow-warrior-dungeon-missing,
+.wow-warrior-guide .wow-warrior-dungeon-why > p,
+.wow-warrior-guide .wow-warrior-dungeon-items small,
+.wow-warrior-guide .wow-warrior-dungeon-quests small,
+.wow-warrior-guide .wow-warrior-dungeon-check,
+.wow-warrior-guide .wow-warrior-dungeon-empty { font-size:.94rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-section-heading p,
+.wow-warrior-guide .wow-warrior-spec-card .wow-warrior-spec-description,
+.wow-warrior-guide .wow-warrior-spec-card p,
+.wow-warrior-guide .wow-warrior-confidence,
+.wow-warrior-guide .wow-warrior-glance-grid ul,
+.wow-warrior-guide .wow-warrior-leveling-details > summary small,
+.wow-warrior-guide .wow-warrior-checklist-heading p,
+.wow-warrior-guide .wow-warrior-checklist-progress,
+.wow-warrior-guide .wow-warrior-checklist-item small,
+.wow-warrior-guide .wow-warrior-gear-item-facts > span,
+.wow-warrior-guide .wow-warrior-gear-section-heading > span,
+.wow-warrior-guide .wow-warrior-dungeon-range,
+.wow-warrior-guide .wow-warrior-dungeon-why > p,
+.wow-warrior-guide .wow-warrior-profession-choice small,
+.wow-warrior-guide .wow-warrior-profession-recipe > div span,
+.wow-warrior-guide .wow-warrior-profession-section tbody th small,
+.wow-warrior-guide .wow-warrior-guide-links .wow-eyebrow,
+.wow-warrior-guide .wow-warrior-guide-link-list a span,
+.wow-warrior-guide .wow-warrior-guide-link-list a small { font-size:.86rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-gear-advice dt,
+.wow-warrior-guide .wow-warrior-gear-group > h5,
+.wow-warrior-guide .wow-warrior-gear-item > header > span,
+.wow-warrior-guide .wow-warrior-professions-intro .wow-eyebrow,
+.wow-warrior-guide .wow-warrior-profession-choice strong,
+.wow-warrior-guide .wow-warrior-profession-selected,
+.wow-warrior-guide .wow-warrior-profession-section th,
+.wow-warrior-guide .wow-warrior-profession-section td,
+.wow-warrior-guide .wow-warrior-profession-section thead th,
+.wow-warrior-guide .wow-warrior-profession-recipe h5,
+.wow-warrior-guide .wow-warrior-dungeon-why h6,
+.wow-warrior-guide .wow-warrior-dungeon-checklist h6,
+.wow-warrior-guide .wow-warrior-dungeon-items a,
+.wow-warrior-guide .wow-warrior-dungeon-quests summary,
+.wow-warrior-guide .wow-warrior-dungeon-quests strong,
+.wow-warrior-guide .wow-warrior-dungeon-card dt { font-size:.82rem; line-height:1.45; }
+.wow-warrior-guide .wow-warrior-gear-filter button,
+.wow-warrior-guide .wow-warrior-checklist-heading label,
+.wow-warrior-guide .wow-warrior-checklist-heading select,
+.wow-warrior-guide .wow-stat-priority-group li,
+.wow-warrior-guide .wow-stat-explanation summary,
+.wow-warrior-guide .wow-stat-section-heading > span,
+.wow-warrior-guide .wow-stat-priority-group h4 { font-size:.84rem; }
+.wow-warrior-guide .wow-stat-priority-rank,
+.wow-warrior-guide .wow-stat-explanation-sources { font-size:.75rem; }
+.wow-warrior-guide .wow-leveling-companion .wow-companion-tree-name { color:#d5dee7; font-size:.76rem; line-height:1.3; }
+.wow-warrior-guide .wow-leveling-companion .wow-companion-tree-icon strong { font-size:.68rem; }
+.wow-warrior-guide .wow-leveling-companion .wow-companion-talent-detail-heading p,
+.wow-warrior-guide .wow-leveling-companion .wow-companion-talent-detail > p,
+.wow-warrior-guide .wow-leveling-companion .wow-companion-talent-detail ol,
+.wow-warrior-guide .wow-leveling-companion .wow-companion-tree-lock-note,
+.wow-warrior-guide .wow-leveling-companion .wow-companion-tier-source { color:#d0dce6; font-size:.84rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-gear-item h5,
+.wow-warrior-guide .wow-warrior-dungeon-card h5,
+.wow-warrior-guide .wow-warrior-profession-recipe h5 { font-size:1rem; line-height:1.35; }
+.wow-warrior-guide .wow-warrior-gear-item h5 a,
+.wow-warrior-guide .wow-warrior-dungeon-items a { color:#f0d8af; text-underline-offset:2px; }
+.wow-warrior-guide .wow-warrior-gear-item-facts strong { color:#c6d4e0; }
+.wow-warrior-guide .wow-warrior-checklist-heading label,
+.wow-warrior-guide .wow-warrior-checklist-progress,
+.wow-warrior-guide .wow-warrior-checklist-group summary { color:#d9e2e9; }
+.wow-warrior-guide .wow-warrior-dungeon-card dt,
+.wow-warrior-guide .wow-warrior-dungeon-missing,
+.wow-warrior-guide .wow-warrior-dungeon-quests small { color:#c3d0dc; }
+.wow-warrior-guide .wow-stat-priority-rank { color:#ffe5b2; }
+@media(max-width:760px) {
+  .wow-warrior-guide .wow-warrior-gear-item-facts { gap:.35rem .65rem; }
+  .wow-warrior-guide .wow-leveling-companion .wow-companion-tree-name { font-size:.78rem; }
+}

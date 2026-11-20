@@ -2277,7 +2277,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
-  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, warriorProfessions: wowPack.warriorProfessions, sources: wowPack.sources, talentClass };
+  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, warriorProfessions: wowPack.warriorProfessions, warriorEquipment: wowPack.warriorEquipment, sources: wowPack.sources, talentClass };
   const stored = new Map();
   const handlers = {};
   const attributes = new Map();
@@ -2343,14 +2343,18 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.ok(panel.innerHTML.includes('What should I equip?'));
   assert.ok(panel.innerHTML.includes('Two-handed weapon'));
   assert.ok(panel.innerHTML.includes('Heavy Copper Maul'));
-  assert.ok(panel.innerHTML.includes('Upcoming · Level 26'));
+  assert.ok(panel.innerHTML.includes('Upcoming · Available at Level 26'));
   assert.ok(panel.innerHTML.includes('weapon DPS'));
   assert.ok(panel.innerHTML.includes('Defender of Dalaran'));
   const accessoryFilter = { dataset: { companionGearFilter: 'accessory' } };
   handlers.click({ target: { closest: selector => selector === '[data-companion-gear-filter]' ? accessoryFilter : null } });
   assert.ok(panel.innerHTML.includes('data-companion-gear-filter="accessory" aria-pressed="true"'));
-  assert.ok(panel.innerHTML.includes('No verified recommendations are recorded in this equipment category.'));
-  assert.ok(!panel.innerHTML.includes('class="wow-warrior-gear-item"'));
+  assert.ok(panel.innerHTML.includes('Raptor Hide Cloak'));
+  assert.ok(!panel.innerHTML.includes('Serpent&#39;s Shoulders'));
+  const armorFilter = { dataset: { companionGearFilter: 'armor' } };
+  handlers.click({ target: { closest: selector => selector === '[data-companion-gear-filter]' ? armorFilter : null } });
+  assert.ok(panel.innerHTML.includes('Serpent&#39;s Shoulders'));
+  assert.ok(!panel.innerHTML.includes('Seal of Sylvanas'));
   const weaponFilter = { dataset: { companionGearFilter: 'weapon' } };
   handlers.click({ target: { closest: selector => selector === '[data-companion-gear-filter]' ? weaponFilter : null } });
   assert.ok(panel.innerHTML.includes('data-companion-gear-filter="weapon" aria-pressed="true"'));
@@ -2791,6 +2795,37 @@ test('Warrior gear guide follows level and specialization data without filling m
   const protection = renderGear('protection', 35);
   assert.ok(protection.includes('Protection · Weapons &amp; Gear · Level 35'));
   assert.ok(protection.includes('No verified Protection equipment guidance or item records are stored yet.'));
+});
+
+test('Warrior equipment recommendations filter by level, faction, specialization, and slot', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = { classRecord: warrior, warriorEquipment: wowPack.warriorEquipment, sources: wowPack.sources };
+  const render = (level, faction, specializationId) => companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId, guideData,
+    storage: { getItem: () => JSON.stringify({ level, faction, specializationId, tab: 'gear' }) }
+  });
+
+  const allianceArms = render(18, 'Alliance', 'arms');
+  assert.ok(allianceArms.includes('Gloves of the Fang'));
+  assert.ok(allianceArms.includes('Upcoming · Available at Level 20'));
+  assert.ok(!allianceArms.includes("Ruga&#39;s Bulwark"));
+  assert.ok(!allianceArms.includes('Kresh&#39;s Back'), 'shield records are Protection-only');
+  assert.ok(allianceArms.includes('data-gear-category="armor" data-gear-slot="Shoulders"'));
+
+  const shieldRecords = wowPack.warriorEquipment.items.filter(item => item.slot === 'Shield');
+  assert.ok(shieldRecords.some(item => item.name === "Ruga's Bulwark" && item.faction === 'Horde'));
+  assert.ok(shieldRecords.some(item => item.name === "Furen's Favor" && item.faction === 'Alliance'));
+  assert.ok(shieldRecords.every(item => item.specializations.includes('protection')));
+
+  const level50Arms = render(50, 'Alliance', 'arms');
+  assert.ok(level50Arms.includes('Fury Visor'));
+  assert.ok(level50Arms.includes('Razorsteel Shoulders'));
+  assert.ok(level50Arms.includes('Diamond Flask'));
+  assert.ok(level50Arms.includes('Required level</strong>Not listed in item record'));
+  const royalSeal = wowPack.warriorEquipment.items.find(item => item.id === 'royal-seal-of-eldrethalas');
+  assert.equal(royalSeal.availabilityLevel, 54);
+  assert.deepEqual(royalSeal.specializations, ['protection']);
 });
 
 test('Warrior talent layout uses full-width equal trees without desktop overflow and stacks responsively', () => {

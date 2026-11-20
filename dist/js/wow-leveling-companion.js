@@ -392,7 +392,15 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
   if (state.tab === 'gear' && classRecord.id === 'warrior') {
     const recordedGuide = specializationGuideContent?.sections?.gear?.equipmentGuide
       || (guideMatchesSpec ? guide?.equipmentGuide : null);
-    const gearGuide = recordedGuide || {
+    const sharedEquipment = guideData.warriorEquipment || {};
+    const sharedItems = (sharedEquipment.items || []).filter(item => item.specializations?.includes(state.specializationId)
+      && (!item.faction || item.faction === state.faction));
+    const gearGuide = recordedGuide ? {
+      ...recordedGuide,
+      items: [...(recordedGuide.items || []), ...sharedItems],
+      slotCoverage: sharedEquipment.slotCoverage || [],
+      emptyState: sharedEquipment.emptyState || ''
+    } : {
       items: [],
       availabilityMessage: `No verified ${specName} equipment guidance or item records are stored yet.`
     };
@@ -627,21 +635,37 @@ function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {
   const renderItem = item => {
     const hasRequirement = Number.isFinite(item.requiredLevel);
     const requirement = hasRequirement ? `Level ${item.requiredLevel}` : 'Not listed in item record';
-    const status = hasRequirement ? (level >= item.requiredLevel ? `Available at ${requirement}` : `Upcoming · ${requirement}`) : 'Required level not listed';
-    return `<article class="wow-warrior-gear-item" data-gear-category="${escapeHtml(item.category)}"><header><h5>${escapeHtml(item.name)}</h5><span>${escapeHtml(status)}</span></header><div class="wow-warrior-gear-item-facts"><span><strong>Required level</strong>${escapeHtml(requirement)}</span><span><strong>Slot</strong>${escapeHtml(item.slot)}</span>${Number.isFinite(item.itemLevel) ? `<span><strong>Item level</strong>${item.itemLevel}</span>` : ''}</div><p><strong>Relevant attributes</strong> ${escapeHtml(item.attributes?.join(' · ') || 'No item attributes are recorded.')}</p><p><strong>Obtain</strong> ${escapeHtml(item.acquisition || 'Acquisition method not recorded.')}</p></article>`;
+    const availabilityLevel = hasRequirement ? item.requiredLevel : Number.isFinite(item.availabilityLevel) ? item.availabilityLevel : null;
+    const availabilityText = hasRequirement ? `Available at ${requirement}` : Number.isFinite(item.availabilityLevel)
+      ? `Source available from level ${item.availabilityLevel}`
+      : 'Source level not listed';
+    const status = availabilityLevel == null ? 'Requirement not listed'
+      : level >= availabilityLevel ? availabilityText : `Upcoming · ${availabilityText}`;
+    const itemName = item.sourceUrl
+      ? `<a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>`
+      : escapeHtml(item.name);
+    const bracket = item.recommendationBracket ? `<span><strong>Bracket</strong>Levels ${escapeHtml(item.recommendationBracket)}</span>` : '';
+    const explanation = item.whyUseful ? `<p><strong>Warrior value</strong> ${escapeHtml(item.whyUseful)}</p>` : '';
+    return `<article class="wow-warrior-gear-item" data-gear-category="${escapeHtml(item.category)}" data-gear-slot="${escapeHtml(item.slot)}"><header><h5>${itemName}</h5><span>${escapeHtml(status)}</span></header><div class="wow-warrior-gear-item-facts"><span><strong>Required level</strong>${escapeHtml(requirement)}</span>${!hasRequirement && Number.isFinite(item.availabilityLevel) ? `<span><strong>Source level</strong>${item.availabilityLevel} (item requirement not listed)</span>` : ''}<span><strong>Slot</strong>${escapeHtml(item.slot)}</span>${bracket}${Number.isFinite(item.itemLevel) ? `<span><strong>Item level</strong>${item.itemLevel}</span>` : ''}</div><p><strong>Relevant attributes</strong> ${escapeHtml(item.attributes?.join(' · ') || 'No item attributes are recorded.')}</p><p><strong>Obtain</strong> ${escapeHtml(item.acquisition || 'Acquisition method not recorded.')}</p>${explanation}</article>`;
   };
+  const groupLevel = item => Number.isFinite(item.requiredLevel) ? item.requiredLevel
+    : Number.isFinite(item.availabilityLevel) ? item.availabilityLevel : null;
   const groups = [
-    ['available', `Available at level ${level}`, visibleItems.filter(item => Number.isFinite(item.requiredLevel) && item.requiredLevel <= level).sort((left, right) => left.requiredLevel - right.requiredLevel)],
-    ['upcoming', 'Upcoming level requirements', visibleItems.filter(item => Number.isFinite(item.requiredLevel) && item.requiredLevel > level).sort((left, right) => left.requiredLevel - right.requiredLevel)],
-    ['unknown', 'Required level not listed', visibleItems.filter(item => !Number.isFinite(item.requiredLevel))]
+    ['available', `Available at level ${level}`, visibleItems.filter(item => groupLevel(item) != null && groupLevel(item) <= level).sort((left, right) => groupLevel(left) - groupLevel(right))],
+    ['upcoming', 'Upcoming level requirements', visibleItems.filter(item => groupLevel(item) != null && groupLevel(item) > level).sort((left, right) => groupLevel(left) - groupLevel(right))],
+    ['unknown', 'Required level or source level not listed', visibleItems.filter(item => groupLevel(item) == null)]
   ].filter(([, , groupItems]) => groupItems.length);
   const equipment = groups.map(([id, title, groupItems]) => `<section class="wow-warrior-gear-group" data-gear-group="${id}"><h5>${escapeHtml(title)}</h5>${groupItems.map(renderItem).join('')}</section>`).join('');
   const filterButtons = categories.map(([category, label]) => `<button type="button" data-companion-gear-filter="${category}" aria-pressed="${category === selectedFilter}">${label}</button>`).join('');
   const noItems = !items.length;
   const noVisibleItems = !visibleItems.length;
+  const categorySlots = gearGuide.slotCoverage?.filter(slot => selectedFilter === 'armor' ? !['Ring', 'Necklace', 'Trinket', 'Cloak'].includes(slot) : selectedFilter === 'accessory' ? ['Ring', 'Necklace', 'Trinket', 'Cloak'].includes(slot) : false) || [];
+  const unrecordedSlots = categorySlots.filter(slot => !items.some(item => item.slot === slot));
   const emptyMessage = noItems
     ? gearGuide.availabilityMessage || 'No verified item-by-item recommendations are recorded for this specialization.'
-    : 'No verified recommendations are recorded in this equipment category.';
+    : noVisibleItems && unrecordedSlots.length
+      ? `${gearGuide.emptyState || 'No verified Warrior recommendation is recorded.'} Slots without records: ${unrecordedSlots.join(', ')}.`
+      : 'No verified recommendations are recorded in this equipment category.';
   return `<div class="wow-warrior-gear-guide" data-warrior-gear-guide>${advice}<section class="wow-warrior-gear-upgrades"><div class="wow-warrior-gear-section-heading"><h4>Equipment upgrades</h4><span>Level ${level} · verified records only</span></div><div class="wow-warrior-gear-filter" role="group" aria-label="Filter equipment by type">${filterButtons}</div><p class="wow-warrior-gear-empty" data-gear-filter-empty role="status"${noVisibleItems ? '' : ' hidden'}>${escapeHtml(emptyMessage)}</p><div class="wow-warrior-gear-groups"${noVisibleItems ? ' hidden' : ''}>${equipment}</div>${gearGuide.upgradeRationale ? `<p class="wow-warrior-gear-rationale"><strong>Why upgrades matter</strong> ${escapeHtml(gearGuide.upgradeRationale)}</p>` : ''}</section></div>`;
 }
 
