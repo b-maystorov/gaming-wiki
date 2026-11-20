@@ -1682,3 +1682,47 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
   .wow-warrior-guide .wow-warrior-gear-item-facts { gap:.35rem .65rem; }
   .wow-warrior-guide .wow-leveling-companion .wow-companion-tree-name { font-size:.78rem; }
 }
+.wow-warrior-guide .wow-warrior-combat { color:#dce5ed; font-size:1rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-combat-disclosure { color:#c2cfda; font-size:.86rem; margin:0 0 .75rem; }
+.wow-warrior-guide .wow-warrior-combat-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem 1.1rem; }
+.wow-warrior-guide .wow-warrior-combat-priority-title { margin:.25rem 0 .1rem; color:#f0d8af; font-size:1.05rem; }
+.wow-warrior-guide .wow-warrior-combat-section { min-width:0; border-top:1px solid #293a4b; padding-top:.45rem; }
+.wow-warrior-guide .wow-warrior-combat-section h4,
+.wow-warrior-guide .wow-warrior-combat-opening h4,
+.wow-warrior-guide .wow-warrior-combat-rage h4 { margin:.2rem 0 .4rem; color:#f0d8af; font-size:1.05rem; }
+.wow-warrior-guide .wow-warrior-combat-section ol,
+.wow-warrior-guide .wow-warrior-combat-opening ol { list-style:none; margin:0; padding:0; }
+.wow-warrior-guide .wow-warrior-combat-step { display:grid; grid-template-columns:1.35rem 2rem minmax(0,1fr); align-items:start; gap:.48rem; padding:.45rem 0; border-bottom:1px solid #1f3040; }
+.wow-warrior-guide .wow-warrior-combat-number { color:#d0a56f; font-weight:750; text-align:center; padding-top:.12rem; }
+.wow-warrior-guide .wow-warrior-combat-icon { display:grid; width:2rem; height:2rem; place-items:center; border:1px solid #81613f; border-radius:5px; background:#182432; color:#e7bf88; font-size:.8rem; font-weight:750; }
+.wow-warrior-guide .wow-warrior-combat-icon img { display:block; width:100%; height:100%; object-fit:cover; border-radius:4px; }
+.wow-warrior-guide .wow-warrior-combat-step-content { min-width:0; }
+.wow-warrior-guide .wow-warrior-combat-ability-line { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:.15rem .5rem; }
+.wow-warrior-guide .wow-warrior-combat-ability-line strong { color:#f1d4a5; font-size:.98rem; }
+.wow-warrior-guide .wow-warrior-combat-ability-line > span { color:#c4d1dd; font-size:.8rem; }
+.wow-warrior-guide .wow-warrior-combat-step-content > p,
+.wow-warrior-guide .wow-warrior-combat-opening > p,
+.wow-warrior-guide .wow-warrior-combat-rage > p { margin:.14rem 0; font-size:.94rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-combat-step details { margin-top:.12rem; color:#bfcdda; font-size:.84rem; }
+.wow-warrior-guide .wow-warrior-combat-step summary { width:max-content; max-width:100%; color:#d3ae7e; cursor:pointer; text-underline-offset:2px; }
+.wow-warrior-guide .wow-warrior-combat-step details p { margin:.25rem 0 .1rem; color:#d0dae3; font-size:.88rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-combat-step.is-new { background:linear-gradient(90deg,rgba(72,142,103,.13),transparent 75%); }
+.wow-warrior-guide .wow-warrior-combat-step.is-new .wow-warrior-combat-ability-line > span { color:#91d6a5; font-weight:700; }
+.wow-warrior-guide .wow-warrior-combat-step.is-locked { opacity:.62; }
+.wow-warrior-guide .wow-warrior-combat-step.is-locked .wow-warrior-combat-ability-line strong,
+.wow-warrior-guide .wow-warrior-combat-step.is-locked .wow-warrior-combat-ability-line > span { color:#9bb0c2; }
+.wow-warrior-guide .wow-warrior-combat-opening,
+.wow-warrior-guide .wow-warrior-combat-rage { margin-top:.6rem; border-top:1px solid #314354; padding-top:.45rem; }
+.wow-warrior-guide .wow-warrior-combat-opening > p { color:#aebdca; font-size:.86rem; }
+.wow-warrior-guide .wow-warrior-combat-empty { color:#b8c6d2; font-size:.94rem; }
+.wow-warrior-guide .wow-warrior-combat-step summary:focus-visible { outline:2px solid #d6ad76; outline-offset:2px; border-radius:2px; }
+@media(max-width:760px) {
+  .wow-warrior-guide .wow-warrior-combat-grid { grid-template-columns:1fr; gap:.3rem; }
+  .wow-warrior-guide .wow-warrior-combat-step { grid-template-columns:1.2rem 1.8rem minmax(0,1fr); gap:.38rem; }
+  .wow-warrior-guide .wow-warrior-combat-icon { width:1.8rem; height:1.8rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .wow-warrior-guide .wow-warrior-combat *,
+  .wow-warrior-guide .wow-warrior-combat *::before,
+  .wow-warrior-guide .wow-warrior-combat *::after { scroll-behavior:auto; animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}

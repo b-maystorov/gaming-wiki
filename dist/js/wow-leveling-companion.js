@@ -1,6 +1,6 @@
-const COMPANION_TABS = ['overview', 'stats', 'talents', 'gear', 'leveling', 'dungeons', 'professions'];
-const WARRIOR_ONLY_TABS = new Set(['dungeons']);
-const COMPANION_TAB_LABELS = { overview: 'Overview', stats: 'Stats', talents: 'Talents', gear: 'Weapons & Gear', leveling: 'Leveling', dungeons: 'Dungeons', professions: 'Professions' };
+const COMPANION_TABS = ['overview', 'stats', 'talents', 'combat', 'gear', 'leveling', 'dungeons', 'professions'];
+const WARRIOR_ONLY_TABS = new Set(['combat', 'dungeons']);
+const COMPANION_TAB_LABELS = { overview: 'Overview', stats: 'Stats', talents: 'Talents', combat: 'Combat', gear: 'Weapons & Gear', leveling: 'Leveling', dungeons: 'Dungeons', professions: 'Professions' };
 const COMPANION_STORAGE_PREFIX = 'bm-wow-leveling-companion-v1:';
 export const WARRIOR_CHECKLIST_STORAGE_KEY = 'bm-warrior-leveling-checklist-v1';
 const WARRIOR_CHECKLIST_CATEGORIES = ['class-quest', 'ability', 'talent', 'equipment', 'dungeon'];
@@ -389,6 +389,16 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       sourceIds: [...new Set(['foreverdb-stats', ...(priority?.sourceIds || []), ...(classRecord.statsGuide.upgradeSourceIds || [])])]
     };
   }
+  if (state.tab === 'combat' && classRecord.id === 'warrior') {
+    const combatGuide = buildWarriorCombatGuide(state, guideData);
+    return {
+      heading: `${specName} · Combat · Level ${state.level}`,
+      warriorCombatGuide: combatGuide,
+      sections: [],
+      notices: [],
+      sourceIds: combatGuide.sourceIds
+    };
+  }
   if (state.tab === 'gear' && classRecord.id === 'warrior') {
     const recordedGuide = specializationGuideContent?.sections?.gear?.equipmentGuide
       || (guideMatchesSpec ? guide?.equipmentGuide : null);
@@ -538,6 +548,51 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
   };
 }
 
+function buildWarriorCombatGuide(state, guideData) {
+  const source = guideData.warriorCombat || {};
+  const specialization = source.specializations?.[state.specializationId];
+  if (!specialization) return { level: state.level, specializationId: state.specializationId, availabilityMessage: 'Verified combat guidance is not loaded for this specialization.', sections: [], openers: [], abilities: [], sourceIds: [] };
+  const client = guideData.combatCatalog || {};
+  const classAbilities = client.classAbilities?.warrior || [];
+  const descriptions = client.spellDescriptions || {};
+  const talentTrees = guideData.talentClass?.trees || [];
+  const abilityNames = [...new Set([
+    ...(specialization.opening || []).map(step => step.ability),
+    ...Object.values(specialization.priorities || {}).flat().map(step => step.ability)
+  ].filter(Boolean))];
+  const abilities = abilityNames.map(name => {
+    const descriptionEntries = Object.entries(descriptions).filter(([key]) => key.startsWith(`Warrior|${name}|`));
+    const spell = descriptionEntries.find(([key]) => key.endsWith('|Rank 1'))?.[1]
+      || descriptionEntries.find(([key]) => key.endsWith('|'))?.[1]
+      || descriptionEntries[0]?.[1];
+    const unlockMatch = spell?.level?.match(/Learned at level (\d+)/i);
+    const exactAbility = classAbilities.find(item => item.name === name);
+    const talent = talentTrees.flatMap(tree => tree.talents || []).find(item => item.name === name && item.icon);
+    // Prefer an exact-name talent icon; class ability icons are used only for known matching records.
+    const trustedClassIcons = new Set(['Rage', 'Thunder Clap', 'Bloodrage', 'Shield Wall', 'Shield Block']);
+    return {
+      name,
+      unlockLevel: unlockMatch ? Number(unlockMatch[1]) : null,
+      description: spell?.description || (trustedClassIcons.has(name) ? exactAbility?.summary : '') || 'No verified ability description is available in the loaded project data.',
+      icon: talent?.icon || (trustedClassIcons.has(name) ? exactAbility?.icon : '') || '',
+      unlocked: !unlockMatch || state.level >= Number(unlockMatch[1]),
+      newAtLevel: Boolean(unlockMatch && state.level === Number(unlockMatch[1]))
+    };
+  });
+  return {
+    level: state.level,
+    specializationId: state.specializationId,
+    specializationName: guideData.classRecord?.specializations?.find(item => item.id === state.specializationId)?.name || state.specializationId,
+    sourceIds: specialization.sourceIds || [],
+    singleTarget: specialization.priorities?.singleTarget || [],
+    multipleEnemies: specialization.priorities?.multipleEnemies || [],
+    defensive: specialization.priorities?.defensive || [],
+    opening: specialization.opening || [],
+    rageManagement: specialization.rageManagement || 'No verified specialization-specific Rage guidance is recorded.',
+    abilities
+  };
+}
+
 function renderTalentTree(state, treeData, escapeHtml) {
   const { tree, allTrees, selectedTree, allocation, validation, selectedTalent } = treeData;
   if (!tree) return '';
@@ -674,6 +729,22 @@ function renderOverviewHighlights(highlights, escapeHtml) {
   return `<div class="wow-warrior-overview-panels">${renderPanel('strengths', 'Strengths', '+', highlights.strengths)}${renderPanel('weaknesses', 'Weaknesses', '−', highlights.weaknesses)}</div>`;
 }
 
+function renderWarriorCombatGuide(data, escapeHtml) {
+  if (!data.specializationName) return `<div class="wow-warrior-combat"><p class="wow-warrior-combat-empty" role="status">${escapeHtml(data.availabilityMessage)}</p></div>`;
+  const abilityByName = new Map(data.abilities.map(ability => [ability.name, ability]));
+  const renderAbility = (name, index, reason) => {
+    const ability = abilityByName.get(name) || { name, unlocked: true, unlockLevel: null, description: 'No verified ability description is available in the loaded project data.', icon: '' };
+    const stateClass = ability.newAtLevel ? ' is-new' : ability.unlocked ? '' : ' is-locked';
+    const level = Number.isFinite(ability.unlockLevel) ? ability.unlockLevel === data.level ? 'Unlocks now · this level' : `Level ${ability.unlockLevel}` : 'Unlock level not listed';
+    const status = ability.newAtLevel ? 'New at this level' : ability.unlocked ? level : `Unavailable · unlocks at ${level.toLowerCase()}`;
+    const icon = ability.icon ? `<img src="${escapeHtml(ability.icon)}" alt="" loading="lazy">` : `<span aria-hidden="true">${escapeHtml(name.split(/\s+/).map(word => word[0]).join('').slice(0, 2))}</span>`;
+    return `<li class="wow-warrior-combat-step${stateClass}"><span class="wow-warrior-combat-number" aria-hidden="true">${index + 1}</span><span class="wow-warrior-combat-icon">${icon}</span><div class="wow-warrior-combat-step-content"><div class="wow-warrior-combat-ability-line"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(status)}</span></div><p>${escapeHtml(reason)}</p><details><summary>Ability details</summary><p>${escapeHtml(ability.description)}</p></details></div></li>`;
+  };
+  const section = (title, steps) => `<section class="wow-warrior-combat-section"><h4>${title}</h4>${steps.length ? `<ol>${steps.map((step, index) => renderAbility(step.ability, index, step.when)).join('')}</ol>` : '<p class="wow-warrior-combat-empty">No verified priorities are recorded for this situation.</p>'}</section>`;
+  const opening = data.opening.length ? `<section class="wow-warrior-combat-opening"><h4>Opening a Fight</h4><ol>${data.opening.map((step, index) => renderAbility(step.ability, index, step.when)).join('')}</ol><p>Use this as a practical opener when conditions fit, not a fixed rotation.</p></section>` : '';
+  return `<div class="wow-warrior-combat" data-warrior-combat data-combat-level="${data.level}" data-combat-specialization="${escapeHtml(data.specializationId)}"><p class="wow-warrior-combat-disclosure">Level ${data.level} · ${escapeHtml(data.specializationName)} · context-based priority list, not a fixed rotation.</p><h4 class="wow-warrior-combat-priority-title">Combat Priority</h4><div class="wow-warrior-combat-grid">${section('Single target', data.singleTarget)}${section('Multiple enemies', data.multipleEnemies)}${section('Defensive situations', data.defensive)}</div>${opening}<section class="wow-warrior-combat-rage"><h4>Rage Management</h4><p>${escapeHtml(data.rageManagement)}</p></section></div>`;
+}
+
 function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all', professionChoice = 'mining-blacksmithing', checklistProgress = [], checklistFilter = 'all', dungeonProgress = {}) {
   const panel = getCompanionPanel(state, guideData, progressionEngine);
   const hideSourceReferences = guideData.classRecord?.id === 'warrior';
@@ -684,6 +755,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const treeData = panel.treeData;
   const statsGuide = panel.statsGuide ? { ...panel.statsGuide, sourceCatalog: Object.fromEntries((guideData.sources || []).map(source => [source.id, source])) } : null;
   const statsPanel = statsGuide ? renderStatsGuide(statsGuide, panel.priority, escapeHtml, hideSourceReferences) : '';
+  const combatPanel = panel.warriorCombatGuide ? renderWarriorCombatGuide(panel.warriorCombatGuide, escapeHtml) : '';
   const gearPanel = panel.gearGuide ? renderWarriorGearGuide(panel.gearGuide, panel.level, gearFilter, escapeHtml) : '';
   const levelingPanel = panel.warriorLeveling ? renderWarriorLevelingGuide(panel.warriorLeveling, escapeHtml, checklistProgress, checklistFilter) : '';
   const dungeonsPanel = panel.warriorDungeons ? renderWarriorDungeonPreparation(panel.warriorDungeons, dungeonProgress, guideData, escapeHtml) : '';
@@ -699,7 +771,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
     : '';
   const tierDisclosure = !hideSourceReferences && treeData?.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : '';
   const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${tierDisclosure}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${combatPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
 }
 
 function renderWarriorProfessionGuide(data, selectedChoice, escapeHtml) {

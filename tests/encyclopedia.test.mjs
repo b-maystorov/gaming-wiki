@@ -2277,7 +2277,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
-  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, warriorProfessions: wowPack.warriorProfessions, warriorEquipment: wowPack.warriorEquipment, sources: wowPack.sources, talentClass };
+  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, warriorCombat: wowPack.warriorCombat, combatCatalog: wowClientData, warriorProfessions: wowPack.warriorProfessions, warriorEquipment: wowPack.warriorEquipment, sources: wowPack.sources, talentClass };
   const stored = new Map();
   const handlers = {};
   const attributes = new Map();
@@ -2730,7 +2730,7 @@ test('Warrior companion tabs omit visible source references while source metadat
   const saved = h.storedValues.get(key);
   const sourceIds = wowPack.classes.find(item => item.id === 'warrior').specializationGuides.arms.sourceIds;
   try {
-    for (const tab of ['overview', 'stats', 'talents', 'gear', 'leveling', 'professions']) {
+    for (const tab of ['overview', 'stats', 'talents', 'combat', 'gear', 'leveling', 'professions']) {
       h.storedValues.set(key, JSON.stringify({ level: 20, specializationId: 'arms', tab }));
       const html = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
       assert.ok(!html.includes('wow-companion-guide-sources'), `${tab} omits generic citations`);
@@ -2826,6 +2826,57 @@ test('Warrior equipment recommendations filter by level, faction, specialization
   const royalSeal = wowPack.warriorEquipment.items.find(item => item.id === 'royal-seal-of-eldrethalas');
   assert.equal(royalSeal.availabilityLevel, 54);
   assert.deepEqual(royalSeal.specializations, ['protection']);
+});
+
+test('Warrior Combat filters unlocks by level and switches specialization priorities', async () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = {
+    classRecord: warrior,
+    warriorCombat: wowPack.warriorCombat,
+    combatCatalog: wowClientData,
+    talentClass: wowClientData.classes.find(item => item.id === 'warrior')
+  };
+  const render = (level, specializationId) => companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId, guideData,
+    storage: { getItem: () => JSON.stringify({ level, specializationId, tab: 'combat' }) }
+  });
+
+  const armsBeforeSlam = render(19, 'arms');
+  assert.ok(armsBeforeSlam.includes('data-combat-level="19"'));
+  assert.ok(armsBeforeSlam.includes('data-combat-specialization="arms"'));
+  assert.ok(armsBeforeSlam.includes('Unavailable · unlocks at level 20'));
+  assert.ok(armsBeforeSlam.includes('class="wow-warrior-combat-step is-locked"'));
+  assert.ok(armsBeforeSlam.includes('Single target') && armsBeforeSlam.includes('Multiple enemies') && armsBeforeSlam.includes('Defensive situations'));
+  assert.ok(armsBeforeSlam.includes('Combat Priority'));
+  assert.ok(armsBeforeSlam.includes('Opening a Fight') && armsBeforeSlam.includes('Rage Management'));
+
+  const armsAtThirty = render(30, 'arms');
+  assert.ok(armsAtThirty.includes('Sweeping Strikes'));
+  assert.ok(armsAtThirty.includes('New at this level'));
+  assert.ok(armsAtThirty.includes('not a fixed rotation'));
+  const renderedIcons = [...armsAtThirty.matchAll(/<img src="(assets\/images\/wow-forever\/icons\/[^"]+)" alt=""/g)];
+  assert.ok(renderedIcons.length > 0, 'matching local Warrior ability icons render when available');
+  for (const [, iconPath] of renderedIcons) assert.ok((await readFile(resolve(root, 'dist', iconPath))).length > 0, `local icon exists: ${iconPath}`);
+
+  const furyAtThirtyFive = render(35, 'fury');
+  assert.ok(furyAtThirtyFive.includes('data-combat-specialization="fury"'));
+  assert.ok(furyAtThirtyFive.includes('Unavailable · unlocks at level 36'));
+  const furyAtThirtySix = render(36, 'fury');
+  assert.ok(furyAtThirtySix.includes('Whirlwind'));
+  assert.ok(furyAtThirtySix.includes('New at this level'));
+  assert.ok(furyAtThirtySix.includes('Berserker Stance'));
+
+  const protectionAtThirtyNine = render(39, 'protection');
+  assert.ok(protectionAtThirtyNine.includes('data-combat-specialization="protection"'));
+  assert.ok(protectionAtThirtyNine.includes('Unavailable · unlocks at level 40'));
+  const protectionAtForty = render(40, 'protection');
+  assert.ok(protectionAtForty.includes('Shield Slam'));
+  assert.ok(protectionAtForty.includes('New at this level'));
+  assert.ok(protectionAtForty.includes('Shield Block'));
+
+  const otherClass = companionModule.renderLevelingCompanion({ classId: 'paladin', currentLevel: 30, selectedSpecialization: 'retribution', guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') } });
+  assert.ok(!otherClass.includes('data-companion-tab="combat"'), 'Combat tab is Warrior-only');
 });
 
 test('Warrior talent layout uses full-width equal trees without desktop overflow and stacks responsively', () => {

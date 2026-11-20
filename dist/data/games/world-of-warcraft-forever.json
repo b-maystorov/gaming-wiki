@@ -1991,6 +1991,120 @@
       {"name":"Upper Blackrock Spire","minLevel":59,"maxLevel":60}
     ]
   },
+  "warriorCombat": {
+    "description": "Leveling fundamentals and situational priority lists. These are priorities, not fixed rotations.",
+    "specializations": {
+      "arms": {
+        "sourceIds": ["icy-arms-leveling"],
+        "opening": [
+          {"ability":"Charge","when":"Open with this before combat when the area is safe; it builds Rage and starts you in melee."},
+          {"ability":"Rend","when":"Apply early only if the target will live through most of the bleed."},
+          {"ability":"Overpower","when":"React to an enemy Dodge or a verified proc and use the opportunity before it expires."},
+          {"ability":"Mortal Strike","when":"At level 40 and above, keep Rage available for this high-priority attack."}
+        ],
+        "priorities": {
+          "singleTarget": [
+            {"ability":"Battle Shout","when":"Keep the group buff active; refresh when needed and Rage permits."},
+            {"ability":"Rend","when":"Apply if the enemy will survive most of its duration; do not refresh on a nearly defeated target."},
+            {"ability":"Overpower","when":"Use on a Dodge or eligible proc before the opportunity expires; it is a key Arms attack."},
+            {"ability":"Slam","when":"From its verified unlock, use when you have surplus Rage after higher-priority attacks; before the Improved Slam talent, time it after an auto attack."},
+            {"ability":"Mortal Strike","when":"From level 40, use when ready while preserving Rage for Rend, Overpower, and an interrupt."},
+            {"ability":"Sunder Armor","when":"Spend spare Rage on durable targets; stack mainly on elites and bosses."},
+            {"ability":"Heroic Strike","when":"Use only with excess Rage because it replaces an auto attack that would generate Rage."}
+          ],
+          "multipleEnemies": [
+            {"ability":"Sweeping Strikes","when":"From level 30, pool Rage and use against two nearby targets so attacks also hit the second enemy."},
+            {"ability":"Cleave","when":"Use as a Rage dump only after preserving Rage for main attacks; focus one enemy to reduce incoming damage."},
+            {"ability":"Rend","when":"Keep it on targets likely to live through most of the bleed, especially when enabling Arms proc talents."},
+            {"ability":"Overpower","when":"Use eligible procs before they expire and on the target that triggered the opportunity."},
+            {"ability":"Whirlwind","when":"From its verified unlock, stance requirements apply; use when several nearby enemies make it worthwhile."}
+          ],
+          "defensive": [
+            {"ability":"Defensive Stance","when":"Use for an emergency reduction in incoming damage or to take an enemy off an ally; stance changes can discard excess Rage."},
+            {"ability":"Demoralizing Shout","when":"Use early against melee enemies when reducing their damage will help you stay in the fight."},
+            {"ability":"Disarm","when":"Use against a dangerous weapon-wielding enemy when its effect is useful."},
+            {"ability":"Pummel","when":"Switch to the required stance and interrupt a dangerous cast when the opportunity warrants the Rage and stance change."},
+            {"ability":"Shield Wall","when":"Reserve for a dangerous burst of incoming damage."}
+          ]
+        },
+        "rageManagement": "Rage comes from attacks, incoming damage, Charge, and Bloodrage. Missed swings generate none; critical auto attacks generate more. Keep enough Rage for Overpower, Mortal Strike once learned, and interrupts. Heroic Strike and Cleave replace an auto attack and its Rage generation, so spend on them only when Rage is excessive. Carry Rage into the next pull when practical."
+      },
+      "fury": {
+        "sourceIds": ["icy-warrior-leveling"],
+        "opening": [
+          {"ability":"Charge","when":"Open with Charge when the area is safe. Before Whirlwind is learned, use Battle Stance; later the source recommends switching to Berserker Stance before reaching the target."},
+          {"ability":"Rend","when":"Before Whirlwind is available, apply only when the target will survive most of the bleed."},
+          {"ability":"Whirlwind","when":"From level 36, use as the main attack while remaining in Berserker Stance."},
+          {"ability":"Bloodthirst","when":"From level 40, use between Whirlwind casts and retain Rage for the next Whirlwind."}
+        ],
+        "priorities": {
+          "singleTarget": [
+            {"ability":"Battle Shout","when":"Keep the group buff active; use Bloodrage to prepare Rage or prevent decay, spaced between other Rage and healing effects."},
+            {"ability":"Charge","when":"Open when safe; stance guidance changes after Berserker Stance and Whirlwind become available."},
+            {"ability":"Rend","when":"Before level 36, apply if the enemy will survive the bleed; stop using it once Whirlwind is learned."},
+            {"ability":"Overpower","when":"Before level 36, use on a Dodge proc when low on Rage and before it expires."},
+            {"ability":"Whirlwind","when":"From level 36, prioritize this main attack and stay in Berserker Stance."},
+            {"ability":"Bloodthirst","when":"From level 40, use while Whirlwind is on cooldown and preserve Rage for the next Whirlwind."},
+            {"ability":"Execute","when":"Use as a finisher below its verified health threshold when spending Rage will secure the kill."},
+            {"ability":"Heroic Strike","when":"Use only with excess Rage after preserving enough for main attacks and interrupts."}
+          ],
+          "multipleEnemies": [
+            {"ability":"Whirlwind","when":"From level 36, use against nearby enemies and keep the required Berserker Stance."},
+            {"ability":"Cleave","when":"Use for a second nearby enemy only when Rage remains after higher-priority attacks."},
+            {"ability":"Bloodthirst","when":"Use between Whirlwind casts from level 40; avoid delaying the next Whirlwind."},
+            {"ability":"Battle Shout","when":"Maintain the party buff and avoid spreading damage so widely that enemies stay alive longer."}
+          ],
+          "defensive": [
+            {"ability":"Defensive Stance","when":"Use for an emergency defensive or to taunt an enemy from an ally; return to your damage stance when safe."},
+            {"ability":"Berserker Rage","when":"From its unlock, use to break or prevent Fear and Incapacitate effects; avoid wasting it before a likely control effect."},
+            {"ability":"Pummel","when":"Use from the required stance to interrupt a dangerous cast."},
+            {"ability":"Disarm","when":"Use against dangerous weapon-wielding enemies when it can reduce pressure."},
+            {"ability":"Shield Wall","when":"Reserve for a dangerous burst of incoming damage."}
+          ]
+        },
+        "rageManagement": "Rage comes from auto attacks, incoming damage, Charge, and Bloodrage; Fury talents can add Rage from weapon attacks. Misses generate none, and critical auto attacks generate more. Pool enough for Whirlwind and Bloodthirst once learned. Space Rage-generating abilities rather than activating all together when Gore Drinker healing stacks are relevant. Heroic Strike and Cleave replace a Rage-generating auto attack, so reserve them for excess Rage."
+      },
+      "protection": {
+        "sourceIds": ["icy-protection-leveling"],
+        "opening": [
+          {"ability":"Charge","when":"When safe, Charge before combat. Until the source-listed Vanguard talent at level 25, use Battle Stance for Charge and then switch to Defensive Stance."},
+          {"ability":"Defensive Stance","when":"Use as your main stance after opening; it improves mitigation and threat, and enables core tank abilities."},
+          {"ability":"Rend","when":"Apply early if the target will survive most of the bleed."},
+          {"ability":"Shield Block","when":"Use against melee attacks to mitigate hits and help make Revenge available."},
+          {"ability":"Revenge","when":"Use when a Block, Dodge, or Parry makes it available; it is an efficient core attack."}
+        ],
+        "priorities": {
+          "singleTarget": [
+            {"ability":"Battle Shout","when":"Keep the group buff active when Rage allows; use Bloodrage between pulls to build Rage and limit decay."},
+            {"ability":"Shield Slam","when":"From level 40, prioritize when Rage allows; if Rage is low, use Revenge first."},
+            {"ability":"Revenge","when":"Use whenever available after a Block, Dodge, or Parry; keep enemies in front so defensive reactions can occur."},
+            {"ability":"Shield Block","when":"Use against melee attacks to reduce damage and help activate Revenge; it is not useful against attacks that cannot be blocked."},
+            {"ability":"Rend","when":"Apply early only if the target will survive most of the bleed."},
+            {"ability":"Sunder Armor","when":"Spend extra Rage on long-lived targets; build five stacks mainly on bosses."},
+            {"ability":"Heroic Strike","when":"Use only with excessive Rage after reserving enough for Shield Slam, Revenge, or an interrupt."}
+          ],
+          "multipleEnemies": [
+            {"ability":"Demoralizing Shout","when":"Use early to reduce incoming physical pressure from a pack."},
+            {"ability":"Thunder Clap","when":"Use to damage and slow nearby enemies; maintain threat on targets outside its target cap."},
+            {"ability":"Shield Block","when":"Use against melee attackers to mitigate and help activate Revenge."},
+            {"ability":"Shield Slam","when":"Use when available and Rage permits, then switch targets as needed to spread dungeon threat."},
+            {"ability":"Revenge","when":"Use after a Block, Dodge, or Parry and rotate targets to build threat across a dungeon pack."},
+            {"ability":"Cleave","when":"Spend excess Rage on a second nearby enemy after preserving resources for core tank abilities."}
+          ],
+          "defensive": [
+            {"ability":"Defensive Stance","when":"Remain here as your main tank stance for mitigation, threat, Taunt, and core Protection abilities."},
+            {"ability":"Shield Block","when":"Use against blockable melee attacks when mitigation or an opportunity to trigger Revenge matters."},
+            {"ability":"Demoralizing Shout","when":"Reduce incoming physical damage from nearby enemies when useful."},
+            {"ability":"Taunt","when":"Use on a specific enemy that has stopped attacking you, then build threat before switching targets."},
+            {"ability":"Disarm","when":"Use against especially dangerous weapon-wielding enemies."},
+            {"ability":"Pummel","when":"Switch to the required stance and interrupt a dangerous cast when the stance and Rage tradeoff is worthwhile."},
+            {"ability":"Shield Wall","when":"Reserve for a dangerous burst of incoming damage."}
+          ]
+        },
+        "rageManagement": "Rage comes from auto attacks, incoming damage, Charge, and Bloodrage. Protection also gains Rage through blocks and defensive reactions supported by its talents. Auto attack Rage is normalized; missed attacks generate none and critical auto attacks generate more. Save enough for Shield Slam and Revenge, especially while tanking. Heroic Strike and Cleave replace Rage-generating auto attacks, so use them only after your main threat and survival needs are covered."
+      }
+    }
+  },
   "warriorEquipment": {
     "sourceIds": ["icy-protection-leveling", "icy-warrior-class-quests"],
     "slotCoverage": ["Head", "Chest", "Shoulders", "Hands", "Legs", "Waist", "Feet", "Wrists", "Shield", "Ring", "Necklace", "Trinket", "Cloak"],
