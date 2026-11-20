@@ -2502,7 +2502,7 @@ test('Warrior leveling guide filters faction zones, updates by level, shows upco
   });
   assert.match(missingRanges, /No faction-matched zone with a verified level range is recorded/);
   assert.match(missingRanges, /No verified dungeon range is recorded for this level/);
-  assert.match(missingRanges, /No later specialization milestones are recorded/);
+  assert.match(missingRanges, /Leveling Checklist/);
   assert.ok(wowPack.warriorLeveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.ok(wowPack.warriorLeveling.dungeonSourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.match(appSource, /guideData:\s*\{[\s\S]*?warriorLeveling:\s*wowData\.warriorLeveling/, 'browser rerender initialization receives the same structured data as initial render');
@@ -2520,6 +2520,36 @@ test('Warrior leveling guide filters faction zones, updates by level, shows upco
       else assert.match(result, /class="wow-warrior-dungeon-list"/, `${faction} has relevant dungeons at level ${level}`);
     }
   }
+});
+
+test('Warrior checklist progress is separate, persistent, manually checked, and grouped by level', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const key = module.WARRIOR_CHECKLIST_STORAGE_KEY;
+  const storage = { values: new Map(), getItem(name) { return this.values.get(name) ?? null; }, setItem(name, value) { this.values.set(name, String(value)); } };
+  const tasks = [
+    { id: 'quest-10', level: 10, category: 'class-quest' },
+    { id: 'dungeon-12', level: 12, maxLevel: 18, category: 'dungeon' },
+    { id: 'weapon-20', level: 20, category: 'equipment' }
+  ];
+  assert.deepEqual(JSON.parse(JSON.stringify(module.groupWarriorChecklistTasks(tasks, 12, [], 'all'))), {
+    available: ['dungeon-12'].map(id => tasks.find(task => task.id === id)),
+    upcoming: [tasks[2]], completed: [tasks[0]]
+  });
+  assert.equal(storage.values.has('bm-wow-leveling-companion-v1:warrior'), false, 'checklist state uses its own key and does not alter talents or companion preferences');
+  storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 1, faction: 'Alliance', tab: 'leveling', specializationId: 'arms' }));
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = { classRecord: warrior, specializationGuides: warrior.specializationGuides, warriorLeveling: wowPack.warriorLeveling };
+  const render = level => {
+    storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level, faction: 'Alliance', tab: 'leveling', specializationId: 'arms' }));
+    return module.renderLevelingCompanion({ classId: 'warrior', currentLevel: level, selectedSpecialization: 'arms', guideData, storage });
+  };
+  assert.match(render(9), /Available Now/);
+  assert.doesNotMatch(render(9), /data-warrior-checklist-task="milestone-10-class-quest" checked/);
+  assert.equal(module.saveWarriorChecklistProgress(['milestone-10-class-quest'], storage), true);
+  assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorChecklistProgress(storage))), ['milestone-10-class-quest']);
+  assert.match(render(10), /data-warrior-checklist-task="milestone-10-class-quest" checked/, 'only the manually saved task remains checked when level changes');
+  assert.match(render(10), /value="class-quest"/);
+  assert.match(render(10), /value="dungeon"/);
 });
 
 test('leveling companion renders only complete source-backed builds and safely handles blocked storage', () => {

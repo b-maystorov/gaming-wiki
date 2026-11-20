@@ -1092,6 +1092,26 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-companion-result p,.wow-warrior-guide .wow-companion-result li { color:#d5dfe8; font-size:.82rem; line-height:1.58; }
 .wow-warrior-guide .wow-companion-result ul { display:grid; gap:.2rem; margin:.25rem 0 0; padding-left:1rem; }
 .wow-warrior-guide .wow-warrior-leveling-guide { display:grid; grid-column:1/-1; gap:.7rem; min-width:0; color:#d8e1e9; }
+.wow-warrior-guide .wow-warrior-checklist { display:grid; gap:.45rem; padding:.65rem .75rem; border:1px solid #34495d; border-left:3px solid #b38b56; border-radius:5px; background:linear-gradient(110deg,#172737,#101b27); }
+.wow-warrior-guide .wow-warrior-checklist-heading { display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+.wow-warrior-guide .wow-warrior-checklist-heading h4 { margin:0; color:#f0e4cf; font-size:.94rem; }
+.wow-warrior-guide .wow-warrior-checklist-heading p { margin:.15rem 0 0; color:#aebdca; font-size:.7rem; }
+.wow-warrior-guide .wow-warrior-checklist-heading label { display:grid; gap:.15rem; color:#c7d2dc; font-size:.65rem; }
+.wow-warrior-guide .wow-warrior-checklist-heading select { min-height:34px; padding:.3rem .45rem; border:1px solid #46586c; border-radius:4px; color:#e1e9f1; background:#101b27; font:500 .74rem system-ui,sans-serif; }
+.wow-warrior-guide .wow-warrior-checklist :is(select,input):focus-visible { outline:2px solid #a8d5fa; outline-offset:2px; }
+.wow-warrior-guide .wow-warrior-checklist-group { min-width:0; padding:.4rem .55rem; border:1px solid #574a37; border-left:2px solid #b68d55; border-radius:4px; background:#171f27; }
+.wow-warrior-guide .wow-warrior-checklist-group.is-upcoming { border-color:#344c60; border-left-color:#6989a5; }
+.wow-warrior-guide .wow-warrior-checklist-group.is-completed { border-color:#315440; border-left-color:#65a77b; }
+.wow-warrior-guide .wow-warrior-checklist-group h5 { display:flex; justify-content:space-between; margin:0 0 .2rem; color:#dfc89e; font-size:.72rem; }
+.wow-warrior-guide .wow-warrior-checklist-group.is-upcoming h5 { color:#b9cfe0; }
+.wow-warrior-guide .wow-warrior-checklist-group.is-completed h5 { color:#a8d3b4; }
+.wow-warrior-guide .wow-warrior-checklist-group h5 span { color:#9fadb9; font-weight:500; }
+.wow-warrior-guide .wow-warrior-checklist-group ul { display:grid; gap:.1rem; margin:0; padding:0; list-style:none; }
+.wow-warrior-guide .wow-warrior-checklist-item label { display:grid; grid-template-columns:1rem minmax(0,1fr); align-items:start; gap:.45rem; padding:.25rem .1rem; cursor:pointer; }
+.wow-warrior-guide .wow-warrior-checklist-item input { width:.95rem; height:.95rem; margin:.12rem 0 0; accent-color:#69ad7e; }
+.wow-warrior-guide .wow-warrior-checklist-item strong { display:block; color:#e4eaf0; font-size:.73rem; }
+.wow-warrior-guide .wow-warrior-checklist-item small { display:block; margin-top:.08rem; color:#aebbc6; font-size:.68rem; line-height:1.4; }
+.wow-warrior-guide .wow-warrior-checklist-item.is-complete strong,.wow-warrior-guide .wow-warrior-checklist-item.is-complete small { color:#9fc4a9; }
 .wow-warrior-guide .wow-warrior-professions { display:grid; grid-column:1/-1; gap:.7rem; min-width:0; color:#d8e1e9; }
 .wow-warrior-guide .wow-warrior-professions-intro { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.8rem .9rem; border:1px solid #344c60; border-left:3px solid #b38b56; border-radius:5px; background:linear-gradient(110deg,#182a3a,#111c28); }
 .wow-warrior-guide .wow-warrior-professions-intro .wow-eyebrow { margin:0 0 .2rem; color:#c7a873; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; }
@@ -1484,6 +1504,8 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 @media(max-width:580px) {
   .wow-warrior-guide .wow-warrior-leveling-toolbar { align-items:stretch; flex-direction:column; }
   .wow-warrior-guide .wow-warrior-leveling-toolbar select { width:100%; }
+  .wow-warrior-guide .wow-warrior-checklist-heading { align-items:stretch; flex-direction:column; }
+  .wow-warrior-guide .wow-warrior-checklist-heading select { width:100%; }
 }
 @media(prefers-reduced-motion:reduce) {
   .wow-warrior-guide :is(a,button,summary),.wow-warrior-guide .wow-companion-panel { transition:none; }

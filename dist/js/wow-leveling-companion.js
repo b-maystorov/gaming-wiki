@@ -1,6 +1,22 @@
 const COMPANION_TABS = ['overview', 'stats', 'talents', 'gear', 'leveling', 'professions'];
 const COMPANION_TAB_LABELS = { overview: 'Overview', stats: 'Stats', talents: 'Talents', gear: 'Weapons & Gear', leveling: 'Leveling', professions: 'Professions' };
 const COMPANION_STORAGE_PREFIX = 'bm-wow-leveling-companion-v1:';
+export const WARRIOR_CHECKLIST_STORAGE_KEY = 'bm-warrior-leveling-checklist-v1';
+const WARRIOR_CHECKLIST_CATEGORIES = ['class-quest', 'ability', 'talent', 'equipment', 'dungeon'];
+
+export function loadWarriorChecklistProgress(storage) {
+  try {
+    const value = JSON.parse((storage ?? globalThis.localStorage)?.getItem(WARRIOR_CHECKLIST_STORAGE_KEY) || '[]');
+    return Array.isArray(value) ? value.filter(id => typeof id === 'string') : [];
+  } catch { return []; }
+}
+
+export function saveWarriorChecklistProgress(progress, storage) {
+  try {
+    (storage ?? globalThis.localStorage)?.setItem(WARRIOR_CHECKLIST_STORAGE_KEY, JSON.stringify([...new Set(progress.filter(id => typeof id === 'string'))]));
+    return true;
+  } catch { return false; }
+}
 
 function escapeText(value) {
   return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
@@ -77,7 +93,11 @@ function buildWarriorLevelingData(state, guideData, tabContent) {
   const upcomingZones = zones.filter(zone => Number(zone.minLevel) > state.level)
     .sort((left, right) => left.minLevel - right.minLevel || left.name.localeCompare(right.name)).slice(0, 4);
   const dungeons = (reference.dungeons || []).filter(dungeon => rangesOverlap(state.level, dungeon.minLevel, dungeon.maxLevel));
-  const upcomingMilestones = (tabContent?.milestones || []).filter(milestone => Number(milestone.level) > state.level).slice(0, 3);
+  // Arms stores the verified Warrior-wide unlock list; reuse it when another spec has none.
+  const recordedMilestones = tabContent?.milestones?.length
+    ? tabContent.milestones
+    : guideData.classRecord?.specializationGuides?.arms?.sections?.leveling?.milestones || [];
+  const milestones = recordedMilestones.filter(milestone => Number.isFinite(Number(milestone.level)));
   const unknownNames = [...new Set((tabContent?.zones?.[faction] || []).filter(name => !(reference.zones || []).some(zone => zone.name === name)))];
   return {
     faction,
@@ -85,10 +105,55 @@ function buildWarriorLevelingData(state, guideData, tabContent) {
     currentZones,
     upcomingZones,
     dungeons,
-    upcomingMilestones,
+    milestones,
+    checklistTasks: buildWarriorChecklistTasks(milestones, reference),
     unknownNames,
     sourceIds: [...new Set([...(reference.sourceIds || []), ...(reference.dungeonSourceIds || [])])]
   };
+}
+
+function buildWarriorChecklistTasks(milestones, reference) {
+  const tasks = milestones.flatMap(item => {
+    if (item.kind === 'Training and build milestone') return [
+      { id: `milestone-${item.level}-equipment`, level: Number(item.level), category: 'equipment', title: `Level ${item.level} · Equipment training`, text: 'Plate Armor training and 60% mount availability.' },
+      { id: `milestone-${item.level}-talent`, level: Number(item.level), category: 'talent', title: `Level ${item.level} · Arms build milestone`, text: 'Mortal Strike is a milestone in the cited Arms leveling build.' }
+    ];
+    return [{
+      id: `milestone-${item.level}-${item.kind.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+      level: Number(item.level), category: item.kind === 'Class quest' ? 'class-quest'
+        : item.kind.toLowerCase().includes('talent') || item.kind.toLowerCase().includes('build') ? 'talent' : 'ability',
+      title: `Level ${item.level} · ${item.kind}`, text: item.text
+    }];
+  });
+  tasks.push({ id: 'weapon-training-reminder', level: 1, category: 'equipment', title: 'Keep your current weapon skill trained', text: 'Compare upgrades with your equipped weapon; no level-specific weapon weights are recorded.' });
+  tasks.push({ id: 'dual-wield-training', level: 20, category: 'equipment', title: 'Train Dual Wield', text: 'The Warrior starter guide records Dual Wield training at level 20; maintain both weapon skills afterward.' });
+  for (const dungeon of reference.dungeons || []) tasks.push({
+    id: `dungeon-${dungeon.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+    level: Number(dungeon.minLevel), maxLevel: Number(dungeon.maxLevel), category: 'dungeon', title: dungeon.name,
+    text: `Recorded opportunity range: levels ${dungeon.minLevel}–${dungeon.maxLevel}.`
+  });
+  return tasks.filter(task => Number.isFinite(task.level) && WARRIOR_CHECKLIST_CATEGORIES.includes(task.category));
+}
+
+export function groupWarriorChecklistTasks(tasks, level, progress, filter = 'all') {
+  const selected = new Set(progress);
+  const groups = { available: [], upcoming: [], completed: [] };
+  const nearbyDungeons = tasks.filter(task => task.category === 'dungeon' && task.maxLevel >= level);
+  const dungeonIds = new Set([
+    ...nearbyDungeons.filter(task => task.level <= level).map(task => task.id),
+    ...nearbyDungeons.filter(task => task.level > level).sort((a, b) => a.level - b.level).slice(0, 4).map(task => task.id),
+    ...tasks.filter(task => task.category === 'dungeon' && selected.has(task.id)).map(task => task.id)
+  ]);
+  for (const task of tasks) {
+    if (filter !== 'all' && task.category !== filter) continue;
+    if (task.category === 'dungeon' && !dungeonIds.has(task.id)) continue;
+    if (selected.has(task.id) || (task.maxLevel != null && task.maxLevel < level) || (task.maxLevel == null && task.level < level)) {
+      if (task.category !== 'dungeon' || selected.has(task.id)) groups.completed.push(task);
+    }
+    else if (task.level > level) groups.upcoming.push(task);
+    else groups.available.push(task);
+  }
+  return groups;
 }
 
 function buildWarriorProfessionGuide(state, guideData) {
@@ -480,7 +545,7 @@ function renderOverviewHighlights(highlights, escapeHtml) {
   return `<div class="wow-warrior-overview-panels">${renderPanel('strengths', 'Strengths', '+', highlights.strengths)}${renderPanel('weaknesses', 'Weaknesses', '−', highlights.weaknesses)}</div>`;
 }
 
-function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all', professionChoice = 'mining-blacksmithing') {
+function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all', professionChoice = 'mining-blacksmithing', checklistProgress = [], checklistFilter = 'all') {
   const panel = getCompanionPanel(state, guideData, progressionEngine);
   const hideSourceReferences = guideData.classRecord?.id === 'warrior';
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
@@ -491,7 +556,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const statsGuide = panel.statsGuide ? { ...panel.statsGuide, sourceCatalog: Object.fromEntries((guideData.sources || []).map(source => [source.id, source])) } : null;
   const statsPanel = statsGuide ? renderStatsGuide(statsGuide, panel.priority, escapeHtml, hideSourceReferences) : '';
   const gearPanel = panel.gearGuide ? renderWarriorGearGuide(panel.gearGuide, panel.level, gearFilter, escapeHtml) : '';
-  const levelingPanel = panel.warriorLeveling ? renderWarriorLevelingGuide(panel.warriorLeveling, escapeHtml) : '';
+  const levelingPanel = panel.warriorLeveling ? renderWarriorLevelingGuide(panel.warriorLeveling, escapeHtml, checklistProgress, checklistFilter) : '';
   const professionsPanel = panel.warriorProfessionGuide ? renderWarriorProfessionGuide(panel.warriorProfessionGuide, professionChoice, escapeHtml) : '';
   const overviewContent = panel.overviewHighlights
     ? `<div class="wow-warrior-overview"><div class="wow-warrior-overview-context">${sections}</div>${renderOverviewHighlights(panel.overviewHighlights, escapeHtml)}</div>`
@@ -531,13 +596,16 @@ function renderWarriorProfessionGuide(data, selectedChoice, escapeHtml) {
   return `<div class="wow-warrior-professions" data-warrior-professions><div class="wow-warrior-professions-intro"><div><p class="wow-eyebrow">Selected path · ${escapeHtml(data.specialization)}</p><h4>Choose a profession direction</h4></div><span>Character level ${data.level}</span></div><p class="wow-warrior-profession-disclosure">${escapeHtml(guide.recommendationDisclosure)}</p><div class="wow-warrior-profession-combinations" role="group" aria-label="Compare profession combinations">${combinations}</div><section class="wow-warrior-profession-section"><h4>What should I work on now?</h4><p>${escapeHtml(data.activity)}</p><p>Profession skill and character level are separate gates. Being high enough level does not mean your profession skill requirement is met.</p></section><section class="wow-warrior-profession-section"><h4>Profession rank requirements</h4><div class="wow-warrior-profession-table-wrap"><table><thead><tr><th scope="col">Rank</th><th scope="col">Profession skill</th><th scope="col">Crafting character level</th><th scope="col">Gathering character level</th></tr></thead><tbody>${gates}</tbody></table></div></section><section class="wow-warrior-profession-section"><h4>Verified Warrior craft example</h4>${examples || '<p class="wow-warrior-profession-empty">No profession recipe examples are recorded.</p>'}</section><section class="wow-warrior-profession-section"><h4>Warrior camp benefits</h4><ul class="wow-warrior-camp-benefits">${campBenefits}</ul><p class="wow-warrior-profession-empty">Each listed camp feature requires profession skill 20. Profession skill is not character level.</p></section><section class="wow-warrior-profession-section"><h4>Useful secondary skills</h4><div class="wow-warrior-secondary-grid">${secondary}</div><p class="wow-warrior-profession-empty">Secondary skills do not use either primary profession slot.</p></section></div>`;
 }
 
-function renderWarriorLevelingGuide(data, escapeHtml) {
+function renderWarriorLevelingGuide(data, escapeHtml, checklistProgress = [], checklistFilter = 'all') {
   const zoneCard = (zone, upcoming = false) => `<article class="wow-warrior-level-zone${upcoming ? ' is-upcoming' : ' is-current'}"><div><h5>${escapeHtml(zone.name)}</h5><span>${escapeHtml(zone.minLevel)}–${escapeHtml(zone.maxLevel)}</span></div><p>${upcoming ? `Source-recommended range begins at level ${zone.minLevel}.` : `Your level is within this source-recommended range (${zone.minLevel}–${zone.maxLevel}).`}</p><small>${zone.faction === 'Contested' ? 'Contested zone' : `${escapeHtml(zone.faction)} access`}</small></article>`;
   const dungeonRows = data.dungeons.map(dungeon => `<li><strong>${escapeHtml(dungeon.name)}</strong><span>Levels ${escapeHtml(dungeon.minLevel)}–${escapeHtml(dungeon.maxLevel)}</span></li>`).join('');
-  const milestones = data.upcomingMilestones.map(item => `<li><span>Level ${escapeHtml(item.level)}</span><p>${escapeHtml(item.text)}</p></li>`).join('');
+  const checklistGroups = groupWarriorChecklistTasks(data.checklistTasks, data.level, checklistProgress, checklistFilter);
+  const checklistItem = task => `<li class="wow-warrior-checklist-item${checklistProgress.includes(task.id) ? ' is-complete' : ''}"><label><input type="checkbox" data-warrior-checklist-task="${escapeHtml(task.id)}"${checklistProgress.includes(task.id) ? ' checked' : ''}><span><strong>${escapeHtml(task.title)}</strong><small>${escapeHtml(task.text)}</small></span></label></li>`;
+  const checklistSection = (id, heading, tasks) => `<section class="wow-warrior-checklist-group is-${id}"><h5>${heading}<span>${tasks.length}</span></h5>${tasks.length ? `<ul>${tasks.map(checklistItem).join('')}</ul>` : '<p class="wow-warrior-leveling-empty">No milestones in this section.</p>'}</section>`;
+  const talentAvailable = data.checklistTasks.some(task => task.category === 'talent');
   const current = data.currentZones.map(zone => zoneCard(zone)).join('');
   const upcoming = data.upcomingZones.map(zone => zoneCard(zone, true)).join('');
-  return `<div class="wow-warrior-leveling-guide" data-warrior-leveling-guide><div class="wow-warrior-leveling-toolbar"><div><h4>Where should I go now?</h4><p>Level-fit zone options, not a ranked route.</p></div><label for="warrior-leveling-faction">Faction<select id="warrior-leveling-faction" data-companion-faction aria-label="Choose faction"><option value="Alliance"${data.faction === 'Alliance' ? ' selected' : ''}>Alliance</option><option value="Horde"${data.faction === 'Horde' ? ' selected' : ''}>Horde</option></select></label></div><p class="wow-warrior-leveling-note">Zone ranges are source-recommended ranges; faction filtering shows faction-specific and contested zones.</p><section class="wow-warrior-leveling-section"><h4>Current options <span>Level ${data.level}</span></h4>${current ? `<div class="wow-warrior-level-zones">${current}</div>` : '<p class="wow-warrior-leveling-empty">No faction-matched zone with a verified level range is recorded for this level.</p>'}</section><section class="wow-warrior-leveling-section is-upcoming"><h4>Coming up next <span>Zones</span></h4>${upcoming ? `<div class="wow-warrior-level-zones">${upcoming}</div>` : '<p class="wow-warrior-leveling-empty">No upcoming faction-matched zone range is recorded.</p>'}</section><section class="wow-warrior-leveling-section"><h4>Dungeons for this level</h4>${dungeonRows ? `<ul class="wow-warrior-dungeon-list">${dungeonRows}</ul>` : '<p class="wow-warrior-leveling-empty">No verified dungeon range is recorded for this level.</p>'}</section><section class="wow-warrior-leveling-section"><h4>Upcoming leveling milestones</h4>${milestones ? `<ol class="wow-warrior-milestone-list">${milestones}</ol>` : '<p class="wow-warrior-leveling-empty">No later specialization milestones are recorded. Zone and dungeon ranges remain available above.</p>'}</section>${data.unknownNames.length ? `<p class="wow-warrior-leveling-empty">Additional faction guide options have no level range in the source data: ${data.unknownNames.map(escapeHtml).join(', ')}.</p>` : ''}</div>`;
+  return `<div class="wow-warrior-leveling-guide" data-warrior-leveling-guide><section class="wow-warrior-checklist" aria-labelledby="warrior-checklist-title"><div class="wow-warrior-checklist-heading"><div><h4 id="warrior-checklist-title">Leveling Checklist</h4><p>Track milestones manually; changing level never completes a task.</p></div><label for="warrior-checklist-filter">Show<select id="warrior-checklist-filter" data-warrior-checklist-filter><option value="all"${checklistFilter === 'all' ? ' selected' : ''}>All tasks</option><option value="class-quest"${checklistFilter === 'class-quest' ? ' selected' : ''}>Class quests</option><option value="ability"${checklistFilter === 'ability' ? ' selected' : ''}>Abilities</option><option value="talent"${checklistFilter === 'talent' ? ' selected' : ''}>Talents</option><option value="equipment"${checklistFilter === 'equipment' ? ' selected' : ''}>Equipment</option><option value="dungeon"${checklistFilter === 'dungeon' ? ' selected' : ''}>Dungeons</option></select></label></div>${checklistSection('available', 'Available Now', checklistGroups.available)}${checklistSection('upcoming', 'Coming Up', checklistGroups.upcoming)}${checklistSection('completed', 'Completed / Earlier Levels', checklistGroups.completed)}${!talentAvailable ? '<p class="wow-warrior-leveling-empty">No exact talent milestone is recorded in the verified Warrior leveling data.</p>' : ''}</section><div class="wow-warrior-leveling-toolbar"><div><h4>Where should I go now?</h4><p>Level-fit zone options, not a ranked route.</p></div><label for="warrior-leveling-faction">Faction<select id="warrior-leveling-faction" data-companion-faction aria-label="Choose faction"><option value="Alliance"${data.faction === 'Alliance' ? ' selected' : ''}>Alliance</option><option value="Horde"${data.faction === 'Horde' ? ' selected' : ''}>Horde</option></select></label></div><p class="wow-warrior-leveling-note">Zone ranges are source-recommended ranges; faction filtering shows faction-specific and contested zones.</p><section class="wow-warrior-leveling-section"><h4>Current options <span>Level ${data.level}</span></h4>${current ? `<div class="wow-warrior-level-zones">${current}</div>` : '<p class="wow-warrior-leveling-empty">No faction-matched zone with a verified level range is recorded for this level.</p>'}</section><section class="wow-warrior-leveling-section is-upcoming"><h4>Coming up next <span>Zones</span></h4>${upcoming ? `<div class="wow-warrior-level-zones">${upcoming}</div>` : '<p class="wow-warrior-leveling-empty">No upcoming faction-matched zone range is recorded.</p>'}</section><section class="wow-warrior-leveling-section"><h4>Dungeons for this level</h4>${dungeonRows ? `<ul class="wow-warrior-dungeon-list">${dungeonRows}</ul>` : '<p class="wow-warrior-leveling-empty">No verified dungeon range is recorded for this level.</p>'}</section>${data.unknownNames.length ? `<p class="wow-warrior-leveling-empty">Additional faction guide options have no level range in the source data: ${data.unknownNames.map(escapeHtml).join(', ')}.</p>` : ''}</div>`;
 }
 
 export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, escapeHtml = escapeText, storage } = {}) {
@@ -556,7 +624,8 @@ export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpe
   const levelControl = classId === 'warrior'
     ? `<div class="wow-companion-level-stepper"><button type="button" data-companion-level-step="-1"${state.level <= 1 ? ' disabled' : ''}>← Previous</button>${levelSlider}<button type="button" data-companion-level-step="1"${state.level >= 60 ? ' disabled' : ''}>Next →</button></div>`
     : levelSlider;
-  return `<section class="wow-leveling-companion" data-leveling-companion data-class-id="${escapeHtml(classId)}" style="--class-accent:${escapeHtml(classRecord.color || '#c79c6e')}" aria-labelledby="${prefix}-companion-title"><header><div><p class="wow-companion-kicker">Field guide · ${escapeHtml(classRecord.name || classId)}</p><h2 id="${prefix}-companion-title">${title}</h2></div><span data-companion-level-badge>Level ${state.level}</span></header><div class="wow-companion-controls"><label for="${prefix}-companion-level">Current level <output data-companion-level>${state.level}</output></label>${levelControl}${specializationControl}</div><div class="wow-companion-tabs" role="tablist" aria-label="${escapeHtml(classRecord.name || classId)} companion guide">${tabs}</div><div class="wow-companion-panel" id="${prefix}-companion-panel" role="tabpanel" tabindex="0" aria-labelledby="${prefix}-companion-tab-${state.tab}" data-companion-panel>${renderPanel(state, guideData, escapeHtml, progressionEngine, storage)}</div><span class="visually-hidden" data-companion-status role="status" aria-live="polite"></span></section>`;
+  const checklistProgress = classId === 'warrior' ? loadWarriorChecklistProgress(storage) : [];
+  return `<section class="wow-leveling-companion" data-leveling-companion data-class-id="${escapeHtml(classId)}" style="--class-accent:${escapeHtml(classRecord.color || '#c79c6e')}" aria-labelledby="${prefix}-companion-title"><header><div><p class="wow-companion-kicker">Field guide · ${escapeHtml(classRecord.name || classId)}</p><h2 id="${prefix}-companion-title">${title}</h2></div><span data-companion-level-badge>Level ${state.level}</span></header><div class="wow-companion-controls"><label for="${prefix}-companion-level">Current level <output data-companion-level>${state.level}</output></label>${levelControl}${specializationControl}</div><div class="wow-companion-tabs" role="tablist" aria-label="${escapeHtml(classRecord.name || classId)} companion guide">${tabs}</div><div class="wow-companion-panel" id="${prefix}-companion-panel" role="tabpanel" tabindex="0" aria-labelledby="${prefix}-companion-tab-${state.tab}" data-companion-panel>${renderPanel(state, guideData, escapeHtml, progressionEngine, storage, 'all', 'mining-blacksmithing', checklistProgress)}</div><span class="visually-hidden" data-companion-status role="status" aria-live="polite"></span></section>`;
 }
 
 export function initializeLevelingCompanion(root, { classId, currentLevel = 1, selectedSpecialization = '', guideData = {}, progressionEngine = {}, storage } = {}) {
@@ -569,6 +638,8 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
   let state = loadCompanionState(classId, { level: currentLevel, specializationId: selectedSpecialization, tab: 'overview' }, specializations, storage);
   let gearFilter = 'all';
   let professionChoice = 'mining-blacksmithing';
+  let checklistProgress = classId === 'warrior' ? loadWarriorChecklistProgress(storage) : [];
+  let checklistFilter = 'all';
   const levelInput = companion.querySelector('[data-companion-level-input]');
   const levelOutput = companion.querySelector('[data-companion-level]');
   const levelBadge = companion.querySelector('[data-companion-level-badge]');
@@ -595,7 +666,7 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
       tab.tabIndex = selected ? 0 : -1;
     }
     panelElement.setAttribute('aria-labelledby', `${classId}-companion-tab-${state.tab}`);
-    panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice);
+    panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice, checklistProgress, checklistFilter);
     if (!saveCompanionState(state, storage) && status) status.textContent = 'This browser could not save companion preferences.';
     else if (status) status.textContent = '';
   };
@@ -606,18 +677,29 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
   companion.addEventListener('change', event => {
     if (event.target.matches('[data-companion-spec]')) update({ specializationId: event.target.value });
     if (event.target.matches('[data-companion-faction]')) update({ faction: event.target.value });
+    if (event.target.matches('[data-warrior-checklist-filter]')) {
+      checklistFilter = WARRIOR_CHECKLIST_CATEGORIES.includes(event.target.value) ? event.target.value : 'all';
+      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice, checklistProgress, checklistFilter);
+    }
+    if (event.target.matches('[data-warrior-checklist-task]')) {
+      const taskId = event.target.dataset.warriorChecklistTask;
+      checklistProgress = event.target.checked ? [...checklistProgress, taskId] : checklistProgress.filter(id => id !== taskId);
+      const saved = saveWarriorChecklistProgress(checklistProgress, storage);
+      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice, checklistProgress, checklistFilter);
+      if (!saved && status) status.textContent = 'This browser could not save checklist progress.';
+    }
   });
   companion.addEventListener('click', event => {
     const gearFilterButton = event.target.closest?.('[data-companion-gear-filter]');
     if (gearFilterButton) {
       gearFilter = gearFilterButton.dataset.companionGearFilter;
-      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice);
+      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice, checklistProgress, checklistFilter);
       return;
     }
     const professionButton = event.target.closest?.('[data-profession-choice]');
     if (professionButton) {
       professionChoice = professionButton.dataset.professionChoice;
-      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice);
+      panelElement.innerHTML = renderPanel(state, guideData, escapeHtml, progressionEngine, storage, gearFilter, professionChoice, checklistProgress, checklistFilter);
       return;
     }
     const levelStep = event.target.closest?.('[data-companion-level-step]');
