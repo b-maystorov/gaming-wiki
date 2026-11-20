@@ -2535,6 +2535,8 @@ test('Warrior checklist progress is separate, persistent, manually checked, and 
     available: ['dungeon-12'].map(id => tasks.find(task => task.id === id)),
     upcoming: [tasks[2]], completed: [tasks[0]]
   });
+  assert.deepEqual(JSON.parse(JSON.stringify(module.calculateWarriorChecklistProgress(tasks, ['quest-10']))), { completed: 1, total: 3, percent: 33 });
+  assert.deepEqual(JSON.parse(JSON.stringify(module.calculateWarriorChecklistProgress(tasks, []))), { completed: 0, total: 3, percent: 0 }, 'level alone never increases manual completion progress');
   assert.equal(storage.values.has('bm-wow-leveling-companion-v1:warrior'), false, 'checklist state uses its own key and does not alter talents or companion preferences');
   storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 1, faction: 'Alliance', tab: 'leveling', specializationId: 'arms' }));
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
@@ -2548,6 +2550,11 @@ test('Warrior checklist progress is separate, persistent, manually checked, and 
   assert.equal(module.saveWarriorChecklistProgress(['milestone-10-class-quest'], storage), true);
   assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorChecklistProgress(storage))), ['milestone-10-class-quest']);
   assert.match(render(10), /data-warrior-checklist-task="milestone-10-class-quest" checked/, 'only the manually saved task remains checked when level changes');
+  const tracker = render(10);
+  assert.match(tracker, /<details class="wow-warrior-checklist-group is-available" data-checklist-section="available" open>/, 'Available Now starts expanded and remains a native keyboard-accessible disclosure');
+  assert.match(tracker, /<details class="wow-warrior-checklist-group is-upcoming" data-checklist-section="upcoming">/);
+  assert.match(tracker, /<details class="wow-warrior-checklist-group is-completed" data-checklist-section="completed">/);
+  assert.match(tracker, /1 \/ 45 tasks complete/);
   assert.match(render(10), /value="class-quest"/);
   assert.match(render(10), /value="dungeon"/);
 });
