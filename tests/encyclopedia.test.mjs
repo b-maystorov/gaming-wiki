@@ -2559,6 +2559,57 @@ test('Warrior checklist progress is separate, persistent, manually checked, and 
   assert.match(render(10), /value="dungeon"/);
 });
 
+test('Warrior dungeon preparation filters by level, changes with specialization, and saves checklist independently', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = {
+    classRecord: warrior,
+    specializationGuides: warrior.specializationGuides,
+    warriorLeveling: wowPack.warriorLeveling,
+    dungeons: wowPack.dungeons,
+    sources: wowPack.sources,
+    dungeonPreparation: dungeonPrepData
+  };
+  const atLevel = module.buildWarriorDungeonPreparation({ level: 18, specializationId: 'arms', faction: 'Alliance' }, guideData);
+  assert.ok(atLevel.available.some(dungeon => dungeon.name === 'Hall of Thanes'));
+  assert.ok(atLevel.comingUp.some(dungeon => dungeon.name === 'Shadowfang Keep'));
+  assert.ok(!atLevel.available.some(dungeon => dungeon.name === 'Blackfathom Deeps'), 'a dungeon outside the verified range is not recommended yet');
+  const horde = module.buildWarriorDungeonPreparation({ level: 22, specializationId: 'arms', faction: 'Horde' }, guideData);
+  const alliance = module.buildWarriorDungeonPreparation({ level: 22, specializationId: 'arms', faction: 'Alliance' }, guideData);
+  assert.ok(horde.available.find(dungeon => dungeon.name === 'Shadowfang Keep').quests.length > 0);
+  assert.equal(alliance.available.find(dungeon => dungeon.name === 'Shadowfang Keep').quests.length, 0, 'quest records follow the selected faction');
+  assert.match(alliance.available.find(dungeon => dungeon.name === 'Deadmines').entrance, /Moonbrook/);
+
+  const arms = module.buildWarriorDungeonPreparation({ level: 30, specializationId: 'arms', faction: 'Alliance' }, guideData);
+  const fury = module.buildWarriorDungeonPreparation({ level: 30, specializationId: 'fury', faction: 'Alliance' }, guideData);
+  const protection = module.buildWarriorDungeonPreparation({ level: 30, specializationId: 'protection', faction: 'Alliance' }, guideData);
+  assert.equal(arms.preparation.label, 'DPS preparation');
+  assert.match(arms.preparation.advice, /two-handed weapon/);
+  assert.equal(fury.preparation.label, 'DPS preparation');
+  assert.match(fury.preparation.advice, /Dual Wield/);
+  assert.equal(protection.preparation.label, 'Tank preparation');
+  assert.ok(fury.available.find(dungeon => dungeon.name === 'Razorfen Kraul').equipment.some(item => item.name === 'Pronged Reaver'));
+  assert.ok(protection.available.find(dungeon => dungeon.name === 'Blackfathom Deeps').equipment.some(item => item.name === 'Darkwater Talwar'));
+
+  const storage = { values: new Map(), getItem(name) { return this.values.get(name) ?? null; }, setItem(name, value) { this.values.set(name, String(value)); } };
+  const key = module.WARRIOR_DUNGEON_PROGRESS_STORAGE_KEY;
+  const progress = { 'deadmines:run': true, 'deadmines:quests': false, 'deadmines:gear': true };
+  assert.equal(module.saveWarriorDungeonProgress(progress, storage), true);
+  assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorDungeonProgress(storage))), progress);
+  assert.equal(storage.values.has(module.WARRIOR_CHECKLIST_STORAGE_KEY), false, 'dungeon completion uses a separate key from the leveling checklist');
+
+  storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 18, faction: 'Alliance', tab: 'dungeons', specializationId: 'arms' }));
+  const rendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 18, selectedSpecialization: 'arms', guideData, storage });
+  assert.match(rendered, /data-companion-tab="dungeons"/);
+  assert.match(rendered, /data-warrior-dungeon-task="deadmines:run" checked/);
+  assert.match(rendered, /Arms preparation · DPS preparation/);
+  assert.match(rendered, /Recommended at your level/);
+  assert.match(rendered, /Faction quest records/);
+  assert.match(rendered, /Sources:/);
+  const otherClass = module.renderLevelingCompanion({ classId: 'paladin', currentLevel: 18, guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') }, storage: { getItem: () => null } });
+  assert.doesNotMatch(otherClass, /data-companion-tab="dungeons"/, 'the new tab is Warrior-only');
+});
+
 test('leveling companion renders only complete source-backed builds and safely handles blocked storage', () => {
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');

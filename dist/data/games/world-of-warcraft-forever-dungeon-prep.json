@@ -1,6 +1,6 @@
 {
   "version": "World of Warcraft: Forever",
-  "checkedDate": "2026-11-09",
+  "checkedDate": "2026-11-20",
   "sources": [
     {
       "id": "dungeon-overview",
@@ -116,6 +116,11 @@
       "id": "testing-wells-db",
       "url": "https://www.wowhead.com/forever/quest=92742/testing-the-wells",
       "checkedDate": "2026-11-09"
+    },
+    {
+      "id": "warrior-protection-leveling",
+      "url": "https://www.icy-veins.com/wow-forever/protection-warrior-leveling/",
+      "checkedDate": "2026-11-20"
     }
   ],
   "dungeons": [
@@ -794,5 +799,38 @@
       "quests": [],
       "level21Advice": "Not at level 21: it is below the suggested 24–29 range. Revisit from level 24; Forever quest prerequisites and rewards remain unverified."
     }
-  ]
+  ],
+  "warriorPreparation": {
+    "specializations": {
+      "arms": {
+        "label": "DPS preparation",
+        "advice": "Keep a strong two-handed weapon equipped and its weapon skill trained. Save Rage for your core attacks and interrupts; use Taunt only when helping recover an enemy from an ally.",
+        "sourceIds": ["icy-arms-leveling"]
+      },
+      "fury": {
+        "label": "DPS preparation",
+        "advice": "Before level 20, use your best current weapon. At level 20, train Dual Wield; afterward keep both weapons and weapon skills current. Check the recommended dungeon range and combine nearby quest objectives with the run.",
+        "sourceIds": ["icy-warrior-leveling"]
+      },
+      "protection": {
+        "label": "Tank preparation",
+        "advice": "Bring a one-handed weapon and shield. Build threat on every enemy, keep the pack in front of you, and use Taunt to recover an enemy before rebuilding threat. Check the dungeon range before forming a group.",
+        "sourceIds": ["warrior-protection-leveling"]
+      }
+    },
+    "equipmentDrops": [
+      {"id":"buzz-saw","name":"Buzz Saw","dungeon":"Deadmines","boss":"Sneed's Shredder","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/1937"},
+      {"id":"cookies-tenderizer","name":"Cookie's Tenderizer","dungeon":"Deadmines","boss":"Cookie","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/5197"},
+      {"id":"pronged-reaver","name":"Pronged Reaver","dungeon":"Razorfen Kraul","boss":"Charlga Razorflank","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6692"},
+      {"id":"thornspike","name":"Thornspike","dungeon":"Razorfen Kraul","boss":"Aggem Thorncurse","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6681"},
+      {"id":"durgen-crescent-axe","name":"Durgen's Crescent Axe","dungeon":"Hall of Thanes","boss":"Durgen Dirgehammer","specializations":["fury"],"faction":"Alliance","sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/270256"},
+      {"id":"barons-scepter","name":"Baron's Scepter","dungeon":"Shadowfang Keep","boss":"Baron Silverlaine","specializations":["fury"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6323"},
+      {"id":"butchers-slicer","name":"Butcher's Slicer","dungeon":"Shadowfang Keep","boss":"Razorclaw the Butcher","specializations":["fury"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6633"},
+      {"id":"darkwater-talwar","name":"Darkwater Talwar","dungeon":"Blackfathom Deeps","boss":"Lady Sarevess","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/11121"},
+      {"id":"hurleys-tankard","name":"Hurley's Tankard","dungeon":"Blackrock Depths","boss":"Hurley Blackbreath","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18044"},
+      {"id":"tooth-of-eranikus","name":"Tooth of Eranikus","dungeon":"Sunken Temple","boss":"Shade of Eranikus","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/10837"},
+      {"id":"lord-generals-sword","name":"Lord General's Sword","dungeon":"Blackrock Depths","boss":"General Angerforge","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/11817"},
+      {"id":"katerinas-shanker","name":"Katerina's Shanker","dungeon":"Alcaz Island Prison","boss":"Katerina the Cleaner","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/276738"}
+    ]
+  }
 }

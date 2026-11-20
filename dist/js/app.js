@@ -1700,6 +1700,7 @@ function showRoute() {
           dungeons: wowData.dungeons,
           warriorLeveling: wowData.warriorLeveling,
           warriorProfessions: wowData.warriorProfessions,
+          dungeonPreparation: wowDungeonPrep,
           sources: wowData.sources,
           specializationGuides: route.classRecord.specializationGuides,
           talentClass: wowClientData?.classes?.find(record => record.id === 'warrior')
