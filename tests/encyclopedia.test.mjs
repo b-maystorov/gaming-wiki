@@ -2316,7 +2316,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const talentClass = wowClientData.classes.find(item => item.id === 'warrior');
-  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, warriorCombat: wowPack.warriorCombat, combatCatalog: wowClientData, warriorProfessions: wowPack.warriorProfessions, warriorEquipment: wowPack.warriorEquipment, sources: wowPack.sources, talentClass };
+  const guideData = { classRecord: warrior, guide: warrior.starterGuide, zones: wowPack.zones, dungeons: wowPack.dungeons, warriorLeveling: wowPack.warriorLeveling, warriorCombat: wowPack.warriorCombat, combatCatalog: wowClientData, warriorProfessions: wowPack.warriorProfessions, warriorEquipment: wowPack.warriorEquipment, dungeonPreparation: dungeonPrepData, sources: wowPack.sources, talentClass };
   const stored = new Map();
   const handlers = {};
   const attributes = new Map();
@@ -2326,9 +2326,9 @@ test('leveling companion updates its level, specialization, and tab and persists
   const previousLevelButton = { disabled: true, dataset: { companionLevelStep: '-1' } };
   const nextLevelButton = { disabled: false, dataset: { companionLevelStep: '1' } };
   const specializationSelect = { value: 'fury', matches: selector => selector === '[data-companion-spec]' };
-  const panel = { innerHTML: '', setAttribute: (name, value) => attributes.set(name, value) };
+  const panel = { innerHTML: '', setAttribute: (name, value) => attributes.set(name, value), querySelectorAll: () => [] };
   const status = { textContent: '' };
-  const tabs = ['overview', 'stats', 'talents', 'gear', 'leveling', 'professions'].map(tab => ({ dataset: { companionTab: tab }, tabIndex: -1, attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); }, focus() {} }));
+  const tabs = ['overview', 'stats', 'talents', 'gear', 'leveling', 'dungeons', 'professions'].map(tab => ({ dataset: { companionTab: tab }, tabIndex: -1, attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); }, focus() {} }));
   const companion = {
     dataset: {},
     querySelector(selector) {
@@ -2488,6 +2488,23 @@ test('leveling companion updates its level, specialization, and tab and persists
   handlers.change({ target: specializationSelect });
   assert.ok(panel.innerHTML.includes('Protection · Professions · Level 35'));
   assert.ok(panel.innerHTML.includes('mining-engineering" aria-pressed="true"'), 'pairing choice remains independent of specialization changes');
+
+  levelInput.value = '20';
+  handlers.input({ target: levelInput });
+  specializationSelect.value = 'arms';
+  handlers.change({ target: specializationSelect });
+  const dungeonsTab = tabs.find(tab => tab.dataset.companionTab === 'dungeons');
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? dungeonsTab : null } });
+  const completedRun = { checked: true, dataset: { warriorDungeonTask: 'deadmines:run' }, matches: selector => selector === '[data-warrior-dungeon-task]' };
+  handlers.change({ target: completedRun });
+  assert.match(panel.innerHTML, /data-warrior-dungeon-task="deadmines:run" checked/);
+  assert.deepEqual(JSON.parse(stored.get(companionModule.WARRIOR_DUNGEON_PROGRESS_STORAGE_KEY)), { 'deadmines:run': true });
+  levelInput.value = '25';
+  handlers.input({ target: levelInput });
+  assert.match(panel.innerHTML, /data-warrior-dungeon-task="deadmines:run" checked/, 'level changes preserve checked dungeon tasks');
+  specializationSelect.value = 'protection';
+  handlers.change({ target: specializationSelect });
+  assert.match(panel.innerHTML, /data-warrior-dungeon-task="deadmines:run" checked/, 'specialization changes preserve checked dungeon tasks');
 });
 
 test('Warrior profession guidance uses loaded Forever records and explains when that data is missing', () => {
@@ -2631,8 +2648,17 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
   assert.equal(fury.preparation.label, 'DPS preparation');
   assert.match(fury.preparation.advice, /Dual Wield/);
   assert.equal(protection.preparation.label, 'Tank preparation');
+  assert.match(module.buildWarriorDungeonPreparation({ level: 13, specializationId: 'protection', faction: 'Alliance' }, guideData).preparation.advice, /strongest current two-handed weapon/);
+  assert.match(protection.preparation.advice, /one-handed weapon and shield/);
   assert.ok(fury.available.find(dungeon => dungeon.name === 'Razorfen Kraul').equipment.some(item => item.name === 'Pronged Reaver'));
   assert.ok(protection.available.find(dungeon => dungeon.name === 'Blackfathom Deeps').equipment.some(item => item.name === 'Darkwater Talwar'));
+  const darkwater = protection.available.find(dungeon => dungeon.name === 'Blackfathom Deeps').equipment.find(item => item.name === 'Darkwater Talwar');
+  assert.equal(darkwater.boss, 'Lady Sarevess');
+  assert.equal(darkwater.slot, 'Main Hand Sword');
+  assert.ok(darkwater.stats.some(stat => stat.includes('17.0')), JSON.stringify(darkwater));
+  assert.deepEqual(darkwater.specializations, ['protection']);
+  const armsDrops = arms.available.find(dungeon => dungeon.name === 'Blackfathom Deeps').equipment;
+  assert.ok(armsDrops.some(item => item.name === 'Strike of the Hydra' && /Aku.?mai/.test(item.boss) && item.slot === 'Two-Hand'));
 
   const storage = { values: new Map(), getItem(name) { return this.values.get(name) ?? null; }, setItem(name, value) { this.values.set(name, String(value)); } };
   const key = module.WARRIOR_DUNGEON_PROGRESS_STORAGE_KEY;
@@ -2645,10 +2671,17 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
   const rendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 18, selectedSpecialization: 'arms', guideData, storage });
   assert.match(rendered, /data-companion-tab="dungeons"/);
   assert.match(rendered, /data-warrior-dungeon-task="deadmines:run" checked/);
-  assert.match(rendered, /Arms preparation · DPS preparation/);
+  assert.match(rendered, /Before You Enter · Arms · DPS preparation/);
   assert.match(rendered, /Recommended at your level/);
   assert.match(rendered, /Faction quest records/);
+  assert.match(rendered, /<details class="wow-warrior-dungeon-details">/);
+  assert.match(rendered, /Important Drops/);
+  assert.match(rendered, /Before You Enter · Arms/);
   assert.match(rendered, /Sources:/);
+  storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 30, faction: 'Alliance', tab: 'dungeons', specializationId: 'protection' }));
+  const protectionRendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 30, selectedSpecialization: 'protection', guideData, storage });
+  assert.match(protectionRendered, /Slot:<\/b> Main Hand Sword/);
+  assert.match(protectionRendered, /Lady Sarevess/);
   const otherClass = module.renderLevelingCompanion({ classId: 'paladin', currentLevel: 18, guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') }, storage: { getItem: () => null } });
   assert.doesNotMatch(otherClass, /data-companion-tab="dungeons"/, 'the new tab is Warrior-only');
 });

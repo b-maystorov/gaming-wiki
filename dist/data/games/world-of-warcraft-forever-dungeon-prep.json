@@ -1,6 +1,6 @@
 {
   "version": "World of Warcraft: Forever",
-  "checkedDate": "2026-11-20",
+  "checkedDate": "2026-11-22",
   "sources": [
     {
       "id": "dungeon-overview",
@@ -804,33 +804,33 @@
     "specializations": {
       "arms": {
         "label": "DPS preparation",
-        "advice": "Keep a strong two-handed weapon equipped and its weapon skill trained. Save Rage for your core attacks and interrupts; use Taunt only when helping recover an enemy from an ally.",
+        "advice": "Use a current two-handed weapon and keep its weapon skill trained. Keep Rage for core attacks; complete the level 10 class quest so Taunt and Sunder Armor are available, and use your trained stance-appropriate interrupt when needed.",
         "sourceIds": ["icy-arms-leveling"]
       },
       "fury": {
         "label": "DPS preparation",
-        "advice": "Before level 20, use your best current weapon. At level 20, train Dual Wield; afterward keep both weapons and weapon skills current. Check the recommended dungeon range and combine nearby quest objectives with the run.",
+        "advice": "Before level 20, use your best current weapon. At level 20, train Dual Wield; afterward keep both weapons and weapon skills current. Complete the level 10 class quest for Taunt and Sunder Armor, check your weapon skills, and keep Rage available for core attacks.",
         "sourceIds": ["icy-warrior-leveling"]
       },
       "protection": {
         "label": "Tank preparation",
-        "advice": "Bring a one-handed weapon and shield. Build threat on every enemy, keep the pack in front of you, and use Taunt to recover an enemy before rebuilding threat. Check the dungeon range before forming a group.",
+        "advice": "After learning Revenge at level 14, bring a one-handed weapon and shield; before then, use your strongest current two-handed weapon. Complete the level 10 class quest, keep Taunt and Sunder Armor ready, use Shield Block when trained against heavy melee pressure, and recover loose enemies before rebuilding threat.",
         "sourceIds": ["warrior-protection-leveling"]
       }
     },
     "equipmentDrops": [
-      {"id":"buzz-saw","name":"Buzz Saw","dungeon":"Deadmines","boss":"Sneed's Shredder","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/1937"},
-      {"id":"cookies-tenderizer","name":"Cookie's Tenderizer","dungeon":"Deadmines","boss":"Cookie","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/5197"},
-      {"id":"pronged-reaver","name":"Pronged Reaver","dungeon":"Razorfen Kraul","boss":"Charlga Razorflank","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6692"},
-      {"id":"thornspike","name":"Thornspike","dungeon":"Razorfen Kraul","boss":"Aggem Thorncurse","specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6681"},
-      {"id":"durgen-crescent-axe","name":"Durgen's Crescent Axe","dungeon":"Hall of Thanes","boss":"Durgen Dirgehammer","specializations":["fury"],"faction":"Alliance","sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/270256"},
-      {"id":"barons-scepter","name":"Baron's Scepter","dungeon":"Shadowfang Keep","boss":"Baron Silverlaine","specializations":["fury"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6323"},
-      {"id":"butchers-slicer","name":"Butcher's Slicer","dungeon":"Shadowfang Keep","boss":"Razorclaw the Butcher","specializations":["fury"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6633"},
-      {"id":"darkwater-talwar","name":"Darkwater Talwar","dungeon":"Blackfathom Deeps","boss":"Lady Sarevess","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/11121"},
-      {"id":"hurleys-tankard","name":"Hurley's Tankard","dungeon":"Blackrock Depths","boss":"Hurley Blackbreath","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18044"},
-      {"id":"tooth-of-eranikus","name":"Tooth of Eranikus","dungeon":"Sunken Temple","boss":"Shade of Eranikus","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/10837"},
-      {"id":"lord-generals-sword","name":"Lord General's Sword","dungeon":"Blackrock Depths","boss":"General Angerforge","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/11817"},
-      {"id":"katerinas-shanker","name":"Katerina's Shanker","dungeon":"Alcaz Island Prison","boss":"Katerina the Cleaner","specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/276738"}
+      {"id":"buzz-saw","name":"Buzz Saw","dungeon":"Deadmines","boss":"Sneed's Shredder","slot":"One-Hand Sword","requiredLevel":18,"stats":["24–46 damage · speed 2.30 · 15.2 DPS","Agility +3","Stamina +3"],"specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/1937"},
+      {"id":"cookies-tenderizer","name":"Cookie's Tenderizer","dungeon":"Deadmines","boss":"Cookie","slot":"One-Hand Mace","requiredLevel":16,"stats":["27–51 damage · speed 2.80 · 13.9 DPS","Spirit +4","Chance on hit: increases physical damage taken by 1 for 1 min"],"specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/5197"},
+      {"id":"pronged-reaver","name":"Pronged Reaver","dungeon":"Razorfen Kraul","boss":"Charlga Razorflank","slot":"One-Hand Axe","requiredLevel":30,"stats":["38–72 damage · speed 2.40 · 22.9 DPS","Strength +5","Spirit +5"],"specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6692"},
+      {"id":"thornspike","name":"Thornspike","dungeon":"Razorfen Kraul","boss":"Aggem Thorncurse","slot":"One-Hand Dagger","requiredLevel":27,"stats":["24–46 damage · speed 1.70 · 20.6 DPS","Chance on hit: 45 Physical damage, then jumps to one nearby enemy at reduced damage"],"specializations":["fury","protection"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6681"},
+      {"id":"durgen-crescent-axe","name":"Durgen's Crescent Axe","dungeon":"Hall of Thanes","boss":"Durgen Dirgehammer","slot":"Main Hand Axe","requiredLevel":13,"stats":["20–39 damage · speed 2.40 · 12.3 DPS","Strength +4"],"specializations":["fury"],"faction":"Alliance","sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/270256"},
+      {"id":"barons-scepter","name":"Baron's Scepter","dungeon":"Shadowfang Keep","boss":"Baron Silverlaine","slot":"Main Hand Mace","requiredLevel":21,"stats":["28–52 damage · speed 2.40 · 16.7 DPS","Strength +2","Stamina +3","Party members nearby regenerate 4 Health per 5 sec"],"specializations":["fury"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6323"},
+      {"id":"butchers-slicer","name":"Butcher's Slicer","dungeon":"Shadowfang Keep","boss":"Razorclaw the Butcher","slot":"One-Hand Sword","requiredLevel":18,"stats":["30–57 damage · speed 2.90 · 15.0 DPS","Stamina +3","Attack Power +6"],"specializations":["fury"],"sourceId":"icy-warrior-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6633"},
+      {"id":"darkwater-talwar","name":"Darkwater Talwar","dungeon":"Blackfathom Deeps","boss":"Lady Sarevess","slot":"Main Hand Sword","requiredLevel":22,"stats":["26–49 damage · speed 2.20 · 17.0 DPS","Chance on hit: deals 28 Shadow damage"],"specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/11121"},
+      {"id":"hurleys-tankard","name":"Hurley's Tankard","dungeon":"Blackrock Depths","boss":"Hurley Blackbreath","slot":"Main Hand Mace","requiredLevel":52,"stats":["71–132 damage · speed 2.70 · 37.6 DPS","Agility +5","Stamina +12","Spirit +3"],"specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18044"},
+      {"id":"tooth-of-eranikus","name":"Tooth of Eranikus","dungeon":"Sunken Temple","boss":"Shade of Eranikus","slot":"Main Hand Axe","requiredLevel":51,"stats":["62–116 damage · speed 2.40 · 37.1 DPS","Strength +6","Hit +1%","Sleep effects against you have 3% less hit chance"],"specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/10837"},
+      {"id":"lord-generals-sword","name":"Lord General's Sword","dungeon":"Blackrock Depths","boss":"General Angerforge","slot":"Main Hand Sword","requiredLevel":51,"stats":["67–125 damage · speed 2.60 · 36.9 DPS","Chance on hit: +84 Attack Power for 10 sec"],"specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/11817"},
+      {"id":"katerinas-shanker","name":"Katerina's Shanker","dungeon":"Alcaz Island Prison","boss":"Katerina the Cleaner","slot":"One-Hand Dagger","requiredLevel":49,"stats":["42–79 damage · speed 1.70 · 35.6 DPS","Agility +7","Dodge +0.5%","Attack Power +21 against Humanoids"],"specializations":["protection"],"sourceId":"warrior-protection-leveling","sourceUrl":"https://db.icy-veins.com/wow-forever/items/276738"}
     ]
   }
 }

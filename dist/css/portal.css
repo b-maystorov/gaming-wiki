@@ -1148,6 +1148,16 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-dungeon-section.is-upcoming > h4 { color:#b9cfe0; }
 .wow-warrior-guide .wow-warrior-dungeon-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; gap:.6rem; }
 .wow-warrior-guide .wow-warrior-dungeon-card { display:grid; gap:.5rem; min-width:0; padding:.65rem .75rem; border:1px solid #344c60; border-radius:5px; background:linear-gradient(135deg,#162636,#101b26); }
+.wow-warrior-guide .wow-warrior-dungeon-details { min-width:0; }
+.wow-warrior-guide .wow-warrior-dungeon-details > summary { display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer; list-style:none; }
+.wow-warrior-guide .wow-warrior-dungeon-details > summary::-webkit-details-marker { display:none; }
+.wow-warrior-guide .wow-warrior-dungeon-details > summary::after { flex:none; margin-left:auto; color:#b68d55; content:'+'; font-size:1.1rem; }
+.wow-warrior-guide .wow-warrior-dungeon-details[open] > summary::after { content:'−'; }
+.wow-warrior-guide .wow-warrior-dungeon-details > summary:focus-visible { outline:2px solid #a8d5fa; outline-offset:2px; }
+.wow-warrior-guide .wow-warrior-dungeon-details > summary > span:first-child { display:grid; gap:.12rem; }
+.wow-warrior-guide .wow-warrior-dungeon-details > summary small { color:#c3a36e; font-size:.76rem; }
+.wow-warrior-guide .wow-warrior-dungeon-details > summary strong { color:#edf1f4; font-size:.96rem; }
+.wow-warrior-guide .wow-warrior-dungeon-detail-content { display:grid; gap:.45rem; margin-top:.55rem; padding-top:.5rem; border-top:1px solid #ffffff12; }
 .wow-warrior-guide .wow-warrior-dungeon-card.is-recommended { border-color:#715c3b; border-left:3px solid #b68d55; }
 .wow-warrior-guide .wow-warrior-dungeon-card.is-upcoming { border-color:#344c60; border-left:3px solid #718da5; background:linear-gradient(135deg,#172431,#101a24); }
 .wow-warrior-guide .wow-warrior-dungeon-card.is-run-complete { border-color:#38644a; border-left-color:#68a97b; }
@@ -1160,24 +1170,27 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-dungeon-card dl { display:grid; gap:.28rem; margin:0; }
 .wow-warrior-guide .wow-warrior-dungeon-card dl > div { display:grid; grid-template-columns:4.2rem minmax(0,1fr); gap:.4rem; }
 .wow-warrior-guide .wow-warrior-dungeon-card dt { color:#aebdca; font-size:.65rem; font-weight:700; }
-.wow-warrior-guide .wow-warrior-dungeon-card dd { margin:0; color:#d1dae2; font-size:.7rem; line-height:1.4; }
-.wow-warrior-guide .wow-warrior-dungeon-access,.wow-warrior-guide .wow-warrior-dungeon-note,.wow-warrior-guide .wow-warrior-dungeon-missing { margin:0; color:#aebbc6; font-size:.68rem; line-height:1.45; }
+.wow-warrior-guide .wow-warrior-dungeon-card dd { margin:0; color:#d1dae2; font-size:.88rem; line-height:1.45; }
+.wow-warrior-guide .wow-warrior-dungeon-access,.wow-warrior-guide .wow-warrior-dungeon-note,.wow-warrior-guide .wow-warrior-dungeon-missing { margin:0; color:#aebbc6; font-size:.84rem; line-height:1.45; }
 .wow-warrior-guide .wow-warrior-dungeon-note { padding:.35rem .45rem; border-left:2px solid #9a7644; color:#d6c49f; background:#9a764410; }
 .wow-warrior-guide .wow-warrior-dungeon-why { display:grid; gap:.3rem; padding:.45rem .5rem; border:1px solid #293d4e; border-radius:4px; background:#0e1923; }
-.wow-warrior-guide .wow-warrior-dungeon-why h6,.wow-warrior-guide .wow-warrior-dungeon-checklist h6 { margin:0; color:#d9c399; font-size:.7rem; }
-.wow-warrior-guide .wow-warrior-dungeon-why > p { margin:0; color:#c4d0da; font-size:.68rem; line-height:1.4; }
+.wow-warrior-guide .wow-warrior-dungeon-why h6,.wow-warrior-guide .wow-warrior-dungeon-checklist h6 { margin:0; color:#d9c399; font-size:.88rem; }
+.wow-warrior-guide .wow-warrior-dungeon-why > p { margin:0; color:#c4d0da; font-size:.86rem; line-height:1.45; }
 .wow-warrior-guide .wow-warrior-dungeon-items,.wow-warrior-guide .wow-warrior-dungeon-quests ul { display:grid; gap:.2rem; margin:0; padding:0; list-style:none; }
-.wow-warrior-guide .wow-warrior-dungeon-items li,.wow-warrior-guide .wow-warrior-dungeon-quests li { padding:.25rem 0; border-top:1px solid #ffffff0a; }
+.wow-warrior-guide .wow-warrior-dungeon-items li,.wow-warrior-guide .wow-warrior-dungeon-quests li { padding:.3rem .4rem; border-top:1px solid #ffffff0a; }
+.wow-warrior-guide .wow-warrior-dungeon-items li { border-left:2px solid #9a7644; }
 .wow-warrior-guide .wow-warrior-dungeon-items a { color:#e4cfaa; font-size:.7rem; font-weight:700; }
-.wow-warrior-guide .wow-warrior-dungeon-items small,.wow-warrior-guide .wow-warrior-dungeon-quests small { display:block; margin-top:.08rem; color:#aebbc6; font-size:.65rem; line-height:1.4; }
-.wow-warrior-guide .wow-warrior-dungeon-quests summary { color:#cad7e1; font-size:.68rem; font-weight:700; cursor:pointer; }
+.wow-warrior-guide .wow-warrior-dungeon-items small,.wow-warrior-guide .wow-warrior-dungeon-quests small { display:block; margin-top:.08rem; color:#aebbc6; font-size:.84rem; line-height:1.45; }
+.wow-warrior-guide .wow-warrior-dungeon-items strong { color:#e4cfaa; font-size:.88rem; }
+.wow-warrior-guide .wow-warrior-dungeon-items b { color:#d9c399; }
+.wow-warrior-guide .wow-warrior-dungeon-quests summary { color:#cad7e1; font-size:.86rem; font-weight:700; cursor:pointer; }
 .wow-warrior-guide .wow-warrior-dungeon-quests summary:focus-visible,.wow-warrior-guide .wow-warrior-dungeon-quests a:focus-visible,.wow-warrior-guide .wow-warrior-dungeon-items a:focus-visible { outline:2px solid #a8d5fa; outline-offset:2px; }
-.wow-warrior-guide .wow-warrior-dungeon-quests strong { color:#e0e6eb; font-size:.67rem; }
+.wow-warrior-guide .wow-warrior-dungeon-quests strong { color:#e0e6eb; font-size:.86rem; }
 .wow-warrior-guide .wow-warrior-dungeon-checklist { display:grid; gap:.25rem; }
-.wow-warrior-guide .wow-warrior-dungeon-check { display:flex; align-items:center; gap:.4rem; min-height:28px; color:#d1dae2; font-size:.68rem; cursor:pointer; }
+.wow-warrior-guide .wow-warrior-dungeon-check { display:flex; align-items:center; gap:.4rem; min-height:32px; color:#d1dae2; font-size:.86rem; cursor:pointer; }
 .wow-warrior-guide .wow-warrior-dungeon-check input { flex:none; width:.9rem; height:.9rem; margin:0; accent-color:#68a97b; }
 .wow-warrior-guide .wow-warrior-dungeon-check.is-complete { color:#9fc4a9; }
-.wow-warrior-guide .wow-warrior-dungeon-empty { margin:0; padding:.55rem .65rem; border:1px dashed #34485a; border-radius:4px; color:#aebbc6; font-size:.73rem; }
+.wow-warrior-guide .wow-warrior-dungeon-empty { margin:0; padding:.55rem .65rem; border:1px dashed #34485a; border-radius:4px; color:#aebbc6; font-size:.88rem; }
 .wow-warrior-guide .wow-warrior-professions { display:grid; grid-column:1/-1; gap:.7rem; min-width:0; color:#d8e1e9; }
 .wow-warrior-guide .wow-warrior-professions-intro { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.8rem .9rem; border:1px solid #344c60; border-left:3px solid #b38b56; border-radius:5px; background:linear-gradient(110deg,#182a3a,#111c28); }
 .wow-warrior-guide .wow-warrior-professions-intro .wow-eyebrow { margin:0 0 .2rem; color:#c7a873; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; }
