@@ -403,14 +403,16 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
     const recordedGuide = specializationGuideContent?.sections?.gear?.equipmentGuide
       || (guideMatchesSpec ? guide?.equipmentGuide : null);
     const sharedEquipment = guideData.warriorEquipment || {};
-    const sharedItems = (sharedEquipment.items || []).filter(item => item.specializations?.includes(state.specializationId)
-      && (!item.faction || item.faction === state.faction));
+    const faction = state.faction === 'Horde' ? 'Horde' : 'Alliance';
+    const allItems = [...(recordedGuide?.items || []), ...(sharedEquipment.items || [])];
+    const eligibleItems = allItems.filter(item => (!item.specializations || item.specializations.includes(state.specializationId))
+      && (!item.faction || item.faction === faction));
     const gearGuide = {
       ...(recordedGuide || {}),
-      items: [...(recordedGuide?.items || []), ...sharedItems],
+      items: eligibleItems,
       slotCoverage: sharedEquipment.slotCoverage || [],
       emptyState: sharedEquipment.emptyState || '',
-      availabilityMessage: recordedGuide?.availabilityMessage || (sharedItems.length ? '' : `No verified ${specName} equipment guidance or item records are stored yet.`)
+      availabilityMessage: recordedGuide?.availabilityMessage || (eligibleItems.length ? '' : `No verified ${specName} equipment guidance or item records are stored yet.`)
     };
     return {
       heading: `${specName} · Weapons & Gear · Level ${state.level}`,
@@ -660,7 +662,7 @@ function renderStatsGuide(statsGuide, priority, escapeHtml, hideSourceLinks = fa
   return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>${escapeHtml(priority.note || 'Guide order · not stat weights')} Bars indicate ordering only, not numerical stat weights.</span></div><div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
 }
 
-function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {
+export function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {
   const items = gearGuide.items || [];
   const visibleItems = selectedFilter === 'all' ? items : items.filter(item => item.category === selectedFilter);
   const categories = [
@@ -692,8 +694,9 @@ function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {
     const availabilityText = hasRequirement ? `Available at ${requirement}` : Number.isFinite(item.availabilityLevel)
       ? `Source available from level ${item.availabilityLevel}`
       : 'Source level not listed';
-    const status = availabilityLevel == null ? 'Requirement not listed'
-      : level >= availabilityLevel ? availabilityText : `Upcoming · ${availabilityText}`;
+    const status = !hasRequirement ? availabilityLevel != null && level < availabilityLevel
+      ? `Upcoming · ${availabilityText}; item requirement unverified` : 'Item requirement unverified'
+      : level >= availabilityLevel ? `Available now · ${availabilityText}` : `Upcoming · ${availabilityText}`;
     const itemName = item.sourceUrl
       ? `<a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>`
       : escapeHtml(item.name);
@@ -704,9 +707,9 @@ function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {
   const groupLevel = item => Number.isFinite(item.requiredLevel) ? item.requiredLevel
     : Number.isFinite(item.availabilityLevel) ? item.availabilityLevel : null;
   const groups = [
-    ['available', `Available at level ${level}`, visibleItems.filter(item => groupLevel(item) != null && groupLevel(item) <= level).sort((left, right) => groupLevel(left) - groupLevel(right))],
-    ['upcoming', 'Upcoming level requirements', visibleItems.filter(item => groupLevel(item) != null && groupLevel(item) > level).sort((left, right) => groupLevel(left) - groupLevel(right))],
-    ['unknown', 'Required level or source level not listed', visibleItems.filter(item => groupLevel(item) == null)]
+    ['available', 'Available now', visibleItems.filter(item => Number.isFinite(item.requiredLevel) && item.requiredLevel <= level).sort((left, right) => left.requiredLevel - right.requiredLevel)],
+    ['upcoming', 'Upcoming upgrades', visibleItems.filter(item => groupLevel(item) != null && groupLevel(item) > level).sort((left, right) => groupLevel(left) - groupLevel(right))],
+    ['unknown', 'Item requirements unverified', visibleItems.filter(item => !Number.isFinite(item.requiredLevel) && !(Number.isFinite(item.availabilityLevel) && item.availabilityLevel > level))]
   ].filter(([, , groupItems]) => groupItems.length);
   const equipment = groups.map(([id, title, groupItems]) => `<section class="wow-warrior-gear-group" data-gear-group="${id}"><h5>${escapeHtml(title)}</h5>${groupItems.map(renderItem).join('')}</section>`).join('');
   const filterButtons = categories.map(([category, label]) => `<button type="button" data-companion-gear-filter="${category}" aria-pressed="${category === selectedFilter}">${label}</button>`).join('');

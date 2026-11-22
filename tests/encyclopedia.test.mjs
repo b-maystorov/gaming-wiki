@@ -88,6 +88,45 @@ async function harness(failure = null, storageMode = 'available', unavailableFil
 const h = await harness();
 const helpers = h.modules.get(resolve(root, 'dist/js/encyclopedia.js')).namespace;
 
+test('Warrior gear retains eligible earlier items and separates requirement uncertainty at milestone levels', () => {
+  const companion = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const classRecord = wowPack.classes.find(record => record.id === 'warrior');
+  const guideData = { classRecord, warriorEquipment: wowPack.warriorEquipment };
+  const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  const allianceArms = companion.getCompanionPanel({ classId: 'warrior', specializationId: 'arms', faction: 'Alliance', level: 34, tab: 'gear' }, guideData).gearGuide.items;
+  const hordeArms = companion.getCompanionPanel({ classId: 'warrior', specializationId: 'arms', faction: 'Horde', level: 34, tab: 'gear' }, guideData).gearGuide.items;
+  assert.ok(allianceArms.some(item => item.id === 'defender-of-dalaran'));
+  assert.ok(!hordeArms.some(item => item.id === 'defender-of-dalaran'));
+  assert.ok(!allianceArms.some(item => item.id === 'kreshs-back'), 'Protection-only shields stay out of Arms recommendations');
+
+  for (const level of [15, 25, 34, 45, 60]) {
+    for (const specializationId of ['arms', 'fury', 'protection']) {
+      const panel = companion.getCompanionPanel({ classId: 'warrior', specializationId, faction: 'Alliance', level, tab: 'gear' }, guideData);
+      const items = panel.gearGuide.items;
+      assert.ok(items.every(item => !item.faction || item.faction === 'Alliance'));
+      assert.ok(items.every(item => !item.specializations || item.specializations.includes(specializationId)));
+      const available = items.filter(item => Number.isFinite(item.requiredLevel) && item.requiredLevel <= level);
+      const upcoming = items.filter(item => Number.isFinite(item.requiredLevel) && item.requiredLevel > level);
+      assert.ok(available.length, `${specializationId} at level ${level} should retain earlier eligible equipment`);
+      assert.ok(available.every(item => items.includes(item)), `${specializationId} level ${level}: eligible records remain in the guide`);
+
+      const allHtml = companion.renderWarriorGearGuide(panel.gearGuide, level, 'all', escape);
+      assert.match(allHtml, /data-gear-group="available"><h5>Available now/);
+      assert.match(allHtml, /Available now · Available at Level/);
+      if (upcoming.length) assert.match(allHtml, /data-gear-group="upcoming"><h5>Upcoming upgrades/);
+      if (items.some(item => !Number.isFinite(item.requiredLevel))) assert.match(allHtml, /Item requirements unverified/);
+      assert.doesNotMatch(allHtml, />Best</i);
+
+      for (const category of ['weapon', 'armor', 'accessory']) {
+        const filteredHtml = companion.renderWarriorGearGuide(panel.gearGuide, level, category, escape);
+        assert.match(filteredHtml, new RegExp(`data-companion-gear-filter="${category}" aria-pressed="true"`));
+        for (const match of filteredHtml.matchAll(/data-gear-category="([^"]+)"/g)) assert.equal(match[1], category);
+        if (!items.some(item => item.category === category)) assert.match(filteredHtml, /No verified recommendations are recorded in this equipment category\./);
+      }
+    }
+  }
+});
+
 test('quest categories and trinket rarities use their own fields', () => {
   assert.equal(h.filter('quests', 'duration', pack.quests).length, 3);
   assert.equal(h.filter('quests', 'all', pack.quests).length, 12);

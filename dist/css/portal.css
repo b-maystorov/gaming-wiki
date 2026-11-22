@@ -1302,6 +1302,9 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-gear-group + .wow-warrior-gear-group { margin-top:.7rem; }
 .wow-warrior-guide .wow-warrior-gear-group > h5 { margin:0 0 .35rem; color:#c8b28f; font-size:.73rem; font-weight:750; }
 .wow-warrior-guide .wow-warrior-gear-item { padding:.55rem .65rem; border:1px solid #283e52; border-left:2px solid #846d4e; border-radius:4px; background:#0e1a27; }
+.wow-warrior-guide [data-gear-group="available"] .wow-warrior-gear-item { border-left-color:#668d70; }
+.wow-warrior-guide [data-gear-group="upcoming"] .wow-warrior-gear-item { border-left-color:#a17b4d; }
+.wow-warrior-guide [data-gear-group="unknown"] .wow-warrior-gear-item { border-left-color:#718396; }
 .wow-warrior-guide .wow-warrior-gear-item + .wow-warrior-gear-item { margin-top:.35rem; }
 .wow-warrior-guide .wow-warrior-gear-item > header { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:.15rem .75rem; }
 .wow-warrior-guide .wow-warrior-gear-item h5 { margin:0; color:#eee4d4; font-size:.82rem; font-weight:750; }

@@ -555,6 +555,7 @@
                     "id": "defender-of-dalaran",
                     "name": "Defender of Dalaran",
                     "category": "weapon",
+                    "faction": "Alliance",
                     "requiredLevel": null,
                     "requiredLevelStatus": "not-listed",
                     "itemLevel": 36,
