@@ -2328,7 +2328,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   const specializationSelect = { value: 'fury', matches: selector => selector === '[data-companion-spec]' };
   const panel = { innerHTML: '', setAttribute: (name, value) => attributes.set(name, value), querySelectorAll: () => [] };
   const status = { textContent: '' };
-  const tabs = ['overview', 'stats', 'talents', 'gear', 'leveling', 'dungeons', 'professions'].map(tab => ({ dataset: { companionTab: tab }, tabIndex: -1, attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); }, focus() {} }));
+  const tabs = ['overview', 'stats', 'talents', 'gear', 'leveling', 'dungeons', 'professions', 'combat'].map(tab => ({ dataset: { companionTab: tab }, tabIndex: -1, attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); }, focus() {} }));
   const companion = {
     dataset: {},
     querySelector(selector) {
@@ -2405,6 +2405,17 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.ok(panel.innerHTML.includes('data-companion-gear-filter="weapon" aria-pressed="true"'), 'filter choice persists as the level changes');
   levelInput.value = '20';
   handlers.input({ target: levelInput });
+
+  const combatTab = tabs.find(tab => tab.dataset.companionTab === 'combat');
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? combatTab : null } });
+  assert.ok(panel.innerHTML.includes('data-combat-specialization="arms"'));
+  specializationSelect.value = 'fury';
+  handlers.change({ target: specializationSelect });
+  assert.ok(panel.innerHTML.includes('data-combat-specialization="fury"'), 'combat panel updates immediately when specialization changes');
+  assert.ok(panel.innerHTML.includes('Fury') && !panel.innerHTML.includes('data-combat-specialization="arms"'));
+  specializationSelect.value = 'arms';
+  handlers.change({ target: specializationSelect });
+  assert.ok(panel.innerHTML.includes('data-combat-specialization="arms"'));
 
   const statsTab = tabs.find(tab => tab.dataset.companionTab === 'stats');
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? statsTab : null } });
@@ -2972,7 +2983,7 @@ test('Warrior equipment recommendations filter by level, faction, specialization
   }
 });
 
-test('Warrior Combat filters unlocks by level and switches specialization priorities', async () => {
+test('Warrior Combat filters ability availability by level and renders specialization priorities', async () => {
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const guideData = {
@@ -2989,8 +3000,8 @@ test('Warrior Combat filters unlocks by level and switches specialization priori
   const armsBeforeSlam = render(19, 'arms');
   assert.ok(armsBeforeSlam.includes('data-combat-level="19"'));
   assert.ok(armsBeforeSlam.includes('data-combat-specialization="arms"'));
-  assert.ok(armsBeforeSlam.includes('Unavailable · unlocks at level 20'));
-  assert.ok(armsBeforeSlam.includes('class="wow-warrior-combat-step is-locked"'));
+  assert.ok(armsBeforeSlam.includes('Upcoming · Minimum level 20'));
+  assert.ok(armsBeforeSlam.includes('class="wow-warrior-combat-step is-upcoming is-locked"'));
   assert.ok(armsBeforeSlam.includes('Single target') && armsBeforeSlam.includes('Multiple enemies') && armsBeforeSlam.includes('Defensive situations'));
   assert.ok(armsBeforeSlam.includes('Combat Priority'));
   assert.ok(armsBeforeSlam.includes('Opening a Fight') && armsBeforeSlam.includes('Rage Management'));
@@ -3005,7 +3016,7 @@ test('Warrior Combat filters unlocks by level and switches specialization priori
 
   const furyAtThirtyFive = render(35, 'fury');
   assert.ok(furyAtThirtyFive.includes('data-combat-specialization="fury"'));
-  assert.ok(furyAtThirtyFive.includes('Unavailable · unlocks at level 36'));
+  assert.ok(furyAtThirtyFive.includes('Upcoming · Minimum level 36'));
   const furyAtThirtySix = render(36, 'fury');
   assert.ok(furyAtThirtySix.includes('Whirlwind'));
   assert.ok(furyAtThirtySix.includes('New at this level'));
@@ -3013,18 +3024,34 @@ test('Warrior Combat filters unlocks by level and switches specialization priori
 
   const protectionAtThirtyNine = render(39, 'protection');
   assert.ok(protectionAtThirtyNine.includes('data-combat-specialization="protection"'));
-  assert.ok(protectionAtThirtyNine.includes('Unavailable · unlocks at level 40'));
+  assert.ok(protectionAtThirtyNine.includes('Upcoming · Minimum level 40'));
   const protectionAtForty = render(40, 'protection');
   assert.ok(protectionAtForty.includes('Shield Slam'));
   assert.ok(protectionAtForty.includes('New at this level'));
   assert.ok(protectionAtForty.includes('Shield Block'));
 
-  for (const level of [10, 15, 25, 34, 40, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+  for (const level of [15, 23, 35, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
     const html = render(level, specializationId);
     assert.ok(html.includes(`data-combat-level="${level}"`), `${specializationId} combat level ${level} loads`);
     assert.ok(html.includes(`data-combat-specialization="${specializationId}"`), `${specializationId} combat key resolves at ${level}`);
+    assert.ok(html.includes('data-ability-availability="available"'), `${specializationId} has verified available abilities at ${level}`);
+    if (level < 60) assert.ok(html.includes('data-ability-availability="upcoming"'), `${specializationId} distinguishes upcoming abilities at ${level}`);
+    assert.ok(html.includes('Does:</strong>') && html.includes('When to use:</strong>') && html.includes('Minimum level'), `${specializationId} renders ability guidance and verified level at ${level}`);
+    assert.ok(html.toLowerCase().includes('context-based priority list') && html.toLowerCase().includes('not a fixed sequence'), `${specializationId} explains priority systems at ${level}`);
     assert.ok(!html.includes('Verified combat guidance is not loaded'), `${specializationId} has sourced combat at ${level}`);
   }
+  const level23 = render(23, 'arms');
+  const mortalStrikePosition = level23.indexOf('<strong>Mortal Strike</strong>');
+  const mortalStrikeStart = level23.lastIndexOf('<li class="', mortalStrikePosition);
+  const mortalStrikeCard = level23.slice(mortalStrikeStart, level23.indexOf('</li>', mortalStrikePosition));
+  assert.ok(mortalStrikeCard.includes('data-ability-availability="upcoming"') && mortalStrikeCard.includes('Upcoming · Minimum level 40') && mortalStrikeCard.includes('When to use:</strong> Upcoming:'), 'Mortal Strike at level 23 is explicitly upcoming, never immediately usable');
+  const incompleteCatalog = { ...wowClientData, spellDescriptions: Object.fromEntries(Object.entries(wowClientData.spellDescriptions).filter(([key]) => !key.startsWith('Warrior|Slam|'))) };
+  const unverifiedAbilityHtml = companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: 23, selectedSpecialization: 'arms',
+    guideData: { ...guideData, combatCatalog: incompleteCatalog },
+    storage: { getItem: () => JSON.stringify({ level: 23, specializationId: 'arms', tab: 'combat' }) }
+  });
+  assert.ok(unverifiedAbilityHtml.includes('data-ability-availability="unverified"') && unverifiedAbilityHtml.includes('Availability unverified') && unverifiedAbilityHtml.includes('Confirm that this ability is trained'), 'missing ability training metadata is explicitly unverified');
 
   const otherClass = companionModule.renderLevelingCompanion({ classId: 'paladin', currentLevel: 30, selectedSpecialization: 'retribution', guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') } });
   assert.ok(!otherClass.includes('data-companion-tab="combat"'), 'Combat tab is Warrior-only');

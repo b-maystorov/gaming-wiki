@@ -588,7 +588,9 @@ function buildWarriorCombatGuide(state, guideData) {
       unlockLevel: unlockMatch ? Number(unlockMatch[1]) : null,
       description: spell?.description || (trustedClassIcons.has(name) ? exactAbility?.summary : '') || 'No verified ability description is available in the loaded project data.',
       icon: talent?.icon || (trustedClassIcons.has(name) ? exactAbility?.icon : '') || '',
-      unlocked: !unlockMatch || state.level >= Number(unlockMatch[1]),
+      // Missing trainer-level metadata is not evidence that an ability is usable.
+      availability: !unlockMatch ? 'unverified' : state.level >= Number(unlockMatch[1]) ? 'available' : 'upcoming',
+      unlocked: Boolean(unlockMatch && state.level >= Number(unlockMatch[1])),
       newAtLevel: Boolean(unlockMatch && state.level === Number(unlockMatch[1]))
     };
   });
@@ -747,16 +749,17 @@ function renderWarriorCombatGuide(data, escapeHtml) {
   if (!data.specializationName) return `<div class="wow-warrior-combat"><p class="wow-warrior-combat-empty" role="status">${escapeHtml(data.availabilityMessage)}</p></div>`;
   const abilityByName = new Map(data.abilities.map(ability => [ability.name, ability]));
   const renderAbility = (name, index, reason) => {
-    const ability = abilityByName.get(name) || { name, unlocked: true, unlockLevel: null, description: 'No verified ability description is available in the loaded project data.', icon: '' };
-    const stateClass = ability.newAtLevel ? ' is-new' : ability.unlocked ? '' : ' is-locked';
-    const level = Number.isFinite(ability.unlockLevel) ? ability.unlockLevel === data.level ? 'Unlocks now · this level' : `Level ${ability.unlockLevel}` : 'Unlock level not listed';
-    const status = ability.newAtLevel ? 'New at this level' : ability.unlocked ? level : `Unavailable · unlocks at ${level.toLowerCase()}`;
+    const ability = abilityByName.get(name) || { name, availability: 'unverified', unlockLevel: null, description: 'No verified ability description is available in the loaded project data.', icon: '' };
+    const stateClass = ability.newAtLevel ? ' is-new' : ability.availability === 'available' ? ' is-available' : ability.availability === 'upcoming' ? ' is-upcoming is-locked' : ' is-unverified';
+    const level = Number.isFinite(ability.unlockLevel) ? `Minimum level ${ability.unlockLevel}` : 'Minimum level unverified';
+    const status = ability.newAtLevel ? 'New at this level · available now' : ability.availability === 'available' ? `Available now · ${level}` : ability.availability === 'upcoming' ? `Upcoming · ${level}` : 'Availability unverified';
+    const usableReason = ability.availability === 'upcoming' ? `Upcoming: ${reason}` : ability.availability === 'unverified' ? `Confirm that this ability is trained and its requirements are met before use. ${reason}` : reason;
     const icon = ability.icon ? `<img src="${escapeHtml(ability.icon)}" alt="" loading="lazy">` : `<span aria-hidden="true">${escapeHtml(name.split(/\s+/).map(word => word[0]).join('').slice(0, 2))}</span>`;
-    return `<li class="wow-warrior-combat-step${stateClass}"><span class="wow-warrior-combat-number" aria-hidden="true">${index + 1}</span><span class="wow-warrior-combat-icon">${icon}</span><div class="wow-warrior-combat-step-content"><div class="wow-warrior-combat-ability-line"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(status)}</span></div><p>${escapeHtml(reason)}</p><details><summary>Ability details</summary><p>${escapeHtml(ability.description)}</p></details></div></li>`;
+    return `<li class="wow-warrior-combat-step${stateClass}" data-ability-availability="${ability.availability}"><span class="wow-warrior-combat-number" aria-hidden="true">${index + 1}</span><span class="wow-warrior-combat-icon">${icon}</span><div class="wow-warrior-combat-step-content"><div class="wow-warrior-combat-ability-line"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(status)}</span></div><p><strong>Does:</strong> ${escapeHtml(ability.description)}</p><p><strong>When to use:</strong> ${escapeHtml(usableReason)}</p><p class="wow-warrior-combat-minimum-level">${escapeHtml(level)}</p></div></li>`;
   };
   const section = (title, steps) => `<section class="wow-warrior-combat-section"><h4>${title}</h4>${steps.length ? `<ol>${steps.map((step, index) => renderAbility(step.ability, index, step.when)).join('')}</ol>` : '<p class="wow-warrior-combat-empty">No verified priorities are recorded for this situation.</p>'}</section>`;
   const opening = data.opening.length ? `<section class="wow-warrior-combat-opening"><h4>Opening a Fight</h4><ol>${data.opening.map((step, index) => renderAbility(step.ability, index, step.when)).join('')}</ol><p>Use this as a practical opener when conditions fit, not a fixed rotation.</p></section>` : '';
-  return `<div class="wow-warrior-combat" data-warrior-combat data-combat-level="${data.level}" data-combat-specialization="${escapeHtml(data.specializationId)}"><p class="wow-warrior-combat-disclosure">Level ${data.level} · ${escapeHtml(data.specializationName)} · context-based priority list, not a fixed rotation.</p><h4 class="wow-warrior-combat-priority-title">Combat Priority</h4><div class="wow-warrior-combat-grid">${section('Single target', data.singleTarget)}${section('Multiple enemies', data.multipleEnemies)}${section('Defensive situations', data.defensive)}</div>${opening}<section class="wow-warrior-combat-rage"><h4>Rage Management</h4><p>${escapeHtml(data.rageManagement)}</p></section></div>`;
+  return `<div class="wow-warrior-combat" data-warrior-combat data-combat-level="${data.level}" data-combat-specialization="${escapeHtml(data.specializationId)}"><p class="wow-warrior-combat-disclosure">Level ${data.level} · ${escapeHtml(data.specializationName)} · Context-based priority list, not a fixed rotation. Use the highest available action that fits the situation; this is not a fixed sequence that must be repeated.</p><h4 class="wow-warrior-combat-priority-title">Combat Priority</h4><div class="wow-warrior-combat-grid">${section('Single target', data.singleTarget)}${section('Multiple enemies', data.multipleEnemies)}${section('Defensive situations', data.defensive)}</div>${opening}<section class="wow-warrior-combat-rage"><h4>Rage Management</h4><p>${escapeHtml(data.rageManagement)}</p></section></div>`;
 }
 
 function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all', professionChoice = 'mining-blacksmithing', checklistProgress = [], checklistFilter = 'all', dungeonProgress = {}) {

@@ -1719,11 +1719,16 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-combat-step-content > p,
 .wow-warrior-guide .wow-warrior-combat-opening > p,
 .wow-warrior-guide .wow-warrior-combat-rage > p { margin:.14rem 0; font-size:.94rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-combat-minimum-level { color:#b7c5d1; font-size:.82rem !important; }
 .wow-warrior-guide .wow-warrior-combat-step details { margin-top:.12rem; color:#bfcdda; font-size:.84rem; }
 .wow-warrior-guide .wow-warrior-combat-step summary { width:max-content; max-width:100%; color:#d3ae7e; cursor:pointer; text-underline-offset:2px; }
 .wow-warrior-guide .wow-warrior-combat-step details p { margin:.25rem 0 .1rem; color:#d0dae3; font-size:.88rem; line-height:1.5; }
 .wow-warrior-guide .wow-warrior-combat-step.is-new { background:linear-gradient(90deg,rgba(72,142,103,.13),transparent 75%); }
 .wow-warrior-guide .wow-warrior-combat-step.is-new .wow-warrior-combat-ability-line > span { color:#91d6a5; font-weight:700; }
+.wow-warrior-guide .wow-warrior-combat-step.is-available { background:linear-gradient(90deg,rgba(72,142,103,.07),transparent 72%); }
+.wow-warrior-guide .wow-warrior-combat-step.is-available .wow-warrior-combat-ability-line > span { color:#91d6a5; }
+.wow-warrior-guide .wow-warrior-combat-step.is-upcoming .wow-warrior-combat-ability-line > span { color:#d6ad76; }
+.wow-warrior-guide .wow-warrior-combat-step.is-unverified .wow-warrior-combat-ability-line > span { color:#e0bd8e; }
 .wow-warrior-guide .wow-warrior-combat-step.is-locked { opacity:.62; }
 .wow-warrior-guide .wow-warrior-combat-step.is-locked .wow-warrior-combat-ability-line strong,
 .wow-warrior-guide .wow-warrior-combat-step.is-locked .wow-warrior-combat-ability-line > span { color:#9bb0c2; }
