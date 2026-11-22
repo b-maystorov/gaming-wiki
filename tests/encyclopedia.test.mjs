@@ -2417,6 +2417,22 @@ test('leveling companion updates its level, specialization, and tab and persists
   handlers.change({ target: specializationSelect });
   assert.ok(panel.innerHTML.includes('data-combat-specialization="arms"'));
 
+  const levelingTabAfterCombat = tabs.find(tab => tab.dataset.companionTab === 'leveling');
+  handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? levelingTabAfterCombat : null } });
+  const savedTask = { matches: selector => selector === '[data-warrior-checklist-task]', dataset: { warriorChecklistTask: 'milestone-10-class-quest' }, checked: true };
+  handlers.change({ target: savedTask });
+  assert.ok(panel.innerHTML.includes('data-warrior-checklist-task="milestone-10-class-quest" checked'));
+  const factionSelectAfterCombat = { value: 'Horde', matches: selector => selector === '[data-companion-faction]' };
+  handlers.change({ target: factionSelectAfterCombat });
+  assert.ok(panel.innerHTML.includes('<h5>The Barrens</h5>') && panel.innerHTML.includes('data-warrior-checklist-task="milestone-10-class-quest" checked'), 'faction changes update recommendations and preserve checklist progress');
+  specializationSelect.value = 'fury';
+  handlers.change({ target: specializationSelect });
+  assert.ok(panel.innerHTML.includes('Fury · damage and Rage focus'), 'specialization changes update leveling focus');
+  assert.ok(panel.innerHTML.includes('data-warrior-checklist-task="milestone-10-class-quest" checked'), 'specialization changes preserve checklist progress');
+  assert.ok(stored.has(companionModule.WARRIOR_CHECKLIST_STORAGE_KEY), 'checklist saves use the existing Warrior storage key');
+  specializationSelect.value = 'arms';
+  handlers.change({ target: specializationSelect });
+
   const statsTab = tabs.find(tab => tab.dataset.companionTab === 'stats');
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? statsTab : null } });
   assert.equal(statsTab.attributes.get('aria-selected'), 'true');
@@ -2463,7 +2479,7 @@ test('leveling companion updates its level, specialization, and tab and persists
   handlers.click({ target: { closest: selector => selector === '[data-companion-tab]' ? levelingTab : null } });
   assert.ok(panel.innerHTML.includes('Arms leveling · Level 20'));
   assert.ok(panel.innerHTML.includes('Where should I go now?'));
-  assert.ok(panel.innerHTML.includes('Westfall'));
+  assert.ok(panel.innerHTML.includes('The Barrens') && !panel.innerHTML.includes('<h5>Westfall</h5>'));
   levelInput.value = '35';
   handlers.input({ target: levelInput });
   assert.equal(levelBadge.textContent, 'Level 35');
@@ -2538,10 +2554,10 @@ test('Warrior leveling guide filters faction zones, updates by level, shows upco
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');
   const guideData = { classRecord: warrior, warriorLeveling: wowPack.warriorLeveling };
-  const render = (level, faction, guide = warrior.specializationGuides.arms.sections.leveling) => companionModule.renderLevelingCompanion({
-    classId: 'warrior', currentLevel: level, selectedSpecialization: 'arms',
+  const render = (level, faction, specializationId = 'arms', guide = warrior.specializationGuides.arms.sections.leveling) => companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId,
     guideData: { ...guideData, specializationGuides: warrior.specializationGuides },
-    storage: { getItem: () => JSON.stringify({ level, faction, tab: 'leveling', specializationId: 'arms' }) }
+    storage: { getItem: () => JSON.stringify({ level, faction, tab: 'leveling', specializationId }) }
   });
 
   const allianceAt20 = render(20, 'Alliance');
@@ -2551,11 +2567,22 @@ test('Warrior leveling guide filters faction zones, updates by level, shows upco
   assert.match(allianceAt20, /Duskwood/);
   assert.match(allianceAt20, /wow-warrior-level-zone is-upcoming/);
   assert.match(allianceAt20, /Shadowfang Keep/);
+  assert.match(allianceAt20, /Arms · solo and two-handed weapon focus/);
+  assert.match(allianceAt20, /Before moving on/);
+  assert.match(allianceAt20, /Alliance level 20 armor chain/);
+  assert.doesNotMatch(allianceAt20, /Horde level 20 armor chain/);
+  assert.match(allianceAt20, /Bartleby/);
+  assert.match(allianceAt20, /Vorlus Vilehoof/);
 
   const hordeAt20 = render(20, 'Horde');
   assert.match(hordeAt20, /<h5>The Barrens<\/h5>/);
   assert.match(hordeAt20, /Silverpine Forest/);
   assert.doesNotMatch(hordeAt20, /<h5>Westfall<\/h5>/, 'Alliance-only zones are filtered out');
+  assert.match(hordeAt20, /Horde level 20 armor chain/);
+  assert.doesNotMatch(hordeAt20, /Alliance level 20 armor chain/);
+  assert.match(hordeAt20, /Path of Defense/);
+  assert.match(hordeAt20, /Ulag the Cleaver/);
+  assert.match(hordeAt20, /The Affray on Fray Island/);
 
   const lowerLevel = render(8, 'Alliance');
   assert.match(lowerLevel, /Level 8/);
@@ -2576,21 +2603,24 @@ test('Warrior leveling guide filters faction zones, updates by level, shows upco
   assert.match(missingRanges, /Leveling Checklist/);
   assert.ok(wowPack.warriorLeveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.ok(wowPack.warriorLeveling.dungeonSourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  for (const guidance of Object.values(wowPack.warriorLeveling.specializationGuidance)) assert.ok(guidance.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  for (const milestones of Object.values(wowPack.warriorLeveling.specializationMilestones)) for (const milestone of milestones) assert.ok(milestone.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  for (const milestone of wowPack.warriorLeveling.questMilestones) assert.ok(milestone.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.match(appSource, /guideData:\s*\{[\s\S]*?warriorLeveling:\s*wowData\.warriorLeveling/, 'browser rerender initialization receives the same structured data as initial render');
 
-  for (const level of [12, 23, 35, 45, 55]) {
-    for (const faction of ['Alliance', 'Horde']) {
-      const result = companionModule.renderLevelingCompanion({
-        classId: 'warrior', currentLevel: level, selectedSpecialization: 'arms',
-        guideData: { ...guideData, specializationGuides: warrior.specializationGuides },
-        storage: { getItem: () => JSON.stringify({ level, faction, tab: 'leveling', specializationId: 'arms' }) }
-      });
-      assert.match(result, /class="wow-warrior-level-zone is-current"/, `${faction} has matching zones at level ${level}`);
-      assert.match(result, /class="wow-warrior-level-zone is-upcoming"/, `${faction} has upcoming zones at level ${level}`);
-      if (level < 13) assert.match(result, /No verified dungeon range is recorded for this level/, `${faction} gets an honest no-match at level ${level}`);
-      else assert.match(result, /class="wow-warrior-dungeon-list"/, `${faction} has relevant dungeons at level ${level}`);
-    }
+  for (const level of [10, 20, 34, 45, 60]) for (const specializationId of ['arms', 'fury', 'protection']) for (const faction of ['Alliance', 'Horde']) {
+    const result = render(level, faction, specializationId);
+    assert.match(result, /class="wow-warrior-level-zone is-current"/, `${specializationId} ${faction} has matching zones at level ${level}`);
+    assert.match(result, /<h4>Recommended now <span>Level /, `${specializationId} has level-specific zone recommendations at ${level}`);
+    if (level < 60) assert.match(result, /class="wow-warrior-level-zone is-upcoming"/, `${specializationId} ${faction} has upcoming zones at level ${level}`);
+    else assert.match(result, /No upcoming faction-matched zone range is recorded/, 'level 60 does not invent a future zone');
+    if (level < 13) assert.match(result, /No verified dungeon range is recorded for this level/, `${specializationId} ${faction} gets an honest no-match at level ${level}`);
+    else assert.match(result, /class="wow-warrior-dungeon-list"/, `${specializationId} ${faction} has relevant dungeons at level ${level}`);
+    assert.match(result, new RegExp(`${specializationId === 'arms' ? 'two-handed weapon' : specializationId === 'fury' ? 'damage and Rage focus' : 'defense and dungeon tanking'}`, 'i'), `${specializationId} has distinct leveling guidance`);
   }
+  assert.match(render(34, 'Alliance', 'arms'), /milestone-arms-sweeping-strikes/);
+  assert.match(render(34, 'Alliance', 'fury'), /milestone-fury-gore-drinker/);
+  assert.match(render(34, 'Alliance', 'protection'), /milestone-protection-vanguard/);
 });
 
 test('Warrior checklist progress is separate, persistent, manually checked, and grouped by level', () => {
@@ -2621,11 +2651,15 @@ test('Warrior checklist progress is separate, persistent, manually checked, and 
   assert.equal(module.saveWarriorChecklistProgress(['milestone-10-class-quest'], storage), true);
   assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorChecklistProgress(storage))), ['milestone-10-class-quest']);
   assert.match(render(10), /data-warrior-checklist-task="milestone-10-class-quest" checked/, 'only the manually saved task remains checked when level changes');
+  assert.match(render(10), /<small>Completed · Complete the Defensive Stance class quest/);
+  const laterLevel = render(20);
+  assert.match(laterLevel, /data-warrior-checklist-task="milestone-12-ability-unlock"><span/);
+  assert.match(laterLevel, /Earlier level · not checked off/, 'an old unchecked task is not presented as completed');
   const tracker = render(10);
   assert.match(tracker, /<details class="wow-warrior-checklist-group is-available" data-checklist-section="available" open>/, 'Available Now starts expanded and remains a native keyboard-accessible disclosure');
   assert.match(tracker, /<details class="wow-warrior-checklist-group is-upcoming" data-checklist-section="upcoming">/);
   assert.match(tracker, /<details class="wow-warrior-checklist-group is-completed" data-checklist-section="completed">/);
-  assert.match(tracker, /1 \/ 45 tasks complete/);
+  assert.match(tracker, /1 \/ \d+ tasks complete/);
   assert.match(render(10), /value="class-quest"/);
   assert.match(render(10), /value="dungeon"/);
 });

@@ -1135,6 +1135,10 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-checklist-item.is-complete .wow-warrior-checklist-icon::before { color:#80bd8e; content:'✓'; }
 .wow-warrior-guide .wow-warrior-checklist-item.is-complete strong { color:#a8d3b4; text-decoration:line-through; text-decoration-color:#679975; text-decoration-thickness:1px; }
 .wow-warrior-guide .wow-warrior-checklist-item.is-complete small { color:#9fc4a9; }
+.wow-warrior-guide .wow-warrior-checklist-item:not(.is-complete) small { color:#c0ccd6; }
+.wow-warrior-guide .wow-warrior-leveling-focus { border-left:3px solid #65a77b; }
+.wow-warrior-guide .wow-warrior-leveling-preparation { border-left:3px solid #b68d55; }
+.wow-warrior-guide .wow-warrior-leveling-focus p,.wow-warrior-guide .wow-warrior-leveling-preparation p { margin:.2rem 0 0; color:#d0d9e0; font-size:.8rem; line-height:1.5; }
 .wow-warrior-guide .wow-warrior-dungeons { display:grid; grid-column:1/-1; gap:.7rem; min-width:0; color:#d8e1e9; }
 .wow-warrior-guide .wow-warrior-dungeon-intro,.wow-warrior-guide .wow-warrior-dungeon-disclosure { margin:0; color:#9fadb9; font-size:.73rem; line-height:1.5; }
 .wow-warrior-guide .wow-warrior-dungeon-preparation { padding:.7rem .8rem; border:1px solid #665337; border-left:3px solid #b68d55; border-radius:5px; background:linear-gradient(110deg,#25241f,#131e29); }

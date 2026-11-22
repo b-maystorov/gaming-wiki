@@ -1927,6 +1927,52 @@
   "warriorLeveling": {
     "sourceIds": ["icy-forever-zone-levels"],
     "dungeonSourceIds": ["icy-dungeons-index"],
+    "specializationGuidance": {
+      "arms": {
+        "text": "For solo questing, use a two-handed weapon and compare upgrades by damage per second; train the new weapon skill after swapping. Keep Rage for high-priority attacks instead of spending it all on Heroic Strike.",
+        "sourceIds": ["icy-arms-leveling"]
+      },
+      "fury": {
+        "text": "Before level 20, use your strongest weapon; a good two-hander works well. At level 20, train Dual Wield and maintain both weapon skills. Fury’s damage improves substantially with Whirlwind at 36, so conserve Rage and keep both weapons current as you level.",
+        "sourceIds": ["icy-warrior-leveling"]
+      },
+      "protection": {
+        "text": "Use a one-handed weapon and shield. Revenge becomes available at 14 and Protection is slower before Shield Block at 16; after that, defensive blocks can support both survival and Revenge use. This setup also prepares you to tank dungeons when your group needs a tank.",
+        "sourceIds": ["icy-protection-leveling"]
+      }
+    },
+    "specializationMilestones": {
+      "arms": [
+        {"id":"arms-sweeping-strikes","level":30,"title":"Sweeping Strikes talent","text":"The recommended Arms build adds Sweeping Strikes at level 30, improving fights against two nearby enemies.","sourceIds":["icy-arms-leveling"]},
+        {"id":"arms-mortal-strike","level":40,"title":"Mortal Strike","text":"The recommended Arms build learns Mortal Strike at 40; preserve Rage for it while keeping Rend and Overpower relevant.","sourceIds":["icy-arms-leveling"]}
+      ],
+      "fury": [
+        {"id":"fury-gore-drinker","level":32,"title":"Gore Drinker talent","text":"The recommended Fury build takes Gore Drinker at levels 32–33 to improve sustain while attacking.","sourceIds":["icy-warrior-leveling"]},
+        {"id":"fury-whirlwind","level":36,"title":"Whirlwind","text":"Whirlwind becomes Fury’s main attack in the cited leveling guide; it requires Berserker Stance.","sourceIds":["icy-warrior-leveling"]},
+        {"id":"fury-flurry","level":37,"title":"Flurry talent","text":"The recommended build reaches Flurry at level 37; keep both weapon skills current to benefit from the faster attacks.","sourceIds":["icy-warrior-leveling"]},
+        {"id":"fury-bloodthirst","level":40,"title":"Bloodthirst","text":"The recommended Fury build learns Bloodthirst at 40 and uses it while Whirlwind is on cooldown, keeping Rage for the next Whirlwind.","sourceIds":["icy-warrior-leveling"]}
+      ],
+      "protection": [
+        {"id":"protection-revenge","level":14,"title":"Revenge","text":"Revenge is the core early Protection attack in the cited build; keep enemies in front and use Shield Block after it becomes available to help trigger it.","sourceIds":["icy-protection-leveling"]},
+        {"id":"protection-shield-block","level":16,"title":"Shield Block","text":"Shield Block improves survival against blockable melee attacks and supports Revenge opportunities.","sourceIds":["icy-protection-leveling"]},
+        {"id":"protection-vanguard","level":25,"title":"Vanguard talent","text":"The recommended build takes Vanguard at level 25, allowing Charge from Defensive Stance; this is a build milestone, not a universal talent requirement.","sourceIds":["icy-protection-leveling"]},
+        {"id":"protection-shield-slam","level":40,"title":"Shield Slam","text":"The recommended Protection build learns Shield Slam at level 40; shield Block Value also contributes to its damage.","sourceIds":["icy-protection-leveling"]}
+      ]
+    },
+    "preparationTips": {
+      "text": "Before changing zones, compare the next zone’s verified level range with your level and finish remaining quests that still fit. Train available abilities, check weapon skill after changing weapon type, and check equipment durability. Before a dungeon, collect its available quests. These are general preparation checks, not verified zone-specific quest routes.",
+      "sourceIds": ["icy-arms-leveling", "icy-warrior-leveling", "icy-protection-leveling"]
+    },
+    "questMilestones": [
+      {"id":"class-quest-10-alliance","level":10,"faction":"Alliance","title":"Level 10 Defensive Stance quest","text":"Choose the route for your starting capital: Bartleby’s Mug (Stormwind), Vejrek (Ironforge), or Vorlus Vilehoof (Darnassus). Skyborne Warriors use The Skybreaker Bulwark on Zephras Isle. These quests reward Defensive Stance, Taunt, and Sunder Armor.","sourceIds":["icy-warrior-class-quests"]},
+      {"id":"class-quest-10-horde","level":10,"faction":"Horde","title":"Level 10 Defensive Stance quest","text":"Choose the route for your starting capital: Path of Defense (The Barrens) or Ulag the Cleaver (Brill). Skyborne Warriors use The Skybreaker Bulwark on Zephras Isle. These quests reward Defensive Stance, Taunt, and Sunder Armor.","sourceIds":["icy-warrior-class-quests"]},
+      {"id":"class-quest-30-affray","level":30,"faction":"Both","title":"Level 30 Berserker Stance quest","text":"The Islander leads to The Affray on Fray Island in The Barrens, which rewards Berserker Stance. The optional Whirlwind Weapon chain also starts at 30, but ends against a level 40 elite; plan for help or return later.","sourceIds":["icy-warrior-class-quests"]},
+      {"id":"class-quest-20-alliance","level":20,"faction":"Alliance","title":"Alliance level 20 armor chain","text":"Optional Fire Hardened Mail chain: the opening can provide a shield at level 20; the hauberk requires materials including a Razorfen Kraul trip, recommended for a later run.","sourceIds":["icy-warrior-class-quests"]},
+      {"id":"class-quest-20-horde","level":20,"faction":"Horde","title":"Horde level 20 armor chain","text":"Optional Brutal Armor chain: the opening can provide a shield at level 20; the hauberk requires materials including a Razorfen Kraul trip, recommended for a later run.","sourceIds":["icy-warrior-class-quests"]},
+      {"id":"class-quest-50-voodoo-feathers","level":50,"faction":"Both","title":"Level 50 Voodoo Feathers chain","text":"Start A Troubled Spirit from a Warrior trainer. The Sunken Temple portion requires a group; the guide recommends completing it around level 52.","sourceIds":["icy-warrior-class-quests"]},
+      {"id":"class-quest-54-codex-of-defense","level":54,"faction":"Both","title":"Level 54 Codex of Defense","text":"The Warrior book quest can start at level 54; its Royal Seal reward is mainly useful for shield tanking.","sourceIds":["icy-warrior-class-quests"]},
+      {"id":"class-quest-60-quelserrar","level":60,"faction":"Both","title":"Level 60 Quel’Serra quest chain","text":"Optional Warrior weapon chain; its starting book comes from Dire Maul bosses or dusty tomes, or may be bought from another player. Further details are not summarized here.","sourceIds":["icy-warrior-class-quests"]}
+    ],
     "zones": [
       {"name":"Tirisfal Glades","minLevel":1,"maxLevel":10,"faction":"Horde"},
       {"name":"Elwynn Forest","minLevel":1,"maxLevel":10,"faction":"Alliance"},
