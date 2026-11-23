@@ -295,12 +295,23 @@ function buildWarriorProfessionGuide(state, guideData) {
   const specialization = (guideData.classRecord?.specializations || []).find(item => item.id === state.specializationId);
   const level = state.level;
   const activityKey = level < 10 ? 'before10' : level < 20 ? 'before20' : level < 25 ? 'before25' : level < 35 ? 'before35' : 'artisan';
+  const equipment = [
+    ...(guideData.warriorEquipment?.items || []),
+    ...(guideData.classRecord?.specializationGuides?.arms?.sections?.gear?.equipmentGuide?.items || [])
+  ];
+  const specializationGuidance = reference?.specializationGuidance?.[state.specializationId] || null;
   return {
     level,
+    specializationId: state.specializationId,
     specialization: specialization?.name || state.specializationId,
     reference,
     activity: reference?.activityNotes?.[activityKey] || '',
-    sourceIds: reference?.sourceIds || []
+    specializationGuidance,
+    recipes: (reference?.craftExamples || []).map(recipe => ({
+      ...recipe,
+      relatedEquipment: equipment.find(item => item.id === recipe.gearItemId) || null
+    })),
+    sourceIds: [...new Set([...(reference?.sourceIds || []), ...(specializationGuidance?.sourceIds || [])])]
   };
 }
 
@@ -837,13 +848,24 @@ function renderWarriorProfessionGuide(data, selectedChoice, escapeHtml) {
       || data.level >= rank.craftingCharacterLevel || data.level >= rank.gatheringCharacterLevel;
     return `<tr class="${current ? 'is-level-ready' : ''}"><th scope="row">${escapeHtml(rank.rank)}<small>Cap ${escapeHtml(rank.skillCap)}</small></th><td>${escapeHtml(requiredSkill)}</td><td>${escapeHtml(craftingLevel)}</td><td>${escapeHtml(gatheringLevel)}</td></tr>`;
   }).join('');
-  const examples = guide.craftExamples.map(recipe => {
-    const levelStatus = data.level >= recipe.characterLevelRequired ? 'Character level met' : `Upcoming · character level ${recipe.characterLevelRequired}`;
-    return `<article class="wow-warrior-profession-recipe"><div><h5>${escapeHtml(recipe.name)}</h5><span>${escapeHtml(levelStatus)}</span></div><p><strong>Profession:</strong> ${escapeHtml(recipe.profession)} skill ${escapeHtml(recipe.professionSkillRequired)} required. This is separate from character level ${escapeHtml(recipe.characterLevelRequired)}.</p><p><strong>Acquisition:</strong> ${escapeHtml(recipe.acquisition)} Recipe source and materials are not recorded.</p></article>`;
+  const examples = data.recipes.map(recipe => {
+    const levelStatus = data.level >= recipe.characterLevelRequired ? 'Available now · character level met' : `Upcoming · character level ${recipe.characterLevelRequired}`;
+    const professionRequirement = recipe.professionSkillRequired == null
+      ? `Minimum ${escapeHtml(recipe.profession)} skill is unverified${recipe.skillUpThreshold ? `; skill-up chance turns yellow at ${escapeHtml(recipe.skillUpThreshold)}` : ''}.`
+      : `${escapeHtml(recipe.profession)} skill ${escapeHtml(recipe.professionSkillRequired)} required.`;
+    const materials = Array.isArray(recipe.materials) && recipe.materials.length
+      ? `<ul class="wow-warrior-profession-materials">${recipe.materials.map(material => `<li><strong>${escapeHtml(material.quantity)} × ${escapeHtml(material.name)}</strong> · ${escapeHtml(material.source || 'Material source not recorded.')}</li>`).join('')}</ul>`
+      : '<p class="wow-warrior-profession-unverified">Recipe materials are not recorded.</p>';
+    const relatedAcquisition = recipe.relatedEquipment?.acquisition?.replace(/\s*\(skill 80\)/i, ' (yellow skill-up point 80; minimum skill unverified)');
+    const related = recipe.relatedEquipment
+      ? `<p><strong>Existing equipment recommendation:</strong> ${escapeHtml(recipe.relatedEquipment.slot || 'Slot not recorded')} · ${escapeHtml((recipe.relatedEquipment.attributes || []).join(' · ') || 'Stats not recorded')} · ${escapeHtml(relatedAcquisition || 'Acquisition not recorded.')}</p>`
+      : '';
+    const availability = data.level >= recipe.characterLevelRequired ? 'is-available' : 'is-upcoming';
+    return `<article class="wow-warrior-profession-recipe ${availability}" data-profession-recipe="${escapeHtml(recipe.id || recipe.name)}"><div><h5>${escapeHtml(recipe.name)}</h5><span>${escapeHtml(levelStatus)}</span></div><p><strong>Profession:</strong> ${escapeHtml(recipe.profession)} · ${professionRequirement} Character level ${escapeHtml(recipe.characterLevelRequired)} is a separate gate.</p><p><strong>Acquisition:</strong> ${escapeHtml(recipe.acquisition)} Recipe: ${escapeHtml(recipe.recipeAcquisition || 'source unavailable')}.</p>${materials}${related}<p class="wow-warrior-profession-unverified">${escapeHtml(recipe.verificationStatus?.includes('unavailable') || recipe.professionSkillRequired == null ? 'Exact minimum profession skill is unavailable in the verified record.' : '')}</p></article>`;
   }).join('');
   const campBenefits = guide.campBenefits.map(item => `<li><span class="wow-warrior-profession-symbol" aria-hidden="true">${escapeHtml(item.symbol)}</span><div><strong>${escapeHtml(item.profession)} · ${escapeHtml(item.name)}</strong><p>Profession skill ${escapeHtml(item.skillRequired)} · ${escapeHtml(item.benefit)}</p></div></li>`).join('');
   const secondary = guide.secondaryProfessions.map(item => `<article><span class="wow-warrior-profession-symbol" aria-hidden="true">${escapeHtml(item.symbol)}</span><div><h5>${escapeHtml(item.name)}</h5><p>${escapeHtml(item.benefit)}</p></div></article>`).join('');
-  return `<div class="wow-warrior-professions" data-warrior-professions><div class="wow-warrior-professions-intro"><div><p class="wow-eyebrow">Selected path · ${escapeHtml(data.specialization)}</p><h4>Choose a profession direction</h4></div><span>Character level ${data.level}</span></div><p class="wow-warrior-profession-disclosure">${escapeHtml(guide.recommendationDisclosure)}</p><div class="wow-warrior-profession-combinations" role="group" aria-label="Compare profession combinations">${combinations}</div><section class="wow-warrior-profession-section"><h4>What should I work on now?</h4><p>${escapeHtml(data.activity)}</p><p>Profession skill and character level are separate gates. Being high enough level does not mean your profession skill requirement is met.</p></section><section class="wow-warrior-profession-section"><h4>Profession rank requirements</h4><div class="wow-warrior-profession-table-wrap"><table><thead><tr><th scope="col">Rank</th><th scope="col">Profession skill</th><th scope="col">Crafting character level</th><th scope="col">Gathering character level</th></tr></thead><tbody>${gates}</tbody></table></div></section><section class="wow-warrior-profession-section"><h4>Verified Warrior craft example</h4>${examples || '<p class="wow-warrior-profession-empty">No profession recipe examples are recorded.</p>'}</section><section class="wow-warrior-profession-section"><h4>Warrior camp benefits</h4><ul class="wow-warrior-camp-benefits">${campBenefits}</ul><p class="wow-warrior-profession-empty">Each listed camp feature requires profession skill 20. Profession skill is not character level.</p></section><section class="wow-warrior-profession-section"><h4>Useful secondary skills</h4><div class="wow-warrior-secondary-grid">${secondary}</div><p class="wow-warrior-profession-empty">Secondary skills do not use either primary profession slot.</p></section></div>`;
+  return `<div class="wow-warrior-professions" data-warrior-professions data-specialization="${escapeHtml(data.specializationId)}"><div class="wow-warrior-professions-intro"><div><p class="wow-eyebrow">Selected path · ${escapeHtml(data.specialization)}</p><h4>Choose a profession direction</h4></div><span>Character level ${data.level}</span></div>${data.specializationGuidance ? `<section class="wow-warrior-profession-section wow-warrior-profession-focus"><h4>${escapeHtml(data.specializationGuidance.title)}</h4><p>${escapeHtml(data.specializationGuidance.text)}</p></section>` : ''}<p class="wow-warrior-profession-disclosure">${escapeHtml(guide.recommendationDisclosure)}</p><div class="wow-warrior-profession-combinations" role="group" aria-label="Compare profession combinations">${combinations}</div><section class="wow-warrior-profession-section"><h4>What should I work on now?</h4><p>${escapeHtml(data.activity)}</p><p>Profession skill and character level are separate gates. Being high enough level does not mean your profession skill requirement is met.</p></section><section class="wow-warrior-profession-section"><h4>Profession rank requirements</h4><div class="wow-warrior-profession-table-wrap"><table><thead><tr><th scope="col">Rank</th><th scope="col">Profession skill</th><th scope="col">Crafting character level</th><th scope="col">Gathering character level</th></tr></thead><tbody>${gates}</tbody></table></div></section><section class="wow-warrior-profession-section"><h4>Warrior craft and equipment records</h4>${examples || '<p class="wow-warrior-profession-empty">No profession recipe examples are recorded.</p>'}</section><section class="wow-warrior-profession-section"><h4>Warrior camp benefits</h4><ul class="wow-warrior-camp-benefits">${campBenefits}</ul><p class="wow-warrior-profession-empty">Each listed camp feature requires profession skill 20. Profession skill is not character level.</p></section><section class="wow-warrior-profession-section"><h4>Useful secondary skills</h4><div class="wow-warrior-secondary-grid">${secondary}</div><p class="wow-warrior-profession-empty">Secondary skills do not use either primary profession slot.</p></section></div>`;
 }
 
 function renderWarriorLevelingGuide(data, escapeHtml, checklistProgress = [], checklistFilter = 'all') {

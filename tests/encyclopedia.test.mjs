@@ -2501,8 +2501,9 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.ok(panel.innerHTML.includes('Mining + Blacksmithing'));
   assert.ok(panel.innerHTML.includes('Mining + Engineering'));
   assert.ok(panel.innerHTML.includes('Character level 20'));
-  assert.ok(panel.innerHTML.includes('Blacksmithing skill 80 required'));
-  assert.ok(panel.innerHTML.includes('Recipe source and materials are not recorded'));
+  assert.ok(panel.innerHTML.includes('Blacksmithing skill is unverified'));
+  assert.ok(panel.innerHTML.includes('12 × Copper Bar'));
+  assert.ok(panel.innerHTML.includes('Minimum Blacksmithing skill is unverified'));
   const engineeringChoice = { dataset: { professionChoice: 'mining-engineering' } };
   handlers.click({ target: { closest: selector => selector === '[data-profession-choice]' ? engineeringChoice : null } });
   assert.ok(panel.innerHTML.includes('data-profession-choice="mining-engineering" aria-pressed="true"'));
@@ -2510,10 +2511,12 @@ test('leveling companion updates its level, specialization, and tab and persists
   levelInput.value = '35';
   handlers.input({ target: levelInput });
   assert.ok(panel.innerHTML.includes('Arms · Professions · Level 35'));
-  assert.ok(panel.innerHTML.includes('Character level met'));
+  assert.ok(panel.innerHTML.includes('Available now · character level met'));
   specializationSelect.value = 'protection';
   handlers.change({ target: specializationSelect });
   assert.ok(panel.innerHTML.includes('Protection · Professions · Level 35'));
+  assert.ok(panel.innerHTML.includes('Protection · armor and preparation'));
+  assert.ok(!panel.innerHTML.includes('Arms · weapon progression'));
   assert.ok(panel.innerHTML.includes('mining-engineering" aria-pressed="true"'), 'pairing choice remains independent of specialization changes');
 
   levelInput.value = '20';
@@ -2532,6 +2535,31 @@ test('leveling companion updates its level, specialization, and tab and persists
   specializationSelect.value = 'protection';
   handlers.change({ target: specializationSelect });
   assert.match(panel.innerHTML, /data-warrior-dungeon-task="deadmines:run" checked/, 'specialization changes preserve checked dungeon tasks');
+});
+
+test('Warrior profession guidance filters craft status by level and changes by specialization', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = { classRecord: warrior, warriorProfessions: wowPack.warriorProfessions, warriorEquipment: wowPack.warriorEquipment, sources: wowPack.sources };
+  for (const level of [15, 35, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+    const html = companionModule.renderLevelingCompanion({
+      classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId, guideData,
+      storage: { getItem: () => JSON.stringify({ level, specializationId, tab: 'professions' }) }
+    });
+    assert.ok(html.includes(`data-specialization="${specializationId}"`), `${specializationId} profession content updates at ${level}`);
+    assert.ok(html.includes('What should I work on now?') && html.includes('Artisan'), 'rank and level progression is present');
+    assert.ok(html.includes('Copper Bar') && html.includes('Weak Flux') && html.includes('Light Leather'), 'known recipe materials render');
+    assert.ok(html.includes('Blacksmithing skill is unverified') && html.includes('yellow at 80'), 'minimum crafting skill is not confused with skill-up range');
+    assert.ok(html.includes('Two-Hand') && html.includes('10.8 DPS') && html.includes('Crafted with Blacksmithing'), 'craft links to existing equipment stats and acquisition');
+    assert.ok(html.includes('wow-warrior-profession-recipe is-available') && html.includes('Available now · character level met'), `level ${level} makes the level-11 craft available`);
+    assert.ok(!html.includes('Recipe source and materials are not recorded'));
+    const expectedHeading = { arms: 'Arms · weapon progression', fury: 'Fury · damage and supplies', protection: 'Protection · armor and preparation' }[specializationId];
+    assert.ok(html.includes(expectedHeading), `${specializationId} guidance is distinct at ${level}`);
+  }
+  assert.equal(wowPack.warriorProfessions.craftExamples[0].professionSkillRequired, null, 'unverified minimum skill stays unknown');
+  assert.equal(wowPack.warriorProfessions.craftExamples[0].skillUpThreshold, 80, 'verified yellow skill-up point is a separate field');
+  assert.ok(wowPack.warriorProfessions.craftExamples[0].sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  assert.ok(Object.values(wowPack.warriorProfessions.specializationGuidance).flatMap(entry => entry.sourceIds).every(id => wowPack.sources.some(source => source.id === id)));
 });
 
 test('Warrior Stats use sourced, level-aware priorities and explanations for each specialization', () => {

@@ -166,6 +166,16 @@
       "status": "Forever client-based profession gathering/crafting relationships and secondary profession slot rules."
     },
     {
+      "id": "forever-client-blacksmithing-recipe",
+      "title": "WoW Forever client recipe data · Heavy Copper Maul",
+      "url": "https://bindonforever.com/spell/7408",
+      "publisher": "Bind on Forever",
+      "accessed": "2026-11-23",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Recipe and reagents read from WoW Forever game client data; the exact minimum Blacksmithing skill is not stated in the record."
+    },
+    {
       "id": "icy-warrior-leveling",
       "title": "Fury Warrior Leveling Guide",
       "url": "https://www.icy-veins.com/wow-forever/fury-warrior-leveling",
@@ -2240,8 +2250,13 @@
     ]
   },
   "warriorProfessions": {
-    "sourceIds": ["method-warrior-leveling", "icy-arms-leveling", "icy-forever-professions", "foreverdb-professions"],
-    "recommendationDisclosure": "These are sourced suggestions and profession synergies, not required Warrior mechanics or a universal best choice. No profession-specific difference between Arms, Fury and Protection is recorded.",
+    "sourceIds": ["method-warrior-leveling", "icy-arms-leveling", "icy-forever-professions", "foreverdb-professions", "forever-client-blacksmithing-recipe"],
+    "recommendationDisclosure": "These are practical profession fits, not requirements or a universal best choice. Specialization notes apply general Warrior play to verified profession benefits; no exclusive specialization profession bonus is recorded.",
+    "specializationGuidance": {
+      "arms": {"title":"Arms · weapon progression", "text":"Mining + Blacksmithing is a sourced Warrior leveling option: ore supports weapon and armor crafts, and Blacksmithing weapon stones support weapon damage. Compare each craft with the weapon you already have; the Heavy Copper Maul below is one recorded early option.", "sourceIds":["method-warrior-leveling","icy-arms-leveling","icy-forever-professions"]},
+      "fury": {"title":"Fury · damage and supplies", "text":"Mining + Blacksmithing remains a sourced Warrior option for weapon crafts and weapon stones. Herbalism + Alchemy is another verified gathering/crafting pairing for potions and other consumables; the source data does not establish a Fury-only recipe or profession bonus.", "sourceIds":["method-warrior-leveling","icy-forever-professions"]},
+      "protection": {"title":"Protection · armor and preparation", "text":"Blacksmithing can craft weapons and mail or plate armor, with Mining supplying ore and stone. This is a practical fit for checking armor upgrades while leveling; no Protection-only recipe or survivability bonus from primary professions is verified here.", "sourceIds":["icy-forever-professions","foreverdb-professions"]}
+    },
     "combinations": [
       {
         "id": "mining-blacksmithing",
@@ -2292,7 +2307,7 @@
       {"profession":"Skinning","skillRequired":20,"name":"Camp Chair","benefit":"Grants 2% critical strike at a camp; does not stack with Leader of the Pack.","symbol":"◈"}
     ],
     "craftExamples": [
-      {"name":"Heavy Copper Maul","profession":"Blacksmithing","characterLevelRequired":11,"professionSkillRequired":80,"acquisition":"Crafted with Blacksmithing.","materials":null,"recipeAcquisition":null,"sourceIds":["icy-arms-leveling"]}
+      {"id":"heavy-copper-maul","name":"Heavy Copper Maul","profession":"Blacksmithing","characterLevelRequired":11,"professionSkillRequired":null,"skillUpThreshold":80,"skillUpThresholdType":"yellow","acquisition":"Crafted with Blacksmithing; the recipe is learned from a profession trainer.","materials":[{"name":"Copper Bar","quantity":12,"source":"Smelt Copper from Copper Ore; ore is gathered with Mining or obtained from other players."},{"name":"Weak Flux","quantity":2,"source":"Profession vendor."},{"name":"Light Leather","quantity":2,"source":"Skinning or other players; a specific source route is not recorded here."}],"recipeAcquisition":"Profession trainer","gearItemId":"heavy-copper-maul","specializations":["arms","fury"],"verificationStatus":"verified-recipe; minimum profession skill unavailable","sourceIds":["icy-arms-leveling","forever-client-blacksmithing-recipe"]}
     ],
     "activityNotes": {
       "before10":"Learn the chosen primary professions from trainers and build profession skill separately from character level. Gathering skill rises from gathering; crafting skill rises by making relevant recipes.",

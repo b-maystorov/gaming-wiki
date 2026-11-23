@@ -1223,6 +1223,11 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-profession-section tbody th { color:#e5eaf0; font-weight:700; }
 .wow-warrior-guide .wow-warrior-profession-section tbody th small { display:block; color:#aab8c5; font-size:.62rem; font-weight:500; }
 .wow-warrior-guide .wow-warrior-profession-recipe { padding:.55rem .65rem; border-left:2px solid #7c6747; background:#17222d; }
+.wow-warrior-guide .wow-warrior-profession-recipe.is-available { border-left-color:#63866f; background:#15251f; }
+.wow-warrior-guide .wow-warrior-profession-recipe.is-upcoming { border-left-color:#9a794c; }
+.wow-warrior-guide .wow-warrior-profession-focus { border-left:2px solid #b38b56; }
+.wow-warrior-guide .wow-warrior-profession-materials { margin:.35rem 0 0; padding-left:1.15rem; color:#c2ced8; font-size:.72rem; line-height:1.5; }
+.wow-warrior-guide .wow-warrior-profession-unverified { color:#b5a27f; }
 .wow-warrior-guide .wow-warrior-profession-recipe > div { display:flex; justify-content:space-between; gap:.5rem; }
 .wow-warrior-guide .wow-warrior-profession-recipe h5 { margin:0; color:#e9edf1; font-size:.8rem; }
 .wow-warrior-guide .wow-warrior-profession-recipe > div span { color:#d8bd8d; font-size:.68rem; }
