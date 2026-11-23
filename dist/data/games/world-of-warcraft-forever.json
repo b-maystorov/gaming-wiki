@@ -751,7 +751,10 @@
           "foreverdb-stats",
           "icy-warrior-arms-stats",
           "icy-warrior-fury-stats",
-          "icy-warrior-protection-stats"
+          "icy-warrior-protection-stats",
+          "icy-arms-leveling",
+          "icy-warrior-leveling",
+          "icy-protection-leveling"
         ],
         "attributes": [
           {
@@ -759,6 +762,7 @@
             "name": "Strength",
             "icon": "assets/images/wow-forever/icons/spell_nature_strengthofearthtotem02.jpg",
             "summary": "Each point gives 2 melee Attack Power; every 20 Strength also gives 1 Block Value for Warriors.",
+            "when": "Useful throughout leveling and at 60: it raises weapon damage and ability damage. For Protection, it also contributes Block Value.",
             "sourceIds": [
               "foreverdb-stats"
             ]
@@ -768,6 +772,7 @@
             "name": "Agility",
             "icon": "assets/images/wow-forever/icons/ability_rogue_ambush.jpg",
             "summary": "At level 60, 20 Agility gives 1% melee crit; each point adds 2 Armor and some Dodge. Warriors gain no melee Attack Power from it.",
+            "when": "Compare it with Strength on gear; it is especially useful to Protection because it adds Armor and Dodge as well as crit. The crit conversion varies by level.",
             "sourceIds": [
               "foreverdb-stats"
             ]
@@ -777,6 +782,7 @@
             "name": "Stamina",
             "icon": "assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg",
             "summary": "The first 20 points each give 1 health; each additional point gives 10 health before buffs. It supports survival, especially for tanks.",
+            "when": "More valuable when pulls or dungeon hits threaten to kill you; it protects against both physical and magic damage.",
             "sourceIds": [
               "foreverdb-stats",
               "icy-warrior-protection-stats"
@@ -787,6 +793,7 @@
             "name": "Attack Power",
             "icon": "assets/images/wow-forever/icons/ability_warrior_focusedrage.jpg",
             "summary": "Every 14 Attack Power adds 1 weapon DPS before modifiers; it also improves abilities that scale with Attack Power.",
+            "when": "A useful offensive stat at every level, but compare it with direct weapon upgrades and Strength rather than treating it as a cap target.",
             "sourceIds": [
               "foreverdb-stats"
             ]
@@ -796,6 +803,7 @@
             "name": "Critical Strike",
             "icon": "assets/images/wow-forever/icons/ability_criticalstrike.jpg",
             "summary": "Increases the chance attacks crit. Critical auto-attacks generate more Rage; Fury also uses crits to trigger Flurry.",
+            "when": "Useful for damage and auto-attack Rage; for Fury it gains extra value from Flurry after the recommended build reaches level 37.",
             "sourceIds": [
               "icy-warrior-arms-stats",
               "icy-warrior-fury-stats"
@@ -806,6 +814,7 @@
             "name": "Hit Chance",
             "icon": "assets/images/wow-forever/icons/ability_warrior_shieldbash.jpg",
             "summary": "Reduces attack misses. Missed auto-attacks deal no damage and generate no Rage.",
+            "when": "Take it when gear offers it without giving up a major weapon or role stat. Boss-target numbers apply only to the stated level-60 encounter, not while leveling.",
             "sourceIds": [
               "icy-warrior-arms-stats",
               "icy-warrior-fury-stats",
@@ -817,6 +826,7 @@
             "name": "Weapon Damage",
             "icon": "assets/images/wow-forever/icons/inv_sword_27.jpg",
             "summary": "Weapon DPS and per-swing damage affect attacks differently; compare the whole weapon and its stats.",
+            "when": "Important throughout leveling and at 60. Arms values per-swing damage with its two-hander; Fury must keep both weapons current; Protection's key abilities do not all scale with weapon damage.",
             "sourceIds": [
               "icy-warrior-arms-stats",
               "icy-warrior-fury-stats"
@@ -827,6 +837,7 @@
             "name": "Expertise",
             "icon": "assets/images/wow-forever/icons/ability_warrior_riposte.jpg",
             "summary": "Reduces enemy dodges and parries. It addresses a different miss result from Hit Chance.",
+            "when": "Useful when available on gear. It supports reliable attacks and Protection threat; the cited dodge reference is for attacking level-63 bosses from behind.",
             "sourceIds": [
               "icy-warrior-arms-stats",
               "icy-warrior-fury-stats",
@@ -838,6 +849,7 @@
             "name": "Defense",
             "icon": "assets/images/wow-forever/icons/ability_warrior_shieldwall.jpg",
             "summary": "Above the level-based baseline, Defense improves Dodge, Parry and Block while reducing enemy Hit and Critical Strike chance.",
+            "when": "Mostly a Protection dungeon or raid survival stat. The 440 Defense figure is a level-60 raid-boss critical-immunity reference, not a leveling target.",
             "sourceIds": [
               "foreverdb-stats",
               "icy-warrior-protection-stats"
@@ -848,6 +860,7 @@
             "name": "Armor",
             "icon": "assets/images/wow-forever/icons/spell_nature_spiritarmor.jpg",
             "summary": "Reduces incoming physical damage; it does not reduce magic damage.",
+            "when": "Most useful when Protection is tanking physical attackers; Stamina covers health needs against both physical and magic damage.",
             "sourceIds": [
               "icy-warrior-protection-stats"
             ]
@@ -857,6 +870,7 @@
             "name": "Block Value",
             "icon": "assets/images/wow-forever/icons/inv_shield_06.jpg",
             "summary": "Reduces damage when blocking and improves Shield Slam damage.",
+            "when": "Protection values it with a shield. Its offensive value grows when Shield Slam is learned at level 40; block-value scaling is not an Arms or Fury priority.",
             "sourceIds": [
               "icy-warrior-protection-stats"
             ]
@@ -866,13 +880,21 @@
           "arms": {
             "label": "Arms · Level 60 PvE starting order",
             "items": [
-              "Weapon DPS",
+              "Two-handed Weapon DPS",
               "Hit Chance",
               "Expertise",
               "Critical Strike",
               "Strength"
             ],
             "note": "A guide ordering, not a numerical stat weight. The existing leveling guide gives separate general leveling advice.",
+            "thresholdNote": "The Hit and Expertise values below are level-60 boss references only; they are not universal caps or leveling targets.",
+            "leveling": {
+              "label": "Arms · Leveling priorities (1–59)",
+              "items": ["Two-handed Weapon DPS", "Hit Chance", "Expertise", "Critical Strike & Agility", "Strength & Attack Power"],
+              "note": "Keep a strong two-handed weapon current. At similar DPS, slower weapons hit harder per swing for Mortal Strike and Slam; do not pass up a large DPS upgrade for speed alone.",
+              "thresholdNote": "No universal leveling Hit or Expertise cap is verified here. The boss values below apply only to level-60 PvE encounters.",
+              "sourceIds": ["icy-arms-leveling"]
+            },
             "sourceIds": [
               "icy-warrior-arms-stats"
             ]
@@ -880,13 +902,28 @@
           "fury": {
             "label": "Fury · Level 60 PvE starting order",
             "items": [
-              "Weapon DPS",
+              "Both weapon DPS",
               "Hit Chance",
               "Expertise",
               "Critical Strike",
               "Strength"
             ],
-            "note": "A guide ordering, not a numerical stat weight. Dual-wield auto-attacks and special attacks have different Hit behavior.",
+            "note": "A guide ordering, not a numerical stat weight. Keep both weapons upgraded; dual-wield auto-attacks and special attacks have different Hit behavior.",
+            "thresholdNote": "The Hit and Expertise values below are level-60 boss references only; dual-wield auto-attacks can still miss beyond the special-attack Hit target.",
+            "beforeDualWield": {
+              "label": "Fury · Before Dual Wield (levels 1–19)",
+              "items": ["Best available weapon", "Hit Chance", "Expertise", "Strength & Attack Power", "Critical Strike & Agility"],
+              "note": "Dual Wield is not trained until level 20. Before then, compare the best weapon available to you; no off-hand priority applies yet.",
+              "thresholdNote": "No universal leveling Hit or Expertise cap is verified here. The boss values below apply only to level-60 PvE encounters.",
+              "sourceIds": ["icy-warrior-leveling"]
+            },
+            "leveling": {
+              "label": "Fury · Dual-wield leveling priorities (20–59)",
+              "items": ["Both weapon DPS", "Hit Chance", "Expertise", "Strength & Attack Power", "Critical Strike & Agility"],
+              "note": "At level 20, train Dual Wield before following this two-weapon comparison. Keep both weapons current; a fast off-hand can create more Unbridled Wrath chances, while a slower main hand can improve Whirlwind at similar DPS. Do not skip a large DPS upgrade for speed alone.",
+              "thresholdNote": "Dual-wield auto-attacks have an extra 19% miss chance in the cited guide; this is not a special-attack penalty or a Hit cap. No universal leveling caps are verified.",
+              "sourceIds": ["icy-warrior-leveling"]
+            },
             "sourceIds": [
               "icy-warrior-fury-stats"
             ]
@@ -908,6 +945,15 @@
               "Defense"
             ],
             "note": "The source separates threat and survival priorities. These are guide orders, not numerical stat weights.",
+            "thresholdNote": "The 440 Defense and boss Hit/Expertise references below describe level-60 raid-boss contexts; they are not leveling requirements.",
+            "leveling": {
+              "label": "Protection · Leveling and dungeon tank priorities",
+              "offense": ["Weapon DPS", "Hit & Expertise", "Strength & Attack Power", "Agility & Critical Strike"],
+              "defense": ["Armor & Stamina", "Defense, Dodge, Parry & Block", "Block Value"],
+              "note": "The leveling guide orders weapon damage and threat stats first for general leveling. When tanking a difficult dungeon, favor shield, armor and health upgrades when survival is the limiting need.",
+              "thresholdNote": "No universal leveling Hit, Expertise or Defense cap is verified here. Boss thresholds below are specific to level-60 encounters.",
+              "sourceIds": ["icy-protection-leveling"]
+            },
             "sourceIds": [
               "icy-warrior-protection-stats"
             ]

@@ -2438,11 +2438,11 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.equal(statsTab.attributes.get('aria-selected'), 'true');
   assert.ok(panel.innerHTML.includes('Arms · Stats &amp; Attributes'));
   assert.ok(panel.innerHTML.includes('data-stats-specialization="arms"'));
-  assert.ok(panel.innerHTML.includes('Arms · Level 60 PvE starting order'));
+  assert.ok(panel.innerHTML.includes('Arms · Leveling priorities (1–59)'));
   assert.ok(panel.innerHTML.includes('Weapon DPS'));
   assert.ok(panel.innerHTML.includes('Strength'));
   assert.ok(panel.innerHTML.includes('Defense'));
-  assert.ok(panel.innerHTML.includes('not a numerical stat weight'));
+  assert.ok(panel.innerHTML.includes('Bars show ordering, not numerical stat weights.'));
   assert.ok(panel.innerHTML.includes('What should I upgrade next?'));
   assert.equal((panel.innerHTML.match(/<details class="wow-stat-explanation">/g) || []).length, 3);
   assert.ok(panel.innerHTML.includes('<summary>Hit, Expertise and target level</summary>'), 'native details summaries provide keyboard-expandable explanations');
@@ -2451,12 +2451,12 @@ test('leveling companion updates its level, specialization, and tab and persists
   specializationSelect.value = 'fury';
   handlers.change({ target: specializationSelect });
   assert.ok(panel.innerHTML.includes('data-stats-specialization="fury"'));
-  assert.ok(panel.innerHTML.includes('Fury · Level 60 PvE starting order'));
-  assert.ok(panel.innerHTML.includes('Dual-wield auto-attacks and special attacks have different Hit behavior.'));
+  assert.ok(panel.innerHTML.includes('Fury · Dual-wield leveling priorities (20–59)'));
+  assert.ok(panel.innerHTML.includes('extra 19% miss chance'));
   specializationSelect.value = 'protection';
   handlers.change({ target: specializationSelect });
   assert.ok(panel.innerHTML.includes('data-stats-specialization="protection"'));
-  assert.ok(panel.innerHTML.includes('Protection · Level 60 PvE tank starting orders'));
+  assert.ok(panel.innerHTML.includes('Protection · Leveling and dungeon tank priorities'));
   assert.ok(panel.innerHTML.includes('Threat &amp; damage'));
   assert.ok(panel.innerHTML.includes('Survival'));
   assert.ok(panel.innerHTML.includes('Block Value'));
@@ -2467,8 +2467,8 @@ test('leveling companion updates its level, specialization, and tab and persists
   assert.ok(panel.innerHTML.includes('class="wow-stat-symbol is-agility"'));
   assert.ok(panel.innerHTML.includes('class="wow-stat-symbol is-block-value"'));
   assert.ok(!panel.innerHTML.includes('class="wow-stat-row"><img'), 'unrelated ability artwork is not used as stat icons');
-  assert.ok(panel.innerHTML.includes('Bars indicate ordering only, not numerical stat weights.'));
-  assert.equal((panel.innerHTML.match(/class="wow-stat-priority-rank"/g) || []).length, 10);
+  assert.ok(panel.innerHTML.includes('Bars show ordering, not numerical stat weights.'));
+  assert.equal((panel.innerHTML.match(/class="wow-stat-priority-rank"/g) || []).length, 7);
   assert.ok(panel.innerHTML.indexOf('Expertise') < panel.innerHTML.indexOf('Hit Chance'));
   assert.match(portalStyles, /\.wow-stat-rows \{ display:grid; grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(portalStyles, /\.wow-stat-order-bar > span \{ display:block; height:100%;/);
@@ -2532,6 +2532,48 @@ test('leveling companion updates its level, specialization, and tab and persists
   specializationSelect.value = 'protection';
   handlers.change({ target: specializationSelect });
   assert.match(panel.innerHTML, /data-warrior-dungeon-task="deadmines:run" checked/, 'specialization changes preserve checked dungeon tasks');
+});
+
+test('Warrior Stats use sourced, level-aware priorities and explanations for each specialization', () => {
+  const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = { classRecord: warrior, sources: wowPack.sources };
+  const render = (level, specializationId) => companionModule.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId, guideData,
+    storage: { getItem: () => JSON.stringify({ level, specializationId, tab: 'stats' }) }
+  });
+  const priorities = (html) => [...html.matchAll(/class="wow-stat-priority-label">([^<]+)/g)].map(match => match[1]);
+  const expected = {
+    arms: {
+      15: ['Two-handed Weapon DPS', 'Hit Chance', 'Expertise', 'Critical Strike &amp; Agility', 'Strength &amp; Attack Power'],
+      35: ['Two-handed Weapon DPS', 'Hit Chance', 'Expertise', 'Critical Strike &amp; Agility', 'Strength &amp; Attack Power'],
+      60: ['Two-handed Weapon DPS', 'Hit Chance', 'Expertise', 'Critical Strike', 'Strength']
+    },
+    fury: {
+      15: ['Best available weapon', 'Hit Chance', 'Expertise', 'Strength &amp; Attack Power', 'Critical Strike &amp; Agility'],
+      35: ['Both weapon DPS', 'Hit Chance', 'Expertise', 'Strength &amp; Attack Power', 'Critical Strike &amp; Agility'],
+      60: ['Both weapon DPS', 'Hit Chance', 'Expertise', 'Critical Strike', 'Strength']
+    },
+    protection: {
+      15: ['Weapon DPS', 'Hit &amp; Expertise', 'Strength &amp; Attack Power', 'Agility &amp; Critical Strike', 'Armor &amp; Stamina', 'Defense, Dodge, Parry &amp; Block', 'Block Value'],
+      35: ['Weapon DPS', 'Hit &amp; Expertise', 'Strength &amp; Attack Power', 'Agility &amp; Critical Strike', 'Armor &amp; Stamina', 'Defense, Dodge, Parry &amp; Block', 'Block Value'],
+      60: ['Expertise', 'Hit Chance', 'Agility', 'Strength', 'Stamina', 'Stamina', 'Armor', 'Agility', 'Avoidance', 'Defense']
+    }
+  };
+  for (const level of [15, 35, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+    const html = render(level, specializationId);
+    assert.ok(html.includes(`data-stats-specialization="${specializationId}" data-stats-level="${level}"`), `${specializationId} Stats update to level ${level}`);
+    assert.deepEqual(priorities(html), expected[specializationId][level], `${specializationId} priority order at level ${level}`);
+    assert.ok(html.includes('What should I upgrade next?') && html.includes('When it matters:'), `${specializationId} stat explanations render at level ${level}`);
+    assert.ok(level === 60 ? /level-60 (?:raid-)?boss (?:references|contexts)/.test(html) : html.includes('No universal leveling'), `${specializationId} labels applicable or unverified thresholds at level ${level}`);
+  }
+  const furyBeforeDualWield = render(15, 'fury');
+  assert.ok(furyBeforeDualWield.includes('no off-hand priority applies yet'));
+  const furyAfterDualWield = render(35, 'fury');
+  assert.ok(furyAfterDualWield.includes('fast off-hand') && furyAfterDualWield.includes('slower main hand'));
+  assert.ok(warrior.statsGuide.priorities.arms.leveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  assert.ok(warrior.statsGuide.priorities.fury.beforeDualWield.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  assert.ok(warrior.statsGuide.priorities.protection.leveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
 });
 
 test('Warrior profession guidance uses loaded Forever records and explains when that data is missing', () => {

@@ -416,9 +416,13 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
   const { classRecord, specialization, guide, guideMatchesSpec, specializationGuideContent } = selectedData(guideData, state);
   const specName = specialization?.name || 'Specialization';
   if (state.tab === 'stats' && classRecord.statsGuide) {
-    const priority = classRecord.statsGuide.priorities?.[state.specializationId];
+    const priorityRecord = classRecord.statsGuide.priorities?.[state.specializationId];
+    const profile = state.level >= 60 ? priorityRecord
+      : state.specializationId === 'fury' && state.level < 20 ? priorityRecord?.beforeDualWield
+        : priorityRecord?.leveling || priorityRecord;
+    const priority = profile ? { ...profile, id: state.specializationId, level: state.level } : null;
     return {
-      heading: `${specName} · Stats & Attributes`,
+      heading: `${specName} · Stats & Attributes · Level ${state.level}`,
       statsGuide: classRecord.statsGuide,
       priority: priority ? { ...priority, id: state.specializationId } : null,
       sections: [],
@@ -695,13 +699,13 @@ function renderStatsGuide(statsGuide, priority, escapeHtml, hideSourceLinks = fa
   const priorities = priority.items
     ? renderPriority(priority.label, priority.items)
     : `${renderPriority('Threat & damage', priority.offense || [])}${renderPriority('Survival', priority.defense || [])}`;
-  const rows = statsGuide.attributes.map(stat => `<li class="wow-stat-row" data-stat-id="${escapeHtml(stat.id)}">${renderWarriorStatSymbol(stat.id)}<strong>${escapeHtml(stat.name)}</strong><span>${escapeHtml(stat.summary)}</span></li>`).join('');
+  const rows = statsGuide.attributes.map(stat => `<li class="wow-stat-row" data-stat-id="${escapeHtml(stat.id)}">${renderWarriorStatSymbol(stat.id)}<strong>${escapeHtml(stat.name)}</strong><span><span>${escapeHtml(stat.summary)}</span>${stat.when ? `<small><strong>When it matters:</strong> ${escapeHtml(stat.when)}</small>` : ''}</span></li>`).join('');
   const explanations = statsGuide.explanations.map(item => {
     const sources = hideSourceLinks ? [] : (item.sourceIds || []).map(id => statsGuide.sourceCatalog?.[id]).filter(Boolean);
     const links = sources.length ? `<span class="wow-stat-explanation-sources">Sources: ${sources.map(source => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a>`).join(' · ')}</span>` : '';
     return `<details class="wow-stat-explanation"><summary>${escapeHtml(item.title)}</summary><p>${escapeHtml(item.text)}</p>${links}</details>`;
   }).join('');
-  return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>${escapeHtml(priority.note || 'Guide order · not stat weights')} Bars indicate ordering only, not numerical stat weights.</span></div><div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
+  return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}" data-stats-level="${Number(priority.level) || 60}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>Level ${Number(priority.level) || 60} · Bars show ordering, not numerical stat weights.</span></div>${priority.note ? `<p class="wow-stat-priority-note">${escapeHtml(priority.note)}</p>` : ''}${priority.thresholdNote ? `<p class="wow-stat-threshold-note">${escapeHtml(priority.thresholdNote)}</p>` : ''}<div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
 }
 
 export function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {

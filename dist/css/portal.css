@@ -1265,6 +1265,8 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-stats-guide { display:grid; grid-column:1/-1; gap:.8rem; min-width:0; color:#d5dfeb; }
 .wow-stat-priority,.wow-stat-attributes,.wow-stat-explanations,.wow-stat-upgrade { min-width:0; padding:.75rem .85rem; border:1px solid #2d465d; border-radius:5px; background:linear-gradient(145deg,#101f2e,#0b1723); }
 .wow-stat-priority { border-top:2px solid #b98d52; }
+.wow-stat-priority-note,.wow-stat-threshold-note { margin:.15rem 0 .45rem; color:#c2ced8; font-size:.84rem; line-height:1.45; }
+.wow-stat-threshold-note { color:#e0c58f; }
 .wow-stat-section-heading { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:.35rem .75rem; margin-bottom:.7rem; }
 .wow-stats-guide h4 { margin:0 0 .5rem; color:#edf2f6; font-size:.84rem; }
 .wow-stat-section-heading h4 { margin:0; }
@@ -1289,6 +1291,7 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-stat-symbol.is-defense,.wow-stat-symbol.is-armor,.wow-stat-symbol.is-block-value { color:#9bbad2; border-color:#455c70; background:#192632; }
 .wow-stat-row strong { color:#ead6ad; font-size:.77rem; line-height:1.3; }
 .wow-stat-row > span:last-child { color:#c4d0db; font-size:.73rem; line-height:1.48; }
+.wow-stat-row > span:last-child small { display:block; margin-top:.2rem; color:#b5c4d0; font-size:.82rem; line-height:1.45; }
 .wow-stat-explanations { padding-block:.6rem; }
 .wow-stat-explanations > h4 { margin-bottom:.35rem; }
 .wow-stat-explanation { border-top:1px solid #283f54; }
@@ -1669,6 +1672,8 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-dungeon-quests summary,
 .wow-warrior-guide .wow-warrior-dungeon-quests strong,
 .wow-warrior-guide .wow-warrior-dungeon-card dt { font-size:.82rem; line-height:1.45; }
+.wow-warrior-guide .wow-stat-row strong,.wow-warrior-guide .wow-stat-row > span:last-child,.wow-warrior-guide .wow-stat-priority-group li,.wow-warrior-guide .wow-stat-priority-note,.wow-warrior-guide .wow-stat-threshold-note { font-size:.92rem; line-height:1.48; }
+.wow-warrior-guide .wow-stat-row > span:last-child small { font-size:.86rem; }
 .wow-warrior-guide .wow-warrior-gear-filter button,
 .wow-warrior-guide .wow-warrior-checklist-heading label,
 .wow-warrior-guide .wow-warrior-checklist-heading select,
