@@ -206,14 +206,15 @@ test('location guides organize linked expedition records and preserve recorded i
   assert.ok(courtyardHtml.includes('general-purpose Courtyard team guide yet'));
 });
 
-test('trinket index groups existing rarity metadata and shows verification and source status', () => {
+test('trinket index groups rarity metadata without repeated verification labels or source lists', () => {
   const html = h.app.renderEncyclopediaCollection('trinkets');
   const rarities = [...new Set(pack.trinkets.map(record => record.rarity))];
   for (const rarity of rarities) {
     assert.ok(html.includes(`data-trinket-rarity="${rarity}"`), `missing rarity group ${rarity}`);
   }
-  assert.ok(html.includes('Sources: Trinkets (Darkest Dungeon)'));
-  assert.ok(html.includes('Reference-checked'));
+  assert.ok(!html.includes('Sources: Trinkets (Darkest Dungeon)'));
+  assert.ok(!html.includes('Reference-checked'));
+  assert.ok(pack.trinkets.every(record => record.verification?.sourceIds?.length), 'source metadata remains in records');
   assert.ok(html.includes('DLC: The Crimson Court'));
 });
 
@@ -1783,7 +1784,8 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     assert.ok(classHtml.includes('Quick combat reference'));
     assert.ok(classHtml.includes('Beginner traps'));
     assert.ok(classHtml.includes('Where to quest'));
-    assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.starterGuide.sourceId).url));
+    assert.ok(wowPack.sources.some(source => source.id === item.starterGuide.sourceId), 'starter guide retains its source record');
+    assert.ok(!classHtml.includes(wowPack.sources.find(source => source.id === item.starterGuide.sourceId).url), 'class card does not repeat its source URL');
     if (item.id !== 'warrior') assert.ok(classHtml.includes('Original BM Gaming Wiki illustration'));
     const art = wowArtwork.records.find(record => record.classId === item.id);
     assert.ok(art, `missing local class illustration for ${item.id}`);
@@ -1794,7 +1796,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     assert.equal(item.starterGuide.levelingBands.length, 3, `${item.id} has three early leveling bands`);
     for (const band of item.starterGuide.levelingBands) assert.ok(classHtml.includes(band.range));
     assert.ok(classHtml.includes('Race and faction options'));
-    assert.ok(classHtml.includes(wowPack.sources.find(source => source.id === item.sourceId).title));
+    assert.ok(wowPack.sources.some(source => source.id === item.sourceId && source.title), 'class guide retains source attribution data');
     for (const specialization of item.specializations) {
       const href = `#game/world-of-warcraft/builds/${item.id}/${specialization.id}`;
       if (item.id === 'warrior') assert.ok(classHtml.includes(`data-warrior-spec-tab="${specialization.id}"`));
@@ -2792,7 +2794,7 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
   assert.match(rendered, /<details class="wow-warrior-dungeon-details">/);
   assert.match(rendered, /Important Drops/);
   assert.match(rendered, /Before You Enter · Arms/);
-  assert.match(rendered, /Sources:/);
+  assert.doesNotMatch(rendered, /Sources:/);
   storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 17, faction: 'Alliance', tab: 'dungeons', specializationId: 'fury' }));
   const earlyRendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 17, selectedSpecialization: 'fury', guideData, storage });
   assert.match(earlyRendered, /Buzz Saw[\s\S]*?Availability:<\/b> Upcoming · requires level 18/, 'dungeon drops distinguish their item level requirement from dungeon range recommendations');
@@ -2832,25 +2834,36 @@ test('gold farming responds to level, specialization and faction and preserves s
     const html = render(level, spec, faction);
     assert.match(html, new RegExp(expected));
     assert.match(html, new RegExp(`data-gold-spec="${spec}"`));
-    assert.match(html, /Source ↗/);
+    assert.doesNotMatch(html, /Source ↗|verified 2026-|class="wow-gold-evidence|Forever data|Market-recorded/);
   }
   assert.doesNotMatch(render(14, 'arms', 'Horde'), /Greymist Seer loot loop/);
   assert.match(render(39, 'fury', 'Alliance'), /Fury approach/);
   assert.match(render(54, 'protection', 'Horde'), /whole group/);
-  assert.match(render(14, 'arms', 'Alliance'), /Forever loot observed · 10 kills/);
+  assert.match(render(14, 'arms', 'Alliance'), /source has ten recorded kills for drop observations/);
+  const desktopLayout = portalStyles.match(/\.wow-gold-grid \{[^}]+\}/)?.[0] || '';
+  assert.match(desktopLayout, /repeat\(2,\s*minmax\(0,\s*1fr\)\)/, 'desktop grid uses two equal columns');
+  assert.match(portalStyles, /\.wow-gold-card:only-child\s*\{\s*grid-column:\s*1\s*\/\s*-1/,
+    'a single recommendation spans the available row');
+  assert.match(portalStyles, /@media\s*\(max-width:\s*900px\)\s*\{\s*\.wow-gold-grid\s*\{\s*grid-template-columns:\s*1fr/,
+    'tablet and mobile grid collapses to one column');
+  assert.match(portalStyles, /@media\(max-width:560px\)[\s\S]*?\.wow-gold-card dl \{ grid-template-columns:1fr;/,
+    'mobile card details also stack in one column');
   const middle = module.getCompanionPanel({ classId: 'warrior', level: 40, specializationId: 'protection', faction: 'Horde', tab: 'gold-farming' }, { classRecord: warrior });
   assert.equal(middle.goldFarming.faction, 'Horde');
   const rendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 40, selectedSpecialization: 'protection', guideData: { classRecord: warrior }, storage: { getItem: key => key.endsWith(':warrior') ? JSON.stringify({ level: 40, faction: 'Horde', specializationId: 'protection', tab: 'gold-farming' }) : null } });
   assert.match(rendered, /Gorilla hides, hair and quest fangs/);
-  assert.match(rendered, /Creator-reported/);
-  assert.match(rendered, /2026-11-24/);
-  assert.match(rendered, /Source ↗/);
+  assert.match(rendered, /Creator-reported; not a promise or typical result/);
+  assert.doesNotMatch(rendered, /class="wow-gold-evidence|Source ↗|verified 2026-11-24/);
+  assert.match(rendered, /Practical instructions and risks/);
   assert.doesNotMatch(rendered, /About 5–6 gold per hour/, 'creator estimates without a documented measurement are not presented as gold-per-hour results');
+  const goldRecords = h.modules.get(resolve(root, 'dist/data/games/wow-forever-gold-farming.js')).namespace.WOW_GOLD_FARMING_METHODS;
+  const creatorRecord = goldRecords.find(method => method.id === 'theramore-north-turtles');
+  assert.ok(creatorRecord.sourceUrl && creatorRecord.verifiedDate && creatorRecord.status === 'Creator-reported', 'source and reliability metadata remain available in the data module');
   assert.match(rendered, /Levels 21–40 suggestions/);
   assert.match(render(47, 'arms', 'Alliance'), /Levels 41–59 suggestions/);
   assert.match(render(60, 'protection', 'Horde'), /Level 60 suggestions/);
   const emptyClass = module.renderLevelingCompanion({ classId: 'paladin', currentLevel: 10, selectedSpecialization: 'holy', guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') }, storage: { getItem: key => key.endsWith(':paladin') ? JSON.stringify({ level: 10, faction: 'Alliance', specializationId: 'holy', tab: 'gold-farming' }) : null } });
-  assert.match(emptyClass, /No sourced method is recorded/);
+  assert.match(emptyClass, /No matching methods for this level, faction, and specialization/);
 });
 
 test('leveling companion renders complete source-backed builds and safely handles blocked storage', () => {
@@ -3044,7 +3057,7 @@ test('Warrior companion tabs omit visible source references while source metadat
       assert.ok(!html.includes('wow-companion-tier-source'), `${tab} omits source disclosure citations`);
     }
     assert.ok(sourceIds.every(id => wowPack.sources.some(source => source.id === id)), 'source attribution remains in structured guide data');
-    assert.ok(h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior')).includes('Open full leveling guide'));
+    assert.ok(h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior')).includes('Open Forever trainer spellbook'));
   } finally {
     if (saved === undefined) h.storedValues.delete(key);
     else h.storedValues.set(key, saved);
@@ -3497,7 +3510,8 @@ test('Warrior handbook preserves existing guide content and integrations', async
   assert.match(html, /href="#game\/world-of-warcraft\/talent-planner" data-wow-build-class="warrior" data-wow-build-spec="fury"/);
   assert.ok(html.includes('href="#game/world-of-warcraft/leveling"'));
   assert.ok(html.includes(guide.professionRecommendation.advice));
-  assert.ok(html.includes(wowPack.sources.find(source => source.id === guide.professionRecommendation.sourceId).url));
+  assert.ok(wowPack.sources.some(source => source.id === guide.professionRecommendation.sourceId), 'profession recommendation retains source metadata');
+  assert.ok(!html.includes(wowPack.sources.find(source => source.id === guide.professionRecommendation.sourceId).url), 'profession card omits repeated source URL');
   const icon = await readFile(resolve(root, 'dist/assets/images/wow-forever/icons/class_warrior.jpg'));
   assert.ok(icon.length > 0);
   for (const item of wowPack.classes.filter(item => item.id !== 'warrior')) {

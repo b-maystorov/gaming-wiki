@@ -486,25 +486,21 @@ function renderEncyclopediaCollection(kind) {
   const filterValues = isRegionFilter
     ? structuredGameContent.regions.map(region => [region.id, region.name])
     : [...new Set(records.map(record => kind === 'trinkets' ? record.rarity : kind === 'items' ? record.category : record.category))].map(value => [value, value]);
-  const trinketSourceLabel = record => {
-    const sourceNames = (record.verification?.sourceIds || []).map(id => structuredGameContent.sources.find(source => source.id === id)?.title).filter(Boolean);
-    return sourceNames.length ? `Sources: ${sourceNames.join(', ')}` : 'Source details not recorded';
-  };
-  const trinketSummary = record => `${record.effects?.length ? record.effects.map(effect => effect.text).join(' · ') : 'Effects are not recorded.'} · ${verificationLabel('trinkets', record)}`;
-  const renderTrinketCard = record => renderEncyclopediaCard('trinkets', record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).filter(Boolean).join(', '), trinketSourceLabel(record)], trinketSummary(record), renderTrinketOwnershipControl(record, 'trinket-card-owned'));
+  const trinketSummary = record => record.effects?.length ? record.effects.map(effect => effect.text).join(' · ') : 'Effects are not recorded.';
+  const renderTrinketCard = record => renderEncyclopediaCard('trinkets', record, [record.rarity, requirementLabel(record.requirements), (record.classRestrictionHeroRouteIds || []).map(id=>heroes.find(hero=>hero.id===id)?.name || id).join(', '), (record.regionIds || []).map(id=>structuredGameContent.regions.find(region=>region.id===id)?.name).filter(Boolean).join(', ')], trinketSummary(record), renderTrinketOwnershipControl(record, 'trinket-card-owned'));
   const cards = records.map(record => {
     if (kind === 'enemies') return renderEncyclopediaCard(kind, record, [record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean).join(' / '), record.enemyType, record.encounterClass, requirementLabel(record.requirements)], record.summary);
     if (kind === 'trinkets') {
       return renderTrinketCard(record);
     }
-    if (kind === 'items') return renderEncyclopediaCard(kind, record, [record.category, requirementLabel(record.requirements), verificationLabel(kind, record)], record.purpose || 'Usage information is not recorded.');
+    if (kind === 'items') return renderEncyclopediaCard(kind, record, [record.category, requirementLabel(record.requirements)], record.purpose || 'Usage information is not recorded.');
     if (kind === 'curios') {
       const visibleInteractions = record.interactions.slice(0, 2);
       const interactionRows = visibleInteractions.map(interaction => {
         const item = interaction.itemId && structuredGameContent.items.find(entry => entry.id === interaction.itemId);
         return `<span><strong>${escapeHtml(item?.name || 'Unassisted')}</strong><span>${escapeHtml(interaction.outcome)}</span></span>`;
       }).join('');
-      return renderEncyclopediaCard(kind, record, [...record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean), requirementLabel(record.requirements), verificationLabel(kind, record)], record.whereFound || 'Where found is not recorded.', `<span class="curio-card-outcomes" aria-label="Example interaction outcomes">${interactionRows || '<span><strong>Interactions</strong><span>Not recorded</span></span>'}</span>`);
+      return renderEncyclopediaCard(kind, record, [...record.regionIds.map(id => structuredGameContent.regions.find(region => region.id === id)?.name).filter(Boolean), requirementLabel(record.requirements)], record.whereFound || 'Where found is not recorded.', `<span class="curio-card-outcomes" aria-label="Example interaction outcomes">${interactionRows || '<span><strong>Interactions</strong><span>Not recorded</span></span>'}</span>`);
     }
     if (kind === 'locations') return renderEncyclopediaCard(kind, record, requirementLabel(record.requirements), record.summary);
     return renderEncyclopediaCard(kind, record, record.category, record.summary);
@@ -627,7 +623,7 @@ function renderPlannerDifficulty(boss, tier) {
   if (!variant) return '';
   const stats = variant.stats || {};
   const summary = [['Health', stats.health], ['Speed', stats.speed], ['Stun resistance', stats.resistances?.stun]].filter(([, entry]) => entry?.value !== undefined).map(([label, entry]) => `<div><dt>${label}</dt><dd>${escapeHtml(entry.value)}${entry.unit === 'percent' ? '%' : entry.unit === 'hp' ? ' HP' : ''}</dd></div>`).join('');
-  return `<dl class="planner-difficulty-summary"><div><dt>Variant</dt><dd>${escapeHtml(variant.name)}</dd></div>${summary}<div><dt>Coverage</dt><dd>${escapeHtml(verificationLabel('bosses', { verification: variant.verification }))}</dd></div></dl>`;
+  return `<dl class="planner-difficulty-summary"><div><dt>Variant</dt><dd>${escapeHtml(variant.name)}</dd></div>${summary}</dl>`;
 }
 
 function renderPlannerRegionRecords(location) {
@@ -636,16 +632,15 @@ function renderPlannerRegionRecords(location) {
   const interactions = curios.flatMap(curio => curio.interactions.map(interaction => ({ curio, interaction, item: interaction.itemId && structuredGameContent.items.find(item => item.id === interaction.itemId) })));
   const mechanics = location.specialMechanics?.length ? `<ul>${location.specialMechanics.map(mechanic => `<li>${escapeHtml(mechanic)}</li>`).join('')}</ul>` : '<p>No regional mechanics are recorded.</p>';
   const enemyList = enemies.length ? `<details class="planner-record-disclosure"><summary>Review ${enemies.length} recorded regional enemies</summary><ul class="planner-record-list">${enemies.map(enemy => `<li><a href="${encyclopediaHref('enemies', enemy)}">${escapeHtml(enemy.name)}</a><span>${escapeHtml(enemy.enemyType)} · ${escapeHtml(enemy.encounterClass)}</span><p>${escapeHtml(enemy.summary)}</p></li>`).join('')}</ul></details>` : '<p>No regional enemies are associated in the current records.</p>';
-  const curioList = curios.length ? `<ul class="planner-curio-list">${curios.map(curio => `<li><a href="${encyclopediaHref('curios', curio)}">${escapeHtml(curio.name)}</a><span>${escapeHtml(verificationLabel('curios', curio))} · ${curio.interactions.length} recorded interaction${curio.interactions.length === 1 ? '' : 's'}</span></li>`).join('')}</ul>` : '<p>No curios are associated in the current records.</p>';
-  const interactionTable = interactions.length ? `<details class="planner-record-disclosure"><summary>Review ${interactions.length} recorded interactions</summary><div class="table-scroll"><table><thead><tr><th>Provision / item</th><th>Curio</th><th>Recorded outcome</th><th>Certainty</th></tr></thead><tbody>${interactions.map(({ curio, interaction, item }) => `<tr><td>${item ? `<a href="${encyclopediaHref('items', item)}">${escapeHtml(item.name)}</a><small class="planner-item-purpose">${escapeHtml(item.purpose || 'Purpose not recorded.')}</small><small>${escapeHtml(verificationLabel('items', item))}</small>` : 'No item specified'}</td><td><a href="${encyclopediaHref('curios', curio)}">${escapeHtml(curio.name)}</a></td><td>${escapeHtml(interaction.outcome)}</td><td>${escapeHtml(interaction.certainty || 'Not recorded')}</td></tr>`).join('')}</tbody></table></div></details>` : '<p>No provision interactions are recorded for the associated curios.</p>';
+  const curioList = curios.length ? `<ul class="planner-curio-list">${curios.map(curio => `<li><a href="${encyclopediaHref('curios', curio)}">${escapeHtml(curio.name)}</a><span>${curio.interactions.length} recorded interaction${curio.interactions.length === 1 ? '' : 's'}</span></li>`).join('')}</ul>` : '<p>No curios are associated in the current records.</p>';
+  const interactionTable = interactions.length ? `<details class="planner-record-disclosure"><summary>Review ${interactions.length} recorded interactions</summary><div class="table-scroll"><table><thead><tr><th>Provision / item</th><th>Curio</th><th>Recorded outcome</th><th>Certainty</th></tr></thead><tbody>${interactions.map(({ curio, interaction, item }) => `<tr><td>${item ? `<a href="${encyclopediaHref('items', item)}">${escapeHtml(item.name)}</a><small class="planner-item-purpose">${escapeHtml(item.purpose || 'Purpose not recorded.')}</small>` : 'No item specified'}</td><td><a href="${encyclopediaHref('curios', curio)}">${escapeHtml(curio.name)}</a></td><td>${escapeHtml(interaction.outcome)}</td><td>${escapeHtml(interaction.certainty || 'Not recorded')}</td></tr>`).join('')}</tbody></table></div></details>` : '<p>No provision interactions are recorded for the associated curios.</p>';
   const linkedBosses = plannerBosses(location);
   const bossLinks = linkedBosses.length ? `<ul class="planner-boss-list">${linkedBosses.map(boss => `<li><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">${escapeHtml(boss.name)}</a><span>${escapeHtml(boss.guideStatus === 'available' ? 'Detailed guide available' : 'Guide coverage incomplete')}</span></li>`).join('')}</ul>` : '<p>No boss associations are recorded for this location.</p>';
   return `<div class="expedition-prep-grid"><section><h3>Main threats</h3>${enemyList}<p><a href="#game/darkest-dungeon/enemies">Browse enemy index →</a></p></section><section><h3>Bosses available in this region</h3>${bossLinks}</section><section><h3>Regional mechanics</h3>${mechanics}</section><section><h3>Curios</h3>${curioList}<p><a href="#game/darkest-dungeon/curios">Browse curios →</a></p></section><section class="expedition-interactions"><h3>Known provision interactions</h3><p>Recorded outcomes only; no universal provision quantities are implied.</p>${interactionTable}<p><a href="#game/darkest-dungeon/items">Browse provisions and items →</a></p></section></div>`;
 }
 
 function renderPlannerRegionHeader(location) {
-  const verification = verificationLabel('locations', location);
-  return `<section class="expedition-region-summary"><header>${renderEntryArtwork('locations', location, 'banner', `<div class="expedition-region-placeholder" role="img" aria-label="${escapeHtml(location.name)} image unavailable"><span>${escapeHtml(location.name.slice(0, 2).toUpperCase())}</span><small>No local image</small></div>`)}<div><p class="eyebrow">Region record · ${escapeHtml(requirementLabel(location.requirements))}</p><h2>${escapeHtml(location.name)}</h2><p>${escapeHtml(location.summary)}</p><p class="planner-data-note">${escapeHtml(verification)} · associations from the location record.</p><a href="#game/darkest-dungeon/locations/${escapeHtml(location.routeId)}">Open full region guide →</a></div></header></section>`;
+  return `<section class="expedition-region-summary"><header>${renderEntryArtwork('locations', location, 'banner', `<div class="expedition-region-placeholder" role="img" aria-label="${escapeHtml(location.name)} image unavailable"><span>${escapeHtml(location.name.slice(0, 2).toUpperCase())}</span><small>No local image</small></div>`)}<div><p class="eyebrow">Region record · ${escapeHtml(requirementLabel(location.requirements))}</p><h2>${escapeHtml(location.name)}</h2><p>${escapeHtml(location.summary)}</p><p class="planner-data-note">Associations are from the location record.</p><a href="#game/darkest-dungeon/locations/${escapeHtml(location.routeId)}">Open full region guide →</a></div></header></section>`;
 }
 
 function renderPlannerTeam(team, roster, selected = selectedExpeditionTeamId === team.id) {
@@ -703,7 +698,7 @@ function renderPlannerEquipmentStep(team) {
     const heroHref = `#hero/${escapeHtml(member.heroRouteId)}/${hero?.guide ? 'overview' : 'abilities'}`;
     const items = (member.trinketIds || []).map(routeId => structuredGameContent.trinkets.find(entry => entry.routeId === routeId)).filter(Boolean);
     const alternatives = (member.alternativeTrinketIds || []).map(routeId => structuredGameContent.trinkets.find(entry => entry.routeId === routeId)).filter(Boolean);
-    const itemList = items.length ? `<ul class="planner-hero-trinkets">${items.map(item => `<li data-planner-trinket="${escapeHtml(item.id)}"><div><a href="${encyclopediaHref('trinkets', item)}">${escapeHtml(item.name)}</a><p>${escapeHtml(item.effects?.map(effect => effect.text).join(' · ') || 'Effect details not recorded.')}</p><small>${escapeHtml(requirementLabel(item.requirements))} · ${escapeHtml(verificationLabel('trinkets', item))}</small></div>${renderTrinketOwnershipControl(item, 'planner-trinket-owned')}</li>`).join('')}</ul>` : '<p>No recommended trinkets recorded for this hero.</p>';
+  const itemList = items.length ? `<ul class="planner-hero-trinkets">${items.map(item => `<li data-planner-trinket="${escapeHtml(item.id)}"><div><a href="${encyclopediaHref('trinkets', item)}">${escapeHtml(item.name)}</a><p>${escapeHtml(item.effects?.map(effect => effect.text).join(' · ') || 'Effect details not recorded.')}</p><small>${escapeHtml(requirementLabel(item.requirements))}</small></div>${renderTrinketOwnershipControl(item, 'planner-trinket-owned')}</li>`).join('')}</ul>` : '<p>No recommended trinkets recorded for this hero.</p>';
     const alternativesMarkup = alternatives.length ? `<div class="planner-hero-alternatives"><strong>Recorded alternatives</strong><ul>${alternatives.map(item => `<li><a href="${encyclopediaHref('trinkets', item)}">${escapeHtml(item.name)}</a><span>${escapeHtml(item.effects?.map(effect => effect.text).join(' · ') || 'Effect details not recorded.')}</span><small>${escapeHtml(requirementLabel(item.requirements))}</small></li>`).join('')}</ul></div>` : `<p class="planner-data-note">No verified named alternative is recorded. Priorities: ${escapeHtml(member.budgetPriorities || 'Not recorded.')}</p>`;
     const unmarked = items.filter(item => !owned.has(item.id)).length;
     return `<article class="planner-equipment-hero" data-planner-equipment-hero="${escapeHtml(member.heroRouteId)}"><header><span>Rank ${member.position}</span><div><h3><a href="${heroHref}">${escapeHtml(name)}</a></h3><p data-planner-hero-owned-status>${escapeHtml(member.role)} · ${unmarked ? `${unmarked} recommendation${unmarked === 1 ? '' : 's'} not marked owned` : 'All recommendations marked owned'}</p></div></header><p class="planner-equipment-rationale">${escapeHtml(member.equipmentRationale || 'The recorded pairing supports this role.')}</p>${itemList}${alternativesMarkup}</article>`;
@@ -731,13 +726,13 @@ function renderPlannerBossReminder(boss, tier, selectedTeam = null) {
   const primary = boss.mechanics?.[0];
   const strategyTeam = selectedTeam || boss.counterTeams?.[0];
   const mechanics = (boss.mechanics || []).slice(primary ? 1 : 0, primary ? 3 : 2).map(item => {
-    const label = item.kind === 'editorial' ? 'Editorial advice' : item.verification?.status === 'reference-checked' ? 'Reference-checked' : 'Verification not recorded';
+  const label = item.kind === 'editorial' ? 'Editorial advice' : item.verification?.status === 'reference-checked' ? 'Recommendation' : 'Coverage unverified';
     return `<li><span>${escapeHtml(label)}</span>${escapeHtml(item.text)}</li>`;
   }).join('');
   const warning = boss.routeId === 'swine-prince' ? renderBossCriticalWarning(boss) : '';
   const tacticalResponse = boss.tacticalConsiderations?.[0];
-  const primaryStatus = primary?.kind === 'editorial' ? 'Editorial advice' : primary?.verification?.status === 'reference-checked' ? 'Reference-checked mechanic' : 'Verification not recorded';
-  return `<section class="planner-boss-reminder"><div class="planner-section-heading"><div><p class="eyebrow">Encounter reference · ${escapeHtml(verificationLabel('bosses', boss))}</p><h2>${escapeHtml(boss.name)} quick reminder</h2></div><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">Open full boss guide →</a></div>${warning}<p class="planner-key-mechanic"><strong>${escapeHtml(primaryStatus)}</strong>${escapeHtml(primary?.text || 'Mechanics are not recorded for this entry.')}</p><ul class="planner-boss-mechanics">${mechanics || '<li>Boss mechanics have not been documented.</li>'}</ul>${tacticalResponse ? `<p class="planner-opening-note"><strong>Response to the mechanic · ${tacticalResponse.kind === 'editorial' ? 'Editorial' : tacticalResponse.verification?.status === 'reference-checked' ? 'Reference-checked' : 'Coverage unverified'}:</strong> ${escapeHtml(tacticalResponse.text)}</p>` : ''}${renderPlannerDifficulty(boss, tier)}${strategyTeam ? `<p class="planner-opening-note"><strong>Opening strategy · ${escapeHtml(strategyTeam.name)}:</strong> ${escapeHtml(strategyTeam.openingStrategy)} <a href="#game/darkest-dungeon/teams/${escapeHtml(strategyTeam.id)}">Team guide →</a></p>` : ''}</section>`;
+  const primaryStatus = primary?.kind === 'editorial' ? 'Editorial advice' : primary?.verification?.status === 'reference-checked' ? 'Mechanic' : 'Mechanics coverage unverified';
+  return `<section class="planner-boss-reminder"><div class="planner-section-heading"><div><p class="eyebrow">Encounter reference</p><h2>${escapeHtml(boss.name)} quick reminder</h2></div><a href="#game/darkest-dungeon/bosses/${escapeHtml(boss.routeId)}">Open full boss guide →</a></div>${warning}<p class="planner-key-mechanic"><strong>${escapeHtml(primaryStatus)}</strong>${escapeHtml(primary?.text || 'Mechanics are not recorded for this entry.')}</p><ul class="planner-boss-mechanics">${mechanics || '<li>Boss mechanics have not been documented.</li>'}</ul>${tacticalResponse ? `<p class="planner-opening-note"><strong>Response to the mechanic · ${tacticalResponse.kind === 'editorial' ? 'Editorial advice' : tacticalResponse.verification?.status === 'reference-checked' ? 'Recommendation' : 'Coverage unverified'}:</strong> ${escapeHtml(tacticalResponse.text)}</p>` : ''}${renderPlannerDifficulty(boss, tier)}${strategyTeam ? `<p class="planner-opening-note"><strong>Opening strategy · ${escapeHtml(strategyTeam.name)}:</strong> ${escapeHtml(strategyTeam.openingStrategy)} <a href="#game/darkest-dungeon/teams/${escapeHtml(strategyTeam.id)}">Team guide →</a></p>` : ''}</section>`;
 }
 
 function renderPlannerBattleStep(context) {
@@ -1367,8 +1362,8 @@ function renderHeroTeamSection(hero) {
 function renderBossSection(hero) {
   const recommendations = hero.bossRecommendations || [];
   if (!recommendations.length) return renderGuideDevelopmentSection('bosses', 'Recommended boss matchups', `Boss recommendations for ${hero.name} have not yet been assessed against documented sources.`, '', '', '04', 'Not yet assessed');
-  return `<section class="guide-section" aria-labelledby="bosses"><div class="section-heading"><h2 id="bosses" tabindex="-1">Recommended boss matchups</h2><span>04 / Source-backed recommendations</span></div>
-    <div class="boss-grid">${recommendations.map(matchup => `<article class="panel boss-card"><p class="eyebrow">${escapeHtml(matchup.assessment || 'Documented matchup')}</p><h3>${escapeHtml(matchup.boss)}</h3><p>${escapeHtml(matchup.reason)}</p>${matchup.source ? `<a href="${escapeHtml(matchup.source)}" target="_blank" rel="noreferrer">Matchup reference ↗</a>` : ''}</article>`).join('')}</div></section>`;
+  return `<section class="guide-section" aria-labelledby="bosses"><div class="section-heading"><h2 id="bosses" tabindex="-1">Recommended boss matchups</h2><span>04 / Boss notes</span></div>
+    <div class="boss-grid">${recommendations.map(matchup => `<article class="panel boss-card"><h3>${escapeHtml(matchup.boss)}</h3><p>${escapeHtml(matchup.reason)}</p></article>`).join('')}</div></section>`;
 }
 
 function renderHeroTrinketSection(hero) {
@@ -1383,7 +1378,7 @@ function renderUniqueAttributes(hero) {
   const attributes = hero.uniqueAttributes || [];
   if (!attributes.length) return renderGuideDevelopmentSection('attributes', 'Unique attributes & class mechanics', `No class-specific mechanics are documented for ${hero.name} in this guide yet.`, '', '', '06');
   return `<section class="guide-section" aria-labelledby="attributes"><div class="section-heading"><h2 id="attributes" tabindex="-1">Unique attributes & class mechanics</h2><span>06 / What sets this hero apart</span></div>
-    <div class="mechanic-grid">${attributes.map(attribute => `<article class="panel mechanic-card"><h3>${escapeHtml(attribute.name)}</h3><p>${escapeHtml(attribute.description)}</p>${attribute.source ? `<a href="${escapeHtml(attribute.source)}" target="_blank" rel="noreferrer">Mechanics reference ↗</a>` : ''}</article>`).join('')}</div></section>`;
+    <div class="mechanic-grid">${attributes.map(attribute => `<article class="panel mechanic-card"><h3>${escapeHtml(attribute.name)}</h3><p>${escapeHtml(attribute.description)}</p></article>`).join('')}</div></section>`;
 }
 
 function renderProgressionSection(hero) {
@@ -1499,7 +1494,7 @@ function renderTrinket(trinket) {
     <div><p class="eyebrow">${escapeHtml(trinket.rarity)}</p><h3>${escapeHtml(trinket.name)}</h3><p class="small-label">${requirementLabel(trinket.requirements)}</p></div></div>
     <p class="selection-label">${escapeHtml(trinket.use)}</p><dl class="effects"><dt>Benefits</dt><dd class="benefits">${trinket.effects.map(escapeHtml).join('<br>')}</dd><dt>Penalties</dt><dd class="penalties">${trinket.drawbacks.map(escapeHtml).join('<br>')}</dd></dl>
     <h4>Why choose it</h4><p>${escapeHtml(trinket.advice)}</p><h4>Accessible alternative</h4><p>${escapeHtml(trinket.alternative)}</p>
-    <a class="source-link" href="${escapeHtml(structuredGameContent?.sources.find(source => source.id === trinket.source)?.url || sources[trinket.source]?.url || '#game/darkest-dungeon/trinkets')}">Check item reference ↗</a></article>`;
+    </article>`;
 }
 
 function activeCategoryId(route) {

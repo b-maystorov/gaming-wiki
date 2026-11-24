@@ -429,7 +429,7 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-race-list > div { display: grid; grid-template-columns: 7rem 1fr; gap: .7rem; padding: .85rem 1rem; border: 1px solid #3e5060; background: #131a21; color: #c5cfd5; line-height: 1.5; }
 .wow-race-list strong { color: var(--wow-gold); }
 .wow-class-links { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.5rem; }
-.wow-class-links a, .wow-source-link a, .wow-build-overview a { color: var(--wow-blue); }
+.wow-class-links a, .wow-build-overview a { color: var(--wow-blue); }
 .wow-class-links a { padding: .65rem .85rem; border: 1px solid #53687a; text-decoration: none; background: #121b25; }
 .wow-class-links a:hover { border-color: var(--wow-gold); }
 .wow-related-guides { margin:1.5rem 0; padding:1.15rem; border:1px solid color-mix(in srgb,var(--class-accent) 54%,#536779); background:radial-gradient(ellipse at 100% 0,color-mix(in srgb,var(--class-accent) 12%,transparent),transparent 42%),linear-gradient(145deg,#151f28,#0c1218); box-shadow:inset 0 1px #d8e0e50c,0 12px 26px #0003; }
@@ -451,7 +451,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-related-guide-card:focus-visible { outline:2px solid #f0d48b; outline-offset:3px; }
 @media(max-width:560px) { .wow-related-guides { padding:.8rem; } .wow-related-guide-grid { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { .wow-related-guide-card { transition:none; } .wow-related-guide-card:hover { transform:none; } }
-.wow-source-link { margin-top: 1.3rem; color: #aeb9c0; font-size: .8rem; }
 .wow-build-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; padding: 1.2rem; margin-block: 1rem; border: 1px solid #4d6272; background: #111923dd; }
 .wow-build-form label { display: grid; align-content: start; gap: .45rem; color: #e1d3b2; font-size: .84rem; }
 .wow-build-form input:not([type="checkbox"]), .wow-build-form select { width: 100%; min-height: 46px; padding: .65rem .75rem; border: 1px solid #566b7c; border-radius: 2px; color: #e5e9eb; background: #0d131a; font: inherit; }
@@ -545,8 +544,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .enhancement-build-card details { margin-top: .7rem; color: #c4cfd5; }
 .enhancement-build-card summary, .enhancement-sources summary { min-height: 42px; display: flex; align-items: center; cursor: pointer; color: var(--storm-gold); }
 .enhancement-build-card details ul { padding-left: 1.15rem; line-height: 1.6; }
-.enhancement-source-line { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; color: #a7cde2; font-size: .82rem; }
-.enhancement-source-line a { color: #9ecce8; }
 .enhancement-sources { margin-block: 1.2rem; padding: .75rem 1rem; border: 1px solid #405463; background: #111a22; }
 .enhancement-sources ul { display: grid; gap: .5rem; padding-left: 1.2rem; color: #b9c5cc; font-size: .82rem; line-height: 1.55; }
 .enhancement-sources a { color: #9ccbe6; }
@@ -567,7 +564,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-art-caption { display:block; margin-top:1rem; color:#9faeb7; font-size:.72rem; }
 .wow-starter-guide { padding:clamp(1rem,3vw,1.7rem); border:1px solid #586c7d; background:linear-gradient(135deg,#172430,#10161c 72%); box-shadow:inset 0 1px #fff1,0 12px 28px #0003; }
 .wow-starter-guide h3 { color:#eee0bd; font:500 clamp(1.45rem,3vw,2rem) Georgia,serif; }
-.wow-guide-source { color:#cbbd91; font-size:.85rem; }
 .wow-starter-summary,.wow-starter-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.9rem; margin-top:1rem; }
 .wow-starter-summary article,.wow-starter-grid article { padding:1rem; border:1px solid #3d5363; background:#0b1219b8; }
 .wow-starter-summary article > span { color:#9bb8ca; font-size:.73rem; text-transform:uppercase; letter-spacing:.08em; }
@@ -896,7 +892,7 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-ability-icon { width:2.8rem; height:2.8rem; }
 .wow-ability-gallery h4 { margin:.1rem 0 .3rem; color:#e7d7b3; font:500 1rem Georgia,serif; }
 .wow-ability-gallery p { color:#c1ccd1; font-size:.86rem; line-height:1.5; }
-.wow-spellbook > .wow-note,.wow-spellbook > .wow-source-link { margin:.8rem 1rem; }
+.wow-spellbook > .wow-note { margin:.8rem 1rem; }
 .wow-spell-tab { border-top:1px solid #354b59; }
 .wow-spell-tab > ul { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.35rem; margin:0; padding:.8rem; list-style:none; }
 .wow-spell-tab li { display:flex; align-items:flex-start; gap:.55rem; min-width:0; padding:.5rem; border:1px solid #344955; background:#101920; }
@@ -905,7 +901,6 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-spell-tab li > span:last-child { display:grid; gap:.25rem; min-width:0; }
 .wow-spell-tab li strong { color:#e1d5bc; font-size:.86rem; }
 .wow-spell-tab li small { color:#b0bdc4; font-size:.75rem; line-height:1.4; }
-.wow-spellbook .wow-source-link a { color:#b7d8e8; }
 .wow-home-class-roster { position:relative; z-index:2; display:flex; flex-wrap:wrap; justify-content:center; gap:.55rem; margin:1rem auto 1.4rem; }
 .wow-home-class-roster a { display:flex; align-items:center; gap:.5rem; min-height:3.55rem; padding:.35rem .65rem; border:1px solid var(--class-accent); color:#e3dfd2; background:#0b1219dc; text-decoration:none; }
 .wow-home-class-roster a:hover { border-color:#e0c47d; background:#192630; }
@@ -1034,14 +1029,10 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-gold-card .wow-gold-location,.wow-gold-card dl > div:nth-last-child(2),.wow-gold-card dl > div:last-child { grid-column:1 / -1; }
 .wow-gold-card dt { margin-bottom:.1rem; color:#b7c4ca; font-size:.76rem; font-weight:700; letter-spacing:.025em; }
 .wow-gold-card dd { margin:0; color:#d5dfe4; font-size:.94rem; line-height:1.5; overflow-wrap:anywhere; }
-.wow-gold-evidence { display:table; margin:.55rem 0 .2rem; padding:.12rem .45rem; border:1px solid #625235; border-radius:999px; color:#e9d29c; background:#352d1d; font-size:.74rem; font-weight:700; letter-spacing:.02em; }
-.wow-gold-evidence.is-creator-reported { border-color:#76573c; color:#f0c291; background:#38271d; }
 .wow-gold-card.is-creator-reported { border-top-color:#b17d4b; }
 .wow-gold-card details { border-top:1px solid #344652; }
 .wow-gold-card summary { padding:.6rem 0 .25rem; color:#e0c991; font-size:.9rem; cursor:pointer; }
 .wow-gold-card details p,.wow-gold-rate { margin:.5rem 0; color:#c1cdd2; font-size:.9rem; line-height:1.55; }
-.wow-gold-source { margin:.65rem 0 0; color:#aebbc2; font-size:.78rem; }
-.wow-gold-source a { color:#9bd2ff; }
 .wow-gold-empty { display:inline-block; margin:.1rem 0 0; padding:.4rem .65rem; border-left:2px solid #756447; color:#aebbc2; background:#101a23; font-size:.84rem; line-height:1.4; }
 .wow-gold-other ul { margin:.3rem 0 0; padding-left:1.2rem; }
 .wow-gold-other li { margin:.3rem 0; color:#c8d2d7; font-size:.9rem; }
@@ -1173,8 +1164,6 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-dungeon-preparation { padding:.7rem .8rem; border:1px solid #665337; border-left:3px solid #b68d55; border-radius:5px; background:linear-gradient(110deg,#25241f,#131e29); }
 .wow-warrior-guide .wow-warrior-dungeon-preparation h4,.wow-warrior-guide .wow-warrior-dungeon-section > h4 { display:flex; align-items:baseline; justify-content:space-between; gap:.5rem; margin:0 0 .35rem; color:#e4cfaa; font-size:.88rem; }
 .wow-warrior-guide .wow-warrior-dungeon-preparation > p { margin:0; color:#d0d9e0; font-size:.76rem; line-height:1.5; }
-.wow-warrior-guide .wow-warrior-dungeon-sources { margin:.45rem 0 0; color:#8798a7; font-size:.65rem; }
-.wow-warrior-guide .wow-warrior-dungeon-sources a { color:#b7c7d5; text-decoration:underline; text-underline-offset:2px; }
 .wow-warrior-guide .wow-warrior-dungeon-section { display:grid; gap:.5rem; min-width:0; }
 .wow-warrior-guide .wow-warrior-dungeon-section > h4 { margin:0; padding:0 .1rem; color:#e4cfaa; }
 .wow-warrior-guide .wow-warrior-dungeon-section > h4 span { color:#aebdca; font-size:.7rem; font-weight:600; }
@@ -1333,8 +1322,6 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-stat-explanation summary::marker { color:#c69c61; }
 .wow-stat-explanation summary:focus-visible { outline:2px solid #a8d5fa; outline-offset:2px; }
 .wow-stat-explanation p,.wow-stat-upgrade p { margin:.1rem 0 .45rem; color:#b9c8d6; font-size:.68rem; line-height:1.5; }
-.wow-stat-explanation-sources { display:block; margin:0 0 .5rem; color:#8fa7bb; font-size:.6rem; }
-.wow-stat-explanation-sources a { color:#ddbd83; text-underline-offset:2px; }
 .wow-stat-upgrade { border-left:2px solid #537b9e; }
 .wow-stat-upgrade h4 { color:#d6e8f6; }
 .wow-stat-upgrade p { margin:0; }
@@ -1418,11 +1405,8 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-leveling-companion .wow-companion-talent-detail-heading p,.wow-leveling-companion .wow-companion-talent-detail > p { margin:.25rem 0 0; color:#b9c9d8; font-size:.68rem; line-height:1.45; }
 .wow-leveling-companion .wow-companion-talent-detail ol { display:grid; gap:.3rem; margin:.55rem 0 0; padding-left:1.2rem; color:#aebdcb; font-size:.64rem; line-height:1.4; }
 .wow-leveling-companion .wow-companion-talent-detail li[aria-current="true"] { color:#f0d7ad; }
-.wow-leveling-companion .wow-companion-tree-lock-note,.wow-leveling-companion .wow-companion-tier-source { color:#9fb3c5; font-size:.63rem; line-height:1.45; }
+.wow-leveling-companion .wow-companion-tree-lock-note { color:#9fb3c5; font-size:.63rem; line-height:1.45; }
 .wow-leveling-companion .wow-companion-tree-layout > .wow-companion-talent-detail { grid-column:1/-1; }
-.wow-leveling-companion .wow-companion-tier-source { margin:.5rem 0 0; }
-.wow-leveling-companion .wow-companion-build-source { margin:.45rem 0 0; color:#aabac9; font-size:.68rem; line-height:1.5; }
-.wow-leveling-companion .wow-companion-build-source a { color:#d5bb91; text-underline-offset:2px; }
 .wow-warrior-guide .wow-warrior-quick-start { margin-top:1.5rem; padding:clamp(1rem,2.6vw,1.4rem); border:1px solid #394354; border-top:2px solid #a78c65; border-radius:6px; background:radial-gradient(ellipse at 100% 0,#b3926b0d,transparent 42%),linear-gradient(145deg,#111d2b,#0b1522); box-shadow:inset 0 1px #ffffff08,0 10px 24px #0002; }
 .wow-warrior-guide .wow-warrior-section-heading { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:.3rem 1rem; margin-bottom:1rem; padding-bottom:.7rem; border-bottom:1px solid #2a4b66; }
 .wow-warrior-guide .wow-warrior-section-heading h2 { font-size:clamp(1.25rem,2.8vw,1.55rem); font-weight:700; letter-spacing:-.02em; }
@@ -1467,8 +1451,6 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-guide-hub > .wow-warrior-section-heading h2 { margin:.05rem 0; font-size:1.2rem; }
 .wow-warrior-guide .wow-warrior-guide-hub > .wow-warrior-section-heading > p:last-child { margin:0; color:#9aabba; font-size:.72rem; }
 .wow-warrior-guide .wow-warrior-guide-hub .wow-companion-panel { gap:.55rem; }
-.wow-warrior-guide .wow-companion-guide-sources { margin:.5rem 0 0; color:#879bad; font-size:.66rem; line-height:1.5; }
-.wow-warrior-guide .wow-companion-guide-sources a { color:#d2b386; text-underline-offset:2px; }
 .wow-warrior-guide .wow-warrior-existing .wow-subsection:has(.wow-race-list) { border-top-color:#536754; }
 .wow-warrior-guide .wow-warrior-existing .wow-race-list > div { border-color:#374655; background:linear-gradient(115deg,#17222b,#111920); }
 .wow-warrior-guide .wow-warrior-existing .wow-race-list > div:nth-child(1) { border-left:2px solid #7399b7; background:linear-gradient(110deg,#192a39,#121c26 72%); }
@@ -1716,14 +1698,12 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-stat-section-heading > span,
 .wow-warrior-guide .wow-stat-priority-group h4 { font-size:.84rem; }
 .wow-warrior-guide .wow-stat-priority-rank,
-.wow-warrior-guide .wow-stat-explanation-sources { font-size:.75rem; }
 .wow-warrior-guide .wow-leveling-companion .wow-companion-tree-name { color:#d5dee7; font-size:.76rem; line-height:1.3; }
 .wow-warrior-guide .wow-leveling-companion .wow-companion-tree-icon strong { font-size:.68rem; }
 .wow-warrior-guide .wow-leveling-companion .wow-companion-talent-detail-heading p,
 .wow-warrior-guide .wow-leveling-companion .wow-companion-talent-detail > p,
 .wow-warrior-guide .wow-leveling-companion .wow-companion-talent-detail ol,
 .wow-warrior-guide .wow-leveling-companion .wow-companion-tree-lock-note,
-.wow-warrior-guide .wow-leveling-companion .wow-companion-tier-source { color:#d0dce6; font-size:.84rem; line-height:1.5; }
 .wow-warrior-guide .wow-warrior-gear-item h5,
 .wow-warrior-guide .wow-warrior-dungeon-card h5,
 .wow-warrior-guide .wow-warrior-profession-recipe h5 { font-size:1rem; line-height:1.35; }
