@@ -2822,6 +2822,22 @@ test('gold farming responds to level, specialization and faction and preserves s
   assert.doesNotMatch(render(15, 'arms', 'Alliance'), /gorilla fangs/i);
   assert.doesNotMatch(render(40, 'protection', 'Alliance'), /Repeatable shellfish turn-in/);
   assert.match(render(40, 'protection', 'Horde'), /Repeatable shellfish turn-in/);
+  for (const [level, spec, faction, expected] of [
+    [14, 'arms', 'Alliance', 'Greymist Seer loot loop'],
+    [29, 'fury', 'Horde', 'Elder Razormaw drops'],
+    [40, 'arms', 'Alliance', 'Cold Eye Basilisk loop'],
+    [54, 'protection', 'Horde', 'Blackrock Depths group loot run'],
+    [60, 'protection', 'Horde', 'Stratholme level-60 group loot run'],
+  ]) {
+    const html = render(level, spec, faction);
+    assert.match(html, new RegExp(expected));
+    assert.match(html, new RegExp(`data-gold-spec="${spec}"`));
+    assert.match(html, /Source ↗/);
+  }
+  assert.doesNotMatch(render(14, 'arms', 'Horde'), /Greymist Seer loot loop/);
+  assert.match(render(39, 'fury', 'Alliance'), /Fury approach/);
+  assert.match(render(54, 'protection', 'Horde'), /whole group/);
+  assert.match(render(14, 'arms', 'Alliance'), /Forever loot observed · 10 kills/);
   const middle = module.getCompanionPanel({ classId: 'warrior', level: 40, specializationId: 'protection', faction: 'Horde', tab: 'gold-farming' }, { classRecord: warrior });
   assert.equal(middle.goldFarming.faction, 'Horde');
   const rendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 40, selectedSpecialization: 'protection', guideData: { classRecord: warrior }, storage: { getItem: key => key.endsWith(':warrior') ? JSON.stringify({ level: 40, faction: 'Horde', specializationId: 'protection', tab: 'gold-farming' }) : null } });
@@ -2831,6 +2847,8 @@ test('gold farming responds to level, specialization and faction and preserves s
   assert.match(rendered, /Source ↗/);
   assert.doesNotMatch(rendered, /About 5–6 gold per hour/, 'creator estimates without a documented measurement are not presented as gold-per-hour results');
   assert.match(rendered, /Levels 21–40 suggestions/);
+  assert.match(render(47, 'arms', 'Alliance'), /Levels 41–59 suggestions/);
+  assert.match(render(60, 'protection', 'Horde'), /Level 60 suggestions/);
   const emptyClass = module.renderLevelingCompanion({ classId: 'paladin', currentLevel: 10, selectedSpecialization: 'holy', guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') }, storage: { getItem: key => key.endsWith(':paladin') ? JSON.stringify({ level: 10, faction: 'Alliance', specializationId: 'holy', tab: 'gold-farming' }) : null } });
   assert.match(emptyClass, /No sourced method is recorded/);
 });
