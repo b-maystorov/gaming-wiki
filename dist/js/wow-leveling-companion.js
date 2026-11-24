@@ -223,6 +223,7 @@ export function buildWarriorDungeonPreparation(state, guideData = {}) {
   const specs = guideData.classRecord?.specializationGuides || {};
   const armsItems = specs.arms?.sections?.gear?.equipmentGuide?.items || [];
   const genericSource = guideData.sources?.find(source => source.id === 'icy-dungeons-index');
+  const itemFaction = item => item.faction || String(item.acquisition || '').match(/^(Alliance|Horde) quest reward/i)?.[1] || '';
   const getRecord = dungeon => {
     const key = normalizeDungeonName(dungeon.name);
     const detail = detailedRecords.find(record => normalizeDungeonName(record.name) === key) || null;
@@ -231,41 +232,65 @@ export function buildWarriorDungeonPreparation(state, guideData = {}) {
       || normalizeDungeonName(record.name) === key.replace('islandprison', 'prison')) || null;
     return { detail, full };
   };
-  const gearFor = dungeon => {
-    const configItems = (pack.warriorPreparation?.equipmentDrops || []).filter(item => normalizeDungeonName(item.dungeon) === normalizeDungeonName(dungeon.name)
-      && item.specializations?.includes(specializationId) && (!item.faction || item.faction === faction));
-    const armsGuideItems = specializationId === 'arms' ? armsItems.filter(item => {
-      const acquisition = String(item.acquisition || '').toLowerCase();
-      return acquisition.includes(dungeon.name.toLowerCase())
-        || (dungeon.name === 'Razorfen Kraul' && acquisition.includes('razorfen kraul'))
-        || (dungeon.name === 'Blackfathom Deeps' && acquisition.includes('blackfathom deeps'));
-    }).map(item => ({
-      id: item.id, name: item.name,
-      boss: String(item.acquisition || '').match(/Dropped by (.+?) in /)?.[1] || '',
-      sourceId: item.sourceIds?.[0], sourceUrl: item.sourceUrl,
-      acquisition: item.acquisition, requiredLevel: item.requiredLevel, slot: item.slot,
-      stats: item.attributes || [],
-      specializations: ['arms']
-    })) : [];
-    return [...configItems, ...armsGuideItems].map(item => ({
-      ...item,
-      specializations: item.specializations || ['arms', 'fury', 'protection']
-    }));
+  const gearFor = (dungeon, full, detail) => {
+    const dungeonId = full?.id || detail?.id || normalizeDungeonName(dungeon.name);
+    const aliases = [...new Set([
+      normalizeDungeonName(dungeon.name), normalizeDungeonName(dungeon.name).replace(/^the/, ''),
+      normalizeDungeonName(full?.name), normalizeDungeonName(full?.id), normalizeDungeonName(detail?.name),
+      normalizeDungeonName(dungeonId)
+    ].filter(alias => alias.length >= 6))];
+    const belongsToDungeon = item => {
+      if (item.dungeonId && normalizeDungeonName(item.dungeonId) === normalizeDungeonName(dungeonId)) return true;
+      const acquisition = normalizeDungeonName(item.acquisition || '');
+      return aliases.some(alias => acquisition.includes(alias));
+    };
+    const matchesProfile = item => (!item.specializations || item.specializations.includes(specializationId))
+      && (!itemFaction(item) || itemFaction(item) === faction);
+    const gearRecords = [
+      ...(guideData.warriorEquipment?.items || []).map(item => ({ ...item, gearRecordType: 'shared' })),
+      ...(specializationId === 'arms' ? armsItems.map(item => ({ ...item, gearRecordType: 'arms-guide' })) : [])
+    ];
+    const byId = new Map(gearRecords.map(item => [item.id, item]));
+    const byName = new Map(gearRecords.map(item => [normalizeDungeonName(item.name), item]));
+    const linkedItems = gearRecords.filter(item => belongsToDungeon(item) && matchesProfile(item)).map(item => {
+      const boss = item.boss || String(item.acquisition || '').match(/Dropped by (.+?) in /i)?.[1] || '';
+      return {
+        ...item, faction: itemFaction(item) || undefined, equipmentId: item.id, boss, stats: item.attributes || [],
+        specializations: item.specializations || ['arms', 'fury', 'protection']
+      };
+    });
+    const linkedIds = new Set(linkedItems.map(item => item.id));
+    const configuredItems = (pack.warriorPreparation?.equipmentDrops || []).filter(item =>
+      normalizeDungeonName(item.dungeon) === normalizeDungeonName(dungeon.name)
+        || (dungeon.name === 'Alcaz Island Prison' && normalizeDungeonName(item.dungeon) === 'alcazprison'));
+    for (const drop of configuredItems) {
+      const record = byId.get(drop.id) || byName.get(normalizeDungeonName(drop.name));
+      if (record) {
+        if (linkedIds.has(record.id) || !matchesProfile(record)) continue;
+        linkedItems.push({ ...record, equipmentId: record.id, boss: drop.boss, stats: record.attributes || drop.stats || [], specializations: record.specializations || drop.specializations });
+        linkedIds.add(record.id);
+        continue;
+      }
+      if (!drop.specializations?.includes(specializationId) || (drop.faction && drop.faction !== faction)) continue;
+      linkedItems.push({ ...drop, equipmentId: null, boss: drop.boss, acquisition: `Dropped by ${drop.boss} in ${drop.dungeon}.`, stats: drop.stats || [] });
+    }
+    return linkedItems;
   };
   const records = levelRecords.map(dungeon => {
     const { detail, full } = getRecord(dungeon);
     const quests = (detail?.quests || []).filter(quest => quest.factions?.includes(faction));
-    const equipment = gearFor(dungeon);
+    const equipment = gearFor(dungeon, full, detail);
+    const bosses = [...new Set(equipment.map(item => item.boss).filter(Boolean))];
     const sourceIds = [...new Set([
       genericSource?.id,
       full?.sourceId,
       dungeon.sourceId,
       ...(config?.sourceIds || []),
-      ...equipment.map(item => item.sourceId),
+      ...equipment.flatMap(item => item.sourceIds || (item.sourceId ? [item.sourceId] : [])),
       ...quests.flatMap(quest => quest.sourceIds || [])
     ].filter(Boolean))];
     return {
-      ...dungeon, id: detail?.id || full?.id || normalizeDungeonName(dungeon.name), detail, full, quests, equipment, sourceIds,
+      ...dungeon, id: detail?.id || full?.id || normalizeDungeonName(dungeon.name), detail, full, quests, equipment, bosses, sourceIds,
       levelRange: `${dungeon.minLevel}–${dungeon.maxLevel}`,
       withinRange: state.level >= dungeon.minLevel && state.level <= dungeon.maxLevel,
       location: detail?.zone || full?.location || dungeon.location || '',
@@ -920,15 +945,17 @@ function renderWarriorDungeonPreparation(data, progress, escapeHtml) {
         ? `<a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>`
         : escapeHtml(item.name);
       const stats = item.stats?.length ? item.stats.join(' · ') : 'Stats not verified in the current record.';
-      const source = item.boss ? `Drops from ${item.boss}` : item.acquisition || 'Acquisition source not recorded.';
+      const acquisition = item.acquisition || (item.boss ? `Dropped by ${item.boss}.` : 'Acquisition method not recorded.');
       const specializations = (item.specializations || []).map(spec => ({ arms: 'Arms', fury: 'Fury', protection: 'Protection' })[spec] || spec).join(', ');
       const requirement = Number.isFinite(item.requiredLevel)
-        ? data.level >= item.requiredLevel ? `Available at level ${item.requiredLevel}` : `Upcoming · requires level ${item.requiredLevel}`
-        : 'Item requirement not recorded';
-      return `<li><strong>${name}</strong><small><b>Slot:</b> ${escapeHtml(item.slot || 'Not recorded')} · <b>Stats:</b> ${escapeHtml(stats)} · <b>Source:</b> ${escapeHtml(source)} · <b>Suitable for:</b> ${escapeHtml(specializations || 'Not recorded')} · <b>Availability:</b> ${escapeHtml(requirement)}. Compare the item with your current equipment; a drop is not a guaranteed upgrade.</small></li>`;
+        ? data.level >= item.requiredLevel ? `Level ${item.requiredLevel} · eligible now` : `Level ${item.requiredLevel} · upcoming`
+        : Number.isFinite(item.availabilityLevel) ? `Item minimum unlisted · source level ${item.availabilityLevel}` : 'Item minimum not listed';
+      const factionRestriction = item.faction ? ` · <b>Faction:</b> ${escapeHtml(item.faction)} only` : '';
+      const linkedId = item.equipmentId || item.id;
+      return `<li data-equipment-id="${escapeHtml(linkedId || '')}"><strong>${name}</strong><small><b>Slot:</b> ${escapeHtml(item.slot || 'Not recorded')} · <b>Stats:</b> ${escapeHtml(stats)} · <b>Acquisition:</b> ${escapeHtml(acquisition)} · <b>Spec:</b> ${escapeHtml(specializations || 'Not recorded')} · <b>Required level:</b> ${escapeHtml(requirement)}${factionRestriction}. Compare with your current gear; a drop is not a guaranteed upgrade.</small></li>`;
     }).join('');
-    const bossNames = [...new Set(dungeon.equipment.map(item => item.boss).filter(Boolean))];
-    const quests = dungeon.quests.map(quest => `<li><strong>${escapeHtml(quest.name)}</strong><small>${escapeHtml(data.faction)} · minimum level ${escapeHtml(String(quest.min))} · ${escapeHtml(quest.npc || 'Quest giver not recorded')} · ${escapeHtml(quest.where || 'Quest giver location not recorded')} · ${escapeHtml(quest.stage)}. ${escapeHtml(quest.unlock || quest.outside || '')}</small></li>`).join('');
+    const bossNames = dungeon.bosses || [];
+    const quests = dungeon.quests.map(quest => `<li><strong>${escapeHtml(quest.name)}</strong><small>${escapeHtml(data.faction)} · minimum level ${escapeHtml(String(quest.min))} · ${escapeHtml(quest.npc || 'Quest giver not recorded')} · ${escapeHtml(quest.where || 'Quest giver location not recorded')} · ${escapeHtml(quest.stage)} · Rewards: ${escapeHtml(quest.rewards || 'Not listed')}. ${escapeHtml(quest.unlock || quest.outside || '')}</small></li>`).join('');
     const questList = dungeon.quests.length
       ? `<details class="wow-warrior-dungeon-quests"><summary>Faction quest records (${dungeon.quests.length})</summary><ul>${quests}</ul></details>`
       : `<p class="wow-warrior-dungeon-missing">No verified quest records for ${data.faction} are available here; this does not establish that no quests exist.</p>`;
@@ -939,7 +966,7 @@ function renderWarriorDungeonPreparation(data, progress, escapeHtml) {
       ? `<p><strong>Important bosses:</strong> ${bossNames.map(escapeHtml).join(' · ')}</p>`
       : '<p class="wow-warrior-dungeon-missing">Important bosses are unavailable in the verified records for this dungeon.</p>';
     const dropSection = itemRows
-      ? `<h6>Important Drops</h6><ul class="wow-warrior-dungeon-items">${itemRows}</ul>`
+      ? `<h6>Warrior Loot</h6><ul class="wow-warrior-dungeon-items">${itemRows}</ul>`
       : '<p class="wow-warrior-dungeon-missing">No Warrior-relevant drops are verified for this dungeon and specialization.</p>';
     return `<article class="wow-warrior-dungeon-card${state === 'available' ? ' is-recommended' : ' is-upcoming'}${runCompleted ? ' is-run-complete' : ''}"><details class="wow-warrior-dungeon-details"><summary><span><small>${state === 'available' ? 'Recommended at your level' : 'Coming up'}</small><strong>${escapeHtml(dungeon.name)}</strong></span><span class="wow-warrior-dungeon-range">Levels ${escapeHtml(dungeon.levelRange)}</span></summary><div class="wow-warrior-dungeon-detail-content"><dl><div><dt>Location</dt><dd>${escapeHtml(dungeon.location || 'No verified location is recorded.')}</dd></div><div><dt>Entrance</dt><dd>${escapeHtml(dungeon.entrance || 'No verified entrance directions are recorded.')}</dd></div></dl><p class="wow-warrior-dungeon-access"><strong>${escapeHtml(data.faction)}:</strong> Quest list availability only; instance entry restrictions are not recorded.</p>${dungeon.note ? `<p class="wow-warrior-dungeon-note">${escapeHtml(dungeon.note)}</p>` : ''}<section class="wow-warrior-dungeon-why">${bossSummary}${dropSection}${questList}</section></div></details><section class="wow-warrior-dungeon-checklist" aria-label="${escapeHtml(dungeon.name)} preparation checklist"><h6>Preparation checklist</h6>${checklist}</section></article>`;
   };

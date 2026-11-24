@@ -2743,6 +2743,7 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
     classRecord: warrior,
     specializationGuides: warrior.specializationGuides,
     warriorLeveling: wowPack.warriorLeveling,
+    warriorEquipment: wowPack.warriorEquipment,
     dungeons: wowPack.dungeons,
     sources: wowPack.sources,
     dungeonPreparation: dungeonPrepData
@@ -2771,11 +2772,51 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
   assert.ok(protection.available.find(dungeon => dungeon.name === 'Blackfathom Deeps').equipment.some(item => item.name === 'Darkwater Talwar'));
   const darkwater = protection.available.find(dungeon => dungeon.name === 'Blackfathom Deeps').equipment.find(item => item.name === 'Darkwater Talwar');
   assert.equal(darkwater.boss, 'Lady Sarevess');
-  assert.equal(darkwater.slot, 'Main Hand Sword');
+  assert.equal(darkwater.slot, 'Main Hand');
   assert.ok(darkwater.stats.some(stat => stat.includes('17.0')), JSON.stringify(darkwater));
   assert.deepEqual(darkwater.specializations, ['protection']);
+  assert.equal(darkwater.equipmentId, 'darkwater-talwar');
   const armsDrops = arms.available.find(dungeon => dungeon.name === 'Blackfathom Deeps').equipment;
   assert.ok(armsDrops.some(item => item.name === 'Strike of the Hydra' && /Aku.?mai/.test(item.boss) && item.slot === 'Two-Hand'));
+
+  const gearRecords = [...wowPack.warriorEquipment.items, ...warrior.specializationGuides.arms.sections.gear.equipmentGuide.items];
+  for (const drop of dungeonPrepData.warriorPreparation.equipmentDrops) {
+    assert.ok(wowPack.warriorEquipment.items.some(item => item.id === drop.id), `${drop.name} reuses a canonical Warrior equipment ID`);
+  }
+  for (const level of [20, 35, 45, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+    const view = module.buildWarriorDungeonPreparation({ level, specializationId, faction: 'Alliance' }, guideData);
+    assert.ok(view.level === level && view.specializationId === specializationId);
+    for (const dungeon of [...view.available, ...view.comingUp]) {
+      const linkedIds = dungeon.equipment.map(item => item.equipmentId);
+      assert.equal(linkedIds.length, new Set(linkedIds).size, `${dungeon.name} avoids duplicate loot records`);
+      for (const item of dungeon.equipment) {
+        assert.ok(item.equipmentId && gearRecords.some(record => record.id === item.equipmentId), `${item.name} links to an equipment record`);
+        assert.ok(item.specializations.includes(specializationId), `${item.name} is suitable for ${specializationId}`);
+        assert.ok(!item.faction || item.faction === view.faction, `${item.name} matches the selected faction`);
+      }
+    }
+  }
+  const cityFury = module.buildWarriorDungeonPreparation({ level: 35, specializationId: 'fury', faction: 'Alliance' }, guideData)
+    .available.find(dungeon => dungeon.id === 'drowned-city');
+  const bloodslash = cityFury.equipment.find(item => item.equipmentId === 'bloodslash-axe');
+  assert.equal(bloodslash.boss, 'Zul’Alai');
+  assert.equal(bloodslash.slot, 'One-Hand');
+  assert.equal(bloodslash.requiredLevel, 34);
+  const kroldokProtection = module.buildWarriorDungeonPreparation({ level: 45, specializationId: 'protection', faction: 'Horde' }, guideData)
+    .available.find(dungeon => dungeon.id === 'kroldok-stronghold');
+  assert.ok(kroldokProtection.equipment.some(item => item.equipmentId === 'kroldok-warplate-chest' && item.boss === 'Nar’gurk'));
+  const arms60 = module.buildWarriorDungeonPreparation({ level: 60, specializationId: 'arms', faction: 'Alliance' }, guideData);
+  assert.ok(arms60.available.find(dungeon => dungeon.id === 'shapers-terrace').equipment.some(item => item.equipmentId === 'hammer-of-thundering-hooves'));
+  const fury60 = module.buildWarriorDungeonPreparation({ level: 60, specializationId: 'fury', faction: 'Alliance' }, guideData);
+  assert.ok(fury60.available.find(dungeon => dungeon.id === 'shapers-terrace').equipment.some(item => item.equipmentId === 'cinderedge-crescent'));
+  const protection60 = module.buildWarriorDungeonPreparation({ level: 60, specializationId: 'protection', faction: 'Alliance' }, guideData);
+  assert.ok(protection60.available.find(dungeon => dungeon.id === 'shapers-terrace').equipment.some(item => item.equipmentId === 'raptorscale-bulwark'));
+  const allianceHall = module.buildWarriorDungeonPreparation({ level: 20, specializationId: 'fury', faction: 'Alliance' }, guideData)
+    .available.find(dungeon => dungeon.id === 'hall-of-thanes');
+  const hordeHall = module.buildWarriorDungeonPreparation({ level: 20, specializationId: 'fury', faction: 'Horde' }, guideData)
+    .available.find(dungeon => dungeon.id === 'hall-of-thanes');
+  assert.ok(allianceHall.equipment.some(item => item.equipmentId === 'durgen-crescent-axe'));
+  assert.ok(!hordeHall.equipment.some(item => item.equipmentId === 'durgen-crescent-axe'));
 
   const storage = { values: new Map(), getItem(name) { return this.values.get(name) ?? null; }, setItem(name, value) { this.values.set(name, String(value)); } };
   const key = module.WARRIOR_DUNGEON_PROGRESS_STORAGE_KEY;
@@ -2792,15 +2833,17 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
   assert.match(rendered, /Recommended at your level/);
   assert.match(rendered, /Faction quest records/);
   assert.match(rendered, /<details class="wow-warrior-dungeon-details">/);
-  assert.match(rendered, /Important Drops/);
+  assert.match(rendered, /Warrior Loot/);
+  assert.match(rendered, /Rewards:/);
   assert.match(rendered, /Before You Enter · Arms/);
   assert.doesNotMatch(rendered, /Sources:/);
   storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 17, faction: 'Alliance', tab: 'dungeons', specializationId: 'fury' }));
   const earlyRendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 17, selectedSpecialization: 'fury', guideData, storage });
-  assert.match(earlyRendered, /Buzz Saw[\s\S]*?Availability:<\/b> Upcoming · requires level 18/, 'dungeon drops distinguish their item level requirement from dungeon range recommendations');
+  assert.match(earlyRendered, /Buzz Saw[\s\S]*?Required level:<\/b> Level 18 · upcoming/, 'dungeon drops distinguish item requirements from dungeon range recommendations');
+  assert.match(earlyRendered, /data-equipment-id="buzz-saw"/);
   storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 30, faction: 'Alliance', tab: 'dungeons', specializationId: 'protection' }));
   const protectionRendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 30, selectedSpecialization: 'protection', guideData, storage });
-  assert.match(protectionRendered, /Slot:<\/b> Main Hand Sword/);
+  assert.match(protectionRendered, /Slot:<\/b> Main Hand/);
   assert.match(protectionRendered, /Lady Sarevess/);
   assert.match(portalStyles, /\.wow-warrior-facts \{ gap:\.6rem 1rem; \}/, 'mobile fact spacing declaration parses as two CSS gap values');
   assert.match(portalStyles, /\.wow-warrior-nav button \{ min-height:46px; padding:\.5rem \.35rem; \}/, 'mobile navigation padding declaration parses as two CSS values');
