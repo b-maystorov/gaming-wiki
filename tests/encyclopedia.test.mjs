@@ -2695,6 +2695,36 @@ test('Warrior leveling guide filters faction zones, updates by level, shows upco
   assert.match(render(34, 'Alliance', 'protection'), /milestone-protection-vanguard/);
 });
 
+test('Warrior Arms, Fury and Protection milestones cover the sourced 10–60 progression', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const guideData = { classRecord: warrior, specializationGuides: warrior.specializationGuides, warriorLeveling: wowPack.warriorLeveling };
+  const expectations = {
+    arms: ['arms-improved-overpower', 'arms-spearing-strike', 'arms-sweeping-strikes', 'arms-recklessness', 'arms-reckless-swings'],
+    fury: ['fury-gore-drinker', 'fury-whirlwind', 'fury-flurry', 'fury-bloodthirst', 'fury-improved-berserker-rage', 'fury-deflection', 'fury-improved-charge', 'fury-recklessness', 'fury-improved-tactical-mastery', 'fury-anger-management', 'fury-improved-bloodrage', 'fury-enrage'],
+    protection: ['protection-revenge', 'protection-shield-block', 'protection-vanguard', 'protection-shield-slam', 'protection-recklessness', 'protection-reckless-swings']
+  };
+  for (const [specializationId, ids] of Object.entries(expectations)) {
+    const milestones = wowPack.warriorLeveling.specializationMilestones[specializationId];
+    for (const id of ids) {
+      const milestone = milestones.find(item => item.id === id);
+      assert.ok(milestone, `${specializationId} contains ${id}`);
+      assert.ok(milestone.sourceIds.every(sourceId => wowPack.sources.some(source => source.id === sourceId)), `${id} source attribution resolves`);
+      if (id.includes('improved-overpower') || id.endsWith('spearing-strike') || /recklessness|reckless-swings|improved-berserker-rage|deflection|improved-charge|improved-tactical-mastery|anger-management|improved-bloodrage|enrage/.test(id)) {
+        assert.ok(milestone.verificationDate && milestone.verificationStatus, `${id} retains verification metadata`);
+      }
+    }
+  }
+  for (const level of [10, 20, 30, 40, 50, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+    const storage = { getItem: key => key.endsWith(':warrior') ? JSON.stringify({ level, faction: 'Alliance', tab: 'leveling', specializationId }) : null };
+    const html = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId, guideData, storage });
+    assert.match(html, /id="warrior-companion-tab-leveling"[^>]*aria-selected="true"/, `${specializationId} selects the leveling tab at level ${level}`);
+    for (const id of expectations[specializationId]) assert.ok(html.includes(`data-warrior-checklist-task="milestone-${id}"`), `${specializationId} milestone ${id} remains in the level-filtered checklist at ${level}`);
+    const otherSpecs = Object.keys(expectations).filter(spec => spec !== specializationId);
+    for (const otherSpec of otherSpecs) for (const id of expectations[otherSpec]) assert.ok(!html.includes(`data-warrior-checklist-task="milestone-${id}"`), `${specializationId} does not receive ${otherSpec} milestone ${id}`);
+  }
+});
+
 test('Warrior checklist progress is separate, persistent, manually checked, and grouped by level', () => {
   const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const key = module.WARRIOR_CHECKLIST_STORAGE_KEY;
