@@ -2736,6 +2736,50 @@ test('Warrior checklist progress is separate, persistent, manually checked, and 
   assert.match(render(10), /value="dungeon"/);
 });
 
+test('Warrior class quests filter by faction, specialization and level while preserving checklist IDs', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const records = wowPack.warriorLeveling.classQuests;
+  const equipment = [...wowPack.warriorEquipment.items, ...warrior.specializationGuides.arms.sections.gear.equipmentGuide.items];
+  assert.ok(records.length >= 8, 'the class quest path covers early stance unlocks through level 60');
+  for (const quest of records) {
+    assert.ok(quest.sourceUrl && quest.verificationDate && quest.verificationStatus, `${quest.id} retains attribution and reliability metadata`);
+    assert.ok(quest.sourceIds.every(id => wowPack.sources.some(source => source.id === id)), `${quest.id} source IDs resolve`);
+    for (const itemId of quest.itemIds) assert.ok(equipment.some(item => item.id === itemId && item.questIds?.includes(quest.id)), `${quest.id} links reward ${itemId} to a canonical equipment record`);
+  }
+  const allianceAtTen = records.filter(quest => quest.factions.includes('Alliance'));
+  const hordeAtTen = records.filter(quest => quest.factions.includes('Horde'));
+  assert.ok(allianceAtTen.some(quest => quest.id === 'class-quest-10-alliance' && quest.routeOptions.some(route => route.npc === 'Harry Burlguard')));
+  assert.ok(hordeAtTen.some(quest => quest.id === 'class-quest-10-horde' && quest.routeOptions.some(route => route.npc === 'Veteran Uzzek')));
+  assert.ok(allianceAtTen.find(quest => quest.id === 'class-quest-10-alliance').routeOptions.some(route => route.location.includes('Skyborne')));
+  const source = { classRecord: warrior, warriorLeveling: wowPack.warriorLeveling, warriorEquipment: wowPack.warriorEquipment, dungeons: wowPack.dungeons, sources: wowPack.sources, dungeonPreparation: dungeonPrepData };
+  for (const faction of ['Alliance', 'Horde']) for (const specializationId of ['arms', 'fury', 'protection']) for (const level of [10, 20, 30, 40, 60]) {
+    const storage = { getItem: key => key.endsWith(':warrior') ? JSON.stringify({ level, faction, specializationId, tab: 'leveling' }) : null };
+    const html = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId, guideData: source, storage });
+    assert.match(html, /Quest route, objectives and rewards/, `${faction} ${specializationId} sees expanded quest guidance at ${level}`);
+    assert.match(html, /data-warrior-checklist-task="milestone-10-class-quest"/, 'existing level-10 checklist task ID remains compatible');
+    assert.match(html, /class="wow-warrior-checklist-group is-(?:available|upcoming|completed)"/, 'quest checklist retains available/upcoming/completed group states');
+    if (level === 10) assert.match(html, /Upcoming · Optional Fire Hardened Mail chain|Upcoming · Optional Brutal Armor chain/, 'level-20 faction chain appears as upcoming');
+    if (level === 20) assert.match(html, /Recommended now · Optional Fire Hardened Mail chain|Recommended now · Optional Brutal Armor chain/, 'the matching level-20 faction chain becomes available');
+    if (level === 20) assert.ok(faction === 'Alliance' ? !html.includes('Path of Defense') : !html.includes('Fire Hardened Mail'), `${faction} does not see the other faction's class armor chain`);
+    if (level === 60 && specializationId !== 'protection') assert.doesNotMatch(html, /Codex of Defense/, `${specializationId} does not see the Protection-specific book reward`);
+  }
+  const stored = { getItem: key => key === module.WARRIOR_CHECKLIST_STORAGE_KEY ? JSON.stringify(['milestone-10-class-quest'])
+    : key.endsWith(':warrior') ? JSON.stringify({ level: 20, faction: 'Alliance', tab: 'leveling', specializationId: 'arms' }) : null };
+  const persisted = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 20, selectedSpecialization: 'arms', guideData: source, storage: stored });
+  assert.match(persisted, /data-warrior-checklist-task="milestone-10-class-quest" checked/, 'legacy checklist data remains checked after quest detail expansion');
+
+  const protectionAt54 = module.buildWarriorDungeonPreparation({ level: 54, specializationId: 'protection', faction: 'Alliance' }, source);
+  const furyAt54 = module.buildWarriorDungeonPreparation({ level: 54, specializationId: 'fury', faction: 'Alliance' }, source);
+  const sunkenTemple = protectionAt54.available.find(dungeon => dungeon.name === 'Sunken Temple');
+  assert.ok(sunkenTemple.quests.some(quest => quest.classQuestId === 'class-quest-50-voodoo-feathers'), 'Sunken Temple references the Warrior Voodoo Feathers quest');
+  const razorfen = module.buildWarriorDungeonPreparation({ level: 29, specializationId: 'protection', faction: 'Alliance' }, source).available.find(dungeon => dungeon.name === 'Razorfen Kraul');
+  assert.ok(razorfen.quests.some(quest => quest.classQuestId === 'class-quest-20-alliance'), 'Razorfen Kraul links the Alliance Warrior armor chain');
+  const direMaul = protectionAt54.available.find(dungeon => dungeon.name === 'Dire Maul East');
+  assert.ok(direMaul.quests.some(quest => quest.classQuestId === 'class-quest-54-codex-of-defense'));
+  assert.ok(!furyAt54.available.find(dungeon => dungeon.name === 'Dire Maul East').quests.some(quest => quest.classQuestId === 'class-quest-54-codex-of-defense'), 'specialization-specific recommendations respect the selected specialization');
+});
+
 test('Warrior dungeon preparation filters by level, changes with specialization, and saves checklist independently', () => {
   const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');

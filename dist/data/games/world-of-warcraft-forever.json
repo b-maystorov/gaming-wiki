@@ -661,7 +661,8 @@
                     "acquisition": "Warrior class-quest reward from Whirlwind Weapon; the guide places the quest at level 30 and notes its final fight needs a group.",
                     "whyUseful": "A level-30 two-handed quest reward with Strength and Stamina; compare its weapon DPS with other upgrades.",
                     "sourceUrl": "https://db.icy-veins.com/wow-forever/items/6975",
-                    "sourceIds": ["icy-arms-leveling", "icy-warrior-class-quests", "icy-wow-forever-items", "forever-atlas-warrior-gear"]
+                    "sourceIds": ["icy-arms-leveling", "icy-warrior-class-quests", "icy-wow-forever-items", "forever-atlas-warrior-gear"],
+                    "questIds": ["class-quest-30-whirlwind"]
                   },
                   {
                     "id": "ravager",
@@ -2097,6 +2098,400 @@
       "text": "Before changing zones, compare the next zone’s verified level range with your level and finish remaining quests that still fit. Train available abilities, check weapon skill after changing weapon type, and check equipment durability. Before a dungeon, collect its available quests. These are general preparation checks, not verified zone-specific quest routes.",
       "sourceIds": ["icy-arms-leveling", "icy-warrior-leveling", "icy-protection-leveling"]
     },
+    "classQuests": [
+      {
+        "id": "class-quest-10-alliance",
+        "checklistId": "milestone-10-class-quest",
+        "requiredLevel": 10,
+        "recommendedCompletionLevel": 10,
+        "title": "Defensive Stance — Alliance routes",
+        "factions": [
+          "Alliance"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Warrior trainer; route depends on the capital chosen",
+        "location": "Stormwind, Ironforge, or Darnassus; Skyborne route on Zephras Isle",
+        "prerequisites": [
+          "Warrior; level 10; choose and complete one route"
+        ],
+        "objectives": "Stormwind: Harry Burlguard sends you to fight Bartleby and return his mug. Ironforge: Muren Stormpike sends you to defeat Vejrek and return his head. Darnassus: Elanaria sends you to defeat Vorlus Vilehoof and return his horn. Skyborne: Seena Skybreaker sends you to recover the Skybreaker Bulwark from Zaal Stormshield.",
+        "rewards": [
+          "Defensive Stance",
+          "Taunt",
+          "Sunder Armor"
+        ],
+        "routeOptions": [
+          {
+            "npc": "Harry Burlguard",
+            "location": "Stormwind Old Town",
+            "objective": "Defeat Bartleby and return his mug."
+          },
+          {
+            "npc": "Muren Stormpike",
+            "location": "Ironforge",
+            "objective": "Defeat Vejrek in Dun Morogh and return his head."
+          },
+          {
+            "npc": "Elanaria",
+            "location": "Darnassus",
+            "objective": "Defeat Vorlus Vilehoof at a moonwell southeast of Ban’ethil Barrow Den; return his horn."
+          },
+          {
+            "npc": "Seena Skybreaker",
+            "location": "Zephras Isle · Skyborne route, available to either faction",
+            "objective": "Recover the Skybreaker Bulwark from Zaal Stormshield at the Shrine of Akir."
+          }
+        ],
+        "groupRequirement": "No group requirement is listed in the source.",
+        "itemIds": [],
+        "dungeonIds": [],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; quest routes and spell rewards cross-checked against the Forever quest database."
+      },
+      {
+        "id": "class-quest-10-horde",
+        "checklistId": "milestone-10-class-quest",
+        "requiredLevel": 10,
+        "recommendedCompletionLevel": 10,
+        "title": "Defensive Stance — Horde routes",
+        "factions": [
+          "Horde"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Veteran Uzzek or Deathguard Dillinger",
+        "location": "The Barrens or Brill, Tirisfal Glades; Skyborne route on Zephras Isle",
+        "prerequisites": [
+          "Warrior; level 10; choose and complete one route"
+        ],
+        "objectives": "Path of Defense: collect 5 Singed Scales from Lightning Hides and Thunder Lizards in Thunder Ridge, Durotar, then return to Uzzek at Far Watch Post. Ulag the Cleaver: activate the skull stone by the mausoleum north of Brill, defeat Ulag, and return to Dillinger. Skyborne: recover the Skybreaker Bulwark from Zaal Stormshield.",
+        "rewards": [
+          "Defensive Stance",
+          "Taunt",
+          "Sunder Armor"
+        ],
+        "routeOptions": [
+          {
+            "npc": "Veteran Uzzek",
+            "location": "Far Watch Post, The Barrens",
+            "objective": "Collect 5 Singed Scales from Lightning Hides and Thunder Lizards in Thunder Ridge, Durotar."
+          },
+          {
+            "npc": "Deathguard Dillinger",
+            "location": "Brill, Tirisfal Glades",
+            "objective": "Activate the skull stone near the mausoleum north of Brill, defeat Ulag, and return."
+          },
+          {
+            "npc": "Seena Skybreaker",
+            "location": "Zephras Isle · Skyborne route, available to either faction",
+            "objective": "Recover the Skybreaker Bulwark from Zaal Stormshield at the Shrine of Akir."
+          }
+        ],
+        "groupRequirement": "No group requirement is listed in the source.",
+        "itemIds": [],
+        "dungeonIds": [],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; quest routes and spell rewards cross-checked against the Forever quest database."
+      },
+      {
+        "id": "class-quest-20-alliance",
+        "checklistId": "class-quest-20-alliance",
+        "requiredLevel": 20,
+        "recommendedCompletionLevel": null,
+        "title": "Fire Hardened Mail",
+        "factions": [
+          "Alliance"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Warrior trainer → Yorus Barleybrew",
+        "location": "Lakeshire, Redridge Mountains; follow-up with Furen Longbeard in Stormwind",
+        "prerequisites": [
+          "Warrior; level 20",
+          "Complete The Rethban Gauntlet before the follow-up"
+        ],
+        "objectives": "Complete the timed Rethban Caverns trial, bring Yorus’s cask to Furen Longbeard for Furen’s Favor, then gather 50 Scorched Spider Fangs in Wetlands, 12 Charred Horns and one Galvanized Horn in Stonetalon Mountains, plus a Vial of Phlogiston from Roogug in Razorfen Kraul.",
+        "rewards": [
+          "Furen’s Favor",
+          "Fire Hardened Hauberk",
+          "Fire Hardened Coif",
+          "Fire Hardened Gauntlets",
+          "Fire Hardened Leggings"
+        ],
+        "groupRequirement": "Razorfen Kraul is a group dungeon; the source recommends finishing the hauberk around level 28 with a group. The shield is available earlier.",
+        "itemIds": [
+          "furen-favor",
+          "fire-hardened-hauberk",
+          "fire-hardened-coif",
+          "fire-hardened-gauntlets",
+          "fire-hardened-leggings"
+        ],
+        "dungeonIds": [
+          "razorfen-kraul"
+        ],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; reward items verified in the Forever item database.",
+        "recommendedCompletionNote": "The source recommends finishing the Razorfen Kraul leg with a group in your late 20s."
+      },
+      {
+        "id": "class-quest-20-horde",
+        "checklistId": "class-quest-20-horde",
+        "requiredLevel": 20,
+        "recommendedCompletionLevel": null,
+        "title": "Brutal Armor",
+        "factions": [
+          "Horde"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Warrior trainer → Ruga Ragetotem",
+        "location": "Camp Taurajo, The Barrens; follow-up with Thun’grim Firegaze",
+        "prerequisites": [
+          "Warrior; level 20"
+        ],
+        "objectives": "Collect 5 Twitching Antenna from silithids in the Field of Giants and return within 15 minutes; this awards Ruga’s Bulwark. The follow-up needs 15 Smoky Iron Ingots from Windshear kobolds in Stonetalon, 10 Powdered Azurite from Hillsbrad Miners, 10 Iron Bars, and a Vial of Phlogiston from Roogug in Razorfen Kraul.",
+        "rewards": [
+          "Ruga’s Bulwark",
+          "Brutal Hauberk",
+          "Brutal Gauntlets",
+          "Brutal Helm",
+          "Brutal Legguards"
+        ],
+        "groupRequirement": "Razorfen Kraul is a group dungeon; the source recommends finishing the hauberk around level 28 with a group. Antennae expire after 15 minutes.",
+        "itemIds": [
+          "rugas-bulwark",
+          "brutal-hauberk",
+          "brutal-gauntlets",
+          "brutal-helm",
+          "brutal-legguards"
+        ],
+        "dungeonIds": [
+          "razorfen-kraul"
+        ],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; reward items verified in the Forever item database.",
+        "recommendedCompletionNote": "The source recommends finishing the Razorfen Kraul leg with a group in your late 20s."
+      },
+      {
+        "id": "class-quest-30-affray",
+        "checklistId": "milestone-30-class-quest",
+        "requiredLevel": 30,
+        "recommendedCompletionLevel": 30,
+        "title": "The Affray — Berserker Stance",
+        "factions": [
+          "Alliance",
+          "Horde"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Warrior trainer → Klannoc Macleod",
+        "location": "Fray Island, The Barrens",
+        "prerequisites": [
+          "Warrior; level 30"
+        ],
+        "objectives": "Accept The Islander, travel to Klannoc on Fray Island, defeat the arena challengers and Big Will, then speak with Klannoc.",
+        "rewards": [
+          "Berserker Stance"
+        ],
+        "groupRequirement": "No group requirement is listed in the source; the quest is an arena trial.",
+        "itemIds": [],
+        "dungeonIds": [],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; quest is listed in the Forever quest database."
+      },
+      {
+        "id": "class-quest-30-whirlwind",
+        "checklistId": "class-quest-30-whirlwind",
+        "requiredLevel": 30,
+        "recommendedCompletionLevel": null,
+        "title": "Whirlwind Weapon",
+        "factions": [
+          "Alliance",
+          "Horde"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Klannoc Macleod → Bath’rah the Windwatcher",
+        "location": "Fray Island, The Barrens → Alterac Mountains",
+        "prerequisites": [
+          "Warrior; level 30",
+          "Complete The Affray / unlock Berserker Stance"
+        ],
+        "objectives": "Take The Windwatcher to Bath’rah, collect 8 Liferoot, 30 Bloodscalp Tusks in Stranglethorn Vale, and 8 each of Burning, Cresting, and Thundering Charms in Arathi Highlands. Combine the charms at Bath’rah’s cauldron and defeat Cyclonian.",
+        "rewards": [
+          "Choose one: Whirlwind Axe, Whirlwind Sword, or Whirlwind Warhammer"
+        ],
+        "groupRequirement": "Cyclonian is a level-40 elite; the source says level-30 characters need help or should return at a higher level.",
+        "itemIds": [
+          "whirlwind-axe"
+        ],
+        "dungeonIds": [],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests",
+          "icy-wow-forever-items"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; Whirlwind Axe item facts checked in the Forever item database. Other choice item records are not present in this guide.",
+        "recommendedCompletionNote": "Cyclonian is level 40; the source advises bringing help at level 30 or returning after gaining more levels."
+      },
+      {
+        "id": "class-quest-50-voodoo-feathers",
+        "checklistId": "class-quest-50-voodoo-feathers",
+        "requiredLevel": 50,
+        "recommendedCompletionLevel": 52,
+        "title": "Voodoo Feathers",
+        "factions": [
+          "Alliance",
+          "Horde"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Warrior trainer → Fallen Hero of the Horde",
+        "location": "Major city trainer → Blasted Lands, near the Swamp of Sorrows border",
+        "prerequisites": [
+          "Warrior; level 50",
+          "Complete Warrior Kinship and War on the Shadowsworn"
+        ],
+        "objectives": "Kill 7 Helboars, then 20 Shadowsworn Adepts, 10 Cultists, and 20 Thugs. Accept Voodoo Feathers before entering Sunken Temple; collect two each of Amber, Blue, and Green Voodoo Feathers from the six troll guardians and return them to the Fallen Hero.",
+        "rewards": [
+          "Diamond Flask",
+          "Fury Visor",
+          "Razorsteel Shoulders"
+        ],
+        "groupRequirement": "Sunken Temple requires a group for this quest; guide recommends finishing around level 52.",
+        "itemIds": [
+          "diamond-flask",
+          "fury-visor",
+          "razorsteel-shoulders"
+        ],
+        "dungeonIds": [
+          "sunken-temple"
+        ],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; item names, effects, and quest minimum cross-checked in Forever databases."
+      },
+      {
+        "id": "class-quest-54-codex-of-defense",
+        "checklistId": "class-quest-54-codex-of-defense",
+        "requiredLevel": 54,
+        "recommendedCompletionLevel": 54,
+        "title": "Codex of Defense",
+        "factions": [
+          "Alliance",
+          "Horde"
+        ],
+        "specializations": [
+          "protection"
+        ],
+        "startingNpc": "Use Codex of Defense; turn in to Lorekeeper Kildrath",
+        "location": "Dire Maul Athenaeum",
+        "prerequisites": [
+          "Warrior; level 54",
+          "Obtain the book from a Dire Maul boss or dusty tome, or buy it from another player"
+        ],
+        "objectives": "Use the Codex of Defense to begin the quest, then return the book to Lorekeeper Kildrath in the Athenaeum.",
+        "rewards": [
+          "Royal Seal of Eldre’Thalas"
+        ],
+        "groupRequirement": "The book may be obtained during a group Dire Maul run; no separate quest combat is documented.",
+        "itemIds": [
+          "royal-seal-of-eldrethalas"
+        ],
+        "dungeonIds": [
+          "dire-maul-east",
+          "dire-maul-north",
+          "dire-maul-west"
+        ],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; reward item verified in the Forever item database."
+      },
+      {
+        "id": "class-quest-60-quelserrar",
+        "checklistId": "class-quest-60-quelserrar",
+        "requiredLevel": 60,
+        "recommendedCompletionLevel": 60,
+        "title": "The Forging of Quel’Serra",
+        "factions": [
+          "Alliance",
+          "Horde"
+        ],
+        "specializations": [
+          "arms",
+          "fury",
+          "protection"
+        ],
+        "startingNpc": "Lorekeeper Lydros",
+        "location": "Dire Maul Athenaeum; final step in Onyxia’s Lair",
+        "prerequisites": [
+          "Warrior; level 60",
+          "Obtain Nostro’s Compendium of Dragon Slaying from a Dire Maul boss or dusty tome, or buy it"
+        ],
+        "objectives": "Follow Lydros’s book quests to The Forging of Quel’Serra. Take the Unfired Ancient Blade to Onyxia’s Lair, heat it with Onyxia’s breath, defeat her, use the Heated Ancient Blade on her corpse before it cools, then return to Lydros.",
+        "rewards": [
+          "Quel’Serra — defensive-proc main-hand sword"
+        ],
+        "groupRequirement": "Requires a raid group for Onyxia’s Lair.",
+        "itemIds": [],
+        "dungeonIds": [],
+        "sourceUrl": "https://www.icy-veins.com/wow-forever/warrior-class-quests",
+        "sourceIds": [
+          "icy-warrior-class-quests"
+        ],
+        "verificationDate": "2026-11-24",
+        "verificationStatus": "Creator-reported Forever guide; Quel’Serra equipment record is not currently present in the Warrior database."
+      }
+    ],
     "questMilestones": [
       {"id":"class-quest-10-alliance","level":10,"faction":"Alliance","title":"Level 10 Defensive Stance quest","text":"Choose the route for your starting capital: Bartleby’s Mug (Stormwind), Vejrek (Ironforge), or Vorlus Vilehoof (Darnassus). Skyborne Warriors use The Skybreaker Bulwark on Zephras Isle. These quests reward Defensive Stance, Taunt, and Sunder Armor.","sourceIds":["icy-warrior-class-quests"]},
       {"id":"class-quest-10-horde","level":10,"faction":"Horde","title":"Level 10 Defensive Stance quest","text":"Choose the route for your starting capital: Path of Defense (The Barrens) or Ulag the Cleaver (Brill). Skyborne Warriors use The Skybreaker Bulwark on Zephras Isle. These quests reward Defensive Stance, Taunt, and Sunder Armor.","sourceIds":["icy-warrior-class-quests"]},
@@ -2303,28 +2698,28 @@
       {"id":"seal-of-sylvanas","name":"Seal of Sylvanas","category":"accessory","slot":"Ring","requiredLevel":null,"availabilityLevel":18,"recommendationBracket":"10–20","faction":"Horde","attributes":["Stamina +8","Attack Power +6"],"acquisition":"Horde quest reward from Arugal Must Die in Shadowfang Keep.","whyUseful":"Attack Power supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6414","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
       {"id":"raptor-hide-cloak","name":"Raptor Hide Cloak","category":"accessory","slot":"Cloak","requiredLevel":16,"itemLevel":21,"recommendationBracket":"10–20","attributes":["Stamina +4","Spirit +3"],"acquisition":"Dropped by Takk the Leaper in The Barrens.","whyUseful":"Stamina adds health; it is a sourced early cloak option.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/285329","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
       {"id":"mark-of-the-pack-leader","name":"Mark of the Pack Leader","category":"accessory","slot":"Necklace","requiredLevel":20,"itemLevel":25,"recommendationBracket":"20–30","attributes":["Strength +5","Intellect +5"],"acquisition":"Dropped by Humar the Pridelord in The Barrens.","whyUseful":"Strength supports melee attack power; the quest-zone set bonus adds movement speed in The Barrens and Stonetalon Mountains.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/285331","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
-      {"id":"furen-favor","name":"Furen's Favor","category":"armor","slot":"Shield","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["411 Armor","Strength +3"],"acquisition":"Alliance Warrior class-quest reward from The Shieldsmith.","whyUseful":"A Warrior-only shield reward adds armor and Strength for Protection.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6970","sourceIds":["icy-warrior-class-quests"],"specializations":["protection"]},
-      {"id":"rugas-bulwark","name":"Ruga's Bulwark","category":"armor","slot":"Shield","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["411 Armor","Strength +3"],"acquisition":"Horde Warrior class-quest reward from Trial at the Field of Giants.","whyUseful":"A Warrior-only shield reward adds armor and Strength for Protection.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7120","sourceIds":["icy-warrior-class-quests"],"specializations":["protection"]},
+      {"id":"furen-favor","name":"Furen's Favor","category":"armor","slot":"Shield","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["411 Armor","Strength +3"],"acquisition":"Alliance Warrior class-quest reward from The Shieldsmith.","whyUseful":"A Warrior-only shield reward adds armor and Strength for Protection.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6970","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-alliance"],"specializations":["protection"]},
+      {"id":"rugas-bulwark","name":"Ruga's Bulwark","category":"armor","slot":"Shield","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["411 Armor","Strength +3"],"acquisition":"Horde Warrior class-quest reward from Trial at the Field of Giants.","whyUseful":"A Warrior-only shield reward adds armor and Strength for Protection.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7120","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-horde"],"specializations":["protection"]},
       {"id":"wildhunter-cloak","name":"Wildhunter Cloak","category":"accessory","slot":"Cloak","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Stamina +2","Attack Power +10","Attack Power +9 against Beasts"],"acquisition":"Horde quest reward from The Hunt Completed in Ashenvale.","whyUseful":"Attack Power supports melee damage, with an additional bonus against Beasts; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/16658","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
       {"id":"silverlaines-family-seal","name":"Silverlaine's Family Seal","category":"accessory","slot":"Ring","requiredLevel":21,"itemLevel":26,"recommendationBracket":"20–30","faction":"Horde","attributes":["Strength +5","Stamina +2"],"acquisition":"Dropped by Baron Silverlaine in Shadowfang Keep.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6321","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
       {"id":"cultists-armguards","name":"Cultist's Armguards","category":"armor","slot":"Wrists","requiredLevel":null,"availabilityLevel":18,"recommendationBracket":"20–30","attributes":["Stamina +7","Attack Power +10"],"acquisition":"Choose as a reward from the Alliance or Horde Blackfathom Villainy quest; minimum quest level 18.","whyUseful":"Attack Power supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/270032","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
       {"id":"algae-fists","name":"Algae Fists","category":"armor","slot":"Hands","requiredLevel":23,"itemLevel":28,"recommendationBracket":"20–30","attributes":["Strength +8","Stamina +5","Nature Resistance +5"],"acquisition":"Dropped by Gelihast in Blackfathom Deeps.","whyUseful":"Strength supports melee damage and Stamina adds health; Nature Resistance is situational dungeon protection.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6906","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
       {"id":"repurposed-rack","name":"Repurposed Rack","category":"armor","slot":"Shield","requiredLevel":25,"itemLevel":30,"recommendationBracket":"20–30","faction":"Alliance","attributes":["661 Armor","Strength +6"],"acquisition":"Dropped by Hamhock in the Stockade.","whyUseful":"Its armor and Strength are useful for a Protection shield; the spell damage bonus is not a Warrior benefit.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/273811","sourceIds":["icy-protection-leveling"],"specializations":["protection"]},
       {"id":"kaleidoscope-chain","name":"Kaleidoscope Chain","category":"accessory","slot":"Necklace","requiredLevel":30,"itemLevel":35,"recommendationBracket":"30–40","attributes":["Strength +4","Agility +4","Stamina +4"],"acquisition":"World drop from creatures in level-appropriate zones.","whyUseful":"Strength supports melee damage, Agility supports critical strike and avoidance, and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/13084","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
-      {"id":"brutal-helm","name":"Brutal Helm","category":"armor","slot":"Head","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Agility +7","Stamina +8"],"acquisition":"Horde Warrior class-quest armor chain, started at level 20.","whyUseful":"Agility supports critical strike and avoidance; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7130","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"brutal-hauberk","name":"Brutal Hauberk","category":"armor","slot":"Chest","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Strength +5","Stamina +14","Use: increases Rage by 30"],"acquisition":"Horde Warrior class-quest chain started at level 20; final materials include a Razorfen Kraul trip.","whyUseful":"Strength supports melee damage, Stamina adds health, and the item has a documented Rage-use effect.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7133","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"brutal-gauntlets","name":"Brutal Gauntlets","category":"armor","slot":"Hands","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Strength +6","Stamina +6"],"acquisition":"Horde Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7129","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"brutal-legguards","name":"Brutal Legguards","category":"armor","slot":"Legs","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Strength +7","Stamina +7"],"acquisition":"Horde Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7132","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"fire-hardened-coif","name":"Fire Hardened Coif","category":"armor","slot":"Head","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Agility +7","Stamina +8"],"acquisition":"Alliance Warrior class-quest follow-up started at level 20.","whyUseful":"Agility supports critical strike and avoidance; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6971","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"fire-hardened-hauberk","name":"Fire Hardened Hauberk","category":"armor","slot":"Chest","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Strength +5","Stamina +14","Use: increases Rage by 30"],"acquisition":"Alliance Warrior class-quest chain started at level 20; the final materials include a Razorfen Kraul trip.","whyUseful":"Strength supports melee damage, Stamina adds health, and the item has a documented Rage-use effect.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6972","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"fire-hardened-gauntlets","name":"Fire Hardened Gauntlets","category":"armor","slot":"Hands","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Strength +6","Stamina +6"],"acquisition":"Alliance Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6974","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"fire-hardened-leggings","name":"Fire Hardened Leggings","category":"armor","slot":"Legs","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Strength +7","Stamina +7"],"acquisition":"Alliance Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6973","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
+      {"id":"brutal-helm","name":"Brutal Helm","category":"armor","slot":"Head","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Agility +7","Stamina +8"],"acquisition":"Horde Warrior class-quest armor chain, started at level 20.","whyUseful":"Agility supports critical strike and avoidance; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7130","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-horde"],"specializations":["arms","fury","protection"]},
+      {"id":"brutal-hauberk","name":"Brutal Hauberk","category":"armor","slot":"Chest","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Strength +5","Stamina +14","Use: increases Rage by 30"],"acquisition":"Horde Warrior class-quest chain started at level 20; final materials include a Razorfen Kraul trip.","whyUseful":"Strength supports melee damage, Stamina adds health, and the item has a documented Rage-use effect.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7133","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-horde"],"specializations":["arms","fury","protection"]},
+      {"id":"brutal-gauntlets","name":"Brutal Gauntlets","category":"armor","slot":"Hands","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Strength +6","Stamina +6"],"acquisition":"Horde Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7129","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-horde"],"specializations":["arms","fury","protection"]},
+      {"id":"brutal-legguards","name":"Brutal Legguards","category":"armor","slot":"Legs","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Horde","attributes":["Strength +7","Stamina +7"],"acquisition":"Horde Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7132","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-horde"],"specializations":["arms","fury","protection"]},
+      {"id":"fire-hardened-coif","name":"Fire Hardened Coif","category":"armor","slot":"Head","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Agility +7","Stamina +8"],"acquisition":"Alliance Warrior class-quest follow-up started at level 20.","whyUseful":"Agility supports critical strike and avoidance; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6971","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-alliance"],"specializations":["arms","fury","protection"]},
+      {"id":"fire-hardened-hauberk","name":"Fire Hardened Hauberk","category":"armor","slot":"Chest","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Strength +5","Stamina +14","Use: increases Rage by 30"],"acquisition":"Alliance Warrior class-quest chain started at level 20; the final materials include a Razorfen Kraul trip.","whyUseful":"Strength supports melee damage, Stamina adds health, and the item has a documented Rage-use effect.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6972","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-alliance"],"specializations":["arms","fury","protection"]},
+      {"id":"fire-hardened-gauntlets","name":"Fire Hardened Gauntlets","category":"armor","slot":"Hands","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Strength +6","Stamina +6"],"acquisition":"Alliance Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6974","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-alliance"],"specializations":["arms","fury","protection"]},
+      {"id":"fire-hardened-leggings","name":"Fire Hardened Leggings","category":"armor","slot":"Legs","requiredLevel":null,"availabilityLevel":20,"recommendationBracket":"20–30","faction":"Alliance","attributes":["Strength +7","Stamina +7"],"acquisition":"Alliance Warrior class-quest follow-up started at level 20.","whyUseful":"Strength supports melee damage and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6973","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-20-alliance"],"specializations":["arms","fury","protection"]},
       {"id":"blackstone-ring","name":"Blackstone Ring","category":"accessory","slot":"Ring","requiredLevel":49,"itemLevel":54,"recommendationBracket":"40–50","attributes":["Stamina +6","Hit +1%","Attack Power +20"],"acquisition":"Dropped by Princess Theradras in Maraudon.","whyUseful":"Attack Power and Hit support melee damage while Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/17713","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
       {"id":"officers-waistguard","name":"Officer's Waistguard","category":"armor","slot":"Waist","requiredLevel":50,"itemLevel":55,"recommendationBracket":"50–60","attributes":["Strength +14","Agility +10","Stamina +13"],"acquisition":"Crafted with Blacksmithing; the item database lists its recipe and materials.","whyUseful":"Strength supports melee damage, Agility adds critical strike and avoidance, and Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/250571","sourceIds":["icy-protection-leveling"],"specializations":["arms","fury","protection"]},
-      {"id":"fury-visor","name":"Fury Visor","category":"armor","slot":"Head","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Strength +18","Hit +1%","Critical Strike +1%"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"Strength, Hit, and Critical Strike support melee damage.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20521","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"razorsteel-shoulders","name":"Razorsteel Shoulders","category":"armor","slot":"Shoulders","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Strength +10","Stamina +10","Hit +1%"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"Strength and Hit support melee damage; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20517","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"diamond-flask","name":"Diamond Flask","category":"accessory","slot":"Trinket","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Use: channels healing, then grants Strength +20 for 1 minute"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"The documented Strength use effect boosts melee damage after its channel; finish the channel before engaging.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20130","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"royal-seal-of-eldrethalas","name":"Royal Seal of Eldre'Thalas","category":"accessory","slot":"Trinket","requiredLevel":null,"availabilityLevel":54,"recommendationBracket":"50–60","attributes":["Nature Resistance +15","Shield Block Value +30"],"acquisition":"Warrior quest reward from Codex of Defense, available at level 54.","whyUseful":"Shield Block Value directly benefits Protection while using a shield; the trinket is Warrior-specific.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18466","sourceIds":["icy-warrior-class-quests"],"specializations":["protection"]},
+      {"id":"fury-visor","name":"Fury Visor","category":"armor","slot":"Head","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Strength +18","Hit +1%","Critical Strike +1%"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"Strength, Hit, and Critical Strike support melee damage.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20521","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-50-voodoo-feathers"],"specializations":["arms","fury","protection"]},
+      {"id":"razorsteel-shoulders","name":"Razorsteel Shoulders","category":"armor","slot":"Shoulders","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Strength +10","Stamina +10","Hit +1%"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"Strength and Hit support melee damage; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20517","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-50-voodoo-feathers"],"specializations":["arms","fury","protection"]},
+      {"id":"diamond-flask","name":"Diamond Flask","category":"accessory","slot":"Trinket","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Use: channels healing, then grants Strength +20 for 1 minute"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"The documented Strength use effect boosts melee damage after its channel; finish the channel before engaging.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20130","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-50-voodoo-feathers"],"specializations":["arms","fury","protection"]},
+      {"id":"royal-seal-of-eldrethalas","name":"Royal Seal of Eldre'Thalas","category":"accessory","slot":"Trinket","requiredLevel":null,"availabilityLevel":54,"recommendationBracket":"50–60","attributes":["Nature Resistance +15","Shield Block Value +30"],"acquisition":"Warrior quest reward from Codex of Defense, available at level 54.","whyUseful":"Shield Block Value directly benefits Protection while using a shield; the trinket is Warrior-specific.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18466","sourceIds":["icy-warrior-class-quests"],"questIds":["class-quest-54-codex-of-defense"],"specializations":["protection"]},
       {"id":"veterans-chain-shirt","name":"Veteran's Chain Shirt","category":"armor","slot":"Chest","requiredLevel":15,"itemLevel":20,"recommendationBracket":"10–20","attributes":["Strength +7","Agility +4","Stamina +5"],"acquisition":"Crafted with Blacksmithing skill 80; the Forever item record lists Plans: Veteran's Chain Shirt as the recipe source.","whyUseful":"A level-15 mail chest option with Strength, Agility and Stamina; compare it with dungeon or quest rewards before crafting.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/250488","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
       {"id":"veterans-silvered-chain-helm","name":"Veteran's Silvered Chain Helm","category":"armor","slot":"Head","requiredLevel":20,"itemLevel":25,"recommendationBracket":"20–30","attributes":["Strength +10","Stamina +9"],"acquisition":"Crafted with Blacksmithing; the Forever item record lists Plans: Veteran's Silvered Chain Helm as the recipe source.","whyUseful":"Adds Strength and Stamina in a slot with few recorded early Warrior options.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/250528","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
       {"id":"veterans-chain-helm","name":"Veteran's Chain Helm","category":"armor","slot":"Head","requiredLevel":25,"itemLevel":30,"recommendationBracket":"20–30","attributes":["Strength +12","Stamina +11"],"acquisition":"Crafted with Blacksmithing skill 125; the Forever item record lists Plans: Veteran's Chain Helm as the recipe source.","whyUseful":"A Strength and Stamina mail option for the mid-20s; check the recipe and material cost before crafting.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/250498","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},

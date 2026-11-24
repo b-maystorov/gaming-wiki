@@ -111,6 +111,12 @@ function buildWarriorLevelingData(state, guideData, tabContent) {
   const questMilestones = (reference.questMilestones || []).filter(item =>
     (item.faction === faction || item.faction === 'Both')
     && (!item.specializations || item.specializations.includes(state.specializationId))
+    && !(reference.classQuests || []).some(quest => (quest.id === item.id || quest.checklistId === item.id)
+      && quest.specializations && !quest.specializations.includes(state.specializationId))
+  );
+  const classQuests = (reference.classQuests || []).filter(item =>
+    item.factions?.includes(faction)
+    && (!item.specializations || item.specializations.includes(state.specializationId))
   );
   const unknownNames = [...new Set((tabContent?.zones?.[faction] || []).filter(name => !(reference.zones || []).some(zone => zone.name === name)))];
   return {
@@ -121,17 +127,18 @@ function buildWarriorLevelingData(state, guideData, tabContent) {
     specializationMilestones,
     preparationTips: reference.preparationTips || null,
     questMilestones,
+    classQuests,
     currentZones,
     upcomingZones,
     dungeons,
     milestones,
-    checklistTasks: buildWarriorChecklistTasks(milestones, reference, faction, state.specializationId, specializationMilestones, questMilestones),
+    checklistTasks: buildWarriorChecklistTasks(milestones, reference, faction, state.specializationId, specializationMilestones, questMilestones, classQuests),
     unknownNames,
-    sourceIds: [...new Set([...(reference.sourceIds || []), ...(reference.dungeonSourceIds || []), ...(specializationGuidance?.sourceIds || []), ...(reference.preparationTips?.sourceIds || []), ...specializationMilestones.flatMap(item => item.sourceIds || []), ...questMilestones.flatMap(item => item.sourceIds || [])])]
+    sourceIds: [...new Set([...(reference.sourceIds || []), ...(reference.dungeonSourceIds || []), ...(specializationGuidance?.sourceIds || []), ...(reference.preparationTips?.sourceIds || []), ...specializationMilestones.flatMap(item => item.sourceIds || []), ...questMilestones.flatMap(item => item.sourceIds || []), ...classQuests.flatMap(item => item.sourceIds || [])])]
   };
 }
 
-function buildWarriorChecklistTasks(milestones, reference, faction = 'Alliance', specializationId = 'arms', specializationMilestones = [], questMilestones = []) {
+function buildWarriorChecklistTasks(milestones, reference, faction = 'Alliance', specializationId = 'arms', specializationMilestones = [], questMilestones = [], classQuests = []) {
   const tasks = milestones.flatMap(item => {
     if (item.kind === 'Training and build milestone') {
       const buildMilestone = specializationMilestones.find(candidate => Number(candidate.level) === Number(item.level));
@@ -159,6 +166,14 @@ function buildWarriorChecklistTasks(milestones, reference, faction = 'Alliance',
   tasks.push(...questMilestones.filter(item => ![10, 30].includes(Number(item.level))).map(item => ({
     id: item.id, level: Number(item.level), category: 'class-quest', title: `Level ${item.level} · ${item.title}`, text: item.text
   })));
+  for (const quest of classQuests) {
+    const existing = tasks.find(task => task.id === quest.checklistId);
+    if (existing) existing.classQuest = quest;
+    else tasks.push({
+      id: quest.checklistId || quest.id, level: Number(quest.requiredLevel), category: 'class-quest',
+      title: `Level ${quest.requiredLevel} · ${quest.title}`, text: quest.objectives, classQuest: quest
+    });
+  }
   for (const dungeon of reference.dungeons || []) tasks.push({
     id: `dungeon-${dungeon.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
     level: Number(dungeon.minLevel), maxLevel: Number(dungeon.maxLevel), category: 'dungeon', title: dungeon.name,
@@ -279,6 +294,15 @@ export function buildWarriorDungeonPreparation(state, guideData = {}) {
   const records = levelRecords.map(dungeon => {
     const { detail, full } = getRecord(dungeon);
     const quests = (detail?.quests || []).filter(quest => quest.factions?.includes(faction));
+    for (const quest of guideData.warriorLeveling?.classQuests || []) {
+      if (!quest.factions?.includes(faction) || (quest.specializations && !quest.specializations.includes(specializationId))
+        || !quest.dungeonIds?.some(id => normalizeDungeonName(id) === normalizeDungeonName(dungeon.name))) continue;
+      quests.push({
+        id: quest.id, classQuestId: quest.id, name: quest.title, npc: quest.startingNpc, where: quest.location,
+        min: quest.requiredLevel, factions: quest.factions, kind: 'class', stage: 'CLASS QUEST REQUIRING INSTANCE PARTICIPATION',
+        outside: quest.prerequisites?.join('; '), unlock: quest.objectives, rewards: quest.rewards?.join('; '), sourceIds: quest.sourceIds
+      });
+    }
     const equipment = gearFor(dungeon, full, detail);
     const bosses = [...new Set(equipment.map(item => item.boss).filter(Boolean))];
     const sourceIds = [...new Set([
@@ -920,7 +944,9 @@ function renderWarriorLevelingGuide(data, escapeHtml, checklistProgress = [], ch
   const checklistItem = task => {
     const isComplete = checklistProgress.includes(task.id);
     const status = isComplete ? 'Completed' : task.level > data.level ? 'Upcoming' : task.level === data.level || (task.category === 'dungeon' && task.maxLevel >= data.level) ? 'Recommended now' : 'Earlier level · not checked off';
-    return `<li class="wow-warrior-checklist-item${isComplete ? ' is-complete' : ''}" data-task-category="${escapeHtml(task.category)}"><label><input type="checkbox" data-warrior-checklist-task="${escapeHtml(task.id)}"${isComplete ? ' checked' : ''}><span class="wow-warrior-checklist-icon" aria-hidden="true"></span><span class="wow-warrior-checklist-copy"><strong>${escapeHtml(task.title)}</strong><small>${escapeHtml(status)} · ${escapeHtml(task.text)}</small></span></label></li>`;
+    const quest = task.classQuest;
+    const questDetails = quest ? `<details class="wow-warrior-class-quest-details"><summary>Quest route, objectives and rewards</summary><dl><div><dt>Required level</dt><dd>${escapeHtml(quest.requiredLevel)}${quest.recommendedCompletionLevel != null && quest.recommendedCompletionLevel !== quest.requiredLevel ? ` · recommended completion around ${escapeHtml(quest.recommendedCompletionLevel)}` : ''}</dd></div>${quest.recommendedCompletionNote ? `<div><dt>Completion timing</dt><dd>${escapeHtml(quest.recommendedCompletionNote)}</dd></div>` : ''}<div><dt>Starting NPC and area</dt><dd>${escapeHtml(quest.startingNpc)} · ${escapeHtml(quest.location)}</dd></div>${quest.prerequisites?.length ? `<div><dt>Prerequisites</dt><dd>${escapeHtml(quest.prerequisites.join('; '))}</dd></div>` : ''}<div><dt>Objectives</dt><dd>${escapeHtml(quest.objectives)}</dd></div>${quest.routeOptions?.length ? `<div><dt>Available routes</dt><dd><ul>${quest.routeOptions.map(route => `<li><strong>${escapeHtml(route.npc)}</strong> · ${escapeHtml(route.location)} — ${escapeHtml(route.objective)}</li>`).join('')}</ul></dd></div>` : ''}<div><dt>Rewards</dt><dd>${escapeHtml(quest.rewards.join('; '))}</dd></div><div><dt>Group / risk</dt><dd>${escapeHtml(quest.groupRequirement)}</dd></div></dl></details>` : '';
+    return `<li class="wow-warrior-checklist-item${isComplete ? ' is-complete' : ''}" data-task-category="${escapeHtml(task.category)}"><label><input type="checkbox" data-warrior-checklist-task="${escapeHtml(task.id)}"${isComplete ? ' checked' : ''}><span class="wow-warrior-checklist-icon" aria-hidden="true"></span><span class="wow-warrior-checklist-copy"><strong>${escapeHtml(task.title)}</strong><small>${escapeHtml(status)} · ${escapeHtml(task.text)}</small></span></label>${questDetails}</li>`;
   };
   const checklistSection = (id, heading, tasks, isOpen = false) => `<details class="wow-warrior-checklist-group is-${id}" data-checklist-section="${id}"${isOpen ? ' open' : ''}><summary>${heading}<span>${tasks.length}</span></summary><div class="wow-warrior-checklist-content">${tasks.length ? `<ul>${tasks.map(checklistItem).join('')}</ul>` : '<p class="wow-warrior-leveling-empty">No milestones in this section.</p>'}</div></details>`;
   const talentAvailable = data.checklistTasks.some(task => task.category === 'talent');
