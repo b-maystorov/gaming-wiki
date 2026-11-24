@@ -1746,9 +1746,21 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     }
     const talents = module.getCompanionPanel({ ...base, tab: 'talents' }, guideData);
     assert.ok(talents.treeData.tree, `${spec.name} talent tree is available at ${level}`);
-    assert.match(talents.notices.join(' '), /recommendations are not yet documented/);
+    assert.match(talents.sections[0].title, /Talent-point budget/);
+    assert.equal(talents.sections[0].text, `${expectedPoints.get(level)} points are available at level ${level}. This is the game-rule budget, not an allocated build.`);
+    assert.match(talents.notices.join(' '), /fully auditable rank-by-rank build/);
     const gold = module.getCompanionPanel({ ...base, tab: 'gold-farming' }, guideData);
     assert.equal(gold.goldFarming.classId, 'shaman');
+  }
+
+  assert.match(page, /class-card-shaman\.svg/);
+  const shamanArtwork = wowArtwork.records.find(record => record.id === 'class-card-shaman-original');
+  assert.match(shamanArtwork.provenance, /Original vector artwork/);
+  assert.match(wowArtwork.gameIconAttribution.dataAttribution, /CC BY 4\.0/);
+  assert.equal(wowClientData.iconAudit.talentsMissingIcons, 0);
+  for (const talent of talentClass.trees.flatMap(tree => tree.talents)) {
+    assert.equal(talent.icon, `assets/images/wow-forever/icons/${talent.iconToken}.jpg`, `${talent.name} uses its recorded game icon mapping`);
+    assert.ok((await readFile(resolve(root, 'dist', talent.icon))).length > 0, `${talent.name} icon asset exists`);
   }
 
   const stored = new Map();
@@ -3093,11 +3105,24 @@ test('leveling companion renders complete source-backed builds and safely handle
   assert.deepEqual(wowGuidedData.builds.filter(build => build.classId === 'warrior').map(build => build.specializationId), ['arms', 'fury', 'protection']);
   const shaman = wowPack.classes.find(item => item.id === 'shaman');
   const shamanTalentClass = wowClientData.classes.find(item => item.id === 'shaman');
-  const partialShaman = companionModule.getCompanionPanel({ classId: 'shaman', level: 20, specializationId: 'enhancement', tab: 'talents' }, { classRecord: shaman, talentClass: shamanTalentClass }, engine);
-  assert.deepEqual(JSON.parse(JSON.stringify(partialShaman.notices)), [
-    'Shaman talent trees are available for reference; class-specific talent recommendations are not yet documented.',
-    'The saved build is not eligible for automatic use (status: Partial · manual in-game verification still needed).'
-  ]);
+  for (const specializationId of ['elemental', 'enhancement', 'restoration']) {
+    for (const level of [10, 16, 25, 35, 60]) {
+      const panel = companionModule.getCompanionPanel({ classId: 'shaman', level, specializationId, tab: 'talents' }, { classRecord: shaman, talentClass: shamanTalentClass }, engine);
+      assert.equal(panel.sections[0].title, 'Talent-point budget');
+      assert.equal(panel.sections[0].text, `${Math.max(0, level - 9)} points are available at level ${level}. This is the game-rule budget, not an allocated build.`);
+      assert.equal(panel.treeData.recommended, null, `${specializationId} level ${level} does not imply an unverified allocation`);
+      assert.deepEqual(JSON.parse(JSON.stringify(panel.treeData.allocation)), {});
+      assert.equal(panel.treeData.allTrees.length, 3, 'all Shaman talent trees remain available');
+      assert.match(panel.notices[0], /[Aa]utomatic allocation is withheld|not applied automatically/);
+      assert.doesNotMatch(panel.sections[0].text, /0 \/ \d+/);
+    }
+  }
+  const shamanSources = new Set(wowPack.shamanGuide.sourceIds);
+  assert.ok(shamanSources.has('icy-elemental-leveling') && shamanSources.has('icy-restoration-leveling'));
+  for (const record of ['icy-elemental-leveling', 'icy-restoration-leveling']) {
+    const source = wowPack.sources.find(item => item.id === record);
+    assert.ok(source?.url && source.updatedDate, `${record} retains its URL and verification date`);
+  }
   assert.equal(companionModule.saveCompanionState({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { setItem() { throw new Error('Storage denied'); } }), false);
   const fallback = companionModule.loadCompanionState('warrior', { level: 17, specializationId: 'fury' }, specs, { getItem() { throw new Error('Storage denied'); } });
   assert.deepEqual(JSON.parse(JSON.stringify(fallback)), { classId: 'warrior', level: 17, specializationId: 'fury', tab: 'overview', selectedTalentId: '', faction: 'Alliance' });

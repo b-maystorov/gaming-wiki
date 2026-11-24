@@ -454,7 +454,7 @@ function getAutomaticTalentData(state, guideData, progressionEngine) {
   const catalog = progressionEngine?.catalog || { classes: classRecord ? [classRecord] : [] };
   const specialization = (guideData.classRecord?.specializations || guideData.specializations || []).find(item => item.id === state.specializationId);
   const tree = findCompanionTalentTree(classRecord, state.specializationId, specialization?.name);
-  const availablePoints = progressionEngine?.availablePoints?.(state.level, 0) ?? 0;
+  const availablePoints = progressionEngine?.availablePoints?.(state.level, 0) ?? Math.max(0, Number(state.level) - 9);
   const matchingBuilds = (progressionEngine?.builds || []).filter(build => build.classId === state.classId && build.specializationId === state.specializationId);
   const build = sourceSupportedBuildFor(state, progressionEngine);
   let recommended = build && progressionEngine?.resolve
@@ -675,9 +675,9 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
     if (classRecord.id === 'shaman') return {
       heading: `${specName} talent tree · Level ${state.level}`,
       treeData,
-      sections: [{ title: 'Talent points spent / available', text: `${treeData.validation.total} / ${treeData.availablePoints}` }],
-      notices: ['Shaman talent trees are available for reference; class-specific talent recommendations are not yet documented.', ...(treeData.availabilityReason ? [treeData.availabilityReason] : [])],
-      note: 'Talent points start at level 10 and exclude Talented Legacy bonus points.'
+      sections: [{ title: 'Talent-point budget', text: `${treeData.availablePoints} points are available at level ${state.level}. This is the game-rule budget, not an allocated build.` }],
+      notices: [shamanBuildAvailabilityNotice(treeData, progressionEngine, state.specializationId)].filter(Boolean),
+      note: `Talent points start at level 10 and exclude Talented Legacy bonus points. ${treeData.tree ? 'All three trees remain visible for reference; no ranks are marked as recommended without a complete verified progression.' : ''}`
     };
     return {
       heading: `${specName} talent tree · Level ${state.level}`,
@@ -702,6 +702,17 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
     sections: gear ? [{ title: 'Existing guide recommendation', text: gear }] : [],
     notices: gear ? [] : ['Guide data coming soon for this specialization’s gear recommendations.']
   };
+}
+
+function shamanBuildAvailabilityNotice(treeData, progressionEngine, specializationId) {
+  if (treeData.recommended?.valid) return '';
+  const candidate = progressionEngine?.builds?.find(build => build.classId === 'shaman'
+    && build.specializationId === specializationId);
+  if (candidate?.coverage?.status === 'partial') {
+    const through = candidate.coverage.highestDocumentedLevel || candidate.levelRange?.through;
+    return `A draft route is recorded${through ? ` through level ${through}` : ''}, but its tree-row requirements and full progression are not verified. It is not applied automatically.`;
+  }
+  return 'A current WoW: Forever leveling guide is available, but it does not provide a fully auditable rank-by-rank build here. Automatic allocation is withheld until that progression is verified.';
 }
 
 function buildWarriorCombatGuide(state, guideData) {

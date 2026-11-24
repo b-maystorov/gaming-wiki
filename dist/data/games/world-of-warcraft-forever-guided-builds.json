@@ -2,14 +2,28 @@
   "schemaVersion": 1,
   "gameVersion": "World of Warcraft: Forever",
   "talentClientBuild": "1.60.1.70755",
-  "lastReviewed": "2026-11-06",
+  "lastReviewed": "2026-11-24",
   "sources": [
     {
       "id": "icy-enhancement-leveling",
       "title": "Icy Veins · Enhancement Shaman Leveling Guide",
       "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-leveling",
-      "updated": "2026-11-04",
-      "use": "Level-20 Shamanistic Focus and level-25 Stormstrike milestones; the guide describes an optional Restoration-first respec path."
+      "updated": "2026-11-13",
+      "use": "Current Forever Enhancement leveling priorities and level milestones, including the post-hotfix solo build notes. The published guide does not provide the complete rank-by-rank progression stored locally."
+    },
+    {
+      "id": "icy-elemental-leveling",
+      "title": "Icy Veins · Elemental Shaman Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/elemental-shaman-leveling/",
+      "updated": "2026-11-16",
+      "use": "Current Forever Elemental leveling milestones and talent priorities. The published guide does not provide an auditable point-by-point progression in its text."
+    },
+    {
+      "id": "icy-restoration-leveling",
+      "title": "Icy Veins · Restoration Shaman Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/restoration-shaman-leveling/",
+      "updated": "2026-11-16",
+      "use": "Current Forever Restoration leveling milestones and talent priorities. The published guide does not provide an auditable point-by-point progression in its text."
     },
     {
       "id": "mobalytics-shaman-leveling",

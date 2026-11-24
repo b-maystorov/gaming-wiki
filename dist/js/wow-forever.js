@@ -813,7 +813,9 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
     const selectedSpecializationId = ['warrior', 'shaman'].includes(item.id)
       ? (profile.classId === item.id && item.specializations.some(spec => spec.id === profile.specializationId) ? profile.specializationId : item.id === 'warrior' ? 'arms' : 'enhancement')
       : '';
-    const art = classArt(item);
+    const art = item.id === 'shaman'
+      ? artworkManifest?.records?.find(record => record.kind === 'class-card' && record.classId === 'shaman') || classArt(item)
+      : classArt(item);
     const raceGroups = Object.entries(data.raceCombinations || {}).map(([faction, races]) => {
       const availableRaces = Object.entries(races).filter(([, classNames]) => classNames.includes(item.name)).map(([race]) => race);
       return `<div><strong>${escapeHtml(faction)}</strong><span>${escapeHtml(availableRaces.join(', ') || 'No combinations recorded')}</span></div>`;

@@ -89,10 +89,30 @@
       "title": "Enhancement Shaman Leveling Guide",
       "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-leveling",
       "publisher": "Icy Veins",
-      "updatedDate": "2026-11-03",
+      "updatedDate": "2026-11-13",
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
-      "status": "Forever-specific guide; lower-level recommendations draw on beta testing and may change after launch."
+      "status": "Forever-specific leveling guide updated after launch hotfixes. It gives milestone priorities but not a complete point-by-point route in its text."
+    },
+    {
+      "id": "icy-elemental-leveling",
+      "title": "Elemental Shaman Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/elemental-shaman-leveling/",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-16",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide with level milestones and talent priorities; its text does not expose an auditable point-by-point route."
+    },
+    {
+      "id": "icy-restoration-leveling",
+      "title": "Restoration Shaman Leveling Guide",
+      "url": "https://www.icy-veins.com/wow-forever/restoration-shaman-leveling/",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-16",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific leveling guide with level milestones and talent priorities; its text does not expose an auditable point-by-point route."
     },
     {
       "id": "icy-enhancement-talents",
@@ -1963,12 +1983,12 @@
   ],
   "shamanGuide": {
     "verificationDate": "2026-11-24",
-    "sourceIds": ["classes-mage-shaman", "icy-enhancement-leveling", "world-of-warcraft-forever-race-class"],
+    "sourceIds": ["classes-mage-shaman", "icy-enhancement-leveling", "icy-elemental-leveling", "icy-restoration-leveling", "world-of-warcraft-forever-race-class"],
     "classMechanics": "Shaman uses Mana and places stationary totems for elemental buffs and utility. Totems can support damage, defense, movement control or group recovery; moving between pulls may mean placing them again. Mana spent on spells or totems can create downtime, so spend it with intent.",
     "specializations": {
-      "elemental": {"sourceIds": ["classes-mage-shaman"], "detailStatus": "Overview only; detailed recommendations are not yet documented."},
+      "elemental": {"sourceIds": ["classes-mage-shaman", "icy-elemental-leveling"], "detailStatus": "Overview only; detailed recommendations are not yet documented."},
       "enhancement": {"sourceIds": ["classes-mage-shaman", "icy-enhancement-leveling"], "detailStatus": "Overview only; detailed recommendations are not yet documented."},
-      "restoration": {"sourceIds": ["classes-mage-shaman"], "detailStatus": "Overview only; detailed recommendations are not yet documented."}
+      "restoration": {"sourceIds": ["classes-mage-shaman", "icy-restoration-leveling"], "detailStatus": "Overview only; detailed recommendations are not yet documented."}
     }
   },
   "zones": [
