@@ -3165,6 +3165,29 @@ test('Warrior equipment recommendations filter by level, faction, specialization
   }
   const upcomingAt45 = render(45, 'Horde', 'protection');
   assert.match(upcomingAt45, /Lord General&#39;s Sword[\s\S]*?Upcoming · Available at Level 51/);
+  const atlasItems = wowPack.warriorEquipment.items.filter(item => item.sourceIds?.includes('forever-atlas-warrior-gear'));
+  assert.equal(atlasItems.length, 41);
+  assert.ok(wowPack.warriorEquipment.sourceIds.includes('forever-atlas-warrior-gear'));
+  assert.ok(atlasItems.every(item => item.verificationDate === '2026-11-24' && item.classRequirement && item.factionRestriction));
+  assert.ok(atlasItems.every(item => wowPack.sources.some(source => source.id === 'forever-atlas-warrior-gear')));
+  assert.ok(atlasItems.every(item => wowPack.dungeons.some(dungeon => dungeon.id === item.dungeonId)), 'new dungeon drops link to existing dungeon records');
+  assert.ok(atlasItems.every(item => item.sourceUrl && item.acquisitionSourceUrl));
+  const armsAt60 = render(60, 'Alliance', 'arms');
+  const furyAt60 = render(60, 'Alliance', 'fury');
+  const protectionAt60 = render(60, 'Alliance', 'protection');
+  assert.ok(armsAt60.includes('Hammer of Thundering Hooves'));
+  assert.ok(!furyAt60.includes('Hammer of Thundering Hooves'), 'two-handed Arms gear stays specialization-filtered');
+  assert.ok(furyAt60.includes('Cinderedge Crescent'));
+  for (const id of ['bloodslash-axe', 'dreadfrost-saber', 'toofbreaker', 'cinderedge-crescent', 'scaleguard-scimitar', 'talon-of-torrel']) {
+    assert.equal(atlasItems.find(item => item.id === id)?.slot, 'One-Hand', `${id} can fill either one-handed weapon hand`);
+  }
+  assert.ok(protectionAt60.includes('Raptorscale Bulwark'));
+  const allianceAt60 = render(60, 'Alliance', 'protection');
+  const hordeAt60 = render(60, 'Horde', 'protection');
+  assert.ok(allianceAt60.includes('Theramore Defender’s Gauntlets'));
+  assert.ok(!allianceAt60.includes('Kor’kron Battle Gauntlets'));
+  assert.ok(hordeAt60.includes('Kor’kron Battle Gauntlets'));
+  assert.ok(!hordeAt60.includes('Theramore Defender’s Gauntlets'));
   const wingblade = wowPack.warriorEquipment.items.find(item => item.id === 'wingblade');
   assert.equal(wingblade.requiredLevel, null, 'the database does not state a minimum level for Wingblade');
   assert.ok(wingblade.sourceUrl && wingblade.sourceIds.includes('icy-wow-forever-items'));
