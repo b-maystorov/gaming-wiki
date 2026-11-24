@@ -1699,11 +1699,87 @@ for (const classRecord of wowPack.classes) {
     assert.equal(route.view, 'wow-class');
     assert.equal(route.classRecord.id, classRecord.id);
     const guide = h.app.renderPage(route);
-    assert.ok(guide.includes(`Starting your journey as ${classRecord.name}`));
-    assert.ok(guide.includes(classRecord.starterGuide.reason), 'the destination renders the implemented class guide');
+    if (classRecord.id === 'shaman') {
+      assert.ok(guide.includes('class="wow-shaman-guide"'));
+      assert.equal((guide.match(/data-shaman-spec-tab=/g) || []).length, 3);
+    } else {
+      assert.ok(guide.includes(`Starting your journey as ${classRecord.name}`));
+      assert.ok(guide.includes(classRecord.starterGuide.reason), 'the destination renders the implemented class guide');
+    }
     assert.doesNotMatch(guide, /class="wow-home-class-shortcuts"/, 'the strip is limited to the landing page');
   });
 }
+
+test('Shaman guide has isolated specialization state, a level-aware overview, and honest missing-data tabs', async () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const shamanGuideModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+  const shaman = wowPack.classes.find(record => record.id === 'shaman');
+  const talentClass = wowClientData.classes.find(record => record.id === 'shaman');
+  const sourceIds = wowPack.shamanGuide.sourceIds;
+  assert.ok(sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  assert.deepEqual(Object.keys(wowPack.shamanGuide.specializations).sort(), ['elemental', 'enhancement', 'restoration']);
+  const page = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/shaman'));
+  assert.match(page, /<h1 id="page-title" tabindex="-1">Shaman<\/h1>/);
+  assert.equal((page.match(/<h1\b/g) || []).length, 1);
+  assert.equal((page.match(/data-shaman-spec-tab=/g) || []).length, 3);
+  assert.equal((page.match(/data-companion-tab=/g) || []).length, 9);
+  assert.match(page, /src="assets\/images\/wow-forever\/(?:elemental|enhancement|restoration)-shaman\.svg"/);
+  assert.doesNotMatch(page, /data-warrior-spec-tab|Warrior Guide|Arms ·|Fury ·|Protection ·/);
+  for (const spec of shaman.specializations) {
+    const icon = { elemental: 'elemental-shaman.svg', enhancement: 'enhancement-shaman.svg', restoration: 'restoration-shaman.svg' }[spec.id];
+    assert.ok((await readFile(resolve(root, 'dist/assets/images/wow-forever', icon))).length > 0);
+  }
+  const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, raceCombinations: wowPack.raceCombinations, talentClass };
+  const expectedPoints = new Map([[10, 1], [30, 21], [60, 51]]);
+  for (const faction of ['Alliance', 'Horde']) for (const spec of shaman.specializations) for (const level of [10, 30, 60]) {
+    const base = { classId: 'shaman', specializationId: spec.id, level, faction };
+    const overview = module.getCompanionPanel({ ...base, tab: 'overview' }, guideData);
+    assert.ok(overview.heading.includes(spec.name) && overview.heading.includes(`Level ${level}`));
+    assert.equal(overview.shamanOverview.availableTalentPoints, expectedPoints.get(level));
+    assert.ok(overview.shamanOverview.races.find(group => group.faction === faction)?.names.length);
+    const playableRaces = overview.shamanOverview.races.find(group => group.faction === faction).names;
+    assert.ok(faction === 'Alliance' ? playableRaces.includes('Dwarf') : playableRaces.includes('Windshaper Skyborne'));
+    for (const tab of ['stats', 'combat', 'gear', 'leveling', 'dungeons', 'professions']) {
+      const panel = module.getCompanionPanel({ ...base, tab }, guideData);
+      assert.match(panel.notices.join(' '), /Not yet documented for Shaman/);
+      assert.doesNotMatch(JSON.stringify(panel), /warriorLeveling|warriorEquipment|warriorCombat/);
+    }
+    const talents = module.getCompanionPanel({ ...base, tab: 'talents' }, guideData);
+    assert.ok(talents.treeData.tree, `${spec.name} talent tree is available at ${level}`);
+    assert.match(talents.notices.join(' '), /recommendations are not yet documented/);
+    const gold = module.getCompanionPanel({ ...base, tab: 'gold-farming' }, guideData);
+    assert.equal(gold.goldFarming.classId, 'shaman');
+  }
+
+  const stored = new Map();
+  const storage = { getItem: key => stored.get(key) || null, setItem: (key, value) => stored.set(key, value) };
+  module.saveCompanionState({ classId: 'shaman', level: 20, specializationId: 'elemental', tab: 'stats' }, storage);
+  module.saveCompanionState({ classId: 'shaman', level: 30, specializationId: 'restoration', tab: 'overview' }, storage);
+  module.saveCompanionState({ classId: 'warrior', level: 40, specializationId: 'protection', tab: 'gear' }, storage);
+  assert.equal(module.loadCompanionState('shaman', {}, shaman.specializations, storage).specializationId, 'restoration');
+  assert.equal(module.loadCompanionState('shaman', { specializationId: 'elemental' }, shaman.specializations, storage, false).level, 20);
+  assert.equal(module.loadCompanionState('shaman', { specializationId: 'elemental' }, shaman.specializations, storage, false).tab, 'stats');
+  assert.equal(module.loadCompanionState('warrior', {}, wowPack.classes.find(record => record.id === 'warrior').specializations, storage).specializationId, 'protection');
+
+  const handlers = {};
+  const tabs = ['elemental', 'enhancement', 'restoration'].map((id, index) => ({
+    dataset: { shamanSpecTab: id }, tabIndex: index ? -1 : 0, attributes: new Map(),
+    setAttribute(name, value) { this.attributes.set(name, value); }, focus() { this.focused = true; }
+  }));
+  const companionSpec = { value: 'elemental', ownerDocument: { defaultView: { Event: class { constructor(type, options) { this.type = type; Object.assign(this, options); } } } }, dispatchEvent(event) { this.dispatched = event; } };
+  const hub = { attributes: new Map(), setAttribute(name, value) { this.attributes.set(name, value); } };
+  const guide = { dataset: {}, contains: item => tabs.includes(item), querySelector: selector => selector === '[data-companion-spec]' ? companionSpec : selector === '#shaman-specialization-guide' ? hub : null, querySelectorAll: selector => selector === '[data-shaman-spec-tab]' ? tabs : [], addEventListener: (type, handler) => { handlers[type] = handler; } };
+  shamanGuideModule.initializeShamanGuide({ querySelector: () => guide });
+  const target = item => ({ closest: selector => selector === '[data-shaman-spec-tab]' ? item : null });
+  handlers.click({ target: target(tabs[1]) });
+  assert.equal(companionSpec.value, 'enhancement');
+  assert.equal(companionSpec.dispatched.type, 'change');
+  assert.equal(tabs[1].attributes.get('aria-selected'), 'true');
+  assert.equal(hub.attributes.get('aria-labelledby'), 'shaman-spec-tab-enhancement');
+  handlers.keydown({ target: target(tabs[1]), key: 'ArrowRight', preventDefault() {} });
+  assert.equal(tabs[2].focused, true);
+  assert.equal(companionSpec.value, 'restoration');
+});
 
 test('WoW class shortcuts retain local icons and guide links when the optional client catalog is unavailable', async () => {
   const local = await harness(null, 'available', ['world-of-warcraft-forever-client-data.json']);
@@ -1777,13 +1853,21 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     const classRoute = route(`#game/world-of-warcraft/classes/${item.id}`);
     assert.equal(classRoute.view, 'wow-class', item.id);
     const classHtml = render(classRoute);
-    assert.ok(classHtml.includes(item.id === 'warrior' ? '<h1 id="page-title" tabindex="-1">Warrior</h1>' : `<h2>${item.name}</h2>`));
-    assert.ok(classHtml.includes('Starting your journey'));
-    assert.ok(classHtml.includes(item.starterGuide.specialization));
-    assert.ok(classHtml.includes(item.starterGuide.reason));
-    assert.ok(classHtml.includes('Quick combat reference'));
-    assert.ok(classHtml.includes('Beginner traps'));
-    assert.ok(classHtml.includes('Where to quest'));
+    assert.ok(classHtml.includes(item.id === 'warrior' ? '<h1 id="page-title" tabindex="-1">Warrior</h1>' : item.id === 'shaman' ? '<h1 id="page-title" tabindex="-1">Shaman</h1>' : `<h2>${item.name}</h2>`));
+    if (item.id === 'shaman') {
+      assert.ok(classHtml.includes('data-shaman-guide'));
+      assert.ok(classHtml.includes('Totems, Mana and group play'));
+      assert.doesNotMatch(classHtml, /Beginner traps|Where to quest/);
+    } else {
+      assert.ok(classHtml.includes('Starting your journey'));
+      assert.ok(classHtml.includes(item.starterGuide.specialization));
+      assert.ok(classHtml.includes(item.starterGuide.reason));
+      assert.ok(classHtml.includes('Quick combat reference'));
+    }
+    if (item.id !== 'shaman') {
+      assert.ok(classHtml.includes('Beginner traps'));
+      assert.ok(classHtml.includes('Where to quest'));
+    }
     assert.ok(wowPack.sources.some(source => source.id === item.starterGuide.sourceId), 'starter guide retains its source record');
     assert.ok(!classHtml.includes(wowPack.sources.find(source => source.id === item.starterGuide.sourceId).url), 'class card does not repeat its source URL');
     if (item.id !== 'warrior') assert.ok(classHtml.includes('Original BM Gaming Wiki illustration'));
@@ -1792,14 +1876,18 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     const svg = await readFile(resolve(root, 'dist', art.src), 'utf8');
     assert.ok(svg.includes('<svg') && svg.includes('BM Gaming Wiki'));
     assert.ok(art.alt.includes('not official') && art.usage.includes('no Blizzard assets'));
-    assert.ok(item.starterGuide.talentPriorities.every(name => classHtml.includes(name)));
-    assert.equal(item.starterGuide.levelingBands.length, 3, `${item.id} has three early leveling bands`);
-    for (const band of item.starterGuide.levelingBands) assert.ok(classHtml.includes(band.range));
-    assert.ok(classHtml.includes('Race and faction options'));
+    if (item.id === 'shaman') assert.ok(classHtml.includes('Playable races by faction'));
+    else {
+      assert.ok(item.starterGuide.talentPriorities.every(name => classHtml.includes(name)));
+      assert.equal(item.starterGuide.levelingBands.length, 3, `${item.id} has three early leveling bands`);
+      for (const band of item.starterGuide.levelingBands) assert.ok(classHtml.includes(band.range));
+      assert.ok(classHtml.includes('Race and faction options'));
+    }
     assert.ok(wowPack.sources.some(source => source.id === item.sourceId && source.title), 'class guide retains source attribution data');
     for (const specialization of item.specializations) {
       const href = `#game/world-of-warcraft/builds/${item.id}/${specialization.id}`;
       if (item.id === 'warrior') assert.ok(classHtml.includes(`data-warrior-spec-tab="${specialization.id}"`));
+      else if (item.id === 'shaman') assert.ok(classHtml.includes(`data-shaman-spec-tab="${specialization.id}"`));
       else {
         assert.ok(classHtml.includes(href));
         assert.equal(route(href).view, 'wow-build-detail');
@@ -3006,7 +3094,10 @@ test('leveling companion renders complete source-backed builds and safely handle
   const shaman = wowPack.classes.find(item => item.id === 'shaman');
   const shamanTalentClass = wowClientData.classes.find(item => item.id === 'shaman');
   const partialShaman = companionModule.getCompanionPanel({ classId: 'shaman', level: 20, specializationId: 'enhancement', tab: 'talents' }, { classRecord: shaman, talentClass: shamanTalentClass }, engine);
-  assert.deepEqual(JSON.parse(JSON.stringify(partialShaman.notices)), ['The saved build is not eligible for automatic use (status: Partial · manual in-game verification still needed).']);
+  assert.deepEqual(JSON.parse(JSON.stringify(partialShaman.notices)), [
+    'Shaman talent trees are available for reference; class-specific talent recommendations are not yet documented.',
+    'The saved build is not eligible for automatic use (status: Partial · manual in-game verification still needed).'
+  ]);
   assert.equal(companionModule.saveCompanionState({ classId: 'warrior', level: 45, specializationId: 'protection', tab: 'gear' }, { setItem() { throw new Error('Storage denied'); } }), false);
   const fallback = companionModule.loadCompanionState('warrior', { level: 17, specializationId: 'fury' }, specs, { getItem() { throw new Error('Storage denied'); } });
   assert.deepEqual(JSON.parse(JSON.stringify(fallback)), { classId: 'warrior', level: 17, specializationId: 'fury', tab: 'overview', selectedTalentId: '', faction: 'Alliance' });
@@ -3679,7 +3770,7 @@ test('Warrior handbook preserves existing guide content and integrations', async
   for (const item of wowPack.classes.filter(item => item.id !== 'warrior')) {
     const other = h.app.renderPage(h.app.readRoute(`#game/world-of-warcraft/classes/${item.id}`));
     assert.doesNotMatch(other, /data-warrior-guide|wow-warrior-header|warrior-overview/);
-    assert.ok(other.includes('class="wow-banner"'));
+    assert.ok(other.includes(item.id === 'shaman' ? 'wow-shaman-page' : 'class="wow-banner"'));
   }
 });
 

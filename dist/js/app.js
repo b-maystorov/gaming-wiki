@@ -8,7 +8,7 @@ import { initializeCommandCenter } from './command-center.js';
 import { renderHeroGallery, initializeHeroGallery } from './hero-gallery.js';
 import { heroAbilities, abilityReference } from './hero-abilities.js';
 import { loadStructuredGameContent } from './content-adapter.js';
-import { renderWowPage, initializeWarriorGuide, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, resolveWowGuidedBuild, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
+import { renderWowPage, initializeWarriorGuide, initializeShamanGuide, renderWowBuildResults, loadWowProfile, saveWowProfile, loadWowGuideProgress, saveWowGuideProgress, loadWowTalentDraft, saveWowTalentDraft, loadWowTalentBuilds, saveWowTalentBuild, deleteWowTalentBuild, availableWowTalentPoints, validateWowTalentAllocation, adjustWowTalentRank, resolveWowGuidedBuild, decodeWowTalentBuild, getWowRaceOptions } from './wow-forever.js';
 import { initializeLevelingCompanion } from './wow-leveling-companion.js';
 import { renderWowDungeonPrep, loadDungeonPrepProgress, saveDungeonPrepProgress, setDungeonPrepFaction, setDungeonPrepLevel } from './wow-dungeon-prep.js';
 import { initializeSiteNavigation } from './site-navigation.js';
@@ -1674,34 +1674,41 @@ function showRoute() {
   const route = readRoute(location.hash);
   updateBackToTop(route, 0);
   document.body.classList.toggle('portal-page', route.view === 'home' || route.view === 'preview' || route.view.startsWith('wow-'));
-  const viewKey = route.view === 'wow-class' && route.classRecord?.id === 'warrior' ? 'wow-class/warrior' : route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.kind && route.record ? `${route.kind}/${route.record.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
+  const viewKey = route.view === 'wow-class' ? `wow-class/${route.classRecord?.id || ''}` : route.preview ? `preview/${route.preview.id}` : route.hero ? `hero/${route.hero.id}` : route.boss ? `boss/${route.boss.id}` : route.kind && route.record ? `${route.kind}/${route.record.id}` : route.view === 'team-detail' ? `team/${route.team.id}` : route.view;
   const changed = viewKey !== currentView;
   if (changed) {
     main.innerHTML = renderPage(route);
     initializeWarriorGuide(main);
-    if (route.view === 'wow-class' && route.classRecord?.id === 'warrior' && wowData) {
+    initializeShamanGuide(main);
+    if (route.view === 'wow-class' && ['warrior', 'shaman'].includes(route.classRecord?.id) && wowData) {
+      const classId = route.classRecord.id;
       const profile = loadWowProfile();
-      const selectedSpecialization = profile.classId === 'warrior' && profile.specializationId
+      const selectedSpecialization = profile.classId === classId && profile.specializationId
         ? profile.specializationId
-        : (route.classRecord.specializations.find(spec => spec.id === 'arms')?.id || route.classRecord.specializations[0]?.id);
+        : (route.classRecord.specializations.find(spec => spec.id === (classId === 'warrior' ? 'arms' : 'enhancement'))?.id || route.classRecord.specializations[0]?.id);
       initializeLevelingCompanion(main, {
-        classId: 'warrior',
+        classId,
         currentLevel: profile.currentLevel || 1,
         selectedSpecialization,
         guideData: {
           classRecord: route.classRecord,
           guide: route.classRecord.starterGuide,
-          zones: wowData.zones,
-          dungeons: wowData.dungeons,
-          warriorLeveling: wowData.warriorLeveling,
-          warriorEquipment: wowData.warriorEquipment,
-          warriorCombat: wowData.warriorCombat,
-          warriorProfessions: wowData.warriorProfessions,
-          dungeonPreparation: wowDungeonPrep,
           sources: wowData.sources,
-          specializationGuides: route.classRecord.specializationGuides,
-          talentClass: wowClientData?.classes?.find(record => record.id === 'warrior'),
-          combatCatalog: wowClientData
+          talentClass: wowClientData?.classes?.find(record => record.id === classId),
+          ...(classId === 'warrior' ? {
+            zones: wowData.zones,
+            dungeons: wowData.dungeons,
+            warriorLeveling: wowData.warriorLeveling,
+            warriorEquipment: wowData.warriorEquipment,
+            warriorCombat: wowData.warriorCombat,
+            warriorProfessions: wowData.warriorProfessions,
+            dungeonPreparation: wowDungeonPrep,
+            specializationGuides: route.classRecord.specializationGuides,
+            combatCatalog: wowClientData
+          } : {
+            shamanGuide: wowData.shamanGuide,
+            raceCombinations: wowData.raceCombinations
+          })
         },
         progressionEngine: {
           builds: wowGuidedData?.builds || [],

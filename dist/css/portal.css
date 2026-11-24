@@ -1446,6 +1446,49 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-spec-card small { display:flex; align-items:center; justify-content:space-between; width:100%; margin:auto 0 0; padding-top:.95rem; color:#c8a87b; font-size:.76rem; }
 .wow-warrior-guide .wow-warrior-spec-card small span { color:#e0c69d; font-size:1rem; transition:transform 180ms ease; }
 .wow-warrior-guide .wow-warrior-spec-card:hover small span { transform:translateX(3px); }
+
+.wow-shaman-guide { max-width:1120px; margin:0 auto; padding:clamp(.7rem,2vw,1.25rem); color:#dce5ed; }
+.wow-shaman-breadcrumb { display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; margin:0 0 .8rem; color:#9fb2c5; font-size:.78rem; }
+.wow-shaman-breadcrumb a { color:#d2b486; text-underline-offset:2px; }
+.wow-shaman-guide .wow-class-hero-heading h1 { margin:.1rem 0 .5rem; color:#eff5fa; font:700 clamp(2rem,4vw,3rem)/1.05 Georgia,serif; }
+.wow-shaman-guide .wow-shaman-choose { margin:1rem 0; padding:1rem; border:1px solid #354355; border-radius:6px; background:linear-gradient(145deg,#111d2b,#0b1522); }
+.wow-shaman-guide .wow-warrior-spec-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.65rem; }
+.wow-shaman-guide .wow-shaman-spec-card { position:relative; display:flex; min-width:0; min-height:14rem; flex-direction:column; align-items:flex-start; padding:1rem; border:1px solid #354355; border-top:2px solid color-mix(in srgb,var(--class-accent) 72%,#c4a77c); border-radius:6px; color:#d4dfeb; background:radial-gradient(ellipse at 100% 0,color-mix(in srgb,var(--class-accent) 10%,transparent),transparent 48%),linear-gradient(150deg,#142131,#0b1521 76%); text-align:left; cursor:pointer; }
+.wow-shaman-guide .wow-shaman-spec-card[aria-selected="true"] { border-color:#b89b70; box-shadow:0 0 0 1px #b89b7038; }
+.wow-shaman-guide .wow-shaman-spec-card:focus-visible,.wow-shaman-guide .wow-companion-tabs [role="tab"]:focus-visible,.wow-shaman-guide .wow-companion-controls input:focus-visible { outline:2px solid #a8d5fa; outline-offset:3px; }
+.wow-shaman-guide .wow-shaman-spec-card .wow-warrior-spec-icon { display:block; width:3.4rem; height:3.4rem; margin-bottom:.65rem; overflow:hidden; border:1px solid #65553f; border-radius:5px; }
+.wow-shaman-guide .wow-shaman-spec-card .wow-warrior-spec-icon img { width:100%; height:100%; object-fit:cover; }
+.wow-shaman-guide .wow-shaman-spec-card .wow-warrior-spec-role { color:#c8a87b; font-size:.74rem; }
+.wow-shaman-guide .wow-shaman-spec-card .wow-warrior-spec-name { margin-top:.25rem; color:#f0e4cf; font:600 1.2rem/1.25 Georgia,serif; }
+.wow-shaman-guide .wow-shaman-spec-card .wow-warrior-spec-description { margin:.4rem 0 .75rem; color:#b8c6d4; font-size:.88rem; line-height:1.5; }
+.wow-shaman-guide .wow-shaman-spec-card small { margin-top:auto; color:#d8b884; }
+.wow-shaman-guide .wow-leveling-companion { margin:1rem 0; padding:1rem; border:1px solid #3a4a5d; border-top:2px solid color-mix(in srgb,var(--class-accent) 66%,#b89b70); border-radius:7px; background:linear-gradient(140deg,#111f2e,#0b1420 72%); }
+.wow-shaman-guide .wow-leveling-companion > header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:.8rem; }
+.wow-shaman-guide .wow-leveling-companion h2 { margin:.1rem 0 0; color:#edf2f7; font:650 1.2rem/1.25 system-ui,sans-serif; }
+.wow-shaman-guide .wow-companion-controls { display:grid; grid-template-columns:minmax(0,1fr) minmax(10rem,.75fr); align-items:center; gap:.35rem 1rem; }
+.wow-shaman-guide .wow-companion-controls label { color:#aabed0; font-size:.82rem; font-weight:650; }
+.wow-shaman-guide .wow-companion-controls label:first-child { display:flex; justify-content:space-between; gap:.5rem; }
+.wow-shaman-guide .wow-companion-level-stepper { display:grid; grid-column:1/-1; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:.65rem; }
+.wow-shaman-guide .wow-companion-level-stepper input { min-width:0; width:100%; accent-color:#c09c6b; }
+.wow-shaman-guide .wow-companion-level-stepper button { min-height:40px; padding:.4rem .75rem; border:1px solid #68563d; border-radius:4px; color:#e7d3ad; background:#142231; cursor:pointer; }
+.wow-shaman-guide .wow-companion-tabs { display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.75rem; padding:.25rem; border-bottom:1px solid #33465a; }
+.wow-shaman-guide .wow-companion-tabs [role="tab"] { min-height:40px; padding:.45rem .65rem; border:1px solid transparent; border-radius:4px 4px 0 0; color:#bfccd7; background:transparent; font:650 .82rem system-ui,sans-serif; cursor:pointer; }
+.wow-shaman-guide .wow-companion-tabs [role="tab"][aria-selected="true"] { border-color:#52677c; color:#f1dfc0; background:#1a2a3a; }
+.wow-shaman-guide .wow-companion-panel { min-width:0; padding:.75rem .2rem .15rem; }
+.wow-shaman-guide .wow-companion-panel > h3 { margin:0 0 .7rem; color:#f0f3f6; font-size:1rem; }
+.wow-shaman-overview { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.65rem; }
+.wow-shaman-overview-card { min-width:0; padding:.8rem; border:1px solid #30465b; border-left:2px solid #a7834f; border-radius:5px; background:linear-gradient(145deg,#142333,#0e1925); }
+.wow-shaman-overview-card h4 { margin:0 0 .35rem; color:#f0d8af; font-size:.95rem; }
+.wow-shaman-overview-card p,.wow-shaman-overview-card dd { color:#d5dfe8; font-size:.92rem; line-height:1.5; overflow-wrap:anywhere; }
+.wow-shaman-overview-card dl { display:grid; gap:.3rem; margin:0; }
+.wow-shaman-overview-card dl > div { display:grid; grid-template-columns:5.8rem minmax(0,1fr); gap:.35rem; }
+.wow-shaman-overview-card dt { color:#c8a87b; font-weight:700; }
+.wow-shaman-overview-card dd { margin:0; }
+.wow-shaman-guide .wow-companion-missing { color:#d7c29d; }
+.wow-shaman-class-notes { margin:1rem 0; padding:1rem; border:1px solid #30465b; border-radius:5px; background:#101b27; }
+.wow-shaman-class-notes h3 { color:#f0d8af; }
+@media(max-width:760px) { .wow-shaman-guide .wow-warrior-spec-grid { grid-template-columns:1fr; } .wow-shaman-overview { grid-template-columns:1fr; } .wow-shaman-guide .wow-companion-level-stepper { grid-template-columns:1fr auto; } .wow-shaman-guide .wow-companion-level-stepper input { grid-column:1/-1; grid-row:1; } }
+.wow-shaman-guide .wow-shaman-spec-card,.wow-shaman-guide .wow-companion-tabs [role="tab"] { transition:none; }
 .wow-warrior-guide .wow-warrior-guide-hub { margin-top:.7rem; padding:.85rem; border:1px solid #314456; border-top:2px solid #b27b57; border-radius:6px; background:radial-gradient(ellipse at 100% 0,#b5663820,transparent 45%),linear-gradient(145deg,#101d2a,#0a141e 76%); }
 .wow-warrior-guide .wow-warrior-guide-hub > .wow-warrior-section-heading { margin:0 0 .65rem; padding:0 0 .55rem; border-bottom:1px solid #33485a; }
 .wow-warrior-guide .wow-warrior-guide-hub > .wow-warrior-section-heading h2 { margin:.05rem 0; font-size:1.2rem; }

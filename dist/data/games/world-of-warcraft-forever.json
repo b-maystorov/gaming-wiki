@@ -1961,6 +1961,16 @@
       }
     }
   ],
+  "shamanGuide": {
+    "verificationDate": "2026-11-24",
+    "sourceIds": ["classes-mage-shaman", "icy-enhancement-leveling", "world-of-warcraft-forever-race-class"],
+    "classMechanics": "Shaman uses Mana and places stationary totems for elemental buffs and utility. Totems can support damage, defense, movement control or group recovery; moving between pulls may mean placing them again. Mana spent on spells or totems can create downtime, so spend it with intent.",
+    "specializations": {
+      "elemental": {"sourceIds": ["classes-mage-shaman"], "detailStatus": "Overview only; detailed recommendations are not yet documented."},
+      "enhancement": {"sourceIds": ["classes-mage-shaman", "icy-enhancement-leveling"], "detailStatus": "Overview only; detailed recommendations are not yet documented."},
+      "restoration": {"sourceIds": ["classes-mage-shaman"], "detailStatus": "Overview only; detailed recommendations are not yet documented."}
+    }
+  },
   "zones": [
     {
       "id": "zephras-isle",

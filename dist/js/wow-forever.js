@@ -623,6 +623,45 @@ export function initializeWarriorGuide(root) {
   });
 }
 
+export function initializeShamanGuide(root) {
+  const guide = root.querySelector('[data-shaman-guide]');
+  if (!guide || guide.dataset.shamanInitialized) return;
+  guide.dataset.shamanInitialized = 'true';
+  const tabs = [...guide.querySelectorAll('[data-shaman-spec-tab]')];
+  const companionSpec = guide.querySelector('[data-companion-spec]');
+  const hub = guide.querySelector('#shaman-specialization-guide');
+  const select = specializationId => {
+    for (const tab of tabs) {
+      const selected = tab.dataset.shamanSpecTab === specializationId;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    }
+    hub?.setAttribute('aria-labelledby', `shaman-spec-tab-${specializationId}`);
+    if (companionSpec && companionSpec.value !== specializationId) {
+      companionSpec.value = specializationId;
+      const EventConstructor = companionSpec.ownerDocument?.defaultView?.Event || globalThis.Event;
+      if (EventConstructor && companionSpec.dispatchEvent) companionSpec.dispatchEvent(new EventConstructor('change', { bubbles: true }));
+    }
+  };
+  select(companionSpec?.value || tabs.find(tab => tab.getAttribute('aria-selected') === 'true')?.dataset.shamanSpecTab);
+  guide.addEventListener('click', event => {
+    const tab = event.target.closest?.('[data-shaman-spec-tab]');
+    if (tab && guide.contains(tab)) select(tab.dataset.shamanSpecTab);
+  });
+  guide.addEventListener('keydown', event => {
+    const current = event.target.closest?.('[data-shaman-spec-tab]');
+    const index = tabs.indexOf(current);
+    if (index < 0) return;
+    const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length
+      : event.key === 'ArrowLeft' ? (index - 1 + tabs.length) % tabs.length
+        : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1;
+    if (next < 0) return;
+    event.preventDefault();
+    tabs[next].focus();
+    select(tabs[next].dataset.shamanSpecTab);
+  });
+}
+
 function selectWarriorSpecialization(guide, specializationId, updateCompanion = true) {
   const tabs = guide.querySelectorAll('[data-warrior-spec-tab]');
   const panels = guide.querySelectorAll('[data-warrior-spec-panel]');
@@ -771,8 +810,8 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
     const sectionAttributes = section => item.id === 'warrior' && section !== 'leveling' ? ` id="warrior-${section}" tabindex="-1"` : '';
     const source = data.sources.find(entry => entry.id === item.sourceId);
     const guide = item.starterGuide;
-    const selectedSpecializationId = item.id === 'warrior'
-      ? (profile.classId === 'warrior' && item.specializations.some(spec => spec.id === profile.specializationId) ? profile.specializationId : 'arms')
+    const selectedSpecializationId = ['warrior', 'shaman'].includes(item.id)
+      ? (profile.classId === item.id && item.specializations.some(spec => spec.id === profile.specializationId) ? profile.specializationId : item.id === 'warrior' ? 'arms' : 'enhancement')
       : '';
     const art = classArt(item);
     const raceGroups = Object.entries(data.raceCombinations || {}).map(([faction, races]) => {
@@ -787,17 +826,23 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
         const status = spec.id === 'arms' ? 'Open Arms guide' : spec.id === 'fury' ? 'Fury · partial guide data' : 'Guide data coming soon';
         return `<button type="button" class="wow-spec-card wow-warrior-spec-card" role="tab" id="warrior-spec-tab-${escapeHtml(spec.id)}" aria-controls="warrior-specialization-guide" aria-selected="${selected}" tabindex="${selected ? '0' : '-1'}" data-warrior-spec-tab="${escapeHtml(spec.id)}"><span class="wow-warrior-spec-icon"><img src="assets/images/wow-forever/icons/${icon}" alt="" width="64" height="64" loading="lazy"></span><span class="wow-warrior-spec-role">${escapeHtml(spec.role)}</span><span class="wow-warrior-spec-name">${escapeHtml(spec.name)}</span><span class="wow-warrior-spec-description">${escapeHtml(spec.focus)}</span><small>${escapeHtml(status)} <span aria-hidden="true">→</span></small></button>`;
       }
+      if (item.id === 'shaman') {
+        const shamanIcons = { elemental: 'elemental-shaman.svg', enhancement: 'enhancement-shaman.svg', restoration: 'restoration-shaman.svg' };
+        const isSelected = spec.id === selectedSpecializationId;
+        return `<button type="button" class="wow-spec-card wow-warrior-spec-card wow-shaman-spec-card" role="tab" id="shaman-spec-tab-${escapeHtml(spec.id)}" aria-controls="shaman-specialization-guide" aria-selected="${isSelected}" tabindex="${isSelected ? '0' : '-1'}" data-shaman-spec-tab="${escapeHtml(spec.id)}"><span class="wow-warrior-spec-icon"><img src="assets/images/wow-forever/${shamanIcons[spec.id]}" alt="" width="64" height="64" loading="lazy"></span><span class="wow-warrior-spec-role">${escapeHtml(spec.role)}</span><span class="wow-warrior-spec-name">${escapeHtml(spec.name)}</span><span class="wow-warrior-spec-description">${escapeHtml(spec.focus)}</span><small>${isSelected ? 'Guide selected' : 'Open guide'} <span aria-hidden="true">→</span></small></button>`;
+      }
       return `<a class="wow-spec-card" href="${href(`builds/${item.id}/${spec.id}`)}">${art ? `<img src="${escapeHtml(art.src)}" alt="" width="480" height="220" loading="lazy">` : ''}<span>${escapeHtml(spec.role)}</span><h3>${escapeHtml(spec.name)}</h3><p>${escapeHtml(spec.focus)}</p><small>${escapeHtml(spec.name === guide?.specialization ? 'Leveling guide available' : 'Read path overview')} →</small></a>`;
     }).join('');
-    const legacySpecializations = item.id === 'warrior' ? '' : `<section class="wow-subsection"${sectionAttributes('talents')}><div class="wow-subsection-heading"><p class="wow-eyebrow">Forever talent paths</p><h3>Specializations</h3></div><div class="wow-spec-grid">${specializations}</div></section>`;
+    const legacySpecializations = ['warrior', 'shaman'].includes(item.id) ? '' : `<section class="wow-subsection"${sectionAttributes('talents')}><div class="wow-subsection-heading"><p class="wow-eyebrow">Forever talent paths</p><h3>Specializations</h3></div><div class="wow-spec-grid">${specializations}</div></section>`;
     const relatedGuides = item.id === 'warrior' ? '' : renderRelatedGuides(item,null,artworkManifest,catalog,escapeHtml);
     const bullets = values => `<ul>${values.map(value => `<li>${escapeHtml(value)}</li>`).join('')}</ul>`;
     const abilityChips = guide?.quickAbilities?.map(name => { const icon = catalog?.classAbilities?.[item.id]?.find(record => record.name === name)?.icon || catalog?.classes?.find(record => record.id === item.id)?.trees.flatMap(tree => tree.talents).find(talent => talent.name === name)?.icon; return `<span class="wow-ability-chip">${icon ? renderWowIcon(icon, `${name} game icon`, escapeHtml, 'wow-chip-icon') : ''}${escapeHtml(name)}</span>`; }).join('') || '';
-    const classHeader = `<header class="wow-class-hero wow-class-hero-illustrated" style="--class-accent:${escapeHtml(item.color)}">${art ? `<img src="${escapeHtml(art.src)}" alt="${escapeHtml(art.alt)}" width="960" height="640" fetchpriority="high">` : `<div class="wow-class-art-fallback" role="img" aria-label="${escapeHtml(item.name)} class-themed decorative illustration fallback"><span aria-hidden="true">${escapeHtml(item.name.slice(0, 1))}</span></div>`}<div class="wow-class-hero-heading">${renderClassEmblem(item.id,catalog,escapeHtml,'wow-class-emblem-large')}<p class="wow-eyebrow">World of Warcraft: Forever · Class field guide</p><h2>${escapeHtml(item.name)}</h2><p>${escapeHtml(item.description)}</p><span class="wow-art-caption">Original BM Gaming Wiki illustration · not official in-game art</span></div></header>
+    const classTitle = item.id === 'shaman' ? `<h1 id="page-title" tabindex="-1">${escapeHtml(item.name)}</h1>` : `<h2>${escapeHtml(item.name)}</h2>`;
+    const classHeader = `<header class="wow-class-hero wow-class-hero-illustrated" style="--class-accent:${escapeHtml(item.color)}">${art ? `<img src="${escapeHtml(art.src)}" alt="${escapeHtml(art.alt)}" width="960" height="640" fetchpriority="high">` : `<div class="wow-class-art-fallback" role="img" aria-label="${escapeHtml(item.name)} class-themed decorative illustration fallback"><span aria-hidden="true">${escapeHtml(item.name.slice(0, 1))}</span></div>`}<div class="wow-class-hero-heading">${renderClassEmblem(item.id,catalog,escapeHtml,'wow-class-emblem-large')}<p class="wow-eyebrow">World of Warcraft: Forever · Class field guide</p>${classTitle}<p>${escapeHtml(item.description)}</p><span class="wow-art-caption">Original BM Gaming Wiki illustration · not official in-game art</span></div></header>
       `;
     body = `<section class="wow-starter-guide" aria-labelledby="starter-guide-title"><div class="wow-subsection-heading"><div><p class="wow-eyebrow">First levels · Forever-specific guide</p><h3 id="starter-guide-title">Starting your journey as ${escapeHtml(item.name)}</h3></div></div><div class="wow-starter-summary"><article><span>Suggested path</span><h4>${escapeHtml(guide?.specialization || 'Class path')}</h4><p>${escapeHtml(guide?.reason || item.description)}</p></article><article${sectionAttributes('combat')}><span>Quick combat reference</span><div class="wow-ability-row">${abilityChips}</div><ol>${bullets(guide?.combat || item.soloTips || [])}</ol></article></div><section class="wow-level-roadmap"${sectionAttributes('leveling')} aria-label="${escapeHtml(item.name)} leveling roadmap"><div class="wow-subsection-heading"><div><p class="wow-eyebrow">Early journey · levels 1–30</p><h3>Leveling roadmap</h3></div></div><div class="wow-level-roadmap-grid">${(guide?.levelingBands || []).map(band => `<article><span>${escapeHtml(band.range)}</span><p>${escapeHtml(band.combat)}</p><p><strong>Stay safe:</strong> ${escapeHtml(band.survival)}</p><small>${escapeHtml(band.milestones)}</small></article>`).join('')}</div></section><div class="wow-starter-grid"><article><h4>Resource and pacing</h4><p>${escapeHtml(guide?.resource || 'No class-specific resource advice is recorded in this guide.')}</p></article><article><h4>Class quests and unlocks</h4><p>${escapeHtml(guide?.classMilestones || 'Check the class quest guide for your race and level.')}</p></article><article${sectionAttributes('gear')}><h4>Weapons and gear</h4><p>${escapeHtml(guide?.gear || 'Use current, level-appropriate gear; detailed priorities are not recorded in this guide.')}</p></article><article><h4>Beginner traps</h4>${bullets(guide?.beginnerMistakes || [])}</article></div>${guide?.talentPriorities?.length ? `<details class="wow-talent-tips"><summary>Early talent priorities from the guide</summary>${bullets(guide.talentPriorities)}<small>Recommendations are copied as names and milestones only; this page does not claim a full talent allocation.</small></details>` : ''}<div class="wow-start-zones"><strong>Where to quest</strong><p>${escapeHtml(guide?.zoneAdvice || 'Use the leveling directory and choose a faction/level-matched zone.')}</p><a href="${href('leveling')}">Open leveling helper →</a></div></section>
       <section class="${item.id === 'warrior' ? 'wow-warrior-glance' : 'wow-detail-grid'}"${item.id === 'warrior' ? ' aria-labelledby="warrior-glance-title"' : ''}>${item.id === 'warrior' ? `<h3 id="warrior-glance-title">Warrior at a Glance</h3><div class="wow-warrior-glance-grid"><article class="wow-warrior-glance-roles"><h4>Roles</h4><p>${item.roles.map(role => `<span>${escapeHtml(role)}</span>`).join('')}</p></article><article><h4>Strengths</h4>${renderBullets(item.strengths, escapeHtml)}</article><article><h4>Limitations</h4>${renderBullets(item.limitations, escapeHtml)}</article><article><h4>Group utility</h4>${renderBullets(item.groupUtility, escapeHtml)}</article><article><h4>Available tools</h4>${renderBullets(item.abilities, escapeHtml)}</article></div>` : `<article><h3>Roles</h3><p>${escapeHtml(item.roles.join(' · '))}</p></article><article><h3>Strengths</h3>${renderBullets(item.strengths, escapeHtml)}</article><article><h3>Limitations</h3>${renderBullets(item.limitations, escapeHtml)}</article><article><h3>Group utility</h3>${renderBullets(item.groupUtility, escapeHtml)}</article><article><h3>Available tools</h3>${renderBullets(item.abilities, escapeHtml)}</article>`}</section>${legacySpecializations}<section class="wow-subsection"><h3>Race and faction options</h3><div class="wow-race-list">${raceGroups}</div><p class="wow-note">Skyborne access and starting experience require the Heroic Pack or higher.</p><a href="#game/world-of-warcraft/races">Open race details and compatibility →</a></section>${renderWowSpellbook(item,catalog,escapeHtml)}${relatedGuides}`;
-    const companion = item.id === 'warrior' ? renderLevelingCompanion({
+    const companion = ['warrior', 'shaman'].includes(item.id) ? renderLevelingCompanion({
       classId: item.id,
       currentLevel: profile.currentLevel || 1,
       selectedSpecialization: profile.classId === item.id && profile.specializationId
@@ -810,6 +855,8 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
         dungeons: data.dungeons,
         warriorLeveling: data.warriorLeveling,
         warriorProfessions: data.warriorProfessions,
+        shamanGuide: item.id === 'shaman' ? data.shamanGuide : undefined,
+        raceCombinations: item.id === 'shaman' ? data.raceCombinations : undefined,
         sources: data.sources,
         specializationGuides: item.specializationGuides,
         talentClass: catalog?.classes?.find(record => record.id === item.id)
@@ -826,6 +873,8 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
     }) : '';
     body = item.id === 'warrior'
       ? `${renderWarriorHeader(item,catalog,artworkManifest,escapeHtml)}<p class="wow-warrior-intro" id="warrior-overview" tabindex="-1">${escapeHtml(item.description)}</p><section class="wow-warrior-specializations" id="warrior-talents" tabindex="-1" aria-labelledby="warrior-specializations-title"><div class="wow-warrior-section-heading"><p class="wow-eyebrow">Choose your path</p><h2 id="warrior-specializations-title">Specializations</h2></div><div class="wow-warrior-spec-grid" role="tablist" aria-label="Warrior specializations">${specializations}</div></section><section class="wow-warrior-guide-hub" id="warrior-specialization-guide" role="tabpanel" aria-labelledby="warrior-spec-tab-${escapeHtml(selectedSpecializationId)}">${companion}</section><details class="wow-warrior-leveling-details" id="warrior-leveling" tabindex="-1"><summary><span><strong>General Warrior Handbook</strong><small>Open shared class notes and combat basics</small></span><span aria-hidden="true">＋</span></summary><div class="wow-warrior-leveling-content"><div class="wow-warrior-quick-start-wrap">${renderWarriorQuickStart(item,data,escapeHtml)}</div><div class="wow-warrior-existing-guide">${body}</div></div></details>`
+      : item.id === 'shaman'
+        ? `<nav class="wow-shaman-breadcrumb" aria-label="Breadcrumb"><a href="#game/world-of-warcraft">WoW: Forever</a><span aria-hidden="true">/</span><a href="#game/world-of-warcraft/classes">Classes</a><span aria-hidden="true">/</span><span aria-current="page">Shaman</span></nav>${classHeader}<section class="wow-shaman-choose"><div class="wow-subsection-heading"><p class="wow-eyebrow">Choose your path</p><h3>Shaman Specializations</h3><p>Switch paths to update this guide. Each Shaman specialization uses its own saved guide state.</p></div><div class="wow-warrior-spec-grid" role="tablist" aria-label="Shaman specializations">${specializations}</div></section><section class="wow-shaman-guide-hub" id="shaman-specialization-guide" role="tabpanel" aria-labelledby="shaman-spec-tab-${escapeHtml(selectedSpecializationId)}">${companion}</section><section class="wow-shaman-class-notes"><h3>Shaman class basics</h3><ul>${item.strengths.map(value => `<li>${escapeHtml(value)}</li>`).join('')}</ul><p>${escapeHtml(item.description)}</p></section>${relatedGuides}`
       : classHeader + body;
   }
   if (route.view === 'wow-build-finder') body = `<p class="wow-lede">Explore source-backed specialization paths by role. This finder does not claim that a complete talent loadout or rotation is verified.</p><form class="wow-build-form" data-wow-build-finder><label>Class<select name="classId"><option value="all">Choose a class</option>${data.classes.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('')}</select></label><label>Playstyle<select name="playstyle">${data.playstyles.map(style => `<option value="${escapeHtml(style.id)}">${escapeHtml(style.label)}</option>`).join('')}</select></label><label>Current level<input name="level" type="number" min="1" max="60" value="1"></label><label>Preferred specialization<select name="specialization"><option value="all">Any specialization</option>${data.classes.flatMap(item => item.specializations.map(spec => `<option value="${escapeHtml(item.id)}:${escapeHtml(spec.id)}">${escapeHtml(item.name)} · ${escapeHtml(spec.name)}</option>`)).join('')}</select></label><label>Faction<select name="faction"><option value="all">Choose later</option><option>Alliance</option><option>Horde</option></select></label><label class="wow-hardcore"><input type="checkbox" disabled> Hardcore preference <small>Unavailable in this guide until its release status is verified.</small></label></form><div id="wow-build-results" aria-live="polite">${renderWowBuildResults(data, { classId: 'all', playstyle: 'solo-leveling', level: '1', specialization: 'all', faction: 'all' }, escapeHtml, catalog)}</div>`;
@@ -842,6 +891,7 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
   if (route.view.startsWith('wow-upcoming')) body = `<div class="wow-note"><h2>Guide in preparation</h2><p>This destination is active and ready for version-specific records. No guide data is published yet.</p></div>`;
   const wowNav = `<nav class="wow-nav" aria-label="World of Warcraft: Forever"><a href="#game/world-of-warcraft">Azeroth</a><a href="${href('my-journey')}">My Journey</a><a href="${href('classes')}">Classes</a><a href="${href('races')}">Races</a><a href="${href('build-finder')}">Find My Build</a><a href="${href('talent-planner')}">Talents</a><a href="${href('leveling')}">Leveling</a><a href="${href('dungeons-raids')}">Dungeons</a><a href="${href('tier-lists')}">Tier Lists</a></nav>`;
   if (route.view === 'wow-class' && route.classRecord.id === 'warrior') return `<div class="wow-page wow-warrior-page"><article class="wow-warrior-guide" data-warrior-guide style="--class-accent:${escapeHtml(route.classRecord.color)};--warrior-accent:#c79c6e">${body}</article></div>`;
+  if (route.view === 'wow-class' && route.classRecord.id === 'shaman') return `<div class="wow-page wow-shaman-page"><article class="wow-shaman-guide" data-shaman-guide style="--class-accent:${escapeHtml(route.classRecord.color)}">${body}</article></div>`;
   return `<div class="wow-page">${route.view === 'wow-home' ? '' : scene}${route.view === 'wow-home' ? body : `<section class="wow-banner"><p class="wow-eyebrow">BM Gaming Wiki <span>✦</span> World of Warcraft: Forever</p><h1 id="page-title" tabindex="-1">${escapeHtml(title)}</h1><p>Explore a reimagined original Azeroth, one well-prepared adventure at a time.</p>${wowNav}</section><section class="wow-content"><a class="wow-back" href="#game/world-of-warcraft">← WoW: Forever</a><h2>${escapeHtml(title)}</h2>${body}</section>`}</div>`;
 }
 

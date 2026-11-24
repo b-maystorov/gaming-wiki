@@ -8,8 +8,14 @@ export const WARRIOR_CHECKLIST_STORAGE_KEY = 'bm-warrior-leveling-checklist-v1';
 const WARRIOR_CHECKLIST_CATEGORIES = ['class-quest', 'ability', 'talent', 'equipment', 'dungeon'];
 export const WARRIOR_DUNGEON_PROGRESS_STORAGE_KEY = 'bm-warrior-dungeon-prep-v1';
 
+function companionStorageKey(classId, specializationId = '') {
+  return classId === 'shaman' && specializationId
+    ? `${COMPANION_STORAGE_PREFIX}${classId}:${specializationId}`
+    : `${COMPANION_STORAGE_PREFIX}${classId}`;
+}
+
 function tabsForClass(classId) {
-  return COMPANION_TABS.filter(tab => !WARRIOR_ONLY_TABS.has(tab) || classId === 'warrior');
+  return COMPANION_TABS.filter(tab => !WARRIOR_ONLY_TABS.has(tab) || ['warrior', 'shaman'].includes(classId));
 }
 
 export function loadWarriorChecklistProgress(storage) {
@@ -56,11 +62,20 @@ export function updateCompanionState(classId, state, change, specializations = [
   return normalizeCompanionState(classId, { ...state, ...change }, specializations);
 }
 
-export function loadCompanionState(classId, fallback = {}, specializations = [], storage) {
-  const initial = normalizeCompanionState(classId, fallback, specializations);
+export function loadCompanionState(classId, fallback = {}, specializations = [], storage, preferRememberedSpecialization = true) {
+  let initial = normalizeCompanionState(classId, fallback, specializations);
   try {
     const store = storage ?? globalThis.localStorage;
-    const saved = JSON.parse(store?.getItem(`${COMPANION_STORAGE_PREFIX}${classId}`) || 'null');
+    const baseKey = companionStorageKey(classId);
+    const baseValue = classId === 'shaman' ? store?.getItem(baseKey) : null;
+    const baseState = JSON.parse(baseValue || 'null');
+    if (classId === 'shaman' && preferRememberedSpecialization && specIds(specializations).includes(baseState?.specializationId)) {
+      initial = normalizeCompanionState(classId, { ...initial, specializationId: baseState.specializationId }, specializations);
+    }
+    const specializationValue = store?.getItem(companionStorageKey(classId, initial.specializationId));
+    const savedValue = specializationValue || (classId === 'shaman' && (!baseState || baseState.specializationId === initial.specializationId) ? baseValue : null)
+      || (classId !== 'shaman' ? store?.getItem(baseKey) : null);
+    const saved = JSON.parse(savedValue || 'null');
     if (!saved || typeof saved !== 'object') return initial;
     return normalizeCompanionState(classId, { ...initial, ...saved }, specializations);
   } catch {
@@ -72,12 +87,14 @@ export function saveCompanionState(state, storage) {
   try {
     const store = storage ?? globalThis.localStorage;
     if (!store?.setItem || !state?.classId) return false;
-    store.setItem(`${COMPANION_STORAGE_PREFIX}${state.classId}`, JSON.stringify({
+    const value = JSON.stringify({
       level: validLevel(state.level),
       specializationId: state.specializationId,
       tab: tabsForClass(state.classId).includes(state.tab) ? state.tab : 'overview',
       faction: state.faction === 'Horde' ? 'Horde' : 'Alliance',
-    }));
+    });
+    store.setItem(companionStorageKey(state.classId, state.specializationId), value);
+    if (state.classId === 'shaman') store.setItem(companionStorageKey(state.classId), value);
     return true;
   } catch {
     return false;
@@ -477,6 +494,29 @@ function getAutomaticTalentData(state, guideData, progressionEngine) {
 export function getCompanionPanel(state, guideData = {}, progressionEngine = {}) {
   const { classRecord, specialization, guide, guideMatchesSpec, specializationGuideContent } = selectedData(guideData, state);
   const specName = specialization?.name || 'Specialization';
+  if (classRecord.id === 'shaman' && state.tab === 'overview') {
+    const races = Object.entries(guideData.raceCombinations || {}).map(([faction, entries]) => ({
+      faction,
+      names: Object.entries(entries).filter(([, classes]) => classes.includes('Shaman'))
+        .map(([race]) => faction === 'Horde' && race === 'Skyborne' ? 'Windshaper Skyborne' : race)
+    })).filter(entry => entry.names.length);
+    return {
+      heading: `Shaman · ${specName} · Level ${state.level}`,
+      shamanOverview: {
+        level: state.level,
+        specialization: specialization || { name: specName, role: 'Role not recorded', focus: 'Specialization details are not yet documented.' },
+        availableTalentPoints: progressionEngine?.availablePoints?.(state.level, 0) ?? Math.max(0, state.level - 9),
+        classMechanics: guideData.shamanGuide?.classMechanics || '',
+        races,
+        sourceIds: [...new Set([...(guideData.shamanGuide?.sourceIds || []), specialization?.sourceId].filter(Boolean))]
+      },
+      sections: [], notices: []
+    };
+  }
+  if (classRecord.id === 'shaman' && state.tab !== 'talents' && state.tab !== 'gold-farming') {
+    const label = COMPANION_TAB_LABELS[state.tab] || state.tab;
+    return { heading: `${specName} · ${label} · Level ${state.level}`, sections: [], notices: [`Not yet documented for Shaman ${specName}.`] };
+  }
   if (state.tab === 'stats' && classRecord.statsGuide) {
     const priorityRecord = classRecord.statsGuide.priorities?.[state.specializationId];
     const profile = state.level >= 60 ? priorityRecord
@@ -632,6 +672,13 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
 
   if (state.tab === 'talents') {
     const treeData = getAutomaticTalentData(state, guideData, progressionEngine);
+    if (classRecord.id === 'shaman') return {
+      heading: `${specName} talent tree · Level ${state.level}`,
+      treeData,
+      sections: [{ title: 'Talent points spent / available', text: `${treeData.validation.total} / ${treeData.availablePoints}` }],
+      notices: ['Shaman talent trees are available for reference; class-specific talent recommendations are not yet documented.', ...(treeData.availabilityReason ? [treeData.availabilityReason] : [])],
+      note: 'Talent points start at level 10 and exclude Talented Legacy bonus points.'
+    };
     return {
       heading: `${specName} talent tree · Level ${state.level}`,
       treeData,
@@ -866,6 +913,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const dungeonsPanel = panel.warriorDungeons ? renderWarriorDungeonPreparation(panel.warriorDungeons, dungeonProgress, escapeHtml) : '';
   const professionsPanel = panel.warriorProfessionGuide ? renderWarriorProfessionGuide(panel.warriorProfessionGuide, professionChoice, escapeHtml) : '';
   const goldFarmingPanel = panel.goldFarming ? renderGoldFarmingGuide(panel.goldFarming, escapeHtml) : '';
+  const shamanOverviewPanel = panel.shamanOverview ? renderShamanOverview(panel.shamanOverview, escapeHtml) : '';
   const overviewContent = panel.overviewHighlights
     ? `<div class="wow-warrior-overview"><div class="wow-warrior-overview-context">${sections}</div>${renderOverviewHighlights(panel.overviewHighlights, escapeHtml)}</div>`
     : sections;
@@ -873,7 +921,13 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
     ? `<p class="wow-companion-next-talent">Next recommended talent · Unlocks at level ${treeData.recommended.nextChange.level} · ${escapeHtml(treeData.tree.talents.find(talent => talent.id === treeData.recommended.nextChange.talentId)?.name || 'Talent')}</p>`
     : '';
   const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${combatPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${goldFarmingPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}`;
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${shamanOverviewPanel}${statsPanel}${combatPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${goldFarmingPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}`;
+}
+
+function renderShamanOverview(data, escapeHtml) {
+  const { specialization, races } = data;
+  const factions = races.map(group => `<div><dt>${escapeHtml(group.faction)}</dt><dd>${escapeHtml(group.names.join(', '))}</dd></div>`).join('');
+  return `<section class="wow-shaman-overview"><div class="wow-shaman-overview-card"><p class="wow-companion-kicker">${escapeHtml(specialization.role)} · Level ${data.level}</p><h4>${escapeHtml(specialization.name)}</h4><p>${escapeHtml(specialization.focus)}</p><p><strong>Talent points available:</strong> ${data.availableTalentPoints}. This is a point budget, not a recommended allocation.</p></div><div class="wow-shaman-overview-card"><h4>Totems, Mana and group play</h4><p>${escapeHtml(data.classMechanics || 'Shaman class mechanics are not yet documented.')}</p></div><div class="wow-shaman-overview-card"><h4>Playable races by faction</h4><dl>${factions || '<div><dd>Faction combinations are not yet documented.</dd></div>'}</dl></div></section>`;
 }
 
 function renderGoldFarmingGuide(selection, escapeHtml) {
@@ -893,7 +947,7 @@ function renderGoldFarmingGuide(selection, escapeHtml) {
       const specAdvice = method.specializationAdvice?.[specializationId];
       const lootValue = method.groupLoot ? `<p class="wow-gold-rate"><strong>Recorded group loot:</strong> ${escapeHtml(method.groupLoot.value)}. ${escapeHtml(method.groupLoot.context)}</p>` : '';
       return `<article class="wow-gold-card"><header><h5>${escapeHtml(method.name)}</h5><span class="wow-gold-level">${escapeHtml(levelLabel)}</span></header><dl><div class="wow-gold-location"><dt>Location</dt><dd>${escapeHtml(method.zone || 'No verified zone')}${method.location ? ` · ${escapeHtml(method.location)}` : ''}</dd></div>${method.target ? `<div><dt>Enemies / resources</dt><dd>${escapeHtml(method.target)}</dd></div>` : ''}<div><dt>Collect</dt><dd>${escapeHtml(method.collect)}</dd></div><div><dt>Requirements</dt><dd>${escapeHtml(method.requirement || 'None recorded')}</dd></div><div><dt>How it earns</dt><dd>${escapeHtml(method.earn)}</dd></div><div><dt>Group / specs</dt><dd>${escapeHtml(method.suitability)} · ${escapeHtml(specNames)}</dd></div></dl>${rate}${lootValue}<details><summary>Practical instructions and risks</summary>${method.route ? `<p><strong>Reach it:</strong> ${escapeHtml(method.route)}</p>` : ''}<p>${escapeHtml(method.instructions)}</p>${specAdvice ? `<p><strong>${escapeHtml(specNames)} approach:</strong> ${escapeHtml(specAdvice)}</p>` : ''}${method.risks ? `<p><strong>Risks:</strong> ${escapeHtml(method.risks)}</p>` : ''}</details></article>`;
-    }).join('')}</div>` : '<p class="wow-gold-empty">No matching methods for this level, faction, and specialization.</p>'}</section>`;
+    }).join('')}</div>` : `<p class="wow-gold-empty">${classId === 'shaman' ? 'Not yet documented for Shaman with these selections.' : 'No matching methods for this level, faction, and specialization.'}</p>`}</section>`;
   }).join('');
   const suggestion = WOW_GOLD_LEVEL_SUGGESTIONS.find(item => level >= item.min && level <= item.max);
   const otherTips = WOW_GOLD_OTHER_TIPS.map(item => `<li>${escapeHtml(item)}</li>`).join('');
@@ -1013,8 +1067,8 @@ export function renderLevelingCompanion({ classId, currentLevel = 1, selectedSpe
   const prefix = String(classId || 'class').replace(/[^a-z0-9-]/gi, '-');
   const options = specializations.map(spec => `<option value="${escapeHtml(spec.id)}"${spec.id === state.specializationId ? ' selected' : ''}>${escapeHtml(spec.name)} · ${escapeHtml(spec.role)}</option>`).join('');
   const tabs = tabsForClass(classId).map(tab => `<button type="button" role="tab" id="${prefix}-companion-tab-${tab}" aria-controls="${prefix}-companion-panel" aria-selected="${state.tab === tab}" tabindex="${state.tab === tab ? '0' : '-1'}" data-companion-tab="${tab}">${COMPANION_TAB_LABELS[tab]}</button>`).join('');
-  const title = classId === 'warrior' ? 'Warrior Guide' : 'Leveling Companion';
-  const specializationControl = classId === 'warrior'
+  const title = `${classRecord.name || classId} Guide`;
+  const specializationControl = ['warrior', 'shaman'].includes(classId)
     ? `<select id="${prefix}-companion-spec" data-companion-spec hidden aria-hidden="true" tabindex="-1">${options}</select>`
     : `<label for="${prefix}-companion-spec">Specialization</label><select id="${prefix}-companion-spec" data-companion-spec>${options}</select>`;
   const levelSlider = `<input id="${prefix}-companion-level" type="range" min="1" max="60" step="1" value="${state.level}" aria-label="Current level" aria-valuetext="Level ${state.level}" data-companion-level-input>`;
@@ -1050,7 +1104,9 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
   const tabs = [...companion.querySelectorAll('[data-companion-tab]')];
 
   const update = change => {
-    state = updateCompanionState(classId, state, change, specializations);
+    state = classId === 'shaman' && change.specializationId && change.specializationId !== state.specializationId
+      ? loadCompanionState(classId, { ...state, ...change }, specializations, storage, false)
+      : updateCompanionState(classId, state, change, specializations);
     levelInput.value = String(state.level);
     levelInput.setAttribute('aria-valuetext', `Level ${state.level}`);
     levelOutput.value = String(state.level);
