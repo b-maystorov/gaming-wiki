@@ -1,6 +1,8 @@
-const COMPANION_TABS = ['overview', 'stats', 'talents', 'combat', 'gear', 'leveling', 'dungeons', 'professions'];
+import { WOW_GOLD_FARMING_METHODS, WOW_GOLD_LEVEL_SUGGESTIONS, WOW_GOLD_OTHER_TIPS } from '../data/games/wow-forever-gold-farming.js';
+
+const COMPANION_TABS = ['overview', 'stats', 'talents', 'combat', 'gear', 'leveling', 'dungeons', 'professions', 'gold-farming'];
 const WARRIOR_ONLY_TABS = new Set(['combat', 'dungeons']);
-const COMPANION_TAB_LABELS = { overview: 'Overview', stats: 'Stats', talents: 'Talents', combat: 'Combat', gear: 'Weapons & Gear', leveling: 'Leveling', dungeons: 'Dungeons', professions: 'Professions' };
+const COMPANION_TAB_LABELS = { overview: 'Overview', stats: 'Stats', talents: 'Talents', combat: 'Combat', gear: 'Weapons & Gear', leveling: 'Leveling', dungeons: 'Dungeons', professions: 'Professions', 'gold-farming': 'Gold Farming' };
 const COMPANION_STORAGE_PREFIX = 'bm-wow-leveling-companion-v1:';
 export const WARRIOR_CHECKLIST_STORAGE_KEY = 'bm-warrior-leveling-checklist-v1';
 const WARRIOR_CHECKLIST_CATEGORIES = ['class-quest', 'ability', 'talent', 'equipment', 'dungeon'];
@@ -505,6 +507,9 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       sourceIds: [...new Set([...(tabContent?.sourceIds || []), ...levelingData.sourceIds])]
     };
   }
+  if (state.tab === 'gold-farming') {
+    return { heading: `${specName} Gold Farming · Level ${state.level}`, goldFarming: { level: state.level, faction: state.faction, specializationId: state.specializationId, classId: classRecord.id || state.classId }, sections: [], notices: [] };
+  }
   if (state.tab !== 'talents' && specializationGuideContent) {
     const tabContent = specializationGuideContent.sections?.[state.tab];
     const sourceIds = tabContent?.sourceIds || specializationGuideContent.sourceIds || [];
@@ -819,6 +824,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const levelingPanel = panel.warriorLeveling ? renderWarriorLevelingGuide(panel.warriorLeveling, escapeHtml, checklistProgress, checklistFilter) : '';
   const dungeonsPanel = panel.warriorDungeons ? renderWarriorDungeonPreparation(panel.warriorDungeons, dungeonProgress, guideData, escapeHtml) : '';
   const professionsPanel = panel.warriorProfessionGuide ? renderWarriorProfessionGuide(panel.warriorProfessionGuide, professionChoice, escapeHtml) : '';
+  const goldFarmingPanel = panel.goldFarming ? renderGoldFarmingGuide(panel.goldFarming, escapeHtml) : '';
   const overviewContent = panel.overviewHighlights
     ? `<div class="wow-warrior-overview"><div class="wow-warrior-overview-context">${sections}</div>${renderOverviewHighlights(panel.overviewHighlights, escapeHtml)}</div>`
     : sections;
@@ -830,7 +836,28 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
     : '';
   const tierDisclosure = !hideSourceReferences && treeData?.build?.tierRuleDisclosure ? `<p class="wow-companion-tier-source">${escapeHtml(treeData.build.tierRuleDisclosure)}</p>` : '';
   const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${sourceAttribution}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}${tierDisclosure}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${combatPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${statsPanel}${combatPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${goldFarmingPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}${sourceLinks}`;
+}
+
+function renderGoldFarmingGuide(selection, escapeHtml) {
+  const { level, faction, specializationId, classId } = selection;
+  const categoryLabels = ['Farming Spots', 'Gathering Professions', 'Crafting for Profit', 'Dungeon Farming', 'Auction House Tips', 'Class-Specific Strategies'];
+  const records = WOW_GOLD_FARMING_METHODS.filter(method => method.classes.includes(classId)
+    && (method.faction === 'Both' || method.faction === faction)
+    && method.minLevel <= level && method.maxLevel >= level
+    && (!method.specializations.length || method.specializations.includes(specializationId)));
+  const cards = categoryLabels.map(category => {
+    const categoryRecords = records.filter(method => method.category === category);
+    return `<section class="wow-gold-category"><h4>${category}</h4>${categoryRecords.length ? `<div class="wow-gold-grid">${categoryRecords.map(method => {
+      const rate = method.goldPerHour ? `<p class="wow-gold-rate"><strong>Observed haul:</strong> ${escapeHtml(method.goldPerHour.amount)} · ${escapeHtml(method.goldPerHour.context)}. Creator-reported; not a promise or typical result.</p>` : '';
+      const specNames = method.specializations.length ? method.specializations.map(id => ({ arms: 'Arms', fury: 'Fury', protection: 'Protection' })[id] || id).join(', ') : 'All specializations';
+      return `<article class="wow-gold-card"><header><h5>${escapeHtml(method.name)}</h5><span>${method.minLevel}–${method.maxLevel === 60 ? '60' : method.maxLevel}</span></header><dl><div><dt>Location</dt><dd>${escapeHtml(method.zone || 'No verified zone')}${method.location ? ` · ${escapeHtml(method.location)}` : ''}</dd></div><div><dt>Group</dt><dd>${escapeHtml(method.suitability)}</dd></div><div><dt>For</dt><dd>${escapeHtml(specNames)}</dd></div><div><dt>Requirement</dt><dd>${escapeHtml(method.requirement || 'None recorded')}</dd></div><div><dt>Collect</dt><dd>${escapeHtml(method.collect)}</dd></div><div><dt>Earn</dt><dd>${escapeHtml(method.earn)}</dd></div></dl>${rate}<details><summary>Practical instructions</summary><p>${escapeHtml(method.instructions)}</p></details><p class="wow-gold-source"><a href="${escapeHtml(method.sourceUrl)}" target="_blank" rel="noopener noreferrer">Source ↗</a> · verified ${escapeHtml(method.verifiedDate)} · ${escapeHtml(method.status)}</p></article>`;
+    }).join('')}</div>` : '<p class="wow-gold-empty">No sourced method is recorded for this category and selection yet.</p>'}</section>`;
+  }).join('');
+  const suggestion = WOW_GOLD_LEVEL_SUGGESTIONS.find(item => level >= item.min && level <= item.max);
+  const otherTips = WOW_GOLD_OTHER_TIPS.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  const bandLabel = suggestion.min === 60 ? 'Level 60' : `Levels ${suggestion.min}–${suggestion.max}`;
+  return `<div class="wow-gold-farming" data-gold-level="${level}" data-gold-spec="${escapeHtml(specializationId)}" data-gold-faction="${escapeHtml(faction)}"><p class="wow-gold-disclosure">Suggestions use the guide’s current level, specialization and faction. Market prices and demand vary by ruleset, faction and date. Rates appear only when a source reports a measured result.</p><section class="wow-gold-band"><h4>${bandLabel} suggestions</h4><p>${escapeHtml(suggestion.text)}</p></section>${cards}<section class="wow-gold-other"><h4>Other Ways to Make Gold</h4><ul>${otherTips}</ul></section></div>`;
 }
 
 function renderWarriorProfessionGuide(data, selectedChoice, escapeHtml) {
@@ -911,7 +938,10 @@ function renderWarriorDungeonPreparation(data, progress, guideData, escapeHtml) 
       const stats = item.stats?.length ? item.stats.join(' · ') : 'Stats not verified in the current record.';
       const source = item.boss ? `Drops from ${item.boss}` : item.acquisition || 'Acquisition source not recorded.';
       const specializations = (item.specializations || []).map(spec => ({ arms: 'Arms', fury: 'Fury', protection: 'Protection' })[spec] || spec).join(', ');
-      return `<li><strong>${name}</strong><small><b>Slot:</b> ${escapeHtml(item.slot || 'Not recorded')} · <b>Stats:</b> ${escapeHtml(stats)} · <b>Source:</b> ${escapeHtml(source)} · <b>Suitable for:</b> ${escapeHtml(specializations || 'Not recorded')}${item.requiredLevel ? ` · Required level ${escapeHtml(String(item.requiredLevel))}` : ''}. Compare the item with your current equipment; a drop is not a guaranteed upgrade.</small></li>`;
+      const requirement = Number.isFinite(item.requiredLevel)
+        ? data.level >= item.requiredLevel ? `Available at level ${item.requiredLevel}` : `Upcoming · requires level ${item.requiredLevel}`
+        : 'Item requirement not recorded';
+      return `<li><strong>${name}</strong><small><b>Slot:</b> ${escapeHtml(item.slot || 'Not recorded')} · <b>Stats:</b> ${escapeHtml(stats)} · <b>Source:</b> ${escapeHtml(source)} · <b>Suitable for:</b> ${escapeHtml(specializations || 'Not recorded')} · <b>Availability:</b> ${escapeHtml(requirement)}. Compare the item with your current equipment; a drop is not a guaranteed upgrade.</small></li>`;
     }).join('');
     const bossNames = [...new Set(dungeon.equipment.map(item => item.boss).filter(Boolean))];
     const quests = dungeon.quests.map(quest => `<li><strong>${escapeHtml(quest.name)}</strong><small>${escapeHtml(data.faction)} · minimum level ${escapeHtml(String(quest.min))} · ${escapeHtml(quest.npc || 'Quest giver not recorded')} · ${escapeHtml(quest.where || 'Quest giver location not recorded')} · ${escapeHtml(quest.stage)}. ${escapeHtml(quest.unlock || quest.outside || '')}</small></li>`).join('');

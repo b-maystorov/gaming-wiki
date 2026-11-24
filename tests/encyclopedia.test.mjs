@@ -55,7 +55,7 @@ async function harness(failure = null, storageMode = 'available', unavailableFil
   if (storageMode === 'inaccessible') globals.localStorage = { getItem() { throw new Error('Storage denied'); }, setItem() { throw new Error('Storage denied'); } };
   const context = createContext(globals);
   const modules = new Map();
-  async function load(path) {
+  async function load(path, linkModule = true) {
     if (modules.has(path)) return modules.get(path);
     let source = await readFile(path, 'utf8');
     // Another import may populate the cache while this file is being read.
@@ -67,7 +67,7 @@ async function harness(failure = null, storageMode = 'available', unavailableFil
     const module = new SourceTextModule(source, { context, identifier: path,
       initializeImportMeta: meta => { meta.url = `file://${path}`; } });
     modules.set(path, module);
-    await module.link((specifier, parent) => load(resolve(dirname(parent.identifier), specifier)));
+    if (linkModule) await module.link((specifier, parent) => load(resolve(dirname(parent.identifier), specifier), false));
     return module;
   }
   const app = await load(resolve(root, 'dist/js/app.js'));
@@ -2793,12 +2793,46 @@ test('Warrior dungeon preparation filters by level, changes with specialization,
   assert.match(rendered, /Important Drops/);
   assert.match(rendered, /Before You Enter · Arms/);
   assert.match(rendered, /Sources:/);
+  storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 17, faction: 'Alliance', tab: 'dungeons', specializationId: 'fury' }));
+  const earlyRendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 17, selectedSpecialization: 'fury', guideData, storage });
+  assert.match(earlyRendered, /Buzz Saw[\s\S]*?Availability:<\/b> Upcoming · requires level 18/, 'dungeon drops distinguish their item level requirement from dungeon range recommendations');
   storage.setItem('bm-wow-leveling-companion-v1:warrior', JSON.stringify({ level: 30, faction: 'Alliance', tab: 'dungeons', specializationId: 'protection' }));
   const protectionRendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 30, selectedSpecialization: 'protection', guideData, storage });
   assert.match(protectionRendered, /Slot:<\/b> Main Hand Sword/);
   assert.match(protectionRendered, /Lady Sarevess/);
+  assert.match(portalStyles, /\.wow-warrior-facts \{ gap:\.6rem 1rem; \}/, 'mobile fact spacing declaration parses as two CSS gap values');
+  assert.match(portalStyles, /\.wow-warrior-nav button \{ min-height:46px; padding:\.5rem \.35rem; \}/, 'mobile navigation padding declaration parses as two CSS values');
   const otherClass = module.renderLevelingCompanion({ classId: 'paladin', currentLevel: 18, guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') }, storage: { getItem: () => null } });
-  assert.doesNotMatch(otherClass, /data-companion-tab="dungeons"/, 'the new tab is Warrior-only');
+  assert.doesNotMatch(otherClass, /data-companion-tab="dungeons"/, 'the existing Warrior-only dungeon tab stays class-scoped');
+  assert.match(otherClass, /data-companion-tab="gold-farming"/, 'the reusable gold farming tab is available for future class records');
+});
+
+test('gold farming responds to level, specialization and faction and preserves source metadata', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const warrior = wowPack.classes.find(item => item.id === 'warrior');
+  const storage = { getItem: () => null };
+  const render = (level, specializationId, faction) => module.renderLevelingCompanion({
+    classId: 'warrior', currentLevel: level, selectedSpecialization: specializationId,
+    guideData: { classRecord: warrior },
+    storage: { getItem: key => key.endsWith(':warrior') ? JSON.stringify({ level, faction, specializationId, tab: 'gold-farming' }) : null },
+  });
+  const early = module.getCompanionPanel({ classId: 'warrior', level: 15, specializationId: 'arms', faction: 'Alliance', tab: 'gold-farming' }, { classRecord: warrior });
+  assert.equal(early.goldFarming.level, 15);
+  assert.match(render(15, 'arms', 'Alliance'), /Levels 1–20 suggestions/);
+  assert.doesNotMatch(render(15, 'arms', 'Alliance'), /gorilla fangs/i);
+  assert.doesNotMatch(render(40, 'protection', 'Alliance'), /Repeatable shellfish turn-in/);
+  assert.match(render(40, 'protection', 'Horde'), /Repeatable shellfish turn-in/);
+  const middle = module.getCompanionPanel({ classId: 'warrior', level: 40, specializationId: 'protection', faction: 'Horde', tab: 'gold-farming' }, { classRecord: warrior });
+  assert.equal(middle.goldFarming.faction, 'Horde');
+  const rendered = module.renderLevelingCompanion({ classId: 'warrior', currentLevel: 40, selectedSpecialization: 'protection', guideData: { classRecord: warrior }, storage: { getItem: key => key.endsWith(':warrior') ? JSON.stringify({ level: 40, faction: 'Horde', specializationId: 'protection', tab: 'gold-farming' }) : null } });
+  assert.match(rendered, /Gorilla hides, hair and quest fangs/);
+  assert.match(rendered, /Creator-reported/);
+  assert.match(rendered, /2026-11-24/);
+  assert.match(rendered, /Source ↗/);
+  assert.doesNotMatch(rendered, /About 5–6 gold per hour/, 'creator estimates without a documented measurement are not presented as gold-per-hour results');
+  assert.match(rendered, /Levels 21–40 suggestions/);
+  const emptyClass = module.renderLevelingCompanion({ classId: 'paladin', currentLevel: 10, selectedSpecialization: 'holy', guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') }, storage: { getItem: key => key.endsWith(':paladin') ? JSON.stringify({ level: 10, faction: 'Alliance', specializationId: 'holy', tab: 'gold-farming' }) : null } });
+  assert.match(emptyClass, /No sourced method is recorded/);
 });
 
 test('leveling companion renders complete source-backed builds and safely handles blocked storage', () => {
