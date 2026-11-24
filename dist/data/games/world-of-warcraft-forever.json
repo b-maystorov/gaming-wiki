@@ -182,9 +182,9 @@
       "publisher": "Icy Veins",
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
-      "status": "Forever-specific leveling guide; check the linked live guide for changes.",
-      "updatedDate": "2026-11-03",
-      "accessed": "2026-11-05"
+      "status": "Forever-specific Fury leveling guide; its item lists and dual-wield guidance are linked to Forever item records.",
+      "updatedDate": "2026-11-16",
+      "accessed": "2026-11-24"
     },
     {
       "id": "icy-protection-leveling",
@@ -193,7 +193,7 @@
       "publisher": "Icy Veins",
       "gameVersion": "World of Warcraft: Forever",
       "updatedDate": "2026-11-16",
-      "accessed": "2026-11-20",
+      "accessed": "2026-11-24",
       "confidence": "medium",
       "status": "Forever-specific Warrior leveling equipment and shield recommendations; item facts link to individual database records."
     },
@@ -207,6 +207,26 @@
       "accessed": "2026-11-20",
       "confidence": "medium",
       "status": "Forever-specific Warrior class quest routes, faction rewards, and quest availability."
+    },
+    {
+      "id": "icy-wow-forever-items",
+      "title": "World of Warcraft: Forever item database",
+      "url": "https://db.icy-veins.com/wow-forever/items/",
+      "publisher": "Icy Veins Database",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "accessed": "2026-11-24",
+      "status": "Forever client item pages used for names, slots, requirements, attributes, and recorded acquisition data; individual item URLs are stored on each equipment record."
+    },
+    {
+      "id": "icy-wow-forever-quests",
+      "title": "World of Warcraft: Forever quest database",
+      "url": "https://db.icy-veins.com/wow-forever/quests/",
+      "publisher": "Icy Veins Database",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "accessed": "2026-11-24",
+      "status": "Forever client quest records used for quest availability levels and reward choices; individual quest URLs are stored when an item requirement is not listed."
     },
     {
       "id": "icy-paladin-leveling",
@@ -333,8 +353,8 @@
       "title": "Arms Warrior Leveling Guide",
       "url": "https://www.icy-veins.com/wow-forever/arms-warrior-leveling",
       "publisher": "Icy Veins",
-      "updatedDate": "2026-11-04",
-      "accessed": "2026-11-17",
+      "updatedDate": "2026-11-16",
+      "accessed": "2026-11-24",
       "gameVersion": "World of Warcraft: Forever",
       "confidence": "medium",
       "status": "Forever-specific Arms guide covering playstyle, leveling advice, stat priorities, items, quests, abilities and professions. Its talent order differs from the source-backed automatic build already integrated in the companion; the two recommendations are kept distinct."
@@ -462,8 +482,8 @@
           "importantAttributes": "Compare the actual weapon and its listed attributes with your current equipment; no verified Fury leveling stat weights are stored.",
           "armorAdvice": "No Fury-specific armor recommendations are recorded.",
           "survivabilityAdvice": "No verified Fury equipment path for survivability is recorded.",
-          "upgradeRationale": "The existing Fury guide emphasizes keeping both weapons current, but it does not record verified named item upgrades.",
-          "availabilityMessage": "No verified named Fury item recommendations are recorded.",
+          "upgradeRationale": "Fury's named weapons and shared Warrior equipment are listed below where Forever item requirements and acquisition records are available. Before level 20, use the strongest current weapon; after Dual Wield training, keep both weapons current.",
+          "availabilityMessage": "No spec-only armor path is recorded. Shared Warrior equipment below includes verified Fury weapon options and items that apply across specializations.",
           "items": [],
           "sourceIds": ["icy-warrior-leveling"]
         },
@@ -626,6 +646,63 @@
                     "acquisition": "Crafted with Blacksmithing (skill 80).",
                     "sourceUrl": "https://db.icy-veins.com/wow-forever/items/6214",
                     "sourceIds": ["icy-arms-leveling"]
+                  },
+                  {
+                    "id": "whirlwind-axe",
+                    "name": "Whirlwind Axe",
+                    "category": "weapon",
+                    "requiredLevel": null,
+                    "availabilityLevel": 30,
+                    "recommendationBracket": "30–40",
+                    "itemLevel": 40,
+                    "slot": "Two-Hand",
+                    "attributes": ["102–154 damage · speed 3.60 · 35.6 DPS", "Strength +16", "Stamina +15"],
+                    "acquisition": "Warrior class-quest reward from Whirlwind Weapon; the guide places the quest at level 30 and notes its final fight needs a group.",
+                    "whyUseful": "A level-30 two-handed quest reward with Strength and Stamina; compare its weapon DPS with other upgrades.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/6975",
+                    "sourceIds": ["icy-arms-leveling", "icy-warrior-class-quests", "icy-wow-forever-items"]
+                  },
+                  {
+                    "id": "ravager",
+                    "name": "Ravager",
+                    "category": "weapon",
+                    "requiredLevel": 37,
+                    "recommendationBracket": "30–40",
+                    "itemLevel": 42,
+                    "slot": "Two-Hand",
+                    "attributes": ["104–157 damage · speed 3.50 · 37.3 DPS", "On-hit effect: attacks nearby enemies and slows the wielder"],
+                    "acquisition": "Dropped by Herod in Scarlet Monastery: Armory.",
+                    "whyUseful": "A two-handed Arms option with a multi-target proc; its self-slow makes the proc situational.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/7717",
+                    "sourceIds": ["icy-arms-leveling", "icy-wow-forever-items"]
+                  },
+                  {
+                    "id": "alcaz-willcrusher",
+                    "name": "Alcaz Willcrusher",
+                    "category": "weapon",
+                    "requiredLevel": 47,
+                    "recommendationBracket": "40–50",
+                    "itemLevel": 52,
+                    "slot": "Two-Hand",
+                    "attributes": ["115–173 damage · speed 3.20 · 45.0 DPS", "Strength +20", "Dodge +1%", "Critical Strike +1%"],
+                    "acquisition": "Dropped by Overseer Wrex in Alcaz Prison.",
+                    "whyUseful": "A two-handed Arms candidate with Strength and offensive and defensive secondary stats.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/276732",
+                    "sourceIds": ["icy-arms-leveling", "icy-wow-forever-items"]
+                  },
+                  {
+                    "id": "angerforges-battle-axe",
+                    "name": "Angerforge's Battle Axe",
+                    "category": "weapon",
+                    "requiredLevel": 51,
+                    "recommendationBracket": "50–60",
+                    "itemLevel": 56,
+                    "slot": "Two-Hand",
+                    "attributes": ["100–150 damage · speed 2.60 · 48.1 DPS", "Strength +22", "Stamina +11", "On-hit damage effect"],
+                    "acquisition": "Dropped by General Angerforge in Blackrock Depths.",
+                    "whyUseful": "A high-DPS two-handed Arms candidate; compare its faster swing and damage with your current weapon.",
+                    "sourceUrl": "https://db.icy-veins.com/wow-forever/items/11816",
+                    "sourceIds": ["icy-arms-leveling", "icy-wow-forever-items"]
                   }
                 ]
               },
@@ -2209,7 +2286,7 @@
     }
   },
   "warriorEquipment": {
-    "sourceIds": ["icy-protection-leveling", "icy-warrior-class-quests"],
+    "sourceIds": ["icy-arms-leveling", "icy-warrior-leveling", "icy-protection-leveling", "icy-warrior-class-quests", "icy-wow-forever-items"],
     "slotCoverage": ["Head", "Chest", "Shoulders", "Hands", "Legs", "Waist", "Feet", "Wrists", "Shield", "Ring", "Necklace", "Trinket", "Cloak"],
     "emptyState": "No verified Warrior recommendation is recorded for this slot and level bracket. Keep your current item until a sourced upgrade is available.",
     "items": [
@@ -2246,7 +2323,25 @@
       {"id":"fury-visor","name":"Fury Visor","category":"armor","slot":"Head","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Strength +18","Hit +1%","Critical Strike +1%"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"Strength, Hit, and Critical Strike support melee damage.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20521","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
       {"id":"razorsteel-shoulders","name":"Razorsteel Shoulders","category":"armor","slot":"Shoulders","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Strength +10","Stamina +10","Hit +1%"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"Strength and Hit support melee damage; Stamina adds health.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20517","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
       {"id":"diamond-flask","name":"Diamond Flask","category":"accessory","slot":"Trinket","requiredLevel":null,"availabilityLevel":50,"recommendationBracket":"50–60","attributes":["Use: channels healing, then grants Strength +20 for 1 minute"],"acquisition":"Reward from the Warrior Voodoo Feathers class quest, available at level 50; item requirement is not listed.","whyUseful":"The documented Strength use effect boosts melee damage after its channel; finish the channel before engaging.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/20130","sourceIds":["icy-warrior-class-quests"],"specializations":["arms","fury","protection"]},
-      {"id":"royal-seal-of-eldrethalas","name":"Royal Seal of Eldre'Thalas","category":"accessory","slot":"Trinket","requiredLevel":null,"availabilityLevel":54,"recommendationBracket":"50–60","attributes":["Nature Resistance +15","Shield Block Value +30"],"acquisition":"Warrior quest reward from Codex of Defense, available at level 54.","whyUseful":"Shield Block Value directly benefits Protection while using a shield; the trinket is Warrior-specific.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18466","sourceIds":["icy-warrior-class-quests"],"specializations":["protection"]}
+      {"id":"royal-seal-of-eldrethalas","name":"Royal Seal of Eldre'Thalas","category":"accessory","slot":"Trinket","requiredLevel":null,"availabilityLevel":54,"recommendationBracket":"50–60","attributes":["Nature Resistance +15","Shield Block Value +30"],"acquisition":"Warrior quest reward from Codex of Defense, available at level 54.","whyUseful":"Shield Block Value directly benefits Protection while using a shield; the trinket is Warrior-specific.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18466","sourceIds":["icy-warrior-class-quests"],"specializations":["protection"]},
+      {"id":"veterans-chain-shirt","name":"Veteran's Chain Shirt","category":"armor","slot":"Chest","requiredLevel":15,"itemLevel":20,"recommendationBracket":"10–20","attributes":["Strength +7","Agility +4","Stamina +5"],"acquisition":"Crafted with Blacksmithing skill 80; the Forever item record lists Plans: Veteran's Chain Shirt as the recipe source.","whyUseful":"A level-15 mail chest option with Strength, Agility and Stamina; compare it with dungeon or quest rewards before crafting.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/250488","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"veterans-silvered-chain-helm","name":"Veteran's Silvered Chain Helm","category":"armor","slot":"Head","requiredLevel":20,"itemLevel":25,"recommendationBracket":"20–30","attributes":["Strength +10","Stamina +9"],"acquisition":"Crafted with Blacksmithing; the Forever item record lists Plans: Veteran's Silvered Chain Helm as the recipe source.","whyUseful":"Adds Strength and Stamina in a slot with few recorded early Warrior options.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/250528","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"veterans-chain-helm","name":"Veteran's Chain Helm","category":"armor","slot":"Head","requiredLevel":25,"itemLevel":30,"recommendationBracket":"20–30","attributes":["Strength +12","Stamina +11"],"acquisition":"Crafted with Blacksmithing skill 125; the Forever item record lists Plans: Veteran's Chain Helm as the recipe source.","whyUseful":"A Strength and Stamina mail option for the mid-20s; check the recipe and material cost before crafting.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/250498","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"mana-warped-chain-shirt","name":"Mana-Warped Chain Shirt","category":"armor","slot":"Chest","requiredLevel":27,"itemLevel":32,"recommendationBracket":"20–30","attributes":["Strength +12","Stamina +8","Mana regeneration +3 per 5 sec"],"acquisition":"Dropped by Arcane Anomaly in the City of Dalaran dungeon.","whyUseful":"A mail chest with Strength and Stamina; its Mana regeneration does not benefit Warrior Rage.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/273035","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"reliquary-mantle","name":"Reliquary Mantle","category":"armor","slot":"Shoulders","requiredLevel":28,"itemLevel":33,"recommendationBracket":"20–30","attributes":["Stamina +12","Hit +0.4%"],"acquisition":"Dropped by Relic Guardian in Excavation Site: Wetlands.","whyUseful":"Adds Stamina and a small Hit bonus; compare it against higher-Strength shoulder choices for solo damage.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/273028","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"ghostshard-talisman","name":"Ghostshard Talisman","category":"accessory","slot":"Necklace","requiredLevel":30,"itemLevel":35,"recommendationBracket":"30–40","attributes":["Stamina +9","Attack Power +14","Attack Power +12 against Undead"],"acquisition":"Dropped by Azshir the Sleepless in Scarlet Monastery.","whyUseful":"Provides Attack Power and Stamina; its extra Attack Power applies only against Undead.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7731","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"scarlet-belt","name":"Scarlet Belt","category":"armor","slot":"Waist","requiredLevel":32,"itemLevel":37,"recommendationBracket":"30–40","attributes":["Strength +12","Stamina +10"],"acquisition":"Bind-on-equip drop from Scarlet Myrmidons and Scarlet Defenders in Scarlet Monastery.","whyUseful":"A mail belt with Strength and Stamina for a slot whose other recorded paths jump from early quest gear to level 50.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/10329","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"scarlet-gauntlets","name":"Scarlet Gauntlets","category":"armor","slot":"Hands","requiredLevel":33,"itemLevel":38,"recommendationBracket":"30–40","attributes":["Strength +12","Agility +10"],"acquisition":"Bind-on-equip drop from Scarlet Centurions in Scarlet Monastery.","whyUseful":"Strength supports melee damage and Agility adds Critical Strike and defensive value.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/10331","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"raging-berserkers-helm","name":"Raging Berserker's Helm","category":"armor","slot":"Head","requiredLevel":37,"itemLevel":42,"recommendationBracket":"30–40","attributes":["Strength +13","Stamina +8","Critical Strike +1%"],"acquisition":"Dropped by Herod in Scarlet Monastery: Armory.","whyUseful":"Combines Strength, Stamina and Critical Strike for a mid-level head upgrade.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7719","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"fleshhide-shoulders","name":"Fleshhide Shoulders","category":"armor","slot":"Shoulders","requiredLevel":37,"itemLevel":42,"recommendationBracket":"30–40","attributes":["Strength +5","Agility +6","Stamina +15"],"acquisition":"Dropped by Glutton in Razorfen Downs.","whyUseful":"A Stamina-heavy shoulder option with Strength and Agility; compare armor type and mitigation before tanking.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/10774","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"scarlet-leggings","name":"Scarlet Leggings","category":"armor","slot":"Legs","requiredLevel":39,"itemLevel":44,"recommendationBracket":"30–40","attributes":["Strength +21","Stamina +10"],"acquisition":"Dropped by Herod in Scarlet Monastery: Armory or Scarlet Commander Mograine in Scarlet Monastery: Cathedral.","whyUseful":"A mail leg option with substantial Strength and Stamina; additional Chain of the Scarlet Crusade bonuses require other set pieces.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/10330","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"vilewalkers","name":"Vilewalkers","category":"armor","slot":"Feet","requiredLevel":17,"itemLevel":22,"recommendationBracket":"10–20","attributes":["Strength +7","Stamina +5"],"acquisition":"Dropped by Viktor the Vile in the Ruins of Lordaeron dungeon.","whyUseful":"A mail boot upgrade with both Strength and Stamina.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/271211","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"bracers-of-the-stone-princess","name":"Bracers of the Stone Princess","category":"armor","slot":"Wrists","requiredLevel":49,"itemLevel":54,"recommendationBracket":"40–50","attributes":["Stamina +6","Attack Power +28"],"acquisition":"Dropped by Princess Theradras in Maraudon.","whyUseful":"A late-level wrist option with a substantial Attack Power bonus; compare it with armor and defensive needs when tanking.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/17714","sourceIds":["icy-arms-leveling","icy-wow-forever-items"],"specializations":["arms","fury","protection"]},
+      {"id":"wingblade","name":"Wingblade","category":"weapon","slot":"Main Hand","requiredLevel":null,"availabilityLevel":22,"recommendationBracket":"20–30","faction":"Horde","attributes":["24–45 damage · speed 2.20 · 15.7 DPS","Agility +5","Stamina +2"],"acquisition":"Horde Warrior quest reward from Leaders of the Fang in Wailing Caverns (quest level 22); the item record does not list an equipment minimum.","whyUseful":"A one-handed sword option for Fury after Dual Wield training; compare its DPS with both current weapons.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6504","sourceIds":["icy-warrior-leveling","icy-wow-forever-items","icy-wow-forever-quests"],"acquisitionSourceUrl":"https://db.icy-veins.com/wow-forever/quests/914","specializations":["fury"]},
+      {"id":"pronged-reaver","name":"Pronged Reaver","category":"weapon","slot":"One-Hand","requiredLevel":30,"itemLevel":35,"recommendationBracket":"30–40","attributes":["38–72 damage · speed 2.40 · 22.9 DPS","Strength +5","Spirit +5"],"acquisition":"Dropped by Charlga Razorflank in Razorfen Kraul.","whyUseful":"A one-handed axe option for Fury after Dual Wield training and for Protection with a shield; compare DPS and weapon skills.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/6692","sourceIds":["icy-warrior-leveling","icy-protection-leveling","icy-wow-forever-items"],"specializations":["fury","protection"]},
+      {"id":"resplendent-guardian","name":"Resplendent Guardian","category":"armor","slot":"Shield","requiredLevel":26,"itemLevel":31,"recommendationBracket":"20–30","attributes":["680 Armor","Stamina +7","Shield Block chance +1%"],"acquisition":"World drop from Scarlet Monastery enemies; the Forever item record lists multiple possible mobs.","whyUseful":"A verified mid-level shield option for Protection; compare its armor and Block bonus with quest shields.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/7787","sourceIds":["icy-protection-leveling","icy-wow-forever-items"],"specializations":["protection"]},
+      {"id":"lord-generals-sword","name":"Lord General's Sword","category":"weapon","slot":"Main Hand","requiredLevel":51,"itemLevel":56,"recommendationBracket":"50–60","attributes":["67–125 damage · speed 2.60 · 36.9 DPS","Chance on hit: +84 Attack Power for 10 sec"],"acquisition":"Dropped by General Angerforge in Blackrock Depths.","whyUseful":"A late-level one-handed weapon for Fury's dual-wield setup or Protection with a shield; compare the proc and current weapon DPS.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/11817","sourceIds":["icy-warrior-leveling","icy-protection-leveling","icy-wow-forever-items"],"specializations":["fury","protection"]},
+      {"id":"hurleys-tankard","name":"Hurley's Tankard","category":"weapon","slot":"Main Hand","requiredLevel":52,"itemLevel":57,"recommendationBracket":"50–60","attributes":["71–132 damage · speed 2.70 · 37.6 DPS","Agility +5","Stamina +12","Spirit +3"],"acquisition":"Dropped by Hurley Blackbreath in Blackrock Depths.","whyUseful":"A late-level main-hand option for Fury or Protection; compare DPS and secondary stats with your current weapon.","sourceUrl":"https://db.icy-veins.com/wow-forever/items/18044","sourceIds":["icy-warrior-leveling","icy-protection-leveling","icy-wow-forever-items"],"specializations":["fury","protection"]}
     ]
   },
   "warriorProfessions": {

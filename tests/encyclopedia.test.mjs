@@ -3106,7 +3106,7 @@ test('Warrior gear guide follows level and specialization data without filling m
   const furyBeforeDualWield = renderGear('fury', 19);
   assert.ok(furyBeforeDualWield.includes('Fury · Weapons &amp; Gear · Level 19'));
   assert.ok(furyBeforeDualWield.includes('Keep your strongest current weapon equipped'));
-  assert.ok(furyBeforeDualWield.includes('No verified named Fury item recommendations'));
+  assert.ok(furyBeforeDualWield.includes('No spec-only armor path is recorded'));
   assert.ok(!furyBeforeDualWield.includes('Corpsemaker'));
   const furyAfterDualWield = renderGear('fury', 20);
   assert.ok(furyAfterDualWield.includes('After training Dual Wield at level 20'));
@@ -3145,10 +3145,32 @@ test('Warrior equipment recommendations filter by level, faction, specialization
   assert.equal(royalSeal.availabilityLevel, 54);
   assert.deepEqual(royalSeal.specializations, ['protection']);
 
-  for (const level of [10, 15, 25, 34, 40, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
+  for (const level of [15, 25, 35, 45, 60]) for (const specializationId of ['arms', 'fury', 'protection']) {
     const html = render(level, 'Alliance', specializationId);
     assert.ok(html.includes('data-gear-category="accessory"'), `${specializationId} has accessory recommendations at level ${level}`);
     assert.ok(!html.includes('No verified Warrior equipment guidance or item records are stored yet.'), `${specializationId} shared data is wired at level ${level}`);
+    assert.ok(html.includes(`· Weapons &amp; Gear · Level ${level}`), `${specializationId} gear view follows the selected level`);
+  }
+  for (const [level, specializationId, itemName, availability] of [
+    [15, 'arms', "Veteran's Chain Shirt", 'Available now · Available at Level 15'],
+    [25, 'fury', "Veteran's Chain Helm", 'Available now · Available at Level 25'],
+    [35, 'protection', 'Pronged Reaver', 'Available now · Available at Level 30'],
+    [45, 'arms', 'Scarlet Leggings', 'Available now · Available at Level 39'],
+    [60, 'fury', "Hurley's Tankard", 'Available now · Available at Level 52'],
+  ]) {
+    const html = render(level, 'Alliance', specializationId);
+    assert.ok(html.includes(itemName.replaceAll("'", '&#39;')), `${specializationId} shows ${itemName} at ${level}`);
+    assert.ok(html.includes(availability), `${itemName} availability follows level ${level}`);
+    assert.ok(html.includes('data-gear-group="available"'));
+  }
+  const upcomingAt45 = render(45, 'Horde', 'protection');
+  assert.match(upcomingAt45, /Lord General&#39;s Sword[\s\S]*?Upcoming · Available at Level 51/);
+  const wingblade = wowPack.warriorEquipment.items.find(item => item.id === 'wingblade');
+  assert.equal(wingblade.requiredLevel, null, 'the database does not state a minimum level for Wingblade');
+  assert.ok(wingblade.sourceUrl && wingblade.sourceIds.includes('icy-wow-forever-items'));
+  assert.ok(wingblade.sourceIds.every(id => wowPack.sources.some(source => source.id === id)), 'new item source IDs resolve to retained source metadata');
+  for (const record of [...wowPack.warriorEquipment.items, ...wowPack.classes.find(item => item.id === 'warrior').specializationGuides.arms.sections.gear.equipmentGuide.items]) {
+    assert.ok(record.sourceUrl && record.sourceIds?.length, `${record.name} keeps source metadata`);
   }
 });
 
