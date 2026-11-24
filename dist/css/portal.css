@@ -1023,24 +1023,30 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-gold-band { border-left:3px solid #c79c6e; }
 .wow-gold-band h4,.wow-gold-other h4,.wow-gold-category h4 { margin:0 0 .45rem; color:#e7d4aa; font-size:1rem; }
 .wow-gold-category { min-width:0; padding:.85rem; border:1px solid #304454; background:#0e1822; }
-.wow-gold-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
-.wow-gold-card { min-width:0; padding:.8rem; border:1px solid #3b4e5b; border-top:2px solid #8d7653; border-radius:3px; background:#121e28; }
+.wow-gold-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.85rem; align-items:stretch; }
+.wow-gold-card { min-width:0; padding:1rem; border:1px solid #3b4e5b; border-top:2px solid #8d7653; border-radius:3px; background:#121e28; }
+.wow-gold-card:only-child { grid-column:1 / -1; }
 .wow-gold-card header { display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; }
 .wow-gold-card h5 { color:#edf3f6; font-size:.93rem; line-height:1.35; }
-.wow-gold-card header > span { flex:none; padding:.1rem .35rem; border:1px solid #594b36; color:#e0c991; font-size:.68rem; }
-.wow-gold-card dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem .7rem; margin:.65rem 0; }
+.wow-gold-card .wow-gold-level { flex:none; max-width:48%; padding:.2rem .45rem; border:1px solid #594b36; border-radius:3px; color:#e0c991; font-size:.76rem; line-height:1.35; text-align:right; }
+.wow-gold-card dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.65rem 1rem; margin:.65rem 0; }
 .wow-gold-card dl > div { min-width:0; }
-.wow-gold-card dt { color:#9daeb8; font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
-.wow-gold-card dd { margin:0; color:#d5dfe4; font-size:.78rem; line-height:1.45; overflow-wrap:anywhere; }
+.wow-gold-card .wow-gold-location,.wow-gold-card dl > div:nth-last-child(2),.wow-gold-card dl > div:last-child { grid-column:1 / -1; }
+.wow-gold-card dt { margin-bottom:.1rem; color:#b7c4ca; font-size:.76rem; font-weight:700; letter-spacing:.025em; }
+.wow-gold-card dd { margin:0; color:#d5dfe4; font-size:.94rem; line-height:1.5; overflow-wrap:anywhere; }
+.wow-gold-evidence { display:table; margin:.55rem 0 .2rem; padding:.12rem .45rem; border:1px solid #625235; border-radius:999px; color:#e9d29c; background:#352d1d; font-size:.74rem; font-weight:700; letter-spacing:.02em; }
+.wow-gold-evidence.is-creator-reported { border-color:#76573c; color:#f0c291; background:#38271d; }
+.wow-gold-card.is-creator-reported { border-top-color:#b17d4b; }
 .wow-gold-card details { border-top:1px solid #344652; }
-.wow-gold-card summary { padding:.5rem 0 .2rem; color:#d7c496; font-size:.78rem; cursor:pointer; }
-.wow-gold-card details p,.wow-gold-rate { margin:.4rem 0; color:#c1cdd2; font-size:.78rem; line-height:1.55; }
-.wow-gold-source { margin:.55rem 0 0; color:#aebbc2; font-size:.7rem; }
+.wow-gold-card summary { padding:.6rem 0 .25rem; color:#e0c991; font-size:.9rem; cursor:pointer; }
+.wow-gold-card details p,.wow-gold-rate { margin:.5rem 0; color:#c1cdd2; font-size:.9rem; line-height:1.55; }
+.wow-gold-source { margin:.65rem 0 0; color:#aebbc2; font-size:.78rem; }
 .wow-gold-source a { color:#9bd2ff; }
-.wow-gold-empty { margin:0; color:#9eafb9; font-size:.8rem; }
+.wow-gold-empty { display:inline-block; margin:.1rem 0 0; padding:.4rem .65rem; border-left:2px solid #756447; color:#aebbc2; background:#101a23; font-size:.84rem; line-height:1.4; }
 .wow-gold-other ul { margin:.3rem 0 0; padding-left:1.2rem; }
-.wow-gold-other li { margin:.3rem 0; color:#c8d2d7; font-size:.82rem; }
-@media(max-width:700px) { .wow-gold-grid { grid-template-columns:1fr; } }
+.wow-gold-other li { margin:.3rem 0; color:#c8d2d7; font-size:.9rem; }
+@media(max-width:900px) { .wow-gold-grid { grid-template-columns:1fr; } }
+@media(max-width:560px) { .wow-gold-category { padding:.65rem; } .wow-gold-card { padding:.8rem; } .wow-gold-card dl { grid-template-columns:1fr; gap:.55rem; } .wow-gold-card .wow-gold-location,.wow-gold-card dl > div:nth-last-child(2),.wow-gold-card dl > div:last-child { grid-column:auto; } }
 .wow-warrior-guide .wow-warrior-facts { display:flex; flex-wrap:wrap; gap:.75rem 2rem; margin:1.15rem 0 0; }
 .wow-warrior-guide .wow-warrior-facts > div { min-width:0; }
 .wow-warrior-guide .wow-warrior-facts dt { color:#8fafc6; font-size:.63rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
