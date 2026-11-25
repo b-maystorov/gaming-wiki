@@ -59,170 +59,97 @@
       "url": "https://wofwforever.com/en/guides/wow-forever-warrior-leveling-talents/",
       "updated": "2026-11-09",
       "use": "Exact Fury and Protection talent point orders from levels 10–60. The author identifies them as editorial recommendations checked against Wowhead Forever client 1.60.1 data, not Blizzard recommendations or in-game tested builds."
+    },
+    {
+      "id": "wow-forever-outpost-shaman-leveling-2026-11",
+      "title": "WoW Forever Outpost · Shaman leveling talents, point by point",
+      "url": "https://wofwforever.com/en/guides/wow-forever-shaman-leveling-talents/",
+      "updated": "2026-11-09",
+      "use": "Point-by-point Elemental, Enhancement, and Restoration leveling routes checked by the author against Wowhead Forever client 1.60.1 data. The author says the builds are editorial recommendations and were not tested in game. Enhancement Stormstrike is placed conservatively after level 40 because the source says its level-25 point calculation conflicts with the level-40 tooltip."
     }
   ],
   "builds": [
     {
       "id": "bm-shaman-enhancement-solo-10-30",
-      "name": "Mana-aware solo leveling · beta route",
+      "name": "Enhancement leveling · conservative Stormstrike timing",
       "classId": "shaman",
       "specializationId": "enhancement",
       "playstyle": "solo-leveling",
       "role": "Melee damage",
       "levelRange": {
         "from": 10,
-        "through": 30
+        "through": 60
       },
       "coverage": {
-        "status": "partial",
-        "label": "Point progression to level 30 · not verified beyond the beta cap",
-        "highestDocumentedLevel": 30,
-        "beyondRange": "Hold the level-30 allocation and disclose the coverage limit; never extrapolate points."
+        "status": "complete",
+        "label": "Source-published point order through level 60",
+        "highestDocumentedLevel": 60
       },
       "sourceIds": [
-        "icy-enhancement-leveling",
-        "mobalytics-shaman-leveling",
-        "topbuilds-enhancement-leveling"
+        "wow-forever-outpost-shaman-leveling-2026-11"
       ],
       "gameClientVersion": "1.60.1.70755",
-      "confidence": "Cross-source synthesis checked against local talent IDs, rank caps, point budget, and named prerequisites. Tree-row point gates are not verified by the client export.",
-      "verificationStatus": "Partial · manual in-game verification still needed",
-      "summary": "An original no-respec solo route that brings the published level-20 Shamanistic Focus milestone forward, secures Stormstrike at level 25, and takes Improved Ghost Wolf before finishing the early Improved Stormstrike pickup. It is a BM Gaming Wiki synthesis, not a copied source build.",
-      "allocations": [
-        {
-          "level": 10,
-          "talentId": "shaman-enhancement-thundering-strikes",
-          "rankAdded": 1
-        },
-        {
-          "level": 11,
-          "talentId": "shaman-enhancement-thundering-strikes",
-          "rankAdded": 1
-        },
-        {
-          "level": 12,
-          "talentId": "shaman-enhancement-thundering-strikes",
-          "rankAdded": 1
-        },
-        {
-          "level": 13,
-          "talentId": "shaman-enhancement-thundering-strikes",
-          "rankAdded": 1
-        },
-        {
-          "level": 14,
-          "talentId": "shaman-enhancement-thundering-strikes",
-          "rankAdded": 1
-        },
-        {
-          "level": 15,
-          "talentId": "shaman-enhancement-improved-lightning-shield",
-          "rankAdded": 1
-        },
-        {
-          "level": 16,
-          "talentId": "shaman-enhancement-improved-lightning-shield",
-          "rankAdded": 1
-        },
-        {
-          "level": 17,
-          "talentId": "shaman-enhancement-improved-lightning-shield",
-          "rankAdded": 1
-        },
-        {
-          "level": 18,
-          "talentId": "shaman-enhancement-mental-dexterity",
-          "rankAdded": 1
-        },
-        {
-          "level": 19,
-          "talentId": "shaman-enhancement-mental-dexterity",
-          "rankAdded": 1
-        },
-        {
-          "level": 20,
-          "talentId": "shaman-enhancement-shamanistic-focus",
-          "rankAdded": 1
-        },
-        {
-          "level": 21,
-          "talentId": "shaman-enhancement-elemental-weapons",
-          "rankAdded": 1
-        },
-        {
-          "level": 22,
-          "talentId": "shaman-enhancement-elemental-weapons",
-          "rankAdded": 1
-        },
-        {
-          "level": 23,
-          "talentId": "shaman-enhancement-elemental-weapons",
-          "rankAdded": 1
-        },
-        {
-          "level": 24,
-          "talentId": "shaman-enhancement-mental-dexterity",
-          "rankAdded": 1
-        },
-        {
-          "level": 25,
-          "talentId": "shaman-enhancement-stormstrike",
-          "rankAdded": 1
-        },
-        {
-          "level": 26,
-          "talentId": "shaman-enhancement-improved-ghost-wolf",
-          "rankAdded": 1
-        },
-        {
-          "level": 27,
-          "talentId": "shaman-enhancement-improved-ghost-wolf",
-          "rankAdded": 1
-        },
-        {
-          "level": 28,
-          "talentId": "shaman-enhancement-flurry",
-          "rankAdded": 1
-        },
-        {
-          "level": 29,
-          "talentId": "shaman-enhancement-flurry",
-          "rankAdded": 1
-        },
-        {
-          "level": 30,
-          "talentId": "shaman-enhancement-improved-stormstrike",
-          "rankAdded": 1
-        }
-      ],
+      "confidence": "The source identifies this as an editorial recommendation, not an in-game-tested build. Talent IDs, rank limits, named prerequisites, per-level point budgets, and tree-row gates are validated against the local WoW: Forever client talent data. Enhancement Stormstrike is delayed until after level 40 to honor the source’s unresolved tooltip conflict.",
+      "verificationStatus": "source-supported",
+      "summary": "A conservative adaptation of WoW Forever Outpost’s Enhancement order. Stormstrike is delayed until after level 40 because the source flags its earlier calculated unlock as conflicting with the Forever tooltip.",
       "respecEvents": [],
-      "milestones": [
-        {
-          "level": 14,
-          "talentId": "shaman-enhancement-thundering-strikes",
-          "ranks": "5/5",
-          "note": "Finish the early critical-strike investment."
-        },
-        {
-          "level": 20,
-          "talentId": "shaman-enhancement-shamanistic-focus",
-          "ranks": "1/1",
-          "note": "Reach the source-highlighted Shock-cost milestone."
-        },
-        {
-          "level": 25,
-          "talentId": "shaman-enhancement-stormstrike",
-          "ranks": "1/1",
-          "note": "Take Stormstrike at the first level the guide identifies as available."
-        },
-        {
-          "level": 30,
-          "talentId": "shaman-enhancement-improved-stormstrike",
-          "ranks": "1/2",
-          "note": "Begin the Improved Stormstrike mana and reset investment; later ranks are outside this route's coverage."
-        }
-      ],
-      "respecDisclosure": "This route does not respec. Icy Veins also describes an optional Restoration-first route and respec at 25, but its written guide does not publish that route's complete rank allocation; it is not offered here as an automatic build."
+      "milestones": [],
+      "respecDisclosure": "This route does not respec. Icy Veins also describes an optional Restoration-first route and respec at 25, but its written guide does not publish that route's complete rank allocation; it is not offered here as an automatic build.",
+      "sourceTitle": "WoW Forever Outpost · Shaman leveling talents, point by point",
+      "sourceUrl": "https://wofwforever.com/en/guides/wow-forever-shaman-leveling-talents/",
+      "talentOrder": [
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-mental-dexterity",
+        "shaman-enhancement-mental-dexterity",
+        "shaman-enhancement-mental-dexterity",
+        "shaman-enhancement-ancestral-knowledge",
+        "shaman-enhancement-ancestral-knowledge",
+        "shaman-enhancement-shamanistic-focus",
+        "shaman-enhancement-elemental-weapons",
+        "shaman-enhancement-elemental-weapons",
+        "shaman-enhancement-elemental-weapons",
+        "shaman-enhancement-anticipation",
+        "shaman-enhancement-flurry",
+        "shaman-enhancement-flurry",
+        "shaman-enhancement-flurry",
+        "shaman-enhancement-flurry",
+        "shaman-enhancement-flurry",
+        "shaman-enhancement-spirit-weapons",
+        "shaman-enhancement-improved-ghost-wolf",
+        "shaman-enhancement-improved-ghost-wolf",
+        "shaman-enhancement-toughness",
+        "shaman-enhancement-toughness",
+        "shaman-enhancement-toughness",
+        "shaman-enhancement-toughness",
+        "shaman-enhancement-toughness",
+        "shaman-enhancement-ancestral-knowledge",
+        "shaman-enhancement-ancestral-knowledge",
+        "shaman-enhancement-ancestral-knowledge",
+        "shaman-enhancement-anticipation",
+        "shaman-enhancement-anticipation",
+        "shaman-enhancement-stormstrike",
+        "shaman-enhancement-improved-stormstrike",
+        "shaman-enhancement-improved-stormstrike",
+        "shaman-enhancement-mental-quickness",
+        "shaman-enhancement-mental-quickness",
+        "shaman-enhancement-maelstrom-weapon",
+        "shaman-enhancement-maelstrom-weapon",
+        "shaman-enhancement-maelstrom-weapon",
+        "shaman-enhancement-maelstrom-weapon",
+        "shaman-enhancement-maelstrom-weapon",
+        "shaman-enhancement-rage-of-the-farseer",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-enhancement-improved-lightning-shield",
+        "shaman-enhancement-improved-lightning-shield"
+      ]
     },
     {
       "id": "bm-warrior-arms-leveling-10-60",
@@ -1090,6 +1017,168 @@
       "respecEvents": [],
       "milestones": [],
       "tierRuleDisclosure": "The guide’s exact order is checked against Wowhead Forever data. The Forever client export does not independently confirm row point gates; the tree view applies its documented five-points-per-row rule."
+    },
+    {
+      "id": "bm-shaman-elemental-leveling-10-60",
+      "name": "Elemental leveling · source-published point order",
+      "classId": "shaman",
+      "specializationId": "elemental",
+      "playstyle": "solo-leveling",
+      "role": "Ranged damage",
+      "levelRange": {
+        "from": 10,
+        "through": 60
+      },
+      "coverage": {
+        "status": "complete",
+        "label": "Source-published point order through level 60",
+        "highestDocumentedLevel": 60
+      },
+      "sourceIds": [
+        "wow-forever-outpost-shaman-leveling-2026-11"
+      ],
+      "sourceTitle": "WoW Forever Outpost · Shaman leveling talents, point by point",
+      "sourceUrl": "https://wofwforever.com/en/guides/wow-forever-shaman-leveling-talents/",
+      "gameClientVersion": "1.60.1.70755",
+      "confidence": "The source identifies this as an editorial recommendation, not an in-game-tested build. Talent IDs, rank limits, named prerequisites, per-level point budgets, and tree-row gates are validated against the local WoW: Forever client talent data. Enhancement Stormstrike is delayed until after level 40 to honor the source’s unresolved tooltip conflict.",
+      "verificationStatus": "source-supported",
+      "summary": "WoW Forever Outpost’s source-published Elemental leveling order. It is a source-supported recommendation, not an in-game-tested build.",
+      "talentOrder": [
+        "shaman-elemental-convection",
+        "shaman-elemental-convection",
+        "shaman-elemental-convection",
+        "shaman-elemental-convection",
+        "shaman-elemental-convection",
+        "shaman-elemental-elemental-alacrity",
+        "shaman-elemental-elemental-alacrity",
+        "shaman-elemental-elemental-alacrity",
+        "shaman-elemental-concussion",
+        "shaman-elemental-concussion",
+        "shaman-elemental-elemental-focus",
+        "shaman-elemental-concussion",
+        "shaman-elemental-concussion",
+        "shaman-elemental-concussion",
+        "shaman-elemental-reverberation",
+        "shaman-elemental-earthbound",
+        "shaman-elemental-eye-of-the-storm",
+        "shaman-elemental-eye-of-the-storm",
+        "shaman-elemental-eye-of-the-storm",
+        "shaman-elemental-reverberation",
+        "shaman-elemental-call-of-thunder",
+        "shaman-elemental-lightning-overload",
+        "shaman-elemental-lightning-overload",
+        "shaman-elemental-lightning-overload",
+        "shaman-elemental-elemental-reach",
+        "shaman-elemental-elemental-fury",
+        "shaman-elemental-elemental-fury",
+        "shaman-elemental-elemental-fury",
+        "shaman-elemental-elemental-fury",
+        "shaman-elemental-elemental-fury",
+        "shaman-elemental-lightning-mastery",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-enhancement-thundering-strikes",
+        "shaman-elemental-reverberation",
+        "shaman-elemental-reverberation",
+        "shaman-elemental-reverberation",
+        "shaman-elemental-elemental-reach",
+        "shaman-elemental-call-of-flame",
+        "shaman-elemental-call-of-flame",
+        "shaman-elemental-call-of-flame",
+        "shaman-elemental-elemental-warding",
+        "shaman-elemental-elemental-warding",
+        "shaman-elemental-elemental-warding",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus"
+      ],
+      "respecEvents": [],
+      "milestones": []
+    },
+    {
+      "id": "bm-shaman-restoration-leveling-10-60",
+      "name": "Restoration leveling · source-published point order",
+      "classId": "shaman",
+      "specializationId": "restoration",
+      "playstyle": "solo-leveling",
+      "role": "Healing and support",
+      "levelRange": {
+        "from": 10,
+        "through": 60
+      },
+      "coverage": {
+        "status": "complete",
+        "label": "Source-published point order through level 60",
+        "highestDocumentedLevel": 60
+      },
+      "sourceIds": [
+        "wow-forever-outpost-shaman-leveling-2026-11"
+      ],
+      "sourceTitle": "WoW Forever Outpost · Shaman leveling talents, point by point",
+      "sourceUrl": "https://wofwforever.com/en/guides/wow-forever-shaman-leveling-talents/",
+      "gameClientVersion": "1.60.1.70755",
+      "confidence": "The source identifies this as an editorial recommendation, not an in-game-tested build. Talent IDs, rank limits, named prerequisites, per-level point budgets, and tree-row gates are validated against the local WoW: Forever client talent data. Enhancement Stormstrike is delayed until after level 40 to honor the source’s unresolved tooltip conflict.",
+      "verificationStatus": "source-supported",
+      "summary": "WoW Forever Outpost’s source-published Restoration leveling order. It is a source-supported recommendation, not an in-game-tested build.",
+      "talentOrder": [
+        "shaman-restoration-improved-healing-wave",
+        "shaman-restoration-improved-healing-wave",
+        "shaman-restoration-improved-healing-wave",
+        "shaman-restoration-improved-healing-wave",
+        "shaman-restoration-improved-healing-wave",
+        "shaman-restoration-mindfulness",
+        "shaman-restoration-mindfulness",
+        "shaman-restoration-mindfulness",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-water-shield",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-tidal-focus",
+        "shaman-restoration-healing-focus",
+        "shaman-restoration-mana-tide-totem",
+        "shaman-restoration-tidal-mastery",
+        "shaman-restoration-tidal-mastery",
+        "shaman-restoration-tidal-mastery",
+        "shaman-restoration-tidal-mastery",
+        "shaman-restoration-nature-s-swiftness",
+        "shaman-restoration-healing-way",
+        "shaman-restoration-healing-way",
+        "shaman-restoration-healing-way",
+        "shaman-restoration-tidal-mastery",
+        "shaman-restoration-purification",
+        "shaman-restoration-purification",
+        "shaman-restoration-purification",
+        "shaman-restoration-purification",
+        "shaman-restoration-purification",
+        "shaman-restoration-riptide",
+        "shaman-restoration-restorative-totems",
+        "shaman-restoration-restorative-totems",
+        "shaman-restoration-restorative-totems",
+        "shaman-restoration-restorative-totems",
+        "shaman-restoration-restorative-totems",
+        "shaman-restoration-healing-focus",
+        "shaman-restoration-healing-focus",
+        "shaman-restoration-natural-grace",
+        "shaman-restoration-natural-grace",
+        "shaman-restoration-natural-grace",
+        "shaman-restoration-totemic-focus",
+        "shaman-restoration-totemic-focus",
+        "shaman-restoration-totemic-focus",
+        "shaman-restoration-totemic-focus",
+        "shaman-restoration-totemic-focus",
+        "shaman-restoration-improved-reincarnation",
+        "shaman-restoration-improved-reincarnation",
+        "shaman-restoration-ancestral-healing",
+        "shaman-restoration-ancestral-healing",
+        "shaman-restoration-ancestral-healing"
+      ],
+      "respecEvents": [],
+      "milestones": []
     }
   ]
 }

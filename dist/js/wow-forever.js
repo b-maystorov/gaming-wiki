@@ -100,7 +100,8 @@ export function validateWowGuidedBuild(build, catalog) {
   const classRecord = catalog?.classes?.find(item => item.id === build?.classId);
   const issues = [];
   if (!classRecord) return { valid: false, issues: ['The guided build class is missing from the client dataset.'] };
-  if (!Array.isArray(build.allocations) || !build.coverage?.highestDocumentedLevel) {
+  const allocations = orderedGuidedBuildAllocations(build);
+  if (!allocations || !build.coverage?.highestDocumentedLevel) {
     return { valid: false, issues: ['The guided build has no ordered allocations or coverage limit.'] };
   }
   const talentById = new Map(classRecord.trees.flatMap(tree => tree.talents).map(talent => [talent.id, talent]));
@@ -116,7 +117,7 @@ export function validateWowGuidedBuild(build, catalog) {
         Object.assign(allocation, respec.toAllocation);
       }
     }
-    const changes = build.allocations.filter(change => change.level === level);
+    const changes = allocations.filter(change => change.level === level);
     if (level >= build.levelRange.from && changes.length !== 1) issues.push(`Level ${level} must have exactly one recorded talent point.`);
     for (const change of changes) {
       const talent = talentById.get(change.talentId);
@@ -137,6 +138,16 @@ export function validateWowGuidedBuild(build, catalog) {
   return { valid: issues.length === 0, issues };
 }
 
+function orderedGuidedBuildAllocations(build) {
+  if (Array.isArray(build?.allocations)) return build.allocations;
+  if (!Array.isArray(build?.talentOrder)) return null;
+  return build.talentOrder.map((talentId, index) => ({
+    level: (build.levelRange?.from || 10) + index,
+    talentId,
+    rankAdded: 1
+  }));
+}
+
 export function resolveWowGuidedBuild(build, catalog, requestedLevel) {
   const classRecord = catalog?.classes?.find(item => item.id === build?.classId);
   const level = Math.max(1, Math.min(60, Number(requestedLevel) || 1));
@@ -145,10 +156,11 @@ export function resolveWowGuidedBuild(build, catalog, requestedLevel) {
   if (!buildCheck.valid) return { valid: false, allocation: {}, level, snapshotLevel: level, total: 0, issues: buildCheck.issues };
   const maxLevel = build.coverage.highestDocumentedLevel;
   const snapshotLevel = Math.min(level, maxLevel);
+  const allocations = orderedGuidedBuildAllocations(build) || [];
   const allocation = {};
   const respecs = (build.respecEvents || []).filter(event => event.level <= snapshotLevel).sort((a, b) => a.level - b.level);
   const changesByLevel = new Map();
-  for (const change of build.allocations) {
+  for (const change of allocations) {
     if (change.level > snapshotLevel) continue;
     const changes = changesByLevel.get(change.level) || [];
     changes.push(change);
@@ -183,7 +195,7 @@ export function resolveWowGuidedBuild(build, catalog, requestedLevel) {
     total: validation.total,
     changesAtRequestedLevel,
     respecAtRequestedLevel,
-    nextChange: build.allocations.find(change => change.level > snapshotLevel) || null,
+    nextChange: allocations.find(change => change.level > snapshotLevel) || null,
     nextMilestone: build.milestones?.find(milestone => milestone.level > snapshotLevel) || null,
     covered: level <= maxLevel,
     issues: validation.issues
@@ -421,7 +433,7 @@ function renderWowTalentPlanner(data, catalog, profile, route, escapeHtml, guide
         : '';
     guidedNotes = `<section class="wow-guided-summary" aria-live="polite"><div><p class="wow-eyebrow">${escapeHtml(selectedGuide.name)}</p><h4>Level ${level}${guidedState.covered ? '' : ` · showing documented level ${guidedState.snapshotLevel}`}</h4><p>${escapeHtml(selectedGuide.summary)}</p><p class="wow-guided-distribution">${escapeHtml(treeDistribution)}</p></div><div><strong>Next recommended talent</strong><p>${nextTalent ? `Level ${guidedState.nextChange.level} · ${escapeHtml(nextTalent.name)}` : 'No later point in documented coverage.'}</p>${upcomingMilestone ? `<strong>Upcoming milestone · Level ${upcomingMilestone.level}</strong><p>${escapeHtml(talentMap.get(upcomingMilestone.talentId)?.name || '')} · ${escapeHtml(upcomingMilestone.note)}</p>` : ''}${currentMilestone ? `<p class="wow-milestone-current">Current milestone · ${escapeHtml(currentMilestone.ranks)} ${escapeHtml(talentMap.get(currentMilestone.talentId)?.name || '')}</p>` : ''}</div></section>${changeNote}${coverageNote}`;
     const grouped = [];
-    for (const change of selectedGuide.allocations) {
+    for (const change of orderedGuidedBuildAllocations(selectedGuide) || []) {
       const talent = talentMap.get(change.talentId);
       if (!talent) continue;
       const previous = grouped[grouped.length - 1];
@@ -817,7 +829,7 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
     const shamanClassIcon = catalog?.classes?.find(record => record.id === 'shaman')?.icon
       || 'assets/images/wow-forever/icons/class_shaman.jpg';
     const heroVisual = item.id === 'shaman'
-      ? `<div class="wow-shaman-hero-icon-panel"><img src="${escapeHtml(shamanClassIcon)}" alt="Shaman class icon" width="128" height="128" fetchpriority="high"></div>`
+      ? `<div class="wow-shaman-hero-icon-panel"><img src="${escapeHtml(shamanClassIcon)}" alt="Shaman class icon" width="56" height="56" fetchpriority="high"></div>`
       : art
         ? `<img src="${escapeHtml(art.src)}" alt="${escapeHtml(art.alt)}" width="960" height="640" fetchpriority="high">`
         : `<div class="wow-class-art-fallback" role="img" aria-label="${escapeHtml(item.name)} class-themed decorative illustration fallback"><span aria-hidden="true">${escapeHtml(item.name.slice(0, 1))}</span></div>`;

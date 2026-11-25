@@ -62,6 +62,14 @@ export function updateCompanionState(classId, state, change, specializations = [
   return normalizeCompanionState(classId, { ...state, ...change }, specializations);
 }
 
+export function changeCompanionSpecialization(state, specializationId, specializations = [], storage) {
+  if (state.classId !== 'shaman' || specializationId === state.specializationId) {
+    return updateCompanionState(state.classId, state, { specializationId }, specializations);
+  }
+  const selected = loadCompanionState(state.classId, { ...state, specializationId }, specializations, storage, false);
+  return { ...selected, level: state.level, faction: state.faction, tab: state.tab };
+}
+
 export function loadCompanionState(classId, fallback = {}, specializations = [], storage, preferRememberedSpecialization = true) {
   let initial = normalizeCompanionState(classId, fallback, specializations);
   try {
@@ -675,9 +683,14 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
     if (classRecord.id === 'shaman') return {
       heading: `${specName} talent tree · Level ${state.level}`,
       treeData,
-      sections: [{ title: 'Talent-point budget', text: `${treeData.availablePoints} points are available at level ${state.level}. This is the game-rule budget, not an allocated build.` }],
+      sections: [{
+        title: treeData.recommended?.valid ? 'Talent points spent / available' : 'Talent-point budget',
+        text: treeData.recommended?.valid
+          ? `${treeData.recommended.total} / ${treeData.availablePoints}`
+          : `${treeData.availablePoints} points are available at level ${state.level}. This is the game-rule budget, not an allocated build.`
+      }],
       notices: [shamanBuildAvailabilityNotice(treeData, progressionEngine, state.specializationId)].filter(Boolean),
-      note: `Talent points start at level 10 and exclude Talented Legacy bonus points. ${treeData.tree ? 'All three trees remain visible for reference; no ranks are marked as recommended without a complete verified progression.' : ''}`
+      note: `Talent points start at level 10 and exclude Talented Legacy bonus points. ${treeData.tree ? 'All three trees remain visible; gold ranks show the selected source-supported route.' : ''}`
     };
     return {
       heading: `${specName} talent tree · Level ${state.level}`,
@@ -712,7 +725,7 @@ function shamanBuildAvailabilityNotice(treeData, progressionEngine, specializati
     const through = candidate.coverage.highestDocumentedLevel || candidate.levelRange?.through;
     return `A draft route is recorded${through ? ` through level ${through}` : ''}, but its tree-row requirements and full progression are not verified. It is not applied automatically.`;
   }
-  return 'A current WoW: Forever leveling guide is available, but it does not provide a fully auditable rank-by-rank build here. Automatic allocation is withheld until that progression is verified.';
+  return treeData.availabilityReason || 'A complete, source-supported WoW: Forever progression is not available for this specialization. Automatic allocation is withheld.';
 }
 
 function buildWarriorCombatGuide(state, guideData) {
@@ -1116,7 +1129,7 @@ export function initializeLevelingCompanion(root, { classId, currentLevel = 1, s
 
   const update = change => {
     state = classId === 'shaman' && change.specializationId && change.specializationId !== state.specializationId
-      ? loadCompanionState(classId, { ...state, ...change }, specializations, storage, false)
+      ? changeCompanionSpecialization(state, change.specializationId, specializations, storage)
       : updateCompanionState(classId, state, change, specializations);
     levelInput.value = String(state.level);
     levelInput.setAttribute('aria-valuetext', `Level ${state.level}`);

@@ -1733,6 +1733,7 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.ok(page.includes(`src="${treeIcon}"`), `${spec.name} tab uses its game icon`);
   }
   const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, raceCombinations: wowPack.raceCombinations, talentClass };
+  const shamanEngine = { builds: wowGuidedData.builds, catalog: wowClientData, resolve: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.resolveWowGuidedBuild, availablePoints: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.availableWowTalentPoints };
   const expectedPoints = new Map([[10, 1], [30, 21], [60, 51]]);
   for (const faction of ['Alliance', 'Horde']) for (const spec of shaman.specializations) for (const level of [10, 30, 60]) {
     const base = { classId: 'shaman', specializationId: spec.id, level, faction };
@@ -1747,11 +1748,12 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
       assert.match(panel.notices.join(' '), /Not yet documented for Shaman/);
       assert.doesNotMatch(JSON.stringify(panel), /warriorLeveling|warriorEquipment|warriorCombat/);
     }
-    const talents = module.getCompanionPanel({ ...base, tab: 'talents' }, guideData);
+    const talents = module.getCompanionPanel({ ...base, tab: 'talents' }, guideData, shamanEngine);
     assert.ok(talents.treeData.tree, `${spec.name} talent tree is available at ${level}`);
-    assert.match(talents.sections[0].title, /Talent-point budget/);
-    assert.equal(talents.sections[0].text, `${expectedPoints.get(level)} points are available at level ${level}. This is the game-rule budget, not an allocated build.`);
-    assert.match(talents.notices.join(' '), /fully auditable rank-by-rank build/);
+    assert.equal(talents.sections[0].title, 'Talent points spent / available');
+    assert.equal(talents.sections[0].text, `${expectedPoints.get(level)} / ${expectedPoints.get(level)}`);
+    assert.deepEqual(JSON.parse(JSON.stringify(talents.notices)), []);
+    assert.equal(talents.treeData.recommended.total, expectedPoints.get(level));
     const gold = module.getCompanionPanel({ ...base, tab: 'gold-farming' }, guideData);
     assert.equal(gold.goldFarming.classId, 'shaman');
   }
@@ -1764,6 +1766,8 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   assert.ok((await readFile(resolve(root, 'dist/assets/images/wow-forever/icons/class_shaman.jpg'))).length > 0);
   assert.match(portalStyles, /wow-shaman-hero-icon-panel::before/);
   assert.match(portalStyles, /wow-shaman-hero-icon-panel \{ min-height:230px; max-height:280px; border-right:0/);
+  assert.match(shamanHero, /width="56" height="56"/);
+  assert.match(portalStyles, /wow-shaman-hero-icon-panel > img \{[^}]*width:56px; height:56px/);
   const shamanArtwork = wowArtwork.records.find(record => record.id === 'class-card-shaman-original');
   assert.match(shamanArtwork.provenance, /Original vector artwork/);
   assert.match(shamanArtwork.alt, /character-free Shaman banner/);
@@ -1785,6 +1789,11 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   assert.equal(module.loadCompanionState('shaman', {}, shaman.specializations, storage).specializationId, 'restoration');
   assert.equal(module.loadCompanionState('shaman', { specializationId: 'elemental' }, shaman.specializations, storage, false).level, 20);
   assert.equal(module.loadCompanionState('shaman', { specializationId: 'elemental' }, shaman.specializations, storage, false).tab, 'stats');
+  const switchedToRestoration = module.changeCompanionSpecialization({ classId: 'shaman', level: 38, faction: 'Horde', tab: 'talents', specializationId: 'elemental' }, 'restoration', shaman.specializations, storage);
+  assert.deepEqual(JSON.parse(JSON.stringify(switchedToRestoration)), { classId: 'shaman', level: 38, faction: 'Horde', specializationId: 'restoration', tab: 'talents', selectedTalentId: '' });
+  const switchedBack = module.changeCompanionSpecialization(switchedToRestoration, 'elemental', shaman.specializations, storage);
+  assert.equal(switchedBack.level, 38, 'Shaman specialization changes preserve the currently selected level');
+  assert.equal(switchedBack.specializationId, 'elemental');
   assert.equal(module.loadCompanionState('warrior', {}, wowPack.classes.find(record => record.id === 'warrior').specializations, storage).specializationId, 'protection');
 
   const handlers = {};
@@ -1805,6 +1814,40 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   handlers.keydown({ target: target(tabs[1]), key: 'ArrowRight', preventDefault() {} });
   assert.equal(tabs[2].focused, true);
   assert.equal(companionSpec.value, 'restoration');
+});
+
+test('Shaman automatic builds render 17, 38 and 60 point snapshots across all specs and clamp 60 to 10', () => {
+  const route = '#game/world-of-warcraft/classes/shaman';
+  const builds = ['elemental', 'enhancement', 'restoration'];
+  const levels = [17, 38, 60];
+  const keys = [...builds.map(spec => `bm-wow-leveling-companion-v1:shaman:${spec}`), 'bm-wow-leveling-companion-v1:shaman'];
+  const saved = new Map(keys.map(key => [key, h.storedValues.get(key)]));
+  try {
+    for (const specializationId of builds) for (const level of levels) {
+      const key = `bm-wow-leveling-companion-v1:shaman:${specializationId}`;
+      const state = JSON.stringify({ classId: 'shaman', level, faction: 'Alliance', tab: 'talents', specializationId });
+      h.storedValues.set(key, state);
+      h.storedValues.set('bm-wow-leveling-companion-v1:shaman', state);
+      const html = h.app.renderPage(h.app.readRoute(route));
+      const points = level - 9;
+      assert.ok(html.includes(`${points} / ${points}`), `${specializationId} level ${level} displays the full point budget`);
+      assert.ok(html.includes(`${specializationId[0].toUpperCase()}${specializationId.slice(1)} talent tree · Level ${level}`));
+      assert.equal((html.match(/class="wow-companion-tree(?: is-primary| is-secondary) tree-(?:elemental|enhancement|restoration)"/g) || []).length, 3);
+      assert.match(html, /class="wow-companion-tree-node is-spent/);
+      assert.match(html, /rank \d+ of \d+/);
+    }
+    const enhancement = wowGuidedData.builds.find(build => build.classId === 'shaman' && build.specializationId === 'enhancement');
+    const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
+    const at60 = wowModule.resolveWowGuidedBuild(enhancement, wowClientData, 60);
+    const at10 = wowModule.resolveWowGuidedBuild(enhancement, wowClientData, 10);
+    assert.equal(at60.total, 51);
+    assert.equal(at10.total, 1, 'reducing from level 60 to 10 leaves only one allocated point');
+  } finally {
+    for (const [key, value] of saved) {
+      if (value === undefined) h.storedValues.delete(key);
+      else h.storedValues.set(key, value);
+    }
+  }
 });
 
 test('WoW class shortcuts retain local icons and guide links when the optional client catalog is unavailable', async () => {
@@ -2273,7 +2316,7 @@ test('Enhancement Shaman has a sourced, playable guide with honest talent and ar
   for (const href of ['#game/world-of-warcraft/classes/shaman', '#game/world-of-warcraft/talent-planner', '#game/world-of-warcraft/leveling', '#game/world-of-warcraft/dungeons-raids']) assert.notEqual(h.app.readRoute(href).view, 'missing', href);
 });
 
-test('guided Enhancement build resolves documented level snapshots without projecting beyond coverage', () => {
+test('guided Enhancement build resolves complete source-supported progression and defers uncertain Stormstrike timing', () => {
   const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
   const route = wowGuidedData.builds.find(build => build.id === 'bm-shaman-enhancement-solo-10-30');
   assert.ok(route);
@@ -2284,19 +2327,16 @@ test('guided Enhancement build resolves documented level snapshots without proje
   assert.equal(snapshot(10).total, 1);
   assert.equal(snapshot(14).allocation[talentId('Thundering Strikes')], 5);
   assert.equal(snapshot(20).allocation[talentId('Shamanistic Focus')], 1);
-  assert.equal(snapshot(25).allocation[talentId('Stormstrike')], 1);
-  assert.equal(snapshot(25).total, 16);
-  assert.equal(snapshot(30).allocation[talentId('Improved Stormstrike')], 1);
-  assert.equal(snapshot(30).total, 21);
-  assert.equal(snapshot(31).covered, false);
-  assert.equal(snapshot(31).snapshotLevel, 30);
-  assert.equal(snapshot(31).total, 21);
-  assert.equal(route.allocations.length, 21, 'the route contains ordered point events, not only an end distribution');
+  assert.equal(snapshot(38).total, 29);
+  assert.equal(snapshot(40).allocation[talentId('Stormstrike')], undefined, 'Stormstrike is not placed before the tooltip level');
+  assert.equal(snapshot(43).allocation[talentId('Stormstrike')], 1);
+  assert.equal(snapshot(60).total, 51);
+  assert.equal(route.talentOrder.length, 51, 'the route records every rank in order through level 60');
   const invalid = structuredClone(route);
-  invalid.allocations[0].talentId = 'missing-talent';
+  invalid.talentOrder[0] = 'missing-talent';
   assert.equal(wowModule.validateWowGuidedBuild(invalid, wowClientData).valid, false);
   const missingLevel = structuredClone(route);
-  missingLevel.allocations = missingLevel.allocations.filter(change => change.level !== 11);
+  missingLevel.talentOrder.splice(1, 1);
   assert.equal(wowModule.validateWowGuidedBuild(missingLevel, wowClientData).valid, false);
   const noPrerequisiteTalents = wowClientData.classes.find(item => item.id === 'shaman').trees.flatMap(tree => tree.talents).filter(talent => !talent.prerequisite);
   const respecBuild = {
@@ -2321,7 +2361,7 @@ test('guided planner renders its controls, progression, level state, and guide n
   h.context.localStorage.removeItem(wowModule.WOW_TALENT_DRAFT_STORAGE_KEY);
   const route = wowGuidedData.builds[0];
   const resolved = wowModule.resolveWowGuidedBuild(route, wowClientData, 15);
-  assert.equal(resolved.changesAtRequestedLevel[0].talentId, 'shaman-enhancement-improved-lightning-shield');
+  assert.equal(resolved.changesAtRequestedLevel[0].talentId, 'shaman-enhancement-mental-dexterity');
   const html = wowModule.renderWowPage({ view: 'wow-talents' }, wowPack, String, wowArtwork, { classId: 'shaman', specializationId: 'enhancement', currentLevel: 15 }, {}, wowClientData, wowGuidedData);
   assert.match(html, /Guided Leveling/);
   assert.match(html, /Custom Build/);
@@ -2333,15 +2373,16 @@ test('guided planner renders its controls, progression, level state, and guide n
   assert.match(html, /Copy this guided build link/);
   assert.match(html, /class="wow-next-recommended-panel"/);
   assert.match(html, /Next recommended talent · Level 16/);
-  assert.match(html, /Improved Lightning Shield/);
+  assert.match(html, /Mental Dexterity/);
   assert.match(html, /Rank 2\/3/);
-  const nextTalentRecord = wowClientData.classes.find(item => item.id === 'shaman').trees.flatMap(tree => tree.talents).find(talent => talent.name === 'Improved Lightning Shield');
+  const nextTalentRecord = wowClientData.classes.find(item => item.id === 'shaman').trees.flatMap(tree => tree.talents).find(talent => talent.name === 'Mental Dexterity');
   assert.ok(html.includes(nextTalentRecord.icon), 'the panel uses the recorded local talent icon');
   assert.ok(html.includes(nextTalentRecord.rankEffects[1]), 'the panel explains the documented next-rank effect');
   assert.equal((html.match(/class="wow-talent-tree"/g) || []).length, 3);
   h.context.localStorage.removeItem(wowModule.WOW_TALENT_DRAFT_STORAGE_KEY);
-  const completed = wowModule.renderWowPage({ view: 'wow-talents' }, wowPack, String, wowArtwork, { classId: 'shaman', specializationId: 'enhancement', currentLevel: 31 }, {}, wowClientData, wowGuidedData);
-  assert.match(completed, /route ends at level 30; later points are not projected/);
+  const completed = wowModule.renderWowPage({ view: 'wow-talents' }, wowPack, String, wowArtwork, { classId: 'shaman', specializationId: 'enhancement', currentLevel: 60 }, {}, wowClientData, wowGuidedData);
+  assert.match(completed, /51 \/ 51/);
+  assert.doesNotMatch(completed, /route ends at level 30; later points are not projected/);
   h.context.localStorage.removeItem(wowModule.WOW_TALENT_DRAFT_STORAGE_KEY);
   const unsupported = wowModule.renderWowPage({ view: 'wow-talents' }, wowPack, String, wowArtwork, { classId: 'warrior', specializationId: 'arms', currentLevel: 20 }, {}, wowClientData, wowGuidedData);
   assert.match(unsupported, /No automatic build is currently available for Warrior/);
@@ -3120,17 +3161,33 @@ test('leveling companion renders complete source-backed builds and safely handle
   const shaman = wowPack.classes.find(item => item.id === 'shaman');
   const shamanTalentClass = wowClientData.classes.find(item => item.id === 'shaman');
   for (const specializationId of ['elemental', 'enhancement', 'restoration']) {
+    const build = wowGuidedData.builds.find(item => item.classId === 'shaman' && item.specializationId === specializationId);
+    assert.ok(build, `${specializationId} Shaman route exists`);
+    assert.equal(build.verificationStatus, 'source-supported');
+    assert.equal(build.coverage.status, 'complete');
+    assert.equal(build.talentOrder.length, 51);
+    assert.deepEqual(JSON.parse(JSON.stringify(wowModule.validateWowGuidedBuild(build, wowClientData))), { valid: true, issues: [] });
+    for (let level = 10; level <= 60; level++) {
+      const snapshot = wowModule.resolveWowGuidedBuild(build, wowClientData, level);
+      assert.equal(snapshot.valid, true, `${specializationId} level ${level} prerequisites and rank limits`);
+      assert.equal(snapshot.total, level - 9, `${specializationId} level ${level} uses its full point budget`);
+      const tierIssues = shamanTalentClass.trees.flatMap(tree => companionModule.validateCompanionTalentTiers(tree, snapshot.allocation));
+      assert.deepEqual(JSON.parse(JSON.stringify(tierIssues)), [], `${specializationId} level ${level} tree-row gates`);
+    }
     for (const level of [10, 16, 25, 35, 60]) {
       const panel = companionModule.getCompanionPanel({ classId: 'shaman', level, specializationId, tab: 'talents' }, { classRecord: shaman, talentClass: shamanTalentClass }, engine);
-      assert.equal(panel.sections[0].title, 'Talent-point budget');
-      assert.equal(panel.sections[0].text, `${Math.max(0, level - 9)} points are available at level ${level}. This is the game-rule budget, not an allocated build.`);
-      assert.equal(panel.treeData.recommended, null, `${specializationId} level ${level} does not imply an unverified allocation`);
-      assert.deepEqual(JSON.parse(JSON.stringify(panel.treeData.allocation)), {});
-      assert.equal(panel.treeData.allTrees.length, 3, 'all Shaman talent trees remain available');
-      assert.match(panel.notices[0], /[Aa]utomatic allocation is withheld|not applied automatically/);
+      const budget = Math.max(0, level - 9);
+      assert.equal(panel.sections[0].title, 'Talent points spent / available');
+      assert.equal(panel.sections[0].text, `${budget} / ${budget}`);
+      assert.equal(panel.treeData.recommended.total, budget, `${specializationId} level ${level}`);
+      assert.equal(Object.values(panel.treeData.allocation).reduce((sum, rank) => sum + rank, 0), budget);
+      assert.equal(panel.treeData.allTrees.length, 3, 'all Shaman talent trees remain visible');
+      assert.deepEqual(JSON.parse(JSON.stringify(panel.notices)), []);
       assert.doesNotMatch(panel.sections[0].text, /0 \/ \d+/);
     }
   }
+  const shamanRouteSource = wowGuidedData.sources.find(item => item.id === 'wow-forever-outpost-shaman-leveling-2026-11');
+  assert.ok(shamanRouteSource?.url && shamanRouteSource.updated, 'Shaman build source URL and review date are stored');
   const shamanSources = new Set(wowPack.shamanGuide.sourceIds);
   assert.ok(shamanSources.has('icy-elemental-leveling') && shamanSources.has('icy-restoration-leveling'));
   for (const record of ['icy-elemental-leveling', 'icy-restoration-leveling']) {
