@@ -1759,6 +1759,10 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   assert.match(page, /class-card-shaman\.svg/);
   const shamanArtwork = wowArtwork.records.find(record => record.id === 'class-card-shaman-original');
   assert.match(shamanArtwork.provenance, /Original vector artwork/);
+  assert.match(shamanArtwork.alt, /character-free Shaman banner/);
+  const shamanBanner = await readFile(resolve(root, 'dist/assets/images/wow-forever/class-card-shaman.svg'), 'utf8');
+  assert.match(shamanBanner, /character-free Shaman atmosphere/);
+  assert.doesNotMatch(shamanBanner, /<ellipse cx="350"|Original Shaman class artwork/);
   assert.match(wowArtwork.gameIconAttribution.dataAttribution, /CC BY 4\.0/);
   assert.equal(wowClientData.iconAudit.talentsMissingIcons, 0);
   for (const talent of talentClass.trees.flatMap(tree => tree.talents)) {
