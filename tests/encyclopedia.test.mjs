@@ -1759,8 +1759,11 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   const shamanHero = page.slice(page.indexOf('<header class="wow-class-hero'), page.indexOf('</header>') + '</header>'.length);
   assert.match(shamanHero, /class="wow-shaman-hero-icon-panel"/);
   assert.match(shamanHero, /src="assets\/images\/wow-forever\/icons\/class_shaman\.jpg" alt="Shaman class icon"/);
+  assert.doesNotMatch(shamanHero, /wow-class-emblem-large/, 'the centered class icon is not duplicated above the title');
   assert.doesNotMatch(shamanHero, /class-card-shaman\.svg|elemental-shaman\.svg|enhancement-shaman\.svg|restoration-shaman\.svg/);
   assert.ok((await readFile(resolve(root, 'dist/assets/images/wow-forever/icons/class_shaman.jpg'))).length > 0);
+  assert.match(portalStyles, /wow-shaman-hero-icon-panel::before/);
+  assert.match(portalStyles, /wow-shaman-hero-icon-panel \{ min-height:230px; max-height:280px; border-right:0/);
   const shamanArtwork = wowArtwork.records.find(record => record.id === 'class-card-shaman-original');
   assert.match(shamanArtwork.provenance, /Original vector artwork/);
   assert.match(shamanArtwork.alt, /character-free Shaman banner/);

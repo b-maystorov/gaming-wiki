@@ -561,8 +561,9 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-class-hero-illustrated > img { width:100%; height:100%; min-height:300px; object-fit:cover; object-position:center 35%; }
 .wow-class-hero-illustrated > div { align-self:center; padding:clamp(1.4rem,4vw,2.5rem); }
 .wow-class-hero-illustrated h2 { font-size:clamp(2.4rem,5vw,4rem); }
-.wow-shaman-page .wow-class-hero-illustrated > .wow-shaman-hero-icon-panel { display:grid; place-items:center; align-self:stretch; min-height:300px; padding:0; overflow:hidden; background:radial-gradient(ellipse at 50% 45%,#38566a 0,#203748 27%,#142330 57%,#0d1721 100%); }
-.wow-shaman-hero-icon-panel > img { display:block; width:clamp(96px,12vw,128px); height:auto; aspect-ratio:1; border:2px solid #a88e60; border-radius:8px; background:#101923; box-shadow:0 0 0 8px #b89b7012,0 0 36px #75b8d044,0 14px 32px #0009; image-rendering:auto; }
+.wow-shaman-page .wow-class-hero-illustrated > .wow-shaman-hero-icon-panel { position:relative; display:grid; place-items:center; align-self:stretch; min-height:300px; padding:0; overflow:hidden; border-right:1px solid #b89b7025; background:radial-gradient(circle at 50% 48%,#72b5d42c 0,#477a9820 20%,transparent 48%),linear-gradient(116deg,transparent 18%,#77bfe00b 34%,transparent 47%),linear-gradient(108deg,#101a25 0%,#172b39 58%,#1c2b37 100%); }
+.wow-shaman-hero-icon-panel::before { content:""; position:absolute; width:clamp(188px,20vw,232px); aspect-ratio:1; border:1px solid #c0a66b68; border-radius:50%; box-shadow:0 0 0 9px #9dbbc20a,0 0 0 22px #86b1c20a,0 0 35px #70b7d01b; pointer-events:none; }
+.wow-shaman-hero-icon-panel > img { position:relative; z-index:1; display:block; width:clamp(132px,15vw,164px); height:auto; aspect-ratio:1; border:2px solid #b89b70; border-radius:7px; background:#101923; box-shadow:0 0 26px #75b8d052,0 12px 28px #0009; image-rendering:auto; }
 .wow-art-caption { display:block; margin-top:1rem; color:#9faeb7; font-size:.72rem; }
 .wow-starter-guide { padding:clamp(1rem,3vw,1.7rem); border:1px solid #586c7d; background:linear-gradient(135deg,#172430,#10161c 72%); box-shadow:inset 0 1px #fff1,0 12px 28px #0003; }
 .wow-starter-guide h3 { color:#eee0bd; font:500 clamp(1.45rem,3vw,2rem) Georgia,serif; }
@@ -586,7 +587,7 @@ body.portal-page:has(.wow-page) { background: radial-gradient(ellipse 34vw 520px
 .wow-leveling-next { margin:1rem 0; padding:1rem 1.2rem; border-left:3px solid #c5ad72; background:#18232d; }
 .wow-leveling-next strong { color:#ecdfbc; }
 .wow-leveling-next p { margin-top:.35rem; color:#c6d1d7; line-height:1.6; }
-@media(max-width:680px) { .wow-class-hero-illustrated { grid-template-columns:1fr; } .wow-class-hero-illustrated > img { min-height:230px; max-height:280px; } .wow-shaman-page .wow-class-hero-illustrated > .wow-shaman-hero-icon-panel { min-height:230px; max-height:280px; } .wow-starter-summary,.wow-starter-grid { grid-template-columns:1fr; } }
+@media(max-width:680px) { .wow-class-hero-illustrated { grid-template-columns:1fr; } .wow-class-hero-illustrated > img { min-height:230px; max-height:280px; } .wow-shaman-page .wow-class-hero-illustrated > .wow-shaman-hero-icon-panel { min-height:230px; max-height:280px; border-right:0; border-bottom:1px solid #b89b7025; } .wow-shaman-hero-icon-panel::before { width:clamp(188px,54vw,224px); } .wow-shaman-hero-icon-panel > img { width:clamp(132px,36vw,156px); } .wow-starter-summary,.wow-starter-grid { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { .wow-spec-card:hover { transform:none; } }
 .wow-page:has(.wow-home-intro) .wow-banner { min-height: 300px; }
 .wow-home-art { z-index: 0; height: 620px; pointer-events: none; }
