@@ -1723,7 +1723,11 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   assert.equal((page.match(/<h1\b/g) || []).length, 1);
   assert.equal((page.match(/data-shaman-spec-tab=/g) || []).length, 3);
   assert.equal((page.match(/data-companion-tab=/g) || []).length, 9);
-  assert.match(page, /wow-shaman-spec-card/);
+  assert.match(page, /class="wow-warrior-spec-card"/);
+  assert.equal((page.match(/class="wow-warrior-spec-card"/g) || []).length, 3);
+  assert.match(page, /id="shaman-specializations"[^>]*aria-labelledby="shaman-specializations-title"/);
+  assert.match(page, /class="wow-warrior-section-heading"[\s\S]*?<h2 id="shaman-specializations-title">Specializations<\/h2>/);
+  assert.doesNotMatch(page, /wow-class-hero-illustrated|wow-shaman-hero-icon-panel|wow-shaman-spec-card|wow-shaman-choose/);
   assert.doesNotMatch(page, /src="assets\/images\/wow-forever\/(?:elemental|enhancement|restoration)-shaman\.svg"/);
   assert.doesNotMatch(page, /data-warrior-spec-tab|Warrior Guide|Arms ·|Fury ·|Protection ·/);
   for (const spec of shaman.specializations) {
@@ -1758,16 +1762,33 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.equal(gold.goldFarming.classId, 'shaman');
   }
 
-  const shamanHero = page.slice(page.indexOf('<header class="wow-class-hero'), page.indexOf('</header>') + '</header>'.length);
-  assert.match(shamanHero, /class="wow-shaman-hero-icon-panel"/);
-  assert.match(shamanHero, /src="assets\/images\/wow-forever\/icons\/class_shaman\.jpg" alt="Shaman class icon"/);
-  assert.doesNotMatch(shamanHero, /wow-class-emblem-large/, 'the centered class icon is not duplicated above the title');
-  assert.doesNotMatch(shamanHero, /class-card-shaman\.svg|elemental-shaman\.svg|enhancement-shaman\.svg|restoration-shaman\.svg/);
+  const shamanHero = page.match(/<header class="wow-warrior-header">[\s\S]*?<\/header>/)?.[0] || '';
+  assert.ok(shamanHero);
+  assert.match(shamanHero, /class="wow-warrior-brand-art" src="assets\/images\/wow-forever\/wow-forever-banner\.png"/);
+  assert.match(shamanHero, /class="wow-warrior-icon"[\s\S]*?src="assets\/images\/wow-forever\/icons\/class_shaman\.jpg"/);
+  assert.match(shamanHero, /Class Guide · Level 1–60/);
+  assert.match(shamanHero, /<h1 id="page-title" tabindex="-1">Shaman<\/h1>/);
+  assert.match(shamanHero, /<dt>Roles<\/dt>/);
+  assert.match(shamanHero, /<dt>Specializations<\/dt>/);
+  assert.match(shamanHero, /href="#shaman-specializations"/);
+  assert.match(shamanHero, /href="#shaman-specialization-guide"/);
+  assert.doesNotMatch(shamanHero, /class-card-shaman\.svg|wow-class-emblem-large|wow-shaman-hero-icon-panel/);
+  const warriorPage = h.app.renderPage(h.app.readRoute('#game/world-of-warcraft/classes/warrior'));
+  const warriorHero = warriorPage.match(/<header class="wow-warrior-header">[\s\S]*?<\/header>/)?.[0] || '';
+  assert.ok(warriorHero);
+  for (const sharedPart of ['wow-forever-banner.png', 'Class Guide · Level 1–60', 'wow-warrior-icon', 'wow-warrior-divider', 'wow-warrior-facts', 'wow-warrior-phase', 'wow-warrior-actions']) {
+    assert.ok(warriorHero.includes(sharedPart) && shamanHero.includes(sharedPart), `${sharedPart} is shared between class heroes`);
+  }
+  const shamanSpecializations = page.match(/<section class="wow-warrior-specializations"[\s\S]*?<\/section>/)?.[0] || '';
+  const warriorSpecializations = warriorPage.match(/<section class="wow-warrior-specializations"[\s\S]*?<\/section>/)?.[0] || '';
+  assert.ok(shamanSpecializations && warriorSpecializations);
+  assert.equal((shamanSpecializations.match(/class="wow-warrior-spec-card"/g) || []).length, 3);
+  assert.equal((warriorSpecializations.match(/wow-warrior-spec-card/g) || []).length, 3);
+  assert.match(shamanSpecializations, /Elemental[\s\S]*Enhancement[\s\S]*Restoration/);
   assert.ok((await readFile(resolve(root, 'dist/assets/images/wow-forever/icons/class_shaman.jpg'))).length > 0);
-  assert.match(portalStyles, /wow-shaman-hero-icon-panel::before/);
-  assert.match(portalStyles, /wow-shaman-hero-icon-panel \{ min-height:230px; max-height:280px; border-right:0/);
-  assert.match(shamanHero, /width="56" height="56"/);
-  assert.match(portalStyles, /wow-shaman-hero-icon-panel > img \{[^}]*width:56px; height:56px/);
+  assert.match(portalStyles, /:is\(\.wow-warrior-guide,\.wow-shaman-guide\) \.wow-warrior-header/);
+  assert.match(portalStyles, /:is\(\.wow-warrior-guide,\.wow-shaman-guide\) \.wow-warrior-spec-card/);
+  assert.match(portalStyles, /:is\(\.wow-warrior-guide,\.wow-shaman-guide\) \.wow-warrior-icon img/);
   const shamanArtwork = wowArtwork.records.find(record => record.id === 'class-card-shaman-original');
   assert.match(shamanArtwork.provenance, /Original vector artwork/);
   assert.match(shamanArtwork.alt, /character-free Shaman banner/);
@@ -3782,9 +3803,9 @@ test('Warrior guide keeps its header and opens the in-page specialization tabs d
   assert.doesNotMatch(html, /class="wow-banner"|class="wow-nav"|class="wow-scene"|wow-class-hero-illustrated/);
   assert.doesNotMatch(header, /src="assets\/images\/wow-forever\/warrior\.svg"/);
   assert.match(header, /src="assets\/images\/wow-forever\/wow-forever-banner\.png"/);
-  assert.match(portalStyles, /\.wow-warrior-header::after \{ z-index:2; background:linear-gradient\(90deg,#071320f7/);
-  assert.match(portalStyles, /\.wow-warrior-header::before \{ z-index:1; background:radial-gradient/);
-  assert.match(portalStyles, /prefers-reduced-motion:reduce\) \{ \.wow-warrior-guide \.wow-warrior-header \.wow-warrior-actions button \{ transition:none; \}/);
+  assert.match(portalStyles, /:is\(\.wow-warrior-guide,\.wow-shaman-guide\) \.wow-warrior-header::after \{ z-index:2; background:linear-gradient\(90deg,#071320f7/);
+  assert.match(portalStyles, /:is\(\.wow-warrior-guide,\.wow-shaman-guide\) \.wow-warrior-header::before \{ z-index:1; background:radial-gradient/);
+  assert.match(portalStyles, /prefers-reduced-motion:reduce\) \{ :is\(\.wow-warrior-guide,\.wow-shaman-guide\) \.wow-warrior-header \.wow-warrior-actions :is\(button,a\) \{ transition:none; \}/);
   assert.doesNotMatch(html, /class="wow-warrior-nav"/);
   assert.equal((html.match(/<button[^>]+data-warrior-spec-tab=/g) || []).length, 3);
   assert.match(html, /<button[^>]+role="tab"[^>]+aria-selected="true"[^>]+data-warrior-spec-tab="arms"/);
@@ -3865,7 +3886,8 @@ test('Warrior handbook preserves existing guide content and integrations', async
   assert.ok(icon.length > 0);
   for (const item of wowPack.classes.filter(item => item.id !== 'warrior')) {
     const other = h.app.renderPage(h.app.readRoute(`#game/world-of-warcraft/classes/${item.id}`));
-    assert.doesNotMatch(other, /data-warrior-guide|wow-warrior-header|warrior-overview/);
+    assert.doesNotMatch(other, /data-warrior-guide|warrior-overview/);
+    if (item.id !== 'shaman') assert.doesNotMatch(other, /wow-warrior-header/);
     assert.ok(other.includes(item.id === 'shaman' ? 'wow-shaman-page' : 'class="wow-banner"'));
   }
 });
