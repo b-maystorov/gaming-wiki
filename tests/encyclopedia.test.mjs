@@ -1756,7 +1756,11 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.equal(gold.goldFarming.classId, 'shaman');
   }
 
-  assert.match(page, /class-card-shaman\.svg/);
+  const shamanHero = page.slice(page.indexOf('<header class="wow-class-hero'), page.indexOf('</header>') + '</header>'.length);
+  assert.match(shamanHero, /class="wow-shaman-hero-icon-panel"/);
+  assert.match(shamanHero, /src="assets\/images\/wow-forever\/icons\/class_shaman\.jpg" alt="Shaman class icon"/);
+  assert.doesNotMatch(shamanHero, /class-card-shaman\.svg|elemental-shaman\.svg|enhancement-shaman\.svg|restoration-shaman\.svg/);
+  assert.ok((await readFile(resolve(root, 'dist/assets/images/wow-forever/icons/class_shaman.jpg'))).length > 0);
   const shamanArtwork = wowArtwork.records.find(record => record.id === 'class-card-shaman-original');
   assert.match(shamanArtwork.provenance, /Original vector artwork/);
   assert.match(shamanArtwork.alt, /character-free Shaman banner/);
@@ -1889,7 +1893,7 @@ test('WoW: Forever landing, categories, nine classes, zones, and tier lists have
     }
     assert.ok(wowPack.sources.some(source => source.id === item.starterGuide.sourceId), 'starter guide retains its source record');
     assert.ok(!classHtml.includes(wowPack.sources.find(source => source.id === item.starterGuide.sourceId).url), 'class card does not repeat its source URL');
-    if (item.id !== 'warrior') assert.ok(classHtml.includes('Original BM Gaming Wiki illustration'));
+    if (item.id !== 'warrior' && item.id !== 'shaman') assert.ok(classHtml.includes('Original BM Gaming Wiki illustration'));
     const art = wowArtwork.records.find(record => record.classId === item.id);
     assert.ok(art, `missing local class illustration for ${item.id}`);
     const svg = await readFile(resolve(root, 'dist', art.src), 'utf8');
