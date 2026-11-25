@@ -1723,11 +1723,14 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   assert.equal((page.match(/<h1\b/g) || []).length, 1);
   assert.equal((page.match(/data-shaman-spec-tab=/g) || []).length, 3);
   assert.equal((page.match(/data-companion-tab=/g) || []).length, 9);
-  assert.match(page, /src="assets\/images\/wow-forever\/(?:elemental|enhancement|restoration)-shaman\.svg"/);
+  assert.match(page, /wow-shaman-spec-card/);
+  assert.doesNotMatch(page, /src="assets\/images\/wow-forever\/(?:elemental|enhancement|restoration)-shaman\.svg"/);
   assert.doesNotMatch(page, /data-warrior-spec-tab|Warrior Guide|Arms ·|Fury ·|Protection ·/);
   for (const spec of shaman.specializations) {
-    const icon = { elemental: 'elemental-shaman.svg', enhancement: 'enhancement-shaman.svg', restoration: 'restoration-shaman.svg' }[spec.id];
-    assert.ok((await readFile(resolve(root, 'dist/assets/images/wow-forever', icon))).length > 0);
+    const treeIcon = talentClass.trees.find(tree => tree.id === spec.id)?.icon;
+    assert.ok(treeIcon, `${spec.name} tree has a mapped game icon`);
+    assert.ok((await readFile(resolve(root, 'dist', treeIcon))).length > 0, `${spec.name} game icon asset exists`);
+    assert.ok(page.includes(`src="${treeIcon}"`), `${spec.name} tab uses its game icon`);
   }
   const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, raceCombinations: wowPack.raceCombinations, talentClass };
   const expectedPoints = new Map([[10, 1], [30, 21], [60, 51]]);
