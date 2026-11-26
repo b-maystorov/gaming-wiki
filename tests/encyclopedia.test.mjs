@@ -1736,7 +1736,7 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.ok((await readFile(resolve(root, 'dist', treeIcon))).length > 0, `${spec.name} game icon asset exists`);
     assert.ok(page.includes(`src="${treeIcon}"`), `${spec.name} tab uses its game icon`);
   }
-  const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, shamanCombat: wowPack.shamanCombat, shamanEquipment: wowPack.shamanEquipment, dungeons: [...wowPack.dungeons, ...dungeonPrepData.dungeons], combatCatalog: wowClientData, raceCombinations: wowPack.raceCombinations, talentClass };
+  const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, shamanLeveling: wowPack.shamanLeveling, shamanCombat: wowPack.shamanCombat, shamanEquipment: wowPack.shamanEquipment, dungeons: [...wowPack.dungeons, ...dungeonPrepData.dungeons], combatCatalog: wowClientData, raceCombinations: wowPack.raceCombinations, talentClass };
   const shamanEngine = { builds: wowGuidedData.builds, catalog: wowClientData, resolve: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.resolveWowGuidedBuild, availablePoints: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.availableWowTalentPoints };
   const expectedPoints = new Map([[10, 1], [30, 21], [60, 51]]);
   for (const faction of ['Alliance', 'Horde']) for (const spec of shaman.specializations) for (const level of [10, 30, 60]) {
@@ -1747,7 +1747,10 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.ok(overview.shamanOverview.races.find(group => group.faction === faction)?.names.length);
     const playableRaces = overview.shamanOverview.races.find(group => group.faction === faction).names;
     assert.ok(faction === 'Alliance' ? playableRaces.includes('Dwarf') : playableRaces.includes('Windshaper Skyborne'));
-    for (const tab of ['stats', 'leveling', 'dungeons', 'professions']) {
+    const leveling = module.getCompanionPanel({ ...base, tab: 'leveling' }, guideData);
+    assert.ok(leveling.warriorLeveling && leveling.warriorLeveling.className === 'Shaman');
+    assert.doesNotMatch(JSON.stringify(leveling), /warriorEquipment|warriorCombat/);
+    for (const tab of ['stats', 'dungeons', 'professions']) {
       const panel = module.getCompanionPanel({ ...base, tab }, guideData);
       assert.match(panel.notices.join(' '), /Not yet documented for Shaman/);
       assert.doesNotMatch(JSON.stringify(panel), /warriorLeveling|warriorEquipment|warriorCombat/);
@@ -3134,6 +3137,108 @@ test('Warrior class quests filter by faction, specialization and level while pre
   const direMaul = protectionAt54.available.find(dungeon => dungeon.name === 'Dire Maul East');
   assert.ok(direMaul.quests.some(quest => quest.classQuestId === 'class-quest-54-codex-of-defense'));
   assert.ok(!furyAt54.available.find(dungeon => dungeon.name === 'Dire Maul East').quests.some(quest => quest.classQuestId === 'class-quest-54-codex-of-defense'), 'specialization-specific recommendations respect the selected specialization');
+});
+
+test('Shaman leveling routes and totem quests filter by faction, level and specialization', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const shaman = wowPack.classes.find(record => record.id === 'shaman');
+  const guideData = {
+    classRecord: shaman,
+    shamanGuide: wowPack.shamanGuide,
+    shamanLeveling: wowPack.shamanLeveling,
+    shamanCombat: wowPack.shamanCombat,
+    shamanEquipment: wowPack.shamanEquipment,
+    dungeons: [...wowPack.dungeons, ...dungeonPrepData.dungeons],
+    sources: wowPack.sources
+  };
+  const storage = { values: new Map(), getItem(key) { return this.values.get(key) ?? null; }, setItem(key, value) { this.values.set(key, String(value)); } };
+  const render = (level, faction, specializationId) => {
+    storage.setItem(`bm-wow-leveling-companion-v1:shaman:${specializationId}`, JSON.stringify({ level, faction, tab: 'leveling', specializationId }));
+    return module.renderLevelingCompanion({
+      classId: 'shaman', currentLevel: level, selectedSpecialization: specializationId,
+      guideData, storage
+    });
+  };
+
+  assert.deepEqual(wowPack.shamanLeveling.routes.map(route => [route.minLevel, route.maxLevel]).filter((range, index, all) => all.findIndex(item => item.join('-') === range.join('-')) === index),
+    [[1, 10], [11, 20], [21, 30], [31, 40], [41, 50], [51, 60]], 'route data covers each requested level band');
+  for (const level of [10, 20, 30, 40, 50, 60]) for (const faction of ['Alliance', 'Horde']) for (const spec of ['elemental', 'enhancement', 'restoration']) {
+    const html = render(level, faction, spec);
+    assert.match(html, new RegExp(`data-leveling-class="shaman"`));
+    assert.match(html, /Mana pacing|two-handed melee progression|group healing and slower solo play/);
+    assert.match(html, /Track milestones manually; level eligibility does not mean a quest is complete/);
+    assert.doesNotMatch(html, /data-warrior-checklist-task="shaman-quest-[^"]+" checked/, 'eligible Shaman quests are never auto-completed');
+  }
+  const alliance = render(20, 'Alliance', 'restoration');
+  assert.equal(module.getCompanionPanel({ classId: 'shaman', faction: 'Alliance', specializationId: 'restoration', level: 20, tab: 'leveling' }, guideData).warriorLeveling.faction, 'Alliance');
+  assert.match(alliance, /Hervdana Saegrund/);
+  assert.match(alliance, /Westfall/);
+  assert.doesNotMatch(alliance, /Brine/);
+  const horde = render(20, 'Horde', 'enhancement');
+  assert.equal(module.getCompanionPanel({ classId: 'shaman', faction: 'Horde', specializationId: 'enhancement', level: 20, tab: 'leveling' }, guideData).warriorLeveling.faction, 'Horde');
+  assert.match(horde, /Brine/);
+  assert.match(horde, /Silverpine Forest/);
+  assert.doesNotMatch(horde, /Hervdana Saegrund/);
+  assert.match(render(30, 'Alliance', 'elemental'), /shaman-quest-call-of-air/);
+  assert.match(render(40, 'Horde', 'enhancement'), /Razorfen Kraul/);
+  assert.match(render(50, 'Alliance', 'restoration'), /Sunken Temple/);
+  assert.match(render(60, 'Horde', 'enhancement'), /Scholomance/i);
+
+  const elementalMilestones = module.getCompanionPanel({ classId: 'shaman', faction: 'Alliance', specializationId: 'elemental', level: 52, tab: 'leveling' }, guideData).warriorLeveling.checklistTasks;
+  const enhancementMilestones = module.getCompanionPanel({ classId: 'shaman', faction: 'Horde', specializationId: 'enhancement', level: 52, tab: 'leveling' }, guideData).warriorLeveling.checklistTasks;
+  const restorationMilestones = module.getCompanionPanel({ classId: 'shaman', faction: 'Horde', specializationId: 'restoration', level: 52, tab: 'leveling' }, guideData).warriorLeveling.checklistTasks;
+  assert.ok(elementalMilestones.some(task => task.id === 'shaman-elemental-level-40-lightning-mastery'));
+  assert.ok(!elementalMilestones.some(task => task.id === 'shaman-restoration-level-40-riptide' || task.id === 'shaman-enhancement-level-40-farseer'));
+  assert.ok(enhancementMilestones.some(task => task.id === 'shaman-enhancement-level-40-farseer'));
+  assert.ok(!enhancementMilestones.some(task => task.id === 'shaman-elemental-level-40-lightning-mastery' || task.id === 'shaman-restoration-level-40-riptide'));
+  assert.ok(restorationMilestones.some(task => task.id === 'shaman-restoration-level-40-riptide'));
+  assert.ok(!restorationMilestones.some(task => task.id === 'shaman-elemental-level-40-lightning-mastery' || task.id === 'shaman-enhancement-level-40-farseer'));
+
+  for (const quest of wowPack.shamanLeveling.classQuests) {
+    assert.ok(quest.sourceIds.every(id => wowPack.sources.some(source => source.id === id)), `${quest.id} source IDs resolve`);
+    assert.ok(quest.verificationDate && quest.verificationStatus, `${quest.id} preserves verification metadata`);
+    for (const combatId of quest.combatIds || []) assert.ok(wowPack.shamanCombat.totems.some(totem => totem.id === combatId), `${quest.id} links to canonical Combat & Totems record ${combatId}`);
+    for (const itemId of quest.rewardsEquipmentIds) {
+      const equipment = wowPack.shamanEquipment.items.find(item => item.id === itemId);
+      assert.ok(equipment && quest.questReferenceIds.some(id => equipment.questIds?.includes(id)), `${quest.id} links to canonical equipment ${itemId}`);
+    }
+    for (const dungeonId of quest.dungeonIds || []) {
+      assert.ok(dungeonPrepData.dungeons.some(dungeon => dungeon.id === dungeonId), `${quest.id} links to recorded dungeon ${dungeonId}`);
+    }
+  }
+  assert.equal(wowPack.shamanLeveling.classQuests.find(quest => quest.id === 'the-tempests-weapons').recommendedCompletionLevel, 40);
+  assert.deepEqual(wowPack.shamanLeveling.classQuests.find(quest => quest.id === 'call-of-earth').factions, ['Alliance', 'Horde']);
+  assert.ok(wowPack.shamanLeveling.classQuests.some(quest => quest.name === 'Mastering the Elements' && quest.factions.includes('Alliance')));
+  assert.ok(wowPack.shamanLeveling.classQuests.some(quest => quest.name === 'Elemental Mastery' && quest.factions.includes('Horde')));
+  assert.ok(wowPack.shamanLeveling.classQuests.some(quest => quest.name === 'Da Voodoo'));
+  assert.ok(wowPack.shamanLeveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  const linkedQuests = new Set(wowPack.shamanLeveling.classQuests.flatMap(quest => quest.questReferenceIds));
+  const relatedDungeons = [...wowPack.dungeons, ...dungeonPrepData.dungeons];
+  for (const dungeon of wowPack.shamanLeveling.dungeons) {
+    const record = relatedDungeons.find(item => item.id === dungeon.id);
+    if (record) assert.ok(record.name, `${dungeon.id} uses its canonical dungeon record`);
+    for (const questId of dungeon.questIds) assert.ok(linkedQuests.has(questId) || wowPack.shamanEquipment.questReferences.some(quest => quest.id === questId), `${dungeon.id} quest ${questId} resolves to Shaman quest or equipment data`);
+  }
+  assert.deepEqual(wowPack.shamanLeveling.classQuests.find(quest => quest.id === 'the-tempests-weapons').dungeonNames, ['Razorfen Kraul'], 'do not create a dungeon link when this wiki has no matching preparation record');
+  assert.match(appSource, /shamanLeveling:\s*wowData\.shamanLeveling/);
+});
+
+test('Shaman checklist progress persists under its own class key and remains manual across levels', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const storage = { values: new Map(), getItem(key) { return this.values.get(key) ?? null; }, setItem(key, value) { this.values.set(key, String(value)); } };
+  const taskId = 'shaman-quest-call-of-fire';
+  assert.equal(module.saveWarriorChecklistProgress([taskId], storage, 'shaman'), true);
+  assert.equal(module.SHAMAN_CHECKLIST_STORAGE_KEY, 'bm-shaman-leveling-checklist-v1');
+  assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorChecklistProgress(storage, 'shaman'))), [taskId]);
+  assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorChecklistProgress(storage, 'warrior'))), []);
+  assert.equal(storage.values.has(module.WARRIOR_CHECKLIST_STORAGE_KEY), false);
+  assert.equal(module.saveWarriorChecklistProgress([taskId], storage, 'warrior'), true);
+  assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorChecklistProgress(storage, 'shaman'))), [taskId], 'Warrior progress writes cannot overwrite Shaman progress');
+  const shaman = wowPack.classes.find(record => record.id === 'shaman');
+  const level38 = module.loadCompanionState('shaman', { level: 38, faction: 'Alliance', specializationId: 'elemental', tab: 'leveling' }, shaman.specializations, storage, false);
+  const switched = module.changeCompanionSpecialization(level38, 'restoration', shaman.specializations, storage);
+  assert.equal(switched.level, 38, 'specialization switching preserves the selected level');
+  assert.deepEqual(JSON.parse(JSON.stringify(module.loadWarriorChecklistProgress(storage, 'shaman'))), [taskId], 'spec switching does not change Shaman checklist progress');
 });
 
 test('Warrior dungeon preparation filters by level, changes with specialization, and saves checklist independently', () => {

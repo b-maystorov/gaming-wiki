@@ -775,7 +775,7 @@ function renderWarriorRelatedClasses(classes, escapeHtml) {
   return `<nav class="wow-warrior-related-classes" aria-labelledby="warrior-related-classes-title"><p class="wow-eyebrow">Explore another class</p><h2 id="warrior-related-classes-title">Related Class Guides</h2><div>${classes.filter(item => item.id !== 'warrior').map(item => `<a href="#game/world-of-warcraft/classes/${escapeHtml(item.id)}" style="--related-class-accent:${escapeHtml(item.color)}"><span>${escapeHtml(item.name)}</span><small>${escapeHtml(item.roles.join(' · '))}</small></a>`).join('')}</div></nav>`;
 }
 
-export function renderWowPage(route, data, escapeHtml, artworkManifest = null, profile = {}, progress = loadWowGuideProgress(), catalog = null, guidedData = null) {
+export function renderWowPage(route, data, escapeHtml, artworkManifest = null, profile = {}, progress = loadWowGuideProgress(), catalog = null, guidedData = null, dungeonPreparation = null) {
   if (route.view === 'wow-database') return renderWowDatabase(artworkManifest, catalog, escapeHtml);
   const href = view => `#game/world-of-warcraft/${view}`;
   const scene = `<div class="wow-scene" aria-hidden="true"><div class="wow-moon"></div><div class="wow-spires"></div></div>`;
@@ -882,10 +882,13 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
         classRecord: item,
         guide,
         zones: data.zones,
-        dungeons: data.dungeons,
+        dungeons: item.id === 'shaman'
+          ? [...new Map([...(data.dungeons || []), ...(dungeonPreparation?.dungeons || [])].map(dungeon => [dungeon.id, dungeon])).values()]
+          : data.dungeons,
         warriorLeveling: data.warriorLeveling,
         warriorProfessions: data.warriorProfessions,
         shamanGuide: item.id === 'shaman' ? data.shamanGuide : undefined,
+        shamanLeveling: item.id === 'shaman' ? data.shamanLeveling : undefined,
         raceCombinations: item.id === 'shaman' ? data.raceCombinations : undefined,
         sources: data.sources,
         specializationGuides: item.specializationGuides,

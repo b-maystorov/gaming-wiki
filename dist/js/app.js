@@ -1627,7 +1627,7 @@ function renderContentError(title = 'Encyclopedia unavailable') {
 function renderPage(route) {
   if (route.view === 'wow-dungeon-prep') return renderWowDungeonPrep(route, wowDungeonPrep, escapeHtml, loadDungeonPrepProgress());
   if (route.preview) return renderGamePreview(route.preview);
-  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile(), loadWowGuideProgress(), wowClientData, wowGuidedData) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
+  if (route.view.startsWith('wow-')) return wowData ? renderWowPage(route, wowData, escapeHtml, wowArtwork, loadWowProfile(), loadWowGuideProgress(), wowClientData, wowGuidedData, wowDungeonPrep) : '<section class="empty-state"><h1 id="page-title" tabindex="-1">Azeroth guide unavailable</h1><p>World of Warcraft: Forever guide data could not be loaded. Reload to try again.</p><a href="#home">Return home</a></section>';
   const views = { 'content-unavailable': renderContentError, home: renderHome, game: renderGameLanding, heroes: renderGallery,
     bosses: renderBossCollection, teams: () => renderCollection('teams'), 'expedition-planner': renderExpeditionPlanner, trinkets: () => renderEncyclopediaCollection('trinkets'),
     enemies: () => renderEncyclopediaCollection('enemies'), items: () => renderEncyclopediaCollection('items'), curios: () => renderEncyclopediaCollection('curios'), locations: () => renderEncyclopediaCollection('locations'), quests: () => renderEncyclopediaCollection('quests'),
@@ -1707,6 +1707,7 @@ function showRoute() {
             combatCatalog: wowClientData
           } : {
             shamanGuide: wowData.shamanGuide,
+            shamanLeveling: wowData.shamanLeveling,
             shamanCombat: wowData.shamanCombat,
             shamanEquipment: wowData.shamanEquipment,
             dungeons: [...(wowData.dungeons || []), ...(wowDungeonPrep?.dungeons || [])],
