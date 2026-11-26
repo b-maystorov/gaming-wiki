@@ -1736,7 +1736,7 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.ok((await readFile(resolve(root, 'dist', treeIcon))).length > 0, `${spec.name} game icon asset exists`);
     assert.ok(page.includes(`src="${treeIcon}"`), `${spec.name} tab uses its game icon`);
   }
-  const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, shamanCombat: wowPack.shamanCombat, combatCatalog: wowClientData, raceCombinations: wowPack.raceCombinations, talentClass };
+  const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, shamanCombat: wowPack.shamanCombat, shamanEquipment: wowPack.shamanEquipment, dungeons: [...wowPack.dungeons, ...dungeonPrepData.dungeons], combatCatalog: wowClientData, raceCombinations: wowPack.raceCombinations, talentClass };
   const shamanEngine = { builds: wowGuidedData.builds, catalog: wowClientData, resolve: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.resolveWowGuidedBuild, availablePoints: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.availableWowTalentPoints };
   const expectedPoints = new Map([[10, 1], [30, 21], [60, 51]]);
   for (const faction of ['Alliance', 'Horde']) for (const spec of shaman.specializations) for (const level of [10, 30, 60]) {
@@ -1747,7 +1747,7 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.ok(overview.shamanOverview.races.find(group => group.faction === faction)?.names.length);
     const playableRaces = overview.shamanOverview.races.find(group => group.faction === faction).names;
     assert.ok(faction === 'Alliance' ? playableRaces.includes('Dwarf') : playableRaces.includes('Windshaper Skyborne'));
-    for (const tab of ['stats', 'gear', 'leveling', 'dungeons', 'professions']) {
+    for (const tab of ['stats', 'leveling', 'dungeons', 'professions']) {
       const panel = module.getCompanionPanel({ ...base, tab }, guideData);
       assert.match(panel.notices.join(' '), /Not yet documented for Shaman/);
       assert.doesNotMatch(JSON.stringify(panel), /warriorLeveling|warriorEquipment|warriorCombat/);
@@ -1836,6 +1836,65 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   handlers.keydown({ target: target(tabs[1]), key: 'ArrowRight', preventDefault() {} });
   assert.equal(tabs[2].focused, true);
   assert.equal(companionSpec.value, 'restoration');
+});
+
+test('Shaman gear recommendations filter by specialization, faction, equipment and level with linked sources', () => {
+  const companion = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const shaman = wowPack.classes.find(record => record.id === 'shaman');
+  const gear = wowPack.shamanEquipment;
+  const knownSources = new Set(gear.sources.map(source => source.id));
+  const knownQuests = new Map(gear.questReferences.map(quest => [quest.id, quest]));
+  const knownDungeons = new Map([...wowPack.dungeons, ...dungeonPrepData.dungeons].map(dungeon => [dungeon.id, dungeon]));
+  const guideData = { classRecord: shaman, shamanEquipment: gear, dungeons: [...knownDungeons.values()] };
+  const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  assert.ok(gear.items.length >= 15, 'the guide starts with a curated set of source-checked recommendations');
+  assert.equal(new Set(gear.items.map(item => item.itemId)).size, gear.items.length, 'stable item IDs are not duplicated');
+  for (const item of gear.items) {
+    assert.equal(item.classRestrictions.join(','), 'shaman');
+    assert.ok(item.specializations.length && item.specializations.every(id => shaman.specializations.some(spec => spec.id === id)));
+    assert.ok(item.sourceIds.every(id => knownSources.has(id)), `${item.name} retains source attribution`);
+    if (item.questIds?.length) assert.ok(item.questIds.every(id => knownQuests.has(id)), `${item.name} quest IDs resolve`);
+    else assert.match(item.acquisition, /Dropped by/, `${item.name} describes its boss acquisition`);
+    if (item.dungeonId) assert.ok(knownDungeons.has(item.dungeonId), `${item.name} dungeon ID resolves to a current dungeon guide`);
+    assert.ok(item.requiredLevel == null || Number.isInteger(item.requiredLevel));
+    if (item.requiredLevel == null) assert.equal(item.requirementStatus, 'not-listed', `${item.name} does not turn an undocumented requirement into a fact`);
+  }
+
+  for (const specializationId of ['elemental', 'enhancement', 'restoration']) for (const level of [15, 25, 35, 45, 60]) for (const faction of ['Alliance', 'Horde']) {
+    const panel = companion.getCompanionPanel({ classId: 'shaman', specializationId, level, faction, tab: 'gear' }, guideData);
+    assert.ok(panel.gearGuide, `${specializationId} gear renders at level ${level}`);
+    assert.equal(panel.level, level);
+    assert.equal(panel.gearGuide.faction, faction);
+    assert.ok(panel.gearGuide.items.every(item => item.classRestrictions.includes('shaman')));
+    assert.ok(panel.gearGuide.items.every(item => !item.faction || item.faction === faction));
+    assert.ok(panel.gearGuide.items.every(item => item.specializations.includes(specializationId)));
+    const html = companion.renderWarriorGearGuide(panel.gearGuide, level, 'all', escape);
+    assert.match(html, /Shaman value/);
+    assert.match(html, /Armor type/);
+    assert.match(html, /Required level/);
+    assert.doesNotMatch(html, /Source\s*→|Verified on \d{4}/);
+    for (const category of ['weapon', 'armor', 'accessory']) {
+      const filtered = companion.renderWarriorGearGuide(panel.gearGuide, level, category, escape);
+      for (const match of filtered.matchAll(/data-gear-category="([^"]+)"/g)) assert.equal(match[1], category);
+    }
+  }
+
+  const horde15 = companion.getCompanionPanel({ classId: 'shaman', specializationId: 'elemental', level: 15, faction: 'Horde', tab: 'gear' }, guideData).gearGuide;
+  const horde25 = companion.getCompanionPanel({ classId: 'shaman', specializationId: 'elemental', level: 25, faction: 'Horde', tab: 'gear' }, guideData).gearGuide;
+  assert.ok(!horde15.items.some(item => item.id === 'shaman-staff-of-westfall'));
+  assert.ok(horde15.items.some(item => item.id === 'shaman-crescent-staff'));
+  assert.ok(!horde25.items.some(item => item.id === 'shaman-disjointed-shoes'));
+  assert.ok(!companion.getCompanionPanel({ classId: 'shaman', specializationId: 'restoration', level: 45, faction: 'Alliance', tab: 'gear' }, guideData).gearGuide.items.some(item => item.id === 'shaman-bigger-rock-on-bigger-stick'));
+  assert.ok(companion.getCompanionPanel({ classId: 'shaman', specializationId: 'enhancement', level: 45, faction: 'Alliance', tab: 'gear' }, guideData).gearGuide.items.some(item => item.id === 'shaman-bigger-rock-on-bigger-stick'));
+
+  const level15Html = companion.renderWarriorGearGuide(horde15, 15, 'all', escape);
+  const level25Html = companion.renderWarriorGearGuide(horde25, 25, 'all', escape);
+  assert.match(level15Html, /Upcoming · Available at Level 21/);
+  assert.match(level25Html, /Available now · Available at Level 21/);
+  assert.match(level15Html, /item requirement unverified/i);
+  assert.match(level25Html, /Related quest/);
+  const alliance25Html = companion.renderWarriorGearGuide(companion.getCompanionPanel({ classId: 'shaman', specializationId: 'elemental', level: 25, faction: 'Alliance', tab: 'gear' }, guideData).gearGuide, 25, 'all', escape);
+  assert.match(alliance25Html, /#game\/world-of-warcraft\/dungeons\/deadmines/);
 });
 
 test('Shaman combat and totem guidance filters abilities, quest gates and ranks by specialization and level', async () => {

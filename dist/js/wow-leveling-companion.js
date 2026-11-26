@@ -521,7 +521,18 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       sections: [], notices: []
     };
   }
-  if (classRecord.id === 'shaman' && !['combat', 'talents', 'gold-farming'].includes(state.tab)) {
+  if (state.tab === 'gear' && classRecord.id === 'shaman') {
+    const gearGuide = buildShamanGearGuide(state, guideData);
+    return {
+      heading: `${specName} · Weapons & Gear · Level ${state.level}`,
+      gearGuide,
+      level: state.level,
+      notices: [],
+      sections: [],
+      sourceIds: gearGuide.sourceIds
+    };
+  }
+  if (classRecord.id === 'shaman' && !['combat', 'gear', 'talents', 'gold-farming'].includes(state.tab)) {
     const label = COMPANION_TAB_LABELS[state.tab] || state.tab;
     return { heading: `${specName} · ${label} · Level ${state.level}`, sections: [], notices: [`Not yet documented for Shaman ${specName}.`] };
   }
@@ -862,6 +873,32 @@ function buildShamanCombatGuide(state, guideData, progressionEngine) {
   };
 }
 
+function buildShamanGearGuide(state, guideData) {
+  const source = guideData.shamanEquipment || {};
+  const faction = state.faction === 'Horde' ? 'Horde' : 'Alliance';
+  const items = (source.items || []).filter(item => item.classRestrictions?.includes('shaman')
+    && item.specializations?.includes(state.specializationId)
+    && (!item.faction || item.faction === faction));
+  const specializationName = guideData.classRecord?.specializations?.find(item => item.id === state.specializationId)?.name || state.specializationId;
+  return {
+    ...source,
+    items,
+    classLabel: 'Shaman',
+    specializationId: state.specializationId,
+    weaponType: source.weaponGuidance?.[state.specializationId] || '',
+    armorAdvice: source.armorGuidance || '',
+    faction,
+    importantAttributes: state.specializationId === 'enhancement'
+      ? 'Weapon damage and speed · Strength · Agility · Stamina'
+      : state.specializationId === 'restoration'
+        ? 'Spell healing · Intellect · Spirit · Mana per 5 sec'
+        : 'Spell damage · Intellect · Spirit · Stamina',
+    availabilityMessage: items.length ? '' : `No verified ${specializationName} Shaman item recommendations match ${faction} at this time.`,
+    dungeons: guideData.dungeons || [],
+    sourceIds: [...new Set(items.flatMap(item => item.sourceIds || []))]
+  };
+}
+
 function renderTalentTree(state, treeData, escapeHtml) {
   const { tree, allTrees, selectedTree, allocation, validation, selectedTalent } = treeData;
   if (!tree) return '';
@@ -929,6 +966,7 @@ function renderStatsGuide(statsGuide, priority, escapeHtml) {
 
 export function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {
   const items = gearGuide.items || [];
+  const classLabel = gearGuide.classLabel || 'Warrior';
   const visibleItems = selectedFilter === 'all' ? items : items.filter(item => item.category === selectedFilter);
   const categories = [
     ['all', 'All'],
@@ -966,8 +1004,13 @@ export function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeH
       ? `<a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name)}</a>`
       : escapeHtml(item.name);
     const bracket = item.recommendationBracket ? `<span><strong>Bracket</strong>Levels ${escapeHtml(item.recommendationBracket)}</span>` : '';
-    const explanation = item.whyUseful ? `<p><strong>Warrior value</strong> ${escapeHtml(item.whyUseful)}</p>` : '';
-    return `<article class="wow-warrior-gear-item" data-gear-category="${escapeHtml(item.category)}" data-gear-slot="${escapeHtml(item.slot)}"><header><h5>${itemName}</h5><span>${escapeHtml(status)}</span></header><div class="wow-warrior-gear-item-facts"><span><strong>Required level</strong>${escapeHtml(requirement)}</span>${!hasRequirement && Number.isFinite(item.availabilityLevel) ? `<span><strong>Source level</strong>${item.availabilityLevel} (item requirement not listed)</span>` : ''}<span><strong>Slot</strong>${escapeHtml(item.slot)}</span>${bracket}${Number.isFinite(item.itemLevel) ? `<span><strong>Item level</strong>${item.itemLevel}</span>` : ''}</div><p><strong>Relevant attributes</strong> ${escapeHtml(item.attributes?.join(' · ') || 'No item attributes are recorded.')}</p><p><strong>Obtain</strong> ${escapeHtml(item.acquisition || 'Acquisition method not recorded.')}</p>${explanation}</article>`;
+    const explanation = item.whyUseful ? `<p><strong>${escapeHtml(classLabel)} value</strong> ${escapeHtml(item.whyUseful)}</p>` : '';
+    const dungeon = item.dungeonId ? gearGuide.dungeons?.find(record => record.id === item.dungeonId) : null;
+    const dungeonLink = dungeon ? `<p><strong>Related dungeon</strong> <a href="#game/world-of-warcraft/dungeons/${escapeHtml(dungeon.id)}">${escapeHtml(dungeon.name)}</a></p>` : '';
+    const questLinks = item.questIds?.map(id => gearGuide.questReferences?.find(quest => quest.id === id && (!quest.faction || quest.faction === gearGuide.faction)))
+      .filter(Boolean);
+    const questLinkRow = questLinks?.length ? `<p><strong>Related quest</strong> ${questLinks.map(quest => `<a href="${escapeHtml(quest.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(quest.name)}</a>`).join(' · ')}</p>` : '';
+    return `<article class="wow-warrior-gear-item" data-gear-category="${escapeHtml(item.category)}" data-gear-slot="${escapeHtml(item.slot)}"><header><h5>${itemName}</h5><span>${escapeHtml(status)}</span></header><div class="wow-warrior-gear-item-facts"><span><strong>Required level</strong>${escapeHtml(requirement)}</span>${!hasRequirement && Number.isFinite(item.availabilityLevel) ? `<span><strong>Source level</strong>${item.availabilityLevel} (item requirement not listed)</span>` : ''}<span><strong>Slot</strong>${escapeHtml(item.slot)}</span>${bracket}${Number.isFinite(item.itemLevel) ? `<span><strong>Item level</strong>${item.itemLevel}</span>` : ''}</div><p><strong>Relevant attributes</strong> ${escapeHtml(item.attributes?.join(' · ') || 'No item attributes are recorded.')}</p><p><strong>Obtain</strong> ${escapeHtml(item.acquisition || 'Acquisition method not recorded.')}</p>${dungeonLink}${questLinkRow}${explanation}</article>`;
   };
   const groupLevel = item => Number.isFinite(item.requiredLevel) ? item.requiredLevel
     : Number.isFinite(item.availabilityLevel) ? item.availabilityLevel : null;
@@ -985,7 +1028,7 @@ export function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeH
   const emptyMessage = noItems
     ? gearGuide.availabilityMessage || 'No verified item-by-item recommendations are recorded for this specialization.'
     : noVisibleItems && unrecordedSlots.length
-      ? `${gearGuide.emptyState || 'No verified Warrior recommendation is recorded.'} Slots without records: ${unrecordedSlots.join(', ')}.`
+      ? `${gearGuide.emptyState || `No verified ${classLabel} recommendation is recorded.`} Slots without records: ${unrecordedSlots.join(', ')}.`
       : 'No verified recommendations are recorded in this equipment category.';
   return `<div class="wow-warrior-gear-guide" data-warrior-gear-guide>${advice}<section class="wow-warrior-gear-upgrades"><div class="wow-warrior-gear-section-heading"><h4>Equipment upgrades</h4><span>Level ${level} · verified records only</span></div><div class="wow-warrior-gear-filter" role="group" aria-label="Filter equipment by type">${filterButtons}</div><p class="wow-warrior-gear-empty" data-gear-filter-empty role="status"${noVisibleItems ? '' : ' hidden'}>${escapeHtml(emptyMessage)}</p><div class="wow-warrior-gear-groups"${noVisibleItems ? ' hidden' : ''}>${equipment}</div>${gearGuide.upgradeRationale ? `<p class="wow-warrior-gear-rationale"><strong>Why upgrades matter</strong> ${escapeHtml(gearGuide.upgradeRationale)}</p>` : ''}</section></div>`;
 }

@@ -1708,6 +1708,8 @@ function showRoute() {
           } : {
             shamanGuide: wowData.shamanGuide,
             shamanCombat: wowData.shamanCombat,
+            shamanEquipment: wowData.shamanEquipment,
+            dungeons: [...(wowData.dungeons || []), ...(wowDungeonPrep?.dungeons || [])],
             combatCatalog: wowClientData,
             raceCombinations: wowData.raceCombinations
           })
