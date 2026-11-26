@@ -1810,11 +1810,12 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   assert.equal(module.loadCompanionState('shaman', {}, shaman.specializations, storage).specializationId, 'restoration');
   assert.equal(module.loadCompanionState('shaman', { specializationId: 'elemental' }, shaman.specializations, storage, false).level, 20);
   assert.equal(module.loadCompanionState('shaman', { specializationId: 'elemental' }, shaman.specializations, storage, false).tab, 'stats');
-  const switchedToRestoration = module.changeCompanionSpecialization({ classId: 'shaman', level: 38, faction: 'Horde', tab: 'talents', specializationId: 'elemental' }, 'restoration', shaman.specializations, storage);
-  assert.deepEqual(JSON.parse(JSON.stringify(switchedToRestoration)), { classId: 'shaman', level: 38, faction: 'Horde', specializationId: 'restoration', tab: 'talents', selectedTalentId: '' });
-  const switchedBack = module.changeCompanionSpecialization(switchedToRestoration, 'elemental', shaman.specializations, storage);
-  assert.equal(switchedBack.level, 38, 'Shaman specialization changes preserve the currently selected level');
-  assert.equal(switchedBack.specializationId, 'elemental');
+  let switchedState = { classId: 'shaman', level: 38, faction: 'Horde', tab: 'talents', specializationId: 'elemental' };
+  for (const specializationId of ['enhancement', 'restoration', 'elemental']) {
+    switchedState = module.changeCompanionSpecialization(switchedState, specializationId, shaman.specializations, storage);
+    assert.equal(switchedState.level, 38, `switching to ${specializationId} preserves level 38`);
+    assert.equal(switchedState.specializationId, specializationId);
+  }
   assert.equal(module.loadCompanionState('warrior', {}, wowPack.classes.find(record => record.id === 'warrior').specializations, storage).specializationId, 'protection');
 
   const handlers = {};
@@ -1837,10 +1838,10 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   assert.equal(companionSpec.value, 'restoration');
 });
 
-test('Shaman automatic builds render 17, 38 and 60 point snapshots across all specs and clamp 60 to 10', () => {
+test('Shaman automatic builds render 10, 17, 38 and 60 point snapshots, then refund ranks at level 15', () => {
   const route = '#game/world-of-warcraft/classes/shaman';
   const builds = ['elemental', 'enhancement', 'restoration'];
-  const levels = [17, 38, 60];
+  const levels = [10, 17, 38, 60];
   const keys = [...builds.map(spec => `bm-wow-leveling-companion-v1:shaman:${spec}`), 'bm-wow-leveling-companion-v1:shaman'];
   const saved = new Map(keys.map(key => [key, h.storedValues.get(key)]));
   try {
@@ -1857,12 +1858,24 @@ test('Shaman automatic builds render 17, 38 and 60 point snapshots across all sp
       assert.match(html, /class="wow-companion-tree-node is-spent/);
       assert.match(html, /rank \d+ of \d+/);
     }
+    for (const specializationId of builds) {
+      const key = `bm-wow-leveling-companion-v1:shaman:${specializationId}`;
+      const state = JSON.stringify({ classId: 'shaman', level: 15, faction: 'Alliance', tab: 'talents', specializationId });
+      h.storedValues.set(key, state);
+      h.storedValues.set('bm-wow-leveling-companion-v1:shaman', state);
+      const html = h.app.renderPage(h.app.readRoute(route));
+      const rankLabels = [...html.matchAll(/<strong>(\d+)\/\d+<\/strong>/g)];
+      assert.ok(html.includes('6 / 6'), `${specializationId} level 15 spends the six-point budget`);
+      assert.ok(html.includes(`${specializationId[0].toUpperCase()}${specializationId.slice(1)} talent tree · Level 15`));
+      assert.equal(rankLabels.reduce((sum, [, rank]) => sum + Number(rank), 0), 6, `${specializationId} drops all ranks above the level 15 budget`);
+      assert.equal((html.match(/class="wow-companion-tree(?: is-primary| is-secondary) tree-(?:elemental|enhancement|restoration)"/g) || []).length, 3);
+    }
     const enhancement = wowGuidedData.builds.find(build => build.classId === 'shaman' && build.specializationId === 'enhancement');
     const wowModule = h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace;
     const at60 = wowModule.resolveWowGuidedBuild(enhancement, wowClientData, 60);
-    const at10 = wowModule.resolveWowGuidedBuild(enhancement, wowClientData, 10);
+    const at15 = wowModule.resolveWowGuidedBuild(enhancement, wowClientData, 15);
     assert.equal(at60.total, 51);
-    assert.equal(at10.total, 1, 'reducing from level 60 to 10 leaves only one allocated point');
+    assert.equal(at15.total, 6, 'reducing from level 60 to 15 removes every rank beyond the new budget');
   } finally {
     for (const [key, value] of saved) {
       if (value === undefined) h.storedValues.delete(key);
