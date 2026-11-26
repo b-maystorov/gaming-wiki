@@ -2611,6 +2611,649 @@
       {"name":"Upper Blackrock Spire","minLevel":59,"maxLevel":60}
     ]
   },
+  "shamanCombat":   {
+    "verificationDate": "2026-11-26",
+    "sources": [
+      {
+        "id": "icy-shaman-quests",
+        "title": "Icy Veins · WoW Forever Shaman Class Quests",
+        "url": "https://www.icy-veins.com/wow-forever/shaman-class-quests",
+        "updatedDate": "2026-11-16",
+        "use": "Race-specific Earth, Fire, Water, and Air totem quest availability and rewards."
+      },
+      {
+        "id": "icy-elemental-rotation",
+        "title": "Icy Veins · WoW Forever Elemental Shaman Rotation",
+        "url": "https://www.icy-veins.com/wow-forever/elemental-shaman-ranged-dps-pve-rotation-cooldowns-abilities",
+        "updatedDate": "2026-11-07",
+        "use": "Leveling priorities, area damage unlocks, spellcasting and Mana guidance."
+      },
+      {
+        "id": "icy-enhancement-rotation",
+        "title": "Icy Veins · WoW Forever Enhancement Shaman Leveling and Rotation",
+        "url": "https://www.icy-veins.com/wow-forever/enhancement-shaman-leveling/",
+        "updatedDate": "2026-11-21",
+        "use": "Level-aware leveling priorities, weapon imbues, totems, interrupts, and Mana management."
+      },
+      {
+        "id": "icy-restoration-rotation",
+        "title": "Icy Veins · WoW Forever Restoration Shaman Rotation",
+        "url": "https://www.icy-veins.com/wow-forever/restoration-shaman-healer-pve-rotation-cooldowns-abilities",
+        "updatedDate": "2026-11-04",
+        "use": "Single-target and group healing priorities, cooldown usage, and Mana management."
+      },
+      {
+        "id": "foreverdb-shaman-spells",
+        "title": "ForeverDB · Shaman Talents and Spell Data",
+        "url": "https://foreverdb.net/class/Shaman/talents",
+        "updatedDate": "2026-11-25",
+        "use": "Forever-specific spell names, level unlocks, and class-quest tool requirements cross-checked against the bundled client catalog."
+      },
+      {
+        "id": "wowhead-forever-spell-data",
+        "title": "Wowhead · WoW Forever spell database",
+        "url": "https://www.wowhead.com/forever/spells/class/shaman",
+        "updatedDate": "2026-11-26",
+        "use": "Forever spell icon-token mapping and spell tooltip cross-checks."
+      }
+    ],
+    "totemQuests": {
+      "Earth": {
+        "name": "Call of Earth",
+        "level": 4,
+        "note": "Skyborne routes open at level 3; Dwarf and most Horde race routes open at level 4."
+      },
+      "Fire": {
+        "name": "Call of Fire",
+        "level": 10
+      },
+      "Water": {
+        "name": "Call of Water",
+        "level": 20
+      },
+      "Air": {
+        "name": "Call of Air",
+        "level": 30
+      }
+    },
+    "abilityIcons": {
+      "Lightning Bolt": {
+        "token": "spell_nature_lightning",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_lightning.jpg"
+      },
+      "Flame Shock": {
+        "token": "spell_fire_flameshock",
+        "url": "dist/assets/images/wow-forever/icons/spell_fire_flameshock.jpg"
+      },
+      "Earth Shock": {
+        "token": "spell_nature_earthshock",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_earthshock.jpg"
+      },
+      "Chain Lightning": {
+        "token": "spell_nature_chainlightning",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_chainlightning.jpg"
+      },
+      "Fire Nova": {
+        "token": "spell_fire_sealoffire",
+        "url": "dist/assets/images/wow-forever/icons/spell_fire_sealoffire.jpg"
+      },
+      "Healing Wave": {
+        "token": "spell_nature_healingwavegreater",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_healingwavegreater.jpg"
+      },
+      "Lesser Healing Wave": {
+        "token": "spell_nature_healingwavelesser",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_healingwavelesser.jpg"
+      },
+      "Chain Heal": {
+        "token": "spell_nature_healingwavegreater",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_healingwavegreater.jpg"
+      },
+      "Lightning Shield": {
+        "token": "spell_nature_lightningshield",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_lightningshield.jpg"
+      },
+      "Water Shield": {
+        "token": "ability_shaman_watershield",
+        "url": "dist/assets/images/wow-forever/icons/ability_shaman_watershield.jpg"
+      },
+      "Ghost Wolf": {
+        "token": "spell_nature_spiritwolf",
+        "url": "dist/assets/images/wow-forever/icons/spell_nature_spiritwolf.jpg"
+      },
+      "Rockbiter Weapon": {
+        "token": "spell_nature_rockbiter",
+        "url": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_rockbiter.jpg"
+      },
+      "Flametongue Weapon": {
+        "token": "spell_fire_flametounge",
+        "url": "dist/assets/images/wow-forever/icons/spell_fire_flametounge.jpg"
+      },
+      "Windfury Weapon": {
+        "token": "spell_nature_windfury",
+        "url": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_windfury.jpg"
+      }
+    },
+    "totems": [
+      {
+        "id": "stoneskin-totem",
+        "name": "Stoneskin Totem",
+        "element": "Earth",
+        "iconToken": "spell_nature_stoneskintotem",
+        "icon": "dist/assets/images/wow-forever/icons/spell_nature_stoneskintotem.jpg",
+        "spellName": "Stoneskin Totem",
+        "unlockLevel": 4,
+        "quest": "Call of Earth",
+        "totemItem": "Earth Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Choose for party-wide physical mitigation when incoming melee damage matters.",
+        "alternative": "Use Strength of Earth when the group benefits more from its Strength buff, or Earthbind when controlling nearby movement matters.",
+        "sourceIds": [
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "stoneclaw-totem",
+        "name": "Stoneclaw Totem",
+        "element": "Earth",
+        "iconToken": "spell_nature_stoneclawtotem",
+        "icon": "dist/assets/images/wow-forever/icons/spell_nature_stoneclawtotem.jpg",
+        "spellName": "Stoneclaw Totem",
+        "unlockLevel": 8,
+        "quest": "Call of Earth",
+        "totemItem": "Earth Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Distract nearby fresh enemies briefly when a pull needs to be separated or you need space to retreat.",
+        "alternative": "Earthbind slows pursuers; Stoneskin is better when group mitigation matters.",
+        "sourceIds": [
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "earthbind-totem",
+        "name": "Earthbind Totem",
+        "element": "Earth",
+        "iconToken": "spell_nature_earthbindtotem",
+        "icon": "dist/assets/images/wow-forever/icons/spell_nature_earthbindtotem.jpg",
+        "spellName": "Earthbind Totem",
+        "unlockLevel": 6,
+        "totemItem": "Earth Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Slow nearby enemies when creating room to cast, heal, or retreat.",
+        "alternative": "Choose Stoneskin or Strength of Earth when party mitigation or damage support is more useful than movement control.",
+        "sourceIds": [
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "strength-of-earth-totem",
+        "name": "Strength of Earth Totem",
+        "element": "Earth",
+        "iconToken": "spell_nature_strengthofearthtotem02",
+        "icon": "dist/assets/images/wow-forever/icons/spell_nature_strengthofearthtotem02.jpg",
+        "spellName": "Strength of Earth Totem",
+        "unlockLevel": 10,
+        "totemItem": "Earth Totem",
+        "specializations": [
+          "enhancement",
+          "elemental",
+          "restoration"
+        ],
+        "use": "Buff nearby party members when Strength improves their melee output.",
+        "alternative": "Use Stoneskin against physical pressure or Earthbind for control; only one Earth totem can occupy the element slot at a time.",
+        "sourceIds": [
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "tremor-totem",
+        "name": "Tremor Totem",
+        "element": "Earth",
+        "iconToken": "spell_nature_tremortotem",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_tremortotem.jpg",
+        "spellName": "Tremor Totem",
+        "unlockLevel": 18,
+        "totemItem": "Earth Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Drop when nearby party members need Fear, Charm, or Sleep effects removed.",
+        "alternative": "Use a mitigation or damage Earth totem when no listed crowd-control effect needs cleansing.",
+        "sourceIds": [
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "searing-totem",
+        "name": "Searing Totem",
+        "element": "Fire",
+        "iconToken": "spell_fire_searingtotem",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_fire_searingtotem.jpg",
+        "spellName": "Searing Totem",
+        "unlockLevel": 10,
+        "quest": "Call of Fire",
+        "totemItem": "Fire Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Place before a longer single-target fight so its repeated attacks can repay the Mana spent.",
+        "alternative": "Prefer Magma Totem for nearby groups; skip a Fire totem when a short fight or unwanted extra aggro makes its cost poor value.",
+        "sourceIds": [
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "flametongue-totem",
+        "name": "Flametongue Totem",
+        "element": "Fire",
+        "iconToken": "spell_nature_guardianward",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_guardianward.jpg",
+        "spellName": "Flametongue Totem",
+        "unlockLevel": 28,
+        "totemItem": "Fire Totem",
+        "specializations": [
+          "enhancement",
+          "elemental",
+          "restoration"
+        ],
+        "use": "Support a melee-heavy party with its main-hand weapon effect when its output fits the group.",
+        "alternative": "Choose Searing or Magma for direct Fire damage when a group weapon buff is not useful.",
+        "sourceIds": [
+          "icy-enhancement-rotation",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "fire-resistance-totem",
+        "name": "Fire Resistance Totem",
+        "element": "Fire",
+        "iconToken": "spell_fireresistancetotem_01",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_fireresistancetotem_01.jpg",
+        "spellName": "Fire Resistance Totem",
+        "unlockLevel": 28,
+        "totemItem": "Fire Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Use when party members are taking meaningful Fire spell damage.",
+        "alternative": "Prefer a Fire damage totem when Fire resistance has no encounter value.",
+        "sourceIds": [
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "magma-totem",
+        "name": "Magma Totem",
+        "element": "Fire",
+        "iconToken": "spell_fire_selfdestruct",
+        "icon": "dist/assets/images/wow-forever/icons/spell_fire_selfdestruct.jpg",
+        "spellName": "Magma Totem",
+        "unlockLevel": 26,
+        "totemItem": "Fire Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Use for sustained nearby area damage when enemies will remain close to the totem.",
+        "alternative": "Searing Totem is the lower-cost single-target choice; conserve Mana if enemies will die quickly.",
+        "sourceIds": [
+          "icy-elemental-rotation",
+          "icy-enhancement-rotation",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "healing-stream-totem",
+        "name": "Healing Stream Totem",
+        "element": "Water",
+        "iconToken": "inv_spear_04",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/inv_spear_04.jpg",
+        "spellName": "Healing Stream Totem",
+        "unlockLevel": 20,
+        "quest": "Call of Water",
+        "totemItem": "Water Totem",
+        "specializations": [
+          "restoration",
+          "elemental",
+          "enhancement"
+        ],
+        "use": "Add steady nearby group healing when party members can remain within its range.",
+        "alternative": "Use Mana Spring for a group with greater Mana pressure, or a direct heal when one ally needs immediate recovery.",
+        "sourceIds": [
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "mana-spring-totem",
+        "name": "Mana Spring Totem",
+        "element": "Water",
+        "iconToken": "spell_nature_manaregentotem",
+        "icon": "dist/assets/images/wow-forever/icons/spell_nature_manaregentotem.jpg",
+        "spellName": "Mana Spring Totem",
+        "unlockLevel": 26,
+        "totemItem": "Water Totem",
+        "specializations": [
+          "restoration",
+          "elemental",
+          "enhancement"
+        ],
+        "use": "Support nearby Mana users during longer group fights.",
+        "alternative": "Healing Stream is preferable when party health is the more immediate concern; avoid spending Mana on it for a nearly finished pull.",
+        "sourceIds": [
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "mana-tide-totem",
+        "name": "Mana Tide Totem",
+        "element": "Water",
+        "iconToken": "spell_frost_summonwaterelemental",
+        "spellName": "Mana Tide Totem",
+        "totemItem": "Water Totem",
+        "specializations": [
+          "restoration"
+        ],
+        "use": "Use during a longer group fight after allies have spent enough Mana to benefit from its restoration.",
+        "alternative": "Mana Spring is the trainer-learned Water totem for ongoing regeneration when Mana Tide is not talented or is on cooldown.",
+        "sourceIds": [
+          "icy-restoration-rotation",
+          "foreverdb-shaman-spells"
+        ],
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_frost_summonwaterelemental.jpg"
+      },
+      {
+        "id": "poison-cleansing-totem",
+        "name": "Poison Cleansing Totem",
+        "element": "Water",
+        "iconToken": "spell_nature_poisoncleansingtotem",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_poisoncleansingtotem.jpg",
+        "spellName": "Poison Cleansing Totem",
+        "unlockLevel": 22,
+        "totemItem": "Water Totem",
+        "specializations": [
+          "restoration",
+          "elemental",
+          "enhancement"
+        ],
+        "use": "Use when party members are affected by removable poison within the totem's range.",
+        "alternative": "Use Healing Stream or Mana Spring when no poison needs removal.",
+        "sourceIds": [
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "windfury-totem",
+        "name": "Windfury Totem",
+        "element": "Air",
+        "iconToken": "spell_nature_windfury",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_windfury.jpg",
+        "spellName": "Windfury Totem",
+        "unlockLevel": 32,
+        "quest": "Call of Air",
+        "totemItem": "Air Totem",
+        "specializations": [
+          "enhancement",
+          "elemental",
+          "restoration"
+        ],
+        "use": "Support nearby melee attackers in a group; Forever allows this totem to coexist with a Shaman weapon imbue.",
+        "alternative": "Grace of Air is another group offensive option after level 42; choose based on the party and encounter.",
+        "sourceIds": [
+          "icy-enhancement-rotation",
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "grounding-totem",
+        "name": "Grounding Totem",
+        "element": "Air",
+        "iconToken": "spell_nature_groundingtotem",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_groundingtotem.jpg",
+        "spellName": "Grounding Totem",
+        "unlockLevel": 30,
+        "quest": "Call of Air",
+        "totemItem": "Air Totem",
+        "specializations": [
+          "elemental",
+          "enhancement",
+          "restoration"
+        ],
+        "use": "Use when an incoming hostile spell can be intercepted by the totem.",
+        "alternative": "Prefer Windfury or Grace of Air for a group damage buff when spell interception is not needed.",
+        "sourceIds": [
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ]
+      },
+      {
+        "id": "grace-of-air-totem",
+        "name": "Grace of Air Totem",
+        "element": "Air",
+        "iconToken": "spell_nature_invisibilitytotem",
+        "icon": "https://wow.zamimg.com/images/wow/icons/large/spell_nature_invisibilitytotem.jpg",
+        "spellName": "Grace of Air Totem",
+        "unlockLevel": 42,
+        "quest": "Call of Air",
+        "totemItem": "Air Totem",
+        "specializations": [
+          "enhancement",
+          "elemental",
+          "restoration"
+        ],
+        "use": "Buff nearby party members when its Agility benefit fits the group.",
+        "alternative": "Use Windfury for a melee group when its extra attacks are preferable; only one Air totem can be active at a time.",
+        "sourceIds": [
+          "icy-enhancement-rotation",
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ]
+      }
+    ],
+    "specializations": {
+      "elemental": {
+        "sourceIds": [
+          "icy-elemental-rotation",
+          "foreverdb-shaman-spells"
+        ],
+        "singleTarget": [
+          {
+            "ability": "Lightning Bolt",
+            "when": "Main ranged damage spell; cast from range and avoid starting a cast that will finish after a target is nearly dead."
+          },
+          {
+            "ability": "Flame Shock",
+            "when": "Apply to a target that will live long enough for its damage over time to matter."
+          }
+        ],
+        "multipleEnemies": [
+          {
+            "ability": "Fire Nova",
+            "when": "Use only when enemies are close to your Fire Totem and the extra Mana cost is justified."
+          },
+          {
+            "ability": "Chain Lightning",
+            "when": "Use against multiple targets when its cost and threat are acceptable; it unlocks at level 32."
+          }
+        ],
+        "defensive": [
+          {
+            "ability": "Earth Shock",
+            "when": "Save for a dangerous enemy cast when its interrupt can prevent harm."
+          },
+          {
+            "ability": "Healing Wave",
+            "when": "Heal between casts or when survival requires it; do not trade a necessary heal for damage."
+          },
+          {
+            "ability": "Earthbind Totem",
+            "when": "Slow pursuers to regain casting space or retreat."
+          }
+        ],
+        "opening": [
+          {
+            "ability": "Lightning Shield",
+            "when": "Refresh between pulls so the buff does not consume combat time."
+          },
+          {
+            "ability": "Searing Totem",
+            "when": "If its quest is complete, place before a longer single-target pull."
+          }
+        ],
+        "resource": "Mana is the limiting resource. Spend a final buff or totem after the last damaging cast when practical so the five-second Spirit regeneration delay begins sooner; finish weak targets with a weapon swing rather than an unnecessary spell.",
+        "extraAdvice": "Stay at range and stop a cast if an enemy is about to interrupt it. Earth Shock is the Shaman interrupt; use it for dangerous casts, not as a routine damage button."
+      },
+      "enhancement": {
+        "sourceIds": [
+          "icy-enhancement-rotation",
+          "icy-shaman-quests",
+          "foreverdb-shaman-spells"
+        ],
+        "singleTarget": [
+          {
+            "ability": "Stormstrike",
+            "when": "Use when the selected recommended talent route has allocated it; its Forever tooltip unlock timing has conflicting reports, so the local conservative build does not allocate it before level 43."
+          },
+          {
+            "ability": "Earth Shock",
+            "when": "Use selectively for an interrupt or when burst damage is worth the Mana."
+          },
+          {
+            "ability": "Lightning Bolt",
+            "when": "Use to pull from range; if Maelstrom Weapon is talented, cast after building its full stack."
+          }
+        ],
+        "multipleEnemies": [
+          {
+            "ability": "Fire Nova",
+            "when": "Use around an active Fire Totem when targets are close and the Mana cost is worthwhile."
+          },
+          {
+            "ability": "Chain Lightning",
+            "when": "At level 32+, use on multiple targets when the Mana and threat cost fits the pull."
+          },
+          {
+            "ability": "Magma Totem",
+            "when": "Use only for groups that will stay near it long enough to justify its high Mana cost."
+          }
+        ],
+        "defensive": [
+          {
+            "ability": "Healing Wave",
+            "when": "Recover between pulls or make a deliberate emergency heal."
+          },
+          {
+            "ability": "Stoneclaw Totem",
+            "when": "Use as a short defensive distraction when a dangerous pull needs control."
+          },
+          {
+            "ability": "Ghost Wolf",
+            "when": "Use to disengage or travel; it prevents attacking while active."
+          }
+        ],
+        "opening": [
+          {
+            "ability": "Rockbiter Weapon",
+            "when": "Use as the economical solo imbue before level 30."
+          },
+          {
+            "ability": "Windfury Weapon",
+            "when": "Use from level 30 for the current Enhancement leveling recommendation; reapply between fights rather than spending combat time."
+          },
+          {
+            "ability": "Lightning Shield",
+            "when": "Apply between pulls."
+          }
+        ],
+        "resource": "Auto-attacks cost no Mana and are a useful way to finish weak targets. Shocks, heals, and totems all compete for Mana; choose only the casts that change the fight. Spirit regeneration pauses for five seconds after Mana expenditure.",
+        "extraAdvice": "Keep a current, slow two-handed weapon. Forever does not use the Classic dual-wield leveling setup; Windfury Weapon and Windfury Totem can coexist under current Forever rules."
+      },
+      "restoration": {
+        "sourceIds": [
+          "icy-restoration-rotation",
+          "icy-elemental-rotation",
+          "foreverdb-shaman-spells"
+        ],
+        "singleTarget": [
+          {
+            "ability": "Riptide",
+            "when": "If allocated by the selected Restoration talent route, use on a hurt target; the Forever talent also empowers your next Chain Heal on that target."
+          },
+          {
+            "ability": "Healing Wave",
+            "when": "Use for measured single-target healing; choose a lower rank when it fully covers the damage."
+          },
+          {
+            "ability": "Lesser Healing Wave",
+            "when": "Use when a faster cast is more valuable than Healing Wave efficiency, especially under pressure."
+          }
+        ],
+        "multipleEnemies": [
+          {
+            "ability": "Riptide",
+            "when": "Apply to an injured party member before Chain Heal when its talent is available."
+          },
+          {
+            "ability": "Chain Heal",
+            "when": "At level 40 and above, use on an injured target when multiple nearby allies need healing; choose a lower rank if it is sufficient."
+          },
+          {
+            "ability": "Healing Wave",
+            "when": "Use for focused damage when group healing is not needed."
+          }
+        ],
+        "defensive": [
+          {
+            "ability": "Nature's Swiftness",
+            "when": "If allocated, pair with a high-value emergency Nature heal when a cast would be too slow."
+          },
+          {
+            "ability": "Lesser Healing Wave",
+            "when": "Use for urgent single-target recovery when its faster cast matters."
+          },
+          {
+            "ability": "Earth Shock",
+            "when": "Interrupt a dangerous cast if the party can spare your Mana and global cooldown."
+          }
+        ],
+        "opening": [
+          {
+            "ability": "Healing Stream Totem",
+            "when": "After completing Call of Water, set up group healing before combat when the group will remain nearby."
+          },
+          {
+            "ability": "Mana Spring Totem",
+            "when": "Use for longer group fights with Mana users when healing is not the more urgent Water totem need."
+          }
+        ],
+        "resource": "Mana is the main healing limit. Down-rank Healing Wave when it covers the damage, use Chain Heal only when several allies can benefit, and leave time between casts for Spirit regeneration. Mana Tide Totem is a talent and only appears as available when the selected automatic build allocates it.",
+        "extraAdvice": "Restoration is a group-healing specialization and has weaker solo damage support. For solo questing, use Lightning Bolt to pull, let weapon attacks finish low-health enemies, and heal between fights; do not assume a healer damage rotation."
+      }
+    }
+  },
   "warriorCombat": {
     "description": "Leveling fundamentals and situational priority lists. These are priorities, not fixed rotations.",
     "specializations": {

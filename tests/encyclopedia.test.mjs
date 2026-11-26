@@ -1736,7 +1736,7 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.ok((await readFile(resolve(root, 'dist', treeIcon))).length > 0, `${spec.name} game icon asset exists`);
     assert.ok(page.includes(`src="${treeIcon}"`), `${spec.name} tab uses its game icon`);
   }
-  const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, raceCombinations: wowPack.raceCombinations, talentClass };
+  const guideData = { classRecord: shaman, shamanGuide: wowPack.shamanGuide, shamanCombat: wowPack.shamanCombat, combatCatalog: wowClientData, raceCombinations: wowPack.raceCombinations, talentClass };
   const shamanEngine = { builds: wowGuidedData.builds, catalog: wowClientData, resolve: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.resolveWowGuidedBuild, availablePoints: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.availableWowTalentPoints };
   const expectedPoints = new Map([[10, 1], [30, 21], [60, 51]]);
   for (const faction of ['Alliance', 'Horde']) for (const spec of shaman.specializations) for (const level of [10, 30, 60]) {
@@ -1747,7 +1747,7 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     assert.ok(overview.shamanOverview.races.find(group => group.faction === faction)?.names.length);
     const playableRaces = overview.shamanOverview.races.find(group => group.faction === faction).names;
     assert.ok(faction === 'Alliance' ? playableRaces.includes('Dwarf') : playableRaces.includes('Windshaper Skyborne'));
-    for (const tab of ['stats', 'combat', 'gear', 'leveling', 'dungeons', 'professions']) {
+    for (const tab of ['stats', 'gear', 'leveling', 'dungeons', 'professions']) {
       const panel = module.getCompanionPanel({ ...base, tab }, guideData);
       assert.match(panel.notices.join(' '), /Not yet documented for Shaman/);
       assert.doesNotMatch(JSON.stringify(panel), /warriorLeveling|warriorEquipment|warriorCombat/);
@@ -1836,6 +1836,84 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
   handlers.keydown({ target: target(tabs[1]), key: 'ArrowRight', preventDefault() {} });
   assert.equal(tabs[2].focused, true);
   assert.equal(companionSpec.value, 'restoration');
+});
+
+test('Shaman combat and totem guidance filters abilities, quest gates and ranks by specialization and level', async () => {
+  const companion = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const shaman = wowPack.classes.find(record => record.id === 'shaman');
+  const talentClass = wowClientData.classes.find(record => record.id === 'shaman');
+  const guideData = {
+    classRecord: shaman,
+    talentClass,
+    shamanCombat: wowPack.shamanCombat,
+    combatCatalog: wowClientData
+  };
+  const engine = {
+    builds: wowGuidedData.builds,
+    catalog: wowClientData,
+    resolve: h.modules.get(resolve(root, 'dist/js/wow-forever.js')).namespace.resolveWowGuidedBuild
+  };
+  const records = new Map(wowPack.shamanCombat.sources.map(source => [source.id, source]));
+  assert.ok(wowPack.shamanCombat.totems.length >= 12);
+  for (const totem of wowPack.shamanCombat.totems) {
+    assert.ok(totem.sourceIds.every(id => records.has(id)), `${totem.name} keeps source attribution in the data`);
+    assert.ok(totem.iconToken && totem.icon, `${totem.name} has an explicit Shaman icon mapping`);
+    if (totem.icon.startsWith('dist/')) assert.ok((await readFile(resolve(root, totem.icon))).length > 0, `${totem.name} local spell icon exists`);
+    else assert.ok(totem.icon.includes(`/${totem.iconToken}.jpg`), `${totem.name} external icon matches its spell token`);
+  }
+
+  for (const specializationId of ['elemental', 'enhancement', 'restoration']) for (const level of [10, 17, 30, 38, 60]) {
+    const state = { classId: 'shaman', specializationId, level, faction: 'Alliance', tab: 'combat' };
+    const panel = companion.getCompanionPanel(state, guideData, engine);
+    const combat = panel.shamanCombatGuide;
+    assert.ok(combat, `${specializationId} combat guide renders at ${level}`);
+    assert.match(panel.heading, new RegExp(`${specializationId}.*Level ${level}`, 'i'));
+    assert.equal(combat.specializationId, specializationId);
+    assert.equal(combat.level, level);
+    assert.ok(combat.singleTarget.every(step => combat.abilities.find(item => item.name === step.ability)?.availability === 'available'));
+    assert.ok(combat.multipleEnemies.every(step => combat.abilities.find(item => item.name === step.ability)?.availability === 'available'));
+    assert.ok(combat.defensive.every(step => combat.abilities.find(item => item.name === step.ability)?.availability === 'available'));
+    assert.equal(combat.totems.every(totem => totem.ability.unlockLevel <= level), true, 'current totem cards never show a spell above the selected level');
+    assert.ok(combat.upcomingTotems.every(totem => totem.ability.unlockLevel > level || totem.ability.unlockLevel == null));
+
+    const storageValues = new Map();
+    const storage = { getItem: key => storageValues.get(key) || null, setItem: (key, value) => storageValues.set(key, value) };
+    const savedState = JSON.stringify({ classId: 'shaman', specializationId, level, faction: 'Alliance', tab: 'combat' });
+    storage.setItem(`bm-wow-leveling-companion-v1:shaman:${specializationId}`, savedState);
+    storage.setItem('bm-wow-leveling-companion-v1:shaman', savedState);
+    const html = companion.renderLevelingCompanion({ classId: 'shaman', selectedSpecialization: specializationId, currentLevel: level, guideData, progressionEngine: engine, storage });
+    assert.match(html, new RegExp(`data-combat-level="${level}" data-combat-specialization="${specializationId}"`));
+    assert.match(html, /Ability details/);
+    assert.match(html, /Totem guide/);
+    assert.match(html, /data-totem-element="(?:Earth|Fire|Water|Air)"/);
+    assert.doesNotMatch(html, /Source\s*→|Creator-reported|Verified on \d{4}/);
+    for (const totem of combat.totems) assert.ok(html.includes(`src="${totem.icon || totem.ability.icon}"`), `${totem.name} displays its mapped icon at level ${level}`);
+  }
+
+  const panelAt = (specializationId, level) => companion.getCompanionPanel({ classId: 'shaman', specializationId, level, faction: 'Horde', tab: 'combat' }, guideData, engine).shamanCombatGuide;
+  let switchedState = { classId: 'shaman', specializationId: 'elemental', level: 38, faction: 'Horde', tab: 'combat' };
+  const specStorage = { getItem: () => null, setItem() {} };
+  for (const specializationId of ['enhancement', 'restoration', 'elemental']) {
+    switchedState = companion.changeCompanionSpecialization(switchedState, specializationId, shaman.specializations, specStorage);
+    const switchedPanel = companion.getCompanionPanel(switchedState, guideData, engine).shamanCombatGuide;
+    assert.equal(switchedState.level, 38, 'specialization changes preserve the selected level');
+    assert.equal(switchedPanel.specializationId, specializationId, 'combat priorities update immediately after a specialization change');
+  }
+  assert.equal(panelAt('elemental', 10).upcoming.find(item => item.name === 'Chain Lightning').unlockLevel, 32);
+  assert.ok(panelAt('elemental', 38).multipleEnemies.some(step => step.ability === 'Chain Lightning'));
+  assert.equal(panelAt('enhancement', 38).upcoming.find(item => item.name === 'Stormstrike').unlockLevel, 43, 'the guide follows the conservative selected automatic talent route');
+  assert.ok(panelAt('enhancement', 60).singleTarget.some(step => step.ability === 'Stormstrike'));
+  assert.ok(panelAt('restoration', 38).upcoming.some(item => item.name === 'Chain Heal'));
+  assert.ok(panelAt('restoration', 60).multipleEnemies.some(step => step.ability === 'Chain Heal'));
+  assert.ok(panelAt('enhancement', 17).totems.some(totem => totem.id === 'searing-totem' && totem.quest === 'Call of Fire'));
+  assert.ok(!panelAt('elemental', 17).totems.some(totem => totem.id === 'healing-stream-totem'));
+  const airTotemAt30 = panelAt('restoration', 30).totems.find(totem => totem.id === 'grounding-totem');
+  assert.equal(airTotemAt30.quest, 'Call of Air');
+  assert.equal(airTotemAt30.ability.availability, 'quest-required', 'level alone does not imply that the Air Totem quest was completed');
+  const restoAt30 = panelAt('restoration', 30);
+  assert.ok(restoAt30.totems.some(totem => totem.id === 'mana-tide-totem' && totem.ability.talentId), 'Mana Tide appears only through the selected Restoration talent route');
+  assert.match(portalStyles, /\.wow-shaman-totem-grid\s*\{\s*display:grid;\s*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(portalStyles, /@media\(max-width:760px\)[\s\S]*?\.wow-shaman-totem-grid\s*\{\s*grid-template-columns:1fr/);
 });
 
 test('Shaman automatic builds render 10, 17, 38 and 60 point snapshots, then refund ranks at level 15', () => {

@@ -521,7 +521,7 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       sections: [], notices: []
     };
   }
-  if (classRecord.id === 'shaman' && state.tab !== 'talents' && state.tab !== 'gold-farming') {
+  if (classRecord.id === 'shaman' && !['combat', 'talents', 'gold-farming'].includes(state.tab)) {
     const label = COMPANION_TAB_LABELS[state.tab] || state.tab;
     return { heading: `${specName} · ${label} · Level ${state.level}`, sections: [], notices: [`Not yet documented for Shaman ${specName}.`] };
   }
@@ -548,6 +548,16 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       sections: [],
       notices: [],
       sourceIds: combatGuide.sourceIds
+    };
+  }
+  if (state.tab === 'combat' && classRecord.id === 'shaman') {
+    const combatGuide = buildShamanCombatGuide(state, guideData, progressionEngine);
+    return {
+      heading: `${specName} · Combat · Level ${state.level}`,
+      shamanCombatGuide: combatGuide,
+      sections: [],
+      notices: [],
+      sourceIds: combatGuide.sourceIds || []
     };
   }
   if (state.tab === 'gear' && classRecord.id === 'warrior') {
@@ -775,6 +785,83 @@ function buildWarriorCombatGuide(state, guideData) {
   };
 }
 
+function buildShamanCombatGuide(state, guideData, progressionEngine) {
+  const source = guideData.shamanCombat || {};
+  const specialization = source.specializations?.[state.specializationId];
+  if (!specialization) return { level: state.level, specializationId: state.specializationId, specializationName: '', availabilityMessage: `No verified combat priorities are recorded for this Shaman specialization.`, abilities: [], totems: [], upcomingTotems: [] };
+
+  const talentClass = guideData.talentClass || progressionEngine?.catalog?.classes?.find(record => record.id === 'shaman');
+  const tree = talentClass?.trees?.find(record => record.id === state.specializationId);
+  const build = progressionEngine?.builds?.find(record => record.classId === 'shaman' && record.specializationId === state.specializationId);
+  const snapshot = build && progressionEngine?.resolve ? progressionEngine.resolve(build, progressionEngine.catalog, state.level) : null;
+  const allocation = snapshot?.valid ? snapshot.allocation : {};
+  const descriptions = guideData.combatCatalog?.spellDescriptions || {};
+  const icons = { ...(source.abilityIcons || {}), ...Object.fromEntries((source.totems || []).map(totem => [totem.name, { token: totem.iconToken, url: totem.icon }])) };
+  const talentNames = new Map((talentClass?.trees || []).flatMap(item => item.talents || []).map(talent => [talent.name, talent]));
+  const abilityNames = new Set([
+    ...(specialization.opening || []).map(step => step.ability),
+    ...Object.values(specialization).filter(Array.isArray).flat().map(step => typeof step === 'string' ? step : step.ability),
+    ...(source.totems || []).map(totem => totem.name)
+  ].filter(Boolean));
+  const abilities = [...abilityNames].map(name => {
+    const talent = talentNames.get(name);
+    const talentRank = talent ? Number(allocation[talent.id]) || 0 : 0;
+    const spellEntries = Object.entries(descriptions).filter(([key]) => key.startsWith(`Shaman|${name}|`)).map(([key, record]) => {
+      const match = record.level?.match(/Learned at level (\d+)/i);
+      const rankMatch = key.match(/\|Rank (\d+)$/);
+      return { record, level: match ? Number(match[1]) : null, rank: rankMatch ? Number(rankMatch[1]) : 1 };
+    }).filter(entry => Number.isFinite(entry.level)).sort((left, right) => left.level - right.level || left.rank - right.rank);
+    const firstSpellLevel = spellEntries[0]?.level ?? null;
+    const activeSpell = spellEntries.filter(entry => entry.level <= state.level).at(-1) || null;
+    const routePoint = talent && build?.talentOrder ? build.talentOrder.indexOf(talent.id) : -1;
+    const talentUnlockLevel = routePoint >= 0 ? routePoint + 10 : null;
+    const unlockLevel = talent ? talentUnlockLevel : firstSpellLevel;
+    const icon = icons[name]?.url || talent?.icon || '';
+    let availability = talent
+      ? talentRank ? 'available' : talentUnlockLevel && state.level < talentUnlockLevel ? 'upcoming' : 'unverified'
+      : activeSpell ? 'available' : firstSpellLevel ? 'upcoming' : 'unverified';
+    const totemRecord = source.totems?.find(totem => totem.name === name);
+    const totemQuest = totemRecord?.quest || source.totemQuests?.[totemRecord?.element]?.name;
+    if (totemRecord && totemQuest && availability === 'available') availability = 'quest-required';
+    return {
+      name, icon, iconToken: icons[name]?.token || talent?.iconToken || '', unlockLevel,
+      availability, rank: talent ? talentRank : activeSpell?.rank || 0,
+      description: activeSpell?.record.description || talent?.rankEffects?.[Math.max(0, talentRank - 1)] || talent?.rankEffects?.[0] || '',
+      mana: activeSpell?.record.details?.flat()?.find(value => /mana/i.test(value)) || '',
+      talentId: talent?.id || '',
+      abilityRecord: source.totems?.find(totem => totem.name === name) || null
+    };
+  });
+  const byName = new Map(abilities.map(ability => [ability.name, ability]));
+  const stepsFor = steps => (steps || []).filter(step => byName.get(step.ability)?.availability === 'available');
+  const upcoming = abilities.filter(ability => !ability.abilityRecord && ['upcoming', 'quest-required', 'unverified'].includes(ability.availability));
+  const totems = (source.totems || []).filter(totem => totem.specializations.includes(state.specializationId))
+    .map(totem => ({ ...totem, quest: totem.quest || source.totemQuests?.[totem.element]?.name || '', ability: byName.get(totem.name) }))
+    .filter(totem => totem.ability?.unlockLevel != null && totem.ability.unlockLevel <= state.level)
+    .sort((left, right) => left.ability.unlockLevel - right.ability.unlockLevel || left.name.localeCompare(right.name));
+  const upcomingTotems = (source.totems || []).filter(totem => totem.specializations.includes(state.specializationId))
+    .map(totem => ({ ...totem, quest: totem.quest || source.totemQuests?.[totem.element]?.name || '', ability: byName.get(totem.name) }))
+    .filter(totem => totem.ability?.unlockLevel == null || totem.ability.unlockLevel > state.level)
+    .sort((left, right) => (left.ability?.unlockLevel ?? 99) - (right.ability?.unlockLevel ?? 99));
+  return {
+    level: state.level,
+    specializationId: state.specializationId,
+    specializationName: guideData.classRecord?.specializations?.find(record => record.id === state.specializationId)?.name || state.specializationId,
+    sourceIds: specialization.sourceIds || [],
+    singleTarget: stepsFor(specialization.singleTarget),
+    multipleEnemies: stepsFor(specialization.multipleEnemies),
+    defensive: stepsFor(specialization.defensive),
+    opening: stepsFor(specialization.opening),
+    resource: specialization.resource || '',
+    extraAdvice: specialization.extraAdvice || '',
+    abilities,
+    upcoming,
+    totems,
+    upcomingTotems,
+    totemQuestNotes: source.totemQuestNotes || ''
+  };
+}
+
 function renderTalentTree(state, treeData, escapeHtml) {
   const { tree, allTrees, selectedTree, allocation, validation, selectedTalent } = treeData;
   if (!tree) return '';
@@ -925,6 +1012,41 @@ function renderWarriorCombatGuide(data, escapeHtml) {
   return `<div class="wow-warrior-combat" data-warrior-combat data-combat-level="${data.level}" data-combat-specialization="${escapeHtml(data.specializationId)}"><p class="wow-warrior-combat-disclosure">Level ${data.level} · ${escapeHtml(data.specializationName)} · Context-based priority list, not a fixed rotation. Use the highest available action that fits the situation; this is not a fixed sequence that must be repeated.</p><h4 class="wow-warrior-combat-priority-title">Combat Priority</h4><div class="wow-warrior-combat-grid">${section('Single target', data.singleTarget)}${section('Multiple enemies', data.multipleEnemies)}${section('Defensive situations', data.defensive)}</div>${opening}<section class="wow-warrior-combat-rage"><h4>Rage Management</h4><p>${escapeHtml(data.rageManagement)}</p></section></div>`;
 }
 
+function renderShamanCombatGuide(data, escapeHtml) {
+  if (!data.specializationName) return `<div class="wow-warrior-combat"><p class="wow-warrior-combat-empty" role="status">${escapeHtml(data.availabilityMessage)}</p></div>`;
+  const abilities = new Map(data.abilities.map(ability => [ability.name, ability]));
+  const statusFor = ability => ability.availability === 'available'
+    ? `Available by level · rank ${ability.rank || 1}`
+    : ability.availability === 'quest-required'
+      ? `Quest gated · ${ability.abilityRecord?.quest || 'class totem quest'} completion is not tracked here`
+      : ability.availability === 'upcoming'
+        ? `Upcoming · level ${ability.unlockLevel}`
+        : 'Unlock data not verified';
+  const renderStep = (step, index) => {
+    const ability = abilities.get(step.ability);
+    if (!ability) return '';
+    const stateClass = ability.availability === 'available' ? ' is-available' : ability.availability === 'quest-required' ? ' is-upcoming' : ' is-unverified';
+    const requirements = ability.abilityRecord
+      ? `${ability.abilityRecord.quest ? `Complete ${ability.abilityRecord.quest}` : `Requires ${ability.abilityRecord.totemItem || 'the relevant totem item'}`}; level ${ability.unlockLevel} requirement met.`
+      : ability.unlockLevel ? `Spell or talent unlocks at level ${ability.unlockLevel}.` : 'Unlock requirement is not recorded.';
+    const icon = ability.icon ? `<img src="${escapeHtml(ability.icon)}" alt="" loading="lazy">` : `<span aria-hidden="true">${escapeHtml(step.ability.slice(0, 1))}</span>`;
+    return `<li class="wow-warrior-combat-step${stateClass}" data-ability-name="${escapeHtml(step.ability)}" data-ability-availability="${ability.availability}"><span class="wow-warrior-combat-number" aria-hidden="true">${index + 1}</span><span class="wow-warrior-combat-icon">${icon}</span><div class="wow-warrior-combat-step-content"><div class="wow-warrior-combat-ability-line"><strong>${escapeHtml(step.ability)}</strong><span>${escapeHtml(statusFor(ability))}</span></div><p><strong>When to use:</strong> ${escapeHtml(step.when)}</p><details><summary>Ability details</summary><p>${escapeHtml(ability.description || 'No verified tooltip description is available.')}</p><p>${escapeHtml([ability.mana, requirements].filter(Boolean).join(' · '))}</p></details></div></li>`;
+  };
+  const section = (title, steps) => `<section class="wow-warrior-combat-section"><h4>${escapeHtml(title)}</h4>${steps.length ? `<ol>${steps.map(renderStep).join('')}</ol>` : '<p class="wow-warrior-combat-empty">No matching priorities are available at this level.</p>'}</section>`;
+  const opening = data.opening.length ? `<section class="wow-warrior-combat-opening"><h4>Before a fight</h4><ol>${data.opening.map(renderStep).join('')}</ol></section>` : '';
+  const upcoming = data.upcoming.length ? `<section class="wow-warrior-combat-opening"><h4>Upcoming abilities and quest gates</h4><ul class="wow-shaman-upcoming-list">${data.upcoming.map(ability => `<li data-ability-name="${escapeHtml(ability.name)}" data-ability-availability="${ability.availability}"><strong>${escapeHtml(ability.name)}</strong><span>${escapeHtml(statusFor(ability))}</span></li>`).join('')}</ul></section>` : '';
+  const totemCards = data.totems.map(totem => {
+    const ability = totem.ability;
+    const specNames = totem.specializations.map(id => ({ elemental: 'Elemental', enhancement: 'Enhancement', restoration: 'Restoration' })[id]).join(', ');
+    const iconSource = totem.icon || ability.icon;
+    const icon = iconSource ? `<img src="${escapeHtml(iconSource)}" alt="" loading="lazy">` : '<span aria-hidden="true">✦</span>';
+    const questLabel = totem.quest ? `Quest gated · ${totem.quest}; completion is not tracked here` : `Level ${ability.unlockLevel} requirement met`;
+    return `<article class="wow-shaman-totem-card" data-totem-id="${escapeHtml(totem.id)}" data-totem-element="${escapeHtml(totem.element)}" data-totem-level="${ability.unlockLevel}" data-ability-availability="${totem.quest ? 'quest-required' : 'available'}"><div class="wow-shaman-totem-heading"><span class="wow-warrior-combat-icon">${icon}</span><div><p class="wow-eyebrow">${escapeHtml(totem.element)} totem · Level ${ability.unlockLevel}${ability.rank > 1 ? ` · Rank ${ability.rank}` : ''}</p><h5>${escapeHtml(totem.name)}</h5></div></div><p class="wow-shaman-totem-status">${escapeHtml(questLabel)}</p><p><strong>What it does:</strong> ${escapeHtml(ability.description || 'Tooltip details are not recorded.')}</p><p><strong>Mana:</strong> ${escapeHtml(ability.mana || 'Cost not verified')} · <strong>For:</strong> ${escapeHtml(specNames)}</p><details><summary>When to use and alternatives</summary><p>${escapeHtml(totem.use)}</p><p><strong>Prefer another totem when:</strong> ${escapeHtml(totem.alternative)}</p><p><strong>Requirement:</strong> ${escapeHtml(totem.totemItem)}${totem.quest ? ` · ${escapeHtml(totem.quest)} quest` : ''}${ability.talentId ? ' · talent allocated in the selected route' : ''}</p></details></article>`;
+  }).join('');
+  const upcomingTotems = data.upcomingTotems.length ? `<ul class="wow-shaman-upcoming-list">${data.upcomingTotems.slice(0, 5).map(totem => `<li data-totem-id="${escapeHtml(totem.id)}" data-totem-level="${totem.ability?.unlockLevel ?? ''}"><strong>${escapeHtml(totem.name)}</strong><span>Upcoming · level ${totem.ability?.unlockLevel ?? 'unverified'}${totem.quest ? ` · ${escapeHtml(totem.quest)} quest` : ''}</span></li>`).join('')}</ul>` : '';
+  return `<div class="wow-warrior-combat wow-shaman-combat" data-shaman-combat data-combat-level="${data.level}" data-combat-specialization="${escapeHtml(data.specializationId)}"><p class="wow-warrior-combat-disclosure">Level ${data.level} · ${escapeHtml(data.specializationName)} · Level filters use WoW: Forever spell data; quest completion and trainer purchases are not tracked.</p><h4 class="wow-warrior-combat-priority-title">Combat Priorities</h4><div class="wow-warrior-combat-grid">${section('Single target', data.singleTarget)}${section('Multiple targets', data.multipleEnemies)}${section('Defensive and utility', data.defensive)}</div>${opening}<section class="wow-warrior-combat-rage"><h4>Mana and playstyle</h4><p>${escapeHtml(data.resource)}</p><p>${escapeHtml(data.extraAdvice)}</p></section><section class="wow-shaman-totems"><h4>Totem guide</h4><p>Only totems whose spell level is reached appear below. Quest requirements are shown separately because this guide cannot see your completed quests.</p>${data.totems.length ? `<div class="wow-shaman-totem-grid">${totemCards}</div>` : '<p class="wow-warrior-combat-empty">No documented totems meet this level and specialization yet.</p>'}${upcomingTotems ? `<details class="wow-shaman-totem-upcoming"><summary>Upcoming totems</summary>${upcomingTotems}</details>` : ''}</section>${upcoming}</div>`;
+}
+
 function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, storage, gearFilter = 'all', professionChoice = 'mining-blacksmithing', checklistProgress = [], checklistFilter = 'all', dungeonProgress = {}) {
   const panel = getCompanionPanel(state, guideData, progressionEngine);
   const sections = panel.sections.map(section => `<section class="wow-companion-result"><h4>${escapeHtml(section.title)}</h4>${section.text ? `<p>${escapeHtml(section.text)}</p>` : ''}${section.items?.length ? `<ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</section>`).join('');
@@ -932,6 +1054,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
   const treeData = panel.treeData;
   const statsPanel = panel.statsGuide ? renderStatsGuide(panel.statsGuide, panel.priority, escapeHtml) : '';
   const combatPanel = panel.warriorCombatGuide ? renderWarriorCombatGuide(panel.warriorCombatGuide, escapeHtml) : '';
+  const shamanCombatPanel = panel.shamanCombatGuide ? renderShamanCombatGuide(panel.shamanCombatGuide, escapeHtml) : '';
   const gearPanel = panel.gearGuide ? renderWarriorGearGuide(panel.gearGuide, panel.level, gearFilter, escapeHtml) : '';
   const levelingPanel = panel.warriorLeveling ? renderWarriorLevelingGuide(panel.warriorLeveling, escapeHtml, checklistProgress, checklistFilter) : '';
   const dungeonsPanel = panel.warriorDungeons ? renderWarriorDungeonPreparation(panel.warriorDungeons, dungeonProgress, escapeHtml) : '';
@@ -945,7 +1068,7 @@ function renderPanel(state, guideData, escapeHtml, progressionEngine = {}, stora
     ? `<p class="wow-companion-next-talent">Next recommended talent · Unlocks at level ${treeData.recommended.nextChange.level} · ${escapeHtml(treeData.tree.talents.find(talent => talent.id === treeData.recommended.nextChange.talentId)?.name || 'Talent')}</p>`
     : '';
   const talentPanel = treeData ? `${treeData.tree ? renderTalentTree(state, treeData, escapeHtml) : ''}${treeData.recommended?.valid ? nextRecommended : ''}${treeData.validation.issues.length ? `<p class="wow-companion-missing" role="status">Progression data needs review: ${escapeHtml(treeData.validation.issues.join(' '))}</p>` : ''}` : '';
-  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${shamanOverviewPanel}${statsPanel}${combatPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${goldFarmingPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}`;
+  return `<h3 data-companion-heading>${escapeHtml(panel.heading)}</h3>${overviewContent || ''}${shamanOverviewPanel}${statsPanel}${combatPanel}${shamanCombatPanel}${gearPanel}${levelingPanel}${dungeonsPanel}${professionsPanel}${goldFarmingPanel}${treeData ? talentPanel : ''}${panel.note ? `<p class="wow-companion-note">${escapeHtml(panel.note)}</p>` : ''}${notices}`;
 }
 
 function renderShamanOverview(data, escapeHtml) {

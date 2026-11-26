@@ -1789,10 +1789,31 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-warrior-guide .wow-warrior-combat-opening > p { color:#aebdca; font-size:.86rem; }
 .wow-warrior-guide .wow-warrior-combat-empty { color:#b8c6d2; font-size:.94rem; }
 .wow-warrior-guide .wow-warrior-combat-step summary:focus-visible { outline:2px solid #d6ad76; outline-offset:2px; border-radius:2px; }
+.wow-warrior-guide .wow-shaman-combat .wow-shaman-totems { margin-top:.8rem; border-top:1px solid #314354; padding-top:.55rem; }
+.wow-warrior-guide .wow-shaman-combat .wow-shaman-totems > h4 { margin:.2rem 0 .4rem; color:#f0d8af; font-size:1.05rem; }
+.wow-warrior-guide .wow-shaman-combat .wow-shaman-totems > p { margin:.2rem 0 .55rem; color:#c2cfda; font-size:.92rem; }
+.wow-warrior-guide .wow-shaman-totem-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; }
+.wow-warrior-guide .wow-shaman-totem-card { min-width:0; border:1px solid #293a4b; border-radius:8px; background:linear-gradient(145deg,rgba(28,43,58,.8),rgba(15,25,36,.94)); padding:.65rem; }
+.wow-warrior-guide .wow-shaman-totem-heading { display:flex; align-items:center; gap:.55rem; }
+.wow-warrior-guide .wow-shaman-totem-heading h5 { margin:.05rem 0; color:#f1d4a5; font-size:1rem; }
+.wow-warrior-guide .wow-shaman-totem-heading .wow-eyebrow { margin:0; color:#d0ad7d; font-size:.76rem; }
+.wow-warrior-guide .wow-shaman-totem-heading img { display:block; width:100%; height:100%; object-fit:cover; border-radius:4px; }
+.wow-warrior-guide .wow-shaman-totem-status { margin:.45rem 0; color:#e0bd8e; font-size:.84rem; }
+.wow-warrior-guide .wow-shaman-totem-card > p { margin:.28rem 0; font-size:.9rem; line-height:1.45; overflow-wrap:anywhere; }
+.wow-warrior-guide .wow-shaman-totem-card details { margin-top:.4rem; color:#bfcdda; font-size:.88rem; }
+.wow-warrior-guide .wow-shaman-totem-card summary,
+.wow-warrior-guide .wow-shaman-totem-upcoming summary { color:#d3ae7e; cursor:pointer; text-underline-offset:2px; }
+.wow-warrior-guide .wow-shaman-totem-card details p { margin:.32rem 0; }
+.wow-warrior-guide .wow-shaman-totem-upcoming { margin-top:.55rem; border-top:1px solid #293a4b; padding-top:.45rem; }
+.wow-warrior-guide .wow-shaman-upcoming-list { margin:.35rem 0 0; padding:0; list-style:none; }
+.wow-warrior-guide .wow-shaman-upcoming-list li { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.2rem .6rem; padding:.32rem .1rem; border-bottom:1px solid #1f3040; font-size:.88rem; }
+.wow-warrior-guide .wow-shaman-upcoming-list li strong { color:#e6c795; }
+.wow-warrior-guide .wow-shaman-upcoming-list li span { color:#c4d1dd; }
 @media(max-width:760px) {
   .wow-warrior-guide .wow-warrior-combat-grid { grid-template-columns:1fr; gap:.3rem; }
   .wow-warrior-guide .wow-warrior-combat-step { grid-template-columns:1.2rem 1.8rem minmax(0,1fr); gap:.38rem; }
   .wow-warrior-guide .wow-warrior-combat-icon { width:1.8rem; height:1.8rem; }
+  .wow-warrior-guide .wow-shaman-totem-grid { grid-template-columns:1fr; }
 }
 @media(prefers-reduced-motion:reduce) {
   .wow-warrior-guide .wow-warrior-combat *,

@@ -1707,6 +1707,8 @@ function showRoute() {
             combatCatalog: wowClientData
           } : {
             shamanGuide: wowData.shamanGuide,
+            shamanCombat: wowData.shamanCombat,
+            combatCatalog: wowClientData,
             raceCombinations: wowData.raceCombinations
           })
         },
