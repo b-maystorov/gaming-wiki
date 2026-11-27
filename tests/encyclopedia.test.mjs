@@ -1750,11 +1750,14 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     const leveling = module.getCompanionPanel({ ...base, tab: 'leveling' }, guideData);
     assert.ok(leveling.warriorLeveling && leveling.warriorLeveling.className === 'Shaman');
     assert.doesNotMatch(JSON.stringify(leveling), /warriorEquipment|warriorCombat/);
-    for (const tab of ['stats', 'dungeons', 'professions']) {
+    for (const tab of ['stats', 'dungeons']) {
       const panel = module.getCompanionPanel({ ...base, tab }, guideData);
       assert.match(panel.notices.join(' '), /Not yet documented for Shaman/);
       assert.doesNotMatch(JSON.stringify(panel), /warriorLeveling|warriorEquipment|warriorCombat/);
     }
+    const professions = module.getCompanionPanel({ ...base, tab: 'professions' }, guideData);
+    assert.ok(professions.warriorProfessionGuide);
+    assert.equal(professions.warriorProfessionGuide.reference, null);
     const talents = module.getCompanionPanel({ ...base, tab: 'talents' }, guideData, shamanEngine);
     assert.ok(talents.treeData.tree, `${spec.name} talent tree is available at ${level}`);
     assert.equal(talents.sections[0].title, 'Talent points spent / available');
@@ -2866,6 +2869,30 @@ test('leveling companion updates its level, specialization, and tab and persists
   specializationSelect.value = 'protection';
   handlers.change({ target: specializationSelect });
   assert.match(panel.innerHTML, /data-warrior-dungeon-task="deadmines:run" checked/, 'specialization changes preserve checked dungeon tasks');
+});
+
+test('Shaman profession recommendations follow specialization and levels 15, 30, 45 and 60', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const shaman = wowPack.classes.find(item => item.id === 'shaman');
+  const guideData = { classRecord: shaman, shamanProfessions: wowPack.shamanProfessions };
+  const expected = {
+    elemental: ['herbalism-alchemy', 'herbalism-alchemy', 'mining-engineering', 'mining-engineering'],
+    enhancement: ['skinning-leatherworking', 'skinning-leatherworking', 'mining-blacksmithing', 'mining-blacksmithing'],
+    restoration: ['herbalism-alchemy', 'herbalism-alchemy', 'herbalism-alchemy', 'herbalism-alchemy']
+  };
+  for (const [index, level] of [15, 30, 45, 60].entries()) {
+    for (const specializationId of ['elemental', 'enhancement', 'restoration']) {
+      const panel = module.getCompanionPanel({ classId: 'shaman', level, specializationId, faction: 'Alliance', tab: 'professions' }, guideData);
+      assert.ok(panel.warriorProfessionGuide, `${specializationId} at ${level}: ${panel.heading}; keys ${Object.keys(panel).join(',')}`);
+      assert.equal(panel.warriorProfessionGuide.recommendation, expected[specializationId][index]);
+      assert.equal(panel.warriorProfessionGuide.level, level);
+      assert.equal(panel.warriorProfessionGuide.specializationId, specializationId);
+      assert.equal(panel.warriorProfessionGuide.reference.rankGates.length, 4);
+    }
+  }
+  assert.equal(wowPack.shamanProfessions.combinations.length, 7);
+  assert.ok(wowPack.shamanProfessions.combinations.every(pair => pair.levelingBenefit && pair.healingBenefit && pair.goldPotential && pair.tradeoff && pair.sourceIds.length));
+  assert.equal(wowPack.shamanProfessions.craftExamples.length, 0, 'no recipe, materials or gear should be invented without a verified Shaman craft record');
 });
 
 test('Warrior profession guidance filters craft status by level and changes by specialization', () => {

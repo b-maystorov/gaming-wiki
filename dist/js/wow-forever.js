@@ -887,6 +887,7 @@ export function renderWowPage(route, data, escapeHtml, artworkManifest = null, p
           : data.dungeons,
         warriorLeveling: data.warriorLeveling,
         warriorProfessions: data.warriorProfessions,
+        shamanProfessions: data.shamanProfessions,
         shamanGuide: item.id === 'shaman' ? data.shamanGuide : undefined,
         shamanLeveling: item.id === 'shaman' ? data.shamanLeveling : undefined,
         raceCombinations: item.id === 'shaman' ? data.raceCombinations : undefined,
