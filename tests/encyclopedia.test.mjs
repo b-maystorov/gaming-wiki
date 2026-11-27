@@ -1855,14 +1855,17 @@ test('Shaman gear recommendations filter by specialization, faction, equipment a
   const knownDungeons = new Map([...wowPack.dungeons, ...dungeonPrepData.dungeons].map(dungeon => [dungeon.id, dungeon]));
   const guideData = { classRecord: shaman, shamanEquipment: gear, dungeons: [...knownDungeons.values()] };
   const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-  assert.ok(gear.items.length >= 15, 'the guide starts with a curated set of source-checked recommendations');
+  assert.ok(gear.items.length >= 35, 'the guide contains expanded source-checked Shaman recommendations');
   assert.equal(new Set(gear.items.map(item => item.itemId)).size, gear.items.length, 'stable item IDs are not duplicated');
+  for (const slot of ['Head', 'Chest', 'Wrists', 'Cloak', 'Necklace', 'Trinket', 'Off Hand']) {
+    assert.ok(gear.items.some(item => item.slot === slot), `${slot} now has a sourced Shaman recommendation`);
+  }
   for (const item of gear.items) {
     assert.equal(item.classRestrictions.join(','), 'shaman');
     assert.ok(item.specializations.length && item.specializations.every(id => shaman.specializations.some(spec => spec.id === id)));
     assert.ok(item.sourceIds.every(id => knownSources.has(id)), `${item.name} retains source attribution`);
     if (item.questIds?.length) assert.ok(item.questIds.every(id => knownQuests.has(id)), `${item.name} quest IDs resolve`);
-    else assert.match(item.acquisition, /Dropped by/, `${item.name} describes its boss acquisition`);
+    else assert.ok(item.acquisition, `${item.name} describes its acquisition method`);
     if (item.dungeonId) assert.ok(knownDungeons.has(item.dungeonId), `${item.name} dungeon ID resolves to a current dungeon guide`);
     assert.ok(item.requiredLevel == null || Number.isInteger(item.requiredLevel));
     if (item.requiredLevel == null) assert.equal(item.requirementStatus, 'not-listed', `${item.name} does not turn an undocumented requirement into a fact`);
@@ -1903,6 +1906,38 @@ test('Shaman gear recommendations filter by specialization, faction, equipment a
   assert.match(level25Html, /Related quest/);
   const alliance25Html = companion.renderWarriorGearGuide(companion.getCompanionPanel({ classId: 'shaman', specializationId: 'elemental', level: 25, faction: 'Alliance', tab: 'gear' }, guideData).gearGuide, 25, 'all', escape);
   assert.match(alliance25Html, /#game\/world-of-warcraft\/dungeons\/deadmines/);
+
+  const allianceEnhancement35 = companion.getCompanionPanel({ classId: 'shaman', specializationId: 'enhancement', level: 35, faction: 'Alliance', tab: 'gear' }, guideData).gearGuide;
+  const level35Html = companion.renderWarriorGearGuide(allianceEnhancement35, 35, 'all', escape);
+  assert.match(level35Html, /Green Whelp Bracers/);
+  assert.match(level35Html, /Required level<\/strong>Level 33/);
+  assert.match(level35Html, /Leatherworking craft/);
+  assert.match(level35Html, /8 Heavy Leather, 2 Silken Thread and 6 Green Whelp Scale/);
+  assert.match(level35Html, /Brewer&#39;s Bracers/);
+  assert.match(level35Html, /equippable from level 40/i);
+  assert.match(level35Html, /Upcoming · Source available from level 40/);
+  assert.ok(allianceEnhancement35.items.some(item => item.id === 'shaman-therazanes-touch') === false, 'caster off-hand is not recommended for Enhancement');
+  const enhancement60 = companion.getCompanionPanel({ classId: 'shaman', specializationId: 'enhancement', level: 60, faction: 'Alliance', tab: 'gear' }, guideData).gearGuide;
+  assert.ok(enhancement60.items.some(item => item.id === 'shaman-guidance-of-ursoc'));
+  assert.ok(enhancement60.items.some(item => item.id === 'shaman-bigger-rock-on-bigger-stick'));
+  const elemental60 = companion.getCompanionPanel({ classId: 'shaman', specializationId: 'elemental', level: 60, faction: 'Horde', tab: 'gear' }, guideData).gearGuide;
+  assert.ok(elemental60.items.some(item => item.id === 'shaman-royal-seal-eldrethalas'));
+  assert.ok(elemental60.items.some(item => item.id === 'shaman-therazanes-touch'));
+  const caster60Html = companion.renderWarriorGearGuide(elemental60, 60, 'all', escape);
+  assert.match(caster60Html, /Royal Seal of Eldre&#39;Thalas/);
+  assert.match(caster60Html, /Related quest/);
+  assert.match(caster60Html, /#game\/world-of-warcraft\/dungeons\/blackmaw-hold/);
+  for (const item of gear.items.filter(entry => entry.id === 'shaman-brewers-bracers')) {
+    assert.equal(item.availabilityLevel, 40, 'Shaman mail proficiency gates its use even though the quest opens earlier');
+    assert.equal(item.requiredLevel, null, 'proficiency does not become an invented item requirement');
+    assert.match(item.proficiencyRequirement, /Mail proficiency from level 40/);
+  }
+  assert.ok(gear.items.filter(item => item.category === 'weapon').every(item => ['Two-Hand', 'Main Hand', 'Off Hand'].includes(item.slot)), 'weapon records use Shaman-supported equipment forms');
+
+  const noEquipment = companion.getCompanionPanel({ classId: 'shaman', specializationId: 'elemental', level: 30, faction: 'Alliance', tab: 'gear' }, { classRecord: shaman }).gearGuide;
+  const noEquipmentHtml = companion.renderWarriorGearGuide(noEquipment, 30, 'all', escape);
+  assert.match(noEquipmentHtml, /Verified Shaman equipment data is not loaded|No verified Elemental Shaman item recommendations/);
+  assert.match(noEquipmentHtml, /No verified Elemental Shaman item recommendations match Alliance/);
 });
 
 test('Shaman combat and totem guidance filters abilities, quest gates and ranks by specialization and level', async () => {
