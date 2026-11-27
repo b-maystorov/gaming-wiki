@@ -1036,6 +1036,13 @@ a.wow-database-card:hover { border-color: #62b5ff; color: #edf4fc; background: #
 .wow-gold-empty { display:inline-block; margin:.1rem 0 0; padding:.4rem .65rem; border-left:2px solid #756447; color:#aebbc2; background:#101a23; font-size:.84rem; line-height:1.4; }
 .wow-gold-other ul { margin:.3rem 0 0; padding-left:1.2rem; }
 .wow-gold-other li { margin:.3rem 0; color:#c8d2d7; font-size:.9rem; }
+.wow-gold-shaman-focus,.wow-gold-upcoming { margin:0; padding:.8rem 1rem; border:1px solid #354b5c; background:#111d28; line-height:1.55; }
+.wow-gold-shaman-focus { border-left:3px solid #c79c6e; }
+.wow-gold-shaman-focus h4,.wow-gold-upcoming h4 { margin:0 0 .4rem; color:#e7d4aa; font-size:1rem; }
+.wow-gold-shaman-focus p { margin:.2rem 0 .45rem; }
+.wow-gold-shaman-focus a { color:#e0c991; }
+.wow-gold-upcoming ul { margin:.25rem 0 0; padding-left:1.2rem; }
+.wow-gold-upcoming li { margin:.3rem 0; color:#c8d2d7; font-size:.9rem; }
 @media(max-width:900px) { .wow-gold-grid { grid-template-columns:1fr; } }
 @media(max-width:560px) { .wow-gold-category { padding:.65rem; } .wow-gold-card { padding:.8rem; } .wow-gold-card dl { grid-template-columns:1fr; gap:.55rem; } .wow-gold-card .wow-gold-location,.wow-gold-card dl > div:nth-last-child(2),.wow-gold-card dl > div:last-child { grid-column:auto; } }
 :is(.wow-warrior-guide,.wow-shaman-guide) .wow-warrior-facts { display:flex; flex-wrap:wrap; gap:.75rem 2rem; margin:1.15rem 0 0; }

@@ -3441,6 +3441,52 @@ test('gold farming responds to level, specialization and faction and preserves s
   assert.match(emptyClass, /No matching methods for this level, faction, and specialization/);
 });
 
+test('Shaman gold farming filters current and upcoming recommendations by level and faction', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const sourceModule = h.modules.get(resolve(root, 'dist/data/games/wow-forever-gold-farming.js')).namespace;
+  const shaman = wowPack.classes.find(item => item.id === 'shaman');
+  const render = (level, specializationId, faction) => module.renderLevelingCompanion({
+    classId: 'shaman', currentLevel: level, selectedSpecialization: specializationId,
+    guideData: { classRecord: shaman },
+    storage: { getItem: key => key.endsWith(`:shaman:${specializationId}`) ? JSON.stringify({ level, faction, specializationId, tab: 'gold-farming' }) : null }
+  });
+  for (const level of [15, 30, 45, 60]) for (const specializationId of ['elemental', 'enhancement', 'restoration']) {
+    const faction = level === 15 ? 'Alliance' : 'Horde';
+    const html = render(level, specializationId, faction);
+    assert.match(html, new RegExp(`data-gold-level="${level}"`));
+    assert.match(html, new RegExp(`data-gold-spec="${specializationId}"`));
+    assert.match(html, new RegExp(`data-gold-faction="${faction}"`));
+    assert.match(html, /Open Shaman profession pairings/);
+    assert.match(html, /Practical instructions and risks/);
+  }
+  const elemental = render(30, 'elemental', 'Alliance');
+  const enhancement = render(30, 'enhancement', 'Alliance');
+  const restoration = render(30, 'restoration', 'Alliance');
+  assert.match(elemental, /Elemental approach/);
+  assert.doesNotMatch(elemental, /Enhancement approach|Restoration approach/);
+  assert.match(enhancement, /Enhancement approach/);
+  assert.match(restoration, /Restoration approach/);
+  assert.match(render(15, 'elemental', 'Alliance'), /Greymist Seer loot loop/);
+  assert.doesNotMatch(render(15, 'elemental', 'Horde'), /Greymist Seer loot loop/);
+  assert.match(render(15, 'elemental', 'Alliance'), /Coming up/);
+  assert.doesNotMatch(render(15, 'elemental', 'Alliance'), /Riverglades coyote respawn loop[\s\S]*Recommended now/);
+  assert.match(render(30, 'enhancement', 'Horde'), /Ashenvale furbolg camps/);
+  assert.match(render(45, 'enhancement', 'Horde'), /Tanaris/);
+  assert.match(render(45, 'restoration', 'Horde'), /Heal mid-level dungeon groups/);
+  assert.match(render(60, 'restoration', 'Horde'), /Heal level-60 boss-loot groups/);
+  assert.match(render(60, 'enhancement', 'Horde'), /Rugged Leather/);
+  assert.match(render(60, 'restoration', 'Horde'), /data-companion-tab="professions"/);
+
+  const sharedCopper = sourceModule.WOW_GOLD_FARMING_METHODS.find(method => method.id === 'mining-copper-starter-routes');
+  assert.ok(sharedCopper.classes.includes('shaman'), 'shared gathering methods remain reusable instead of being copied for Shaman');
+  const shamanMethods = sourceModule.WOW_GOLD_FARMING_METHODS.filter(method => method.classes.includes('shaman'));
+  assert.ok(shamanMethods.filter(method => method.category !== 'Class-Specific Strategies').every(method => method.sourceUrl && method.verifiedDate && method.status));
+  assert.equal(sourceModule.WOW_GOLD_SHAMAN_GUIDANCE.elemental.sourceUrl, 'https://www.ratchetreserve.com/guides/shaman-gold-farming');
+  assert.ok(shamanMethods.some(method => method.faction === 'Alliance'));
+  const empty = module.renderLevelingCompanion({ classId: 'paladin', currentLevel: 10, selectedSpecialization: 'holy', guideData: { classRecord: wowPack.classes.find(item => item.id === 'paladin') }, storage: { getItem: key => key.endsWith(':paladin') ? JSON.stringify({ level: 10, faction: 'Alliance', specializationId: 'holy', tab: 'gold-farming' }) : null } });
+  assert.match(empty, /No matching methods for this level, faction, and specialization/);
+});
+
 test('leveling companion renders complete source-backed builds and safely handles blocked storage', () => {
   const companionModule = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
   const warrior = wowPack.classes.find(item => item.id === 'warrior');

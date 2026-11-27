@@ -1,4 +1,4 @@
-import { WOW_GOLD_FARMING_METHODS, WOW_GOLD_LEVEL_SUGGESTIONS, WOW_GOLD_OTHER_TIPS } from '../data/games/wow-forever-gold-farming.js';
+import { WOW_GOLD_FARMING_METHODS, WOW_GOLD_LEVEL_SUGGESTIONS, WOW_GOLD_OTHER_TIPS, WOW_GOLD_SHAMAN_GUIDANCE } from '../data/games/wow-forever-gold-farming.js';
 
 const COMPANION_TABS = ['overview', 'stats', 'talents', 'combat', 'gear', 'leveling', 'dungeons', 'professions', 'gold-farming'];
 const WARRIOR_ONLY_TABS = new Set(['combat', 'dungeons']);
@@ -1221,26 +1221,34 @@ function renderShamanOverview(data, escapeHtml) {
 function renderGoldFarmingGuide(selection, escapeHtml) {
   const { level, faction, specializationId, classId } = selection;
   const categoryLabels = ['Farming Spots', 'Gathering Professions', 'Crafting for Profit', 'Dungeon Farming', 'Auction House Tips', 'Class-Specific Strategies'];
-  const records = WOW_GOLD_FARMING_METHODS.filter(method => method.classes.includes(classId)
+  const matchesSelection = method => method.classes.includes(classId)
     && (method.faction === 'Both' || method.faction === faction)
+    && (!method.specializations.length || method.specializations.includes(specializationId));
+  const records = WOW_GOLD_FARMING_METHODS.filter(method => matchesSelection(method)
     && (!Number.isFinite(method.minLevel) || method.minLevel <= level)
-    && (!Number.isFinite(method.maxLevel) || method.maxLevel >= level)
-    && (!method.specializations.length || method.specializations.includes(specializationId)));
+    && (!Number.isFinite(method.maxLevel) || method.maxLevel >= level));
+  const upcomingRecords = classId === 'shaman' ? WOW_GOLD_FARMING_METHODS.filter(method => matchesSelection(method)
+    && Number.isFinite(method.minLevel) && method.minLevel > level).sort((left, right) => left.minLevel - right.minLevel).slice(0, 4) : [];
+  const shamanGuidance = classId === 'shaman' ? WOW_GOLD_SHAMAN_GUIDANCE[specializationId] : null;
   const cards = categoryLabels.map(category => {
     const categoryRecords = records.filter(method => method.category === category);
     return `<section class="wow-gold-category"><h4>${category}</h4>${categoryRecords.length ? `<div class="wow-gold-grid">${categoryRecords.map(method => {
       const rate = method.goldPerHour ? `<p class="wow-gold-rate"><strong>Observed haul:</strong> ${escapeHtml(method.goldPerHour.amount)} · ${escapeHtml(method.goldPerHour.context)}. Creator-reported; not a promise or typical result.</p>` : '';
-      const specNames = method.specializations.length ? method.specializations.map(id => ({ arms: 'Arms', fury: 'Fury', protection: 'Protection' })[id] || id).join(', ') : 'All specializations';
+      const specNames = method.specializations.length ? method.specializations.map(id => ({ arms: 'Arms', fury: 'Fury', protection: 'Protection', elemental: 'Elemental', enhancement: 'Enhancement', restoration: 'Restoration' })[id] || id).join(', ') : 'All specializations';
       const levelLabel = method.levelLabel || `Levels ${method.minLevel}–${method.maxLevel}`;
       const specAdvice = method.specializationAdvice?.[specializationId];
+      const adviceLabel = classId === 'shaman' ? ({ elemental: 'Elemental', enhancement: 'Enhancement', restoration: 'Restoration' })[specializationId] || specNames : specNames;
       const lootValue = method.groupLoot ? `<p class="wow-gold-rate"><strong>Recorded group loot:</strong> ${escapeHtml(method.groupLoot.value)}. ${escapeHtml(method.groupLoot.context)}</p>` : '';
-      return `<article class="wow-gold-card"><header><h5>${escapeHtml(method.name)}</h5><span class="wow-gold-level">${escapeHtml(levelLabel)}</span></header><dl><div class="wow-gold-location"><dt>Location</dt><dd>${escapeHtml(method.zone || 'No verified zone')}${method.location ? ` · ${escapeHtml(method.location)}` : ''}</dd></div>${method.target ? `<div><dt>Enemies / resources</dt><dd>${escapeHtml(method.target)}</dd></div>` : ''}<div><dt>Collect</dt><dd>${escapeHtml(method.collect)}</dd></div><div><dt>Requirements</dt><dd>${escapeHtml(method.requirement || 'None recorded')}</dd></div><div><dt>How it earns</dt><dd>${escapeHtml(method.earn)}</dd></div><div><dt>Group / specs</dt><dd>${escapeHtml(method.suitability)} · ${escapeHtml(specNames)}</dd></div></dl>${rate}${lootValue}<details><summary>Practical instructions and risks</summary>${method.route ? `<p><strong>Reach it:</strong> ${escapeHtml(method.route)}</p>` : ''}<p>${escapeHtml(method.instructions)}</p>${specAdvice ? `<p><strong>${escapeHtml(specNames)} approach:</strong> ${escapeHtml(specAdvice)}</p>` : ''}${method.risks ? `<p><strong>Risks:</strong> ${escapeHtml(method.risks)}</p>` : ''}</details></article>`;
+      const professionLink = method.professionGuideLink ? '<p><a href="#game/world-of-warcraft/classes/shaman" data-companion-tab="professions">Compare Shaman profession pairings →</a></p>' : '';
+      return `<article class="wow-gold-card"><header><h5>${escapeHtml(method.name)}</h5><span class="wow-gold-level">${escapeHtml(levelLabel)}</span></header><dl><div class="wow-gold-location"><dt>Location</dt><dd>${escapeHtml(method.zone || 'No verified zone')}${method.location ? ` · ${escapeHtml(method.location)}` : ''}</dd></div>${method.target ? `<div><dt>Enemies / resources</dt><dd>${escapeHtml(method.target)}</dd></div>` : ''}<div><dt>Collect</dt><dd>${escapeHtml(method.collect)}</dd></div><div><dt>Requirements</dt><dd>${escapeHtml(method.requirement || 'None recorded')}</dd></div><div><dt>How it earns</dt><dd>${escapeHtml(method.earn)}</dd></div><div><dt>Group / specs</dt><dd>${escapeHtml(method.suitability)} · ${escapeHtml(specNames)}</dd></div></dl>${rate}${lootValue}<details><summary>Practical instructions and risks</summary>${method.route ? `<p><strong>Reach it:</strong> ${escapeHtml(method.route)}</p>` : ''}<p>${escapeHtml(method.instructions)}</p>${specAdvice ? `<p><strong>${escapeHtml(adviceLabel)} approach:</strong> ${escapeHtml(specAdvice)}</p>` : ''}${method.risks ? `<p><strong>Risks:</strong> ${escapeHtml(method.risks)}</p>` : ''}</details>${professionLink}</article>`;
     }).join('')}</div>` : `<p class="wow-gold-empty">${classId === 'shaman' ? 'Not yet documented for Shaman with these selections.' : 'No matching methods for this level, faction, and specialization.'}</p>`}</section>`;
   }).join('');
   const suggestion = WOW_GOLD_LEVEL_SUGGESTIONS.find(item => level >= item.min && level <= item.max);
   const otherTips = WOW_GOLD_OTHER_TIPS.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const bandLabel = suggestion.min === 60 ? 'Level 60' : `Levels ${suggestion.min}–${suggestion.max}`;
-  return `<div class="wow-gold-farming" data-gold-level="${level}" data-gold-spec="${escapeHtml(specializationId)}" data-gold-faction="${escapeHtml(faction)}"><p class="wow-gold-disclosure">Suggestions use the guide’s current level, specialization and faction. Market prices and demand vary by ruleset, faction and date. Rates appear only when a source reports a measured result.</p><section class="wow-gold-band"><h4>${bandLabel} suggestions</h4><p>${escapeHtml(suggestion.text)}</p></section>${cards}<section class="wow-gold-other"><h4>Other Ways to Make Gold</h4><ul>${otherTips}</ul></section></div>`;
+  const upcoming = upcomingRecords.length ? `<section class="wow-gold-upcoming"><h4>Coming up</h4><ul>${upcomingRecords.map(method => `<li><strong>Level ${escapeHtml(method.minLevel)} · ${escapeHtml(method.name)}</strong> — ${escapeHtml(method.zone)}. ${escapeHtml(method.levelLabel || `Available through level ${method.maxLevel ?? 60}`)}</li>`).join('')}</ul></section>` : '';
+  const specializationPanel = shamanGuidance ? `<section class="wow-gold-shaman-focus"><h4>${escapeHtml(shamanGuidance.title)}</h4><p>${escapeHtml(shamanGuidance.text)}</p><a href="#game/world-of-warcraft/classes/shaman" data-companion-tab="professions">Open Shaman profession pairings →</a></section>` : '';
+  return `<div class="wow-gold-farming" data-gold-level="${level}" data-gold-spec="${escapeHtml(specializationId)}" data-gold-faction="${escapeHtml(faction)}"><p class="wow-gold-disclosure">Suggestions use the guide’s current level, specialization and faction. Market prices and demand vary by ruleset, faction and date. Rates appear only when a source reports a measured result.</p>${specializationPanel}<section class="wow-gold-band"><h4>${bandLabel} suggestions</h4><p>${escapeHtml(suggestion.text)}</p></section>${cards}${upcoming}<section class="wow-gold-other"><h4>Other Ways to Make Gold</h4><ul>${otherTips}</ul></section></div>`;
 }
 
 function renderWarriorProfessionGuide(data, selectedChoice, escapeHtml) {
