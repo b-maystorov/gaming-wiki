@@ -1750,11 +1750,13 @@ test('Shaman guide has isolated specialization state, a level-aware overview, an
     const leveling = module.getCompanionPanel({ ...base, tab: 'leveling' }, guideData);
     assert.ok(leveling.warriorLeveling && leveling.warriorLeveling.className === 'Shaman');
     assert.doesNotMatch(JSON.stringify(leveling), /warriorEquipment|warriorCombat/);
-    for (const tab of ['stats', 'dungeons']) {
+    for (const tab of ['dungeons']) {
       const panel = module.getCompanionPanel({ ...base, tab }, guideData);
       assert.match(panel.notices.join(' '), /Not yet documented for Shaman/);
       assert.doesNotMatch(JSON.stringify(panel), /warriorLeveling|warriorEquipment|warriorCombat/);
     }
+    const stats = module.getCompanionPanel({ ...base, tab: 'stats' }, guideData);
+    assert.ok(stats.statsGuide && stats.priority, 'Shaman Stats is now documented per specialization');
     const professions = module.getCompanionPanel({ ...base, tab: 'professions' }, guideData);
     assert.ok(professions.warriorProfessionGuide);
     assert.equal(professions.warriorProfessionGuide.reference, null);
@@ -2960,6 +2962,51 @@ test('Warrior Stats use sourced, level-aware priorities and explanations for eac
   assert.ok(warrior.statsGuide.priorities.arms.leveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.ok(warrior.statsGuide.priorities.fury.beforeDualWield.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
   assert.ok(warrior.statsGuide.priorities.protection.leveling.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+});
+
+test('Shaman Stats update specialization and level, explain stats, use dedicated SVG icons, and handle missing data', () => {
+  const module = h.modules.get(resolve(root, 'dist/js/wow-leveling-companion.js')).namespace;
+  const shaman = wowPack.classes.find(item => item.id === 'shaman');
+  const guideData = { classRecord: shaman, sources: wowPack.sources };
+  const render = (level, specializationId, record = shaman) => module.renderLevelingCompanion({
+    classId: 'shaman', currentLevel: level, selectedSpecialization: specializationId, guideData: { classRecord: record, sources: wowPack.sources },
+    storage: { getItem: () => JSON.stringify({ level, specializationId, tab: 'stats' }) }
+  });
+  const labels = (html) => [...html.matchAll(/class="wow-stat-priority-label">([^<]+)/g)].map(match => match[1]);
+  const expected = {
+    elemental: { 15: 'Elemental · Solo leveling priorities (1–20)', 35: 'Elemental · Solo leveling priorities (21–40)', 45: 'Elemental · Solo leveling priorities (41–59)', 60: 'Elemental · Level 60 spell DPS' },
+    enhancement: { 15: 'Enhancement · Solo leveling priorities (1–20)', 35: 'Enhancement · Solo leveling priorities (21–40)', 45: 'Enhancement · Solo leveling priorities (41–59)', 60: 'Enhancement · Level 60 melee DPS' },
+    restoration: { 15: 'Restoration · Leveling and dungeon healing (1–20)', 35: 'Restoration · Leveling and dungeon healing (21–40)', 45: 'Restoration · Leveling and dungeon healing (41–59)', 60: 'Restoration · Level 60 dungeon and raid healing' }
+  };
+  for (const level of [15, 35, 45, 60]) for (const specializationId of ['elemental', 'enhancement', 'restoration']) {
+    const html = render(level, specializationId);
+    assert.ok(html.includes(`data-stats-specialization="${specializationId}" data-stats-level="${level}"`));
+    assert.ok(html.includes(expected[specializationId][level]), `${specializationId} profile updates at ${level}`);
+    assert.ok(html.includes('Shaman attributes') && html.includes('When it matters:'));
+    assert.ok(html.includes('What should I upgrade next?') && html.includes('Mechanics &amp; context'));
+    assert.ok(!html.includes('foreverdb.net/stats'), 'citations stay in source metadata, not repetitive visible labels');
+  }
+  assert.deepEqual(labels(render(15, 'elemental')).slice(0, 3), ['Spell Damage', 'Critical Strike', 'Hit Chance']);
+  assert.deepEqual(labels(render(15, 'enhancement')).slice(0, 3), ['Weapon DPS', 'Intellect', 'Strength']);
+  assert.deepEqual(labels(render(60, 'restoration')).slice(0, 3), ['Healing Power', 'Critical Strike', 'Intellect']);
+  assert.ok(render(35, 'elemental').includes('general leveling order'), 'range-specific labels do not imply unverified band-specific weights');
+  const allIds = shaman.statsGuide.attributes.map(stat => stat.id);
+  for (const stat of shaman.statsGuide.attributes) {
+    assert.ok(stat.summary && stat.when && stat.sourceIds?.length, `${stat.name} has explanation and attribution`);
+    assert.ok(wowPack.sources.some(source => source.id === stat.sourceIds[0]), `${stat.name} source exists`);
+  }
+  assert.ok(shaman.statsGuide.sourceIds.every(id => wowPack.sources.some(source => source.id === id)));
+  const icons = render(60, 'enhancement');
+  for (const id of allIds) assert.ok(icons.includes(`class="wow-stat-symbol is-${id}"`), `${id} has a matching inline SVG stat icon`);
+  assert.equal((icons.match(/class="wow-stat-row"/g) || []).length, allIds.length);
+  assert.equal((icons.match(/class="wow-stat-symbol is-missing"/g) || []).length, 0);
+  assert.ok(!icons.includes('<img'), 'stat rows do not use unrelated spell artwork');
+  const restorationLeveling = render(15, 'restoration');
+  assert.ok(restorationLeveling.includes('no verified ranking') && !restorationLeveling.includes('wow-stat-priority-rank'), 'unranked Restoration leveling options are not displayed as a stat order');
+  const missing = render(35, 'elemental', { ...shaman, statsGuide: undefined });
+  assert.ok(missing.includes('Not yet documented for Shaman Elemental.'));
+  assert.ok(!missing.includes('data-stats-specialization=') && !missing.includes('wow-stat-row'));
+  assert.ok(guideData.classRecord.statsGuide.priorities.elemental.leveling.items.length > 0, 'specialization switching reads each independent profile');
 });
 
 test('Warrior profession guidance uses loaded Forever records and explains when that data is missing', () => {

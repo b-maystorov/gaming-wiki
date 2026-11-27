@@ -626,15 +626,23 @@ export function getCompanionPanel(state, guideData = {}, progressionEngine = {})
       sections: [], notices: [], sourceIds: levelingData.sourceIds
     };
   }
-  if (classRecord.id === 'shaman' && !['combat', 'gear', 'talents', 'gold-farming', 'professions'].includes(state.tab)) {
+  if (classRecord.id === 'shaman' && !['combat', 'gear', 'talents', 'gold-farming', 'professions'].includes(state.tab)
+    && !(state.tab === 'stats' && classRecord.statsGuide)) {
     const label = COMPANION_TAB_LABELS[state.tab] || state.tab;
     return { heading: `${specName} · ${label} · Level ${state.level}`, sections: [], notices: [`Not yet documented for Shaman ${specName}.`] };
   }
   if (state.tab === 'stats' && classRecord.statsGuide) {
     const priorityRecord = classRecord.statsGuide.priorities?.[state.specializationId];
-    const profile = state.level >= 60 ? priorityRecord
-      : state.specializationId === 'fury' && state.level < 20 ? priorityRecord?.beforeDualWield
-        : priorityRecord?.leveling || priorityRecord;
+    const profile = classRecord.id === 'shaman'
+      ? (() => {
+        const selected = priorityRecord?.[state.level >= 60 ? 'level60' : 'leveling'];
+        if (!selected || state.level >= 60) return selected;
+        const band = state.level <= 20 ? '1–20' : state.level <= 40 ? '21–40' : '41–59';
+        return { ...selected, label: selected.label.replace('1–59', band) };
+      })()
+      : state.level >= 60 ? priorityRecord
+        : state.specializationId === 'fury' && state.level < 20 ? priorityRecord?.beforeDualWield
+          : priorityRecord?.leveling || priorityRecord;
     const priority = profile ? { ...profile, id: state.specializationId, level: state.level } : null;
     return {
       heading: `${specName} · Stats & Attributes · Level ${state.level}`,
@@ -1043,23 +1051,41 @@ const WARRIOR_STAT_SYMBOLS = {
   'block-value': '<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m8 12 2.5 2.5L16 9"/><path d="M12 5v3"/>'
 };
 
+Object.assign(WARRIOR_STAT_SYMBOLS, {
+  'spell-power': '<path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/>',
+  'healing-power': '<path d="M20.8 8.8c0 4.1-8.8 11-8.8 11s-8.8-6.9-8.8-11a4.7 4.7 0 0 1 8.8-2.2 4.7 4.7 0 0 1 8.8 2.2Z"/><path d="M12 8v6M9 11h6"/>',
+  intellect: '<path d="M12 3a7 7 0 0 0-4 12.7V19h8v-3.3A7 7 0 0 0 12 3Z"/><path d="M9 22h6M9 19h6M9 10a3 3 0 0 1 3-3"/>',
+  spirit: '<path d="M12 22c4-4 6-7 6-11a6 6 0 0 0-12 0c0 4 2 7 6 11Z"/><path d="M12 17c-2-2-2-4 0-6 2 2 2 4 0 6Z"/>',
+  mp5: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M8 2h8"/>',
+  'weapon-speed': '<path d="m14 4 6-2 2 2-2 6-3-3-9 9-2-2 9-9-1-1Z"/><circle cx="6" cy="18" r="4"/><path d="M6 16v2l1 1"/>'
+});
+
 function renderWarriorStatSymbol(statId) {
-  const paths = WARRIOR_STAT_SYMBOLS[statId] || WARRIOR_STAT_SYMBOLS.defense;
+  const paths = WARRIOR_STAT_SYMBOLS[statId];
+  if (!paths) return `<span class="wow-stat-symbol is-missing" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="M12 8v5m0 3h.01"/></svg></span>`;
   return `<span class="wow-stat-symbol is-${statId}" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${paths}</svg></span>`;
 }
 
 function renderStatsGuide(statsGuide, priority, escapeHtml) {
   if (!statsGuide || !priority) return '';
+  const renderGroup = group => group.ranked === false
+    ? `<section class="wow-stat-priority-group"><h4>${escapeHtml(group.label)}</h4><ul>${group.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`
+    : renderPriority(group.label, group.items);
   const renderPriority = (title, items) => `<section class="wow-stat-priority-group"><h4>${escapeHtml(title)}</h4><ol>${items.map((item, index) => {
     const orderFill = Math.round(((items.length - index) / items.length) * 100);
     return `<li><span class="wow-stat-priority-rank" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span><span class="wow-stat-priority-label">${escapeHtml(item)}</span><span class="wow-stat-order-bar" aria-hidden="true"><span style="width:${orderFill}%"></span></span></li>`;
   }).join('')}</ol></section>`;
-  const priorities = priority.items
-    ? renderPriority(priority.label, priority.items)
+  const priorities = priority.groups
+    ? priority.groups.map(renderGroup).join('')
+    : priority.items
+      ? priority.ranked === false
+        ? renderGroup({ label: priority.label, items: priority.items, ranked: false })
+        : renderPriority(priority.label, priority.items)
     : `${renderPriority('Threat & damage', priority.offense || [])}${renderPriority('Survival', priority.defense || [])}`;
-  const rows = statsGuide.attributes.map(stat => `<li class="wow-stat-row" data-stat-id="${escapeHtml(stat.id)}">${renderWarriorStatSymbol(stat.id)}<strong>${escapeHtml(stat.name)}</strong><span><span>${escapeHtml(stat.summary)}</span>${stat.when ? `<small><strong>When it matters:</strong> ${escapeHtml(stat.when)}</small>` : ''}</span></li>`).join('');
-  const explanations = statsGuide.explanations.map(item => `<details class="wow-stat-explanation"><summary>${escapeHtml(item.title)}</summary><p>${escapeHtml(item.text)}</p></details>`).join('');
-  return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}" data-stats-level="${Number(priority.level) || 60}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>Level ${Number(priority.level) || 60} · Bars show ordering, not numerical stat weights.</span></div>${priority.note ? `<p class="wow-stat-priority-note">${escapeHtml(priority.note)}</p>` : ''}${priority.thresholdNote ? `<p class="wow-stat-threshold-note">${escapeHtml(priority.thresholdNote)}</p>` : ''}<div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>Warrior attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice)}</p></section></div>`;
+  const rows = (statsGuide.attributes || []).map(stat => `<li class="wow-stat-row" data-stat-id="${escapeHtml(stat.id)}">${renderWarriorStatSymbol(stat.id)}<strong>${escapeHtml(stat.name)}</strong><span><span>${escapeHtml(stat.summary)}</span>${stat.when ? `<small><strong>When it matters:</strong> ${escapeHtml(stat.when)}</small>` : ''}</span></li>`).join('');
+  const explanations = (statsGuide.explanations || []).map(item => `<details class="wow-stat-explanation"><summary>${escapeHtml(item.title)}</summary><p>${escapeHtml(item.text)}</p></details>`).join('');
+  const priorityLegend = priority.ranked === false ? 'Leveling stat options · no verified ranking' : 'Bars show ordering, not numerical stat weights.';
+  return `<div class="wow-stats-guide" data-stats-specialization="${escapeHtml(priority.id || '')}" data-stats-level="${Number(priority.level) || 60}"><section class="wow-stat-priority"><div class="wow-stat-section-heading"><h4>${escapeHtml(priority.label || 'Specialization priority')}</h4><span>Level ${Number(priority.level) || 60} · ${priorityLegend}</span></div>${priority.note ? `<p class="wow-stat-priority-note">${escapeHtml(priority.note)}</p>` : ''}${priority.thresholdNote ? `<p class="wow-stat-threshold-note">${escapeHtml(priority.thresholdNote)}</p>` : ''}<div class="wow-stat-priority-groups">${priorities}</div></section><section class="wow-stat-attributes"><h4>${escapeHtml(statsGuide.className || 'Warrior')} attributes</h4><ul class="wow-stat-rows">${rows}</ul></section><section class="wow-stat-explanations"><h4>Mechanics &amp; context</h4>${explanations}</section><section class="wow-stat-upgrade"><h4>What should I upgrade next?</h4><p>${escapeHtml(statsGuide.upgradeAdvice || 'No upgrade advice is recorded.')}</p></section></div>`;
 }
 
 export function renderWarriorGearGuide(gearGuide, level, selectedFilter, escapeHtml) {

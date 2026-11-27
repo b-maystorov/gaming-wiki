@@ -145,6 +145,39 @@
       "status": "The source calls its level-60 stat ordering speculative because beta gear availability was incomplete."
     },
     {
+      "id": "icy-elemental-stats",
+      "title": "Elemental Shaman Stat Priority",
+      "url": "https://www.icy-veins.com/wow-forever/elemental-shaman-ranged-dps-pve-stat-priority",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "accessed": "2026-11-27",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific level-60 stat priority and mechanics; the guide notes launch-era gear changes remain incomplete."
+    },
+    {
+      "id": "icy-restoration-stats",
+      "title": "Restoration Shaman Stat Priority",
+      "url": "https://www.icy-veins.com/wow-forever/restoration-shaman-healer-pve-stat-priority",
+      "publisher": "Icy Veins",
+      "updatedDate": "2026-11-04",
+      "accessed": "2026-11-27",
+      "gameVersion": "World of Warcraft: Forever",
+      "confidence": "medium",
+      "status": "Forever-specific level-60 healing priority and stat mechanics; early gearing remains subject to change."
+    },
+    {
+      "id": "method-restoration-stats",
+      "title": "Restoration Shaman WoW Forever BIS Gear and Stats Guide",
+      "url": "https://www.method.gg/wow-forever/class-guides/restoration-shaman/bis-gear-and-stats",
+      "publisher": "Method",
+      "updatedDate": "2026-11-26",
+      "accessed": "2026-11-27",
+      "gameVersion": "World of Warcraft: Forever 1.60.1",
+      "confidence": "medium",
+      "status": "Forever-specific endgame Restoration priority; cross-checks Icy Veins order and mechanics."
+    },
+    {
       "id": "icy-shaman-quests",
       "title": "Shaman Class Quests",
       "url": "https://www.icy-veins.com/wow-forever/shaman-class-quests",
@@ -1688,6 +1721,47 @@
             "milestones": "Shamanistic Focus 20; Stormstrike around 25; Windfury Weapon 30."
           }
         ]
+      },
+      "statsGuide": {
+        "className": "Shaman",
+        "sourceIds": ["foreverdb-stats", "icy-elemental-stats", "icy-elemental-leveling", "icy-enhancement-stats", "icy-enhancement-leveling", "icy-restoration-stats", "icy-restoration-leveling", "method-restoration-stats"],
+        "attributes": [
+          {"id":"weapon-damage","name":"Weapon DPS and speed","summary":"Weapon DPS raises melee damage; a slower weapon delivers larger swings and matters to Enhancement's weapon attacks and procs.","when":"Compare current weapons at every level; Enhancement leveling guidance places weapon DPS first. Speed is a spec and proc interaction, not a reason to ignore a clear DPS upgrade.","sourceIds":["icy-enhancement-leveling","icy-enhancement-stats"]},
+          {"id":"strength","name":"Strength","summary":"Each point grants 2 Attack Power, increasing melee damage.","when":"Useful throughout Enhancement leveling and in its endgame physical-damage profile; compare total weapon and item stats.","sourceIds":["icy-enhancement-leveling","icy-enhancement-stats"]},
+          {"id":"agility","name":"Agility","summary":"Improves melee critical strike and Dodge; it does not grant Shaman Attack Power in the cited Forever guide.","when":"A secondary Enhancement option, especially when paired with useful stats; it is not above Strength in the current guide order.","sourceIds":["icy-enhancement-leveling","icy-enhancement-stats"]},
+          {"id":"attack-power","name":"Attack Power","summary":"Every 14 Attack Power adds 1 weapon DPS before other effects.","when":"Supports Enhancement melee output. Assess it with Strength and weapon upgrades rather than treating it as a separate confirmed top-ranked stat.","sourceIds":["icy-enhancement-stats"]},
+          {"id":"spell-power","name":"Spell Power / Spell Damage","summary":"Increases spell damage according to each spell's coefficient; some Elemental spells benefit more from slower casts.","when":"Elemental's leading damage stat at level 60. For Enhancement leveling it is a useful bonus, but the leveling guide says not to sacrifice better-rounded gear for it.","sourceIds":["icy-elemental-stats","icy-enhancement-leveling","icy-enhancement-stats"]},
+          {"id":"hit-chance","name":"Hit Chance","summary":"Improves the chance for spells and/or melee attacks to connect; Enhancement benefits across both attack types.","when":"Elemental's level-60 guide ranks Hit after Spell Power; Enhancement's endgame guide ranks Hit after weapon DPS. Target level affects its value.","sourceIds":["icy-elemental-stats","icy-enhancement-stats"]},
+          {"id":"expertise","name":"Expertise","summary":"Reduces the chance that melee attacks are dodged or parried.","when":"An Enhancement endgame consideration after Hit. The cited guides do not establish a universal leveling threshold.","sourceIds":["icy-enhancement-stats"]},
+          {"id":"critical-strike","name":"Critical Strike","summary":"Increases spell or melee critical chance; Enhancement critical hits also interact with Flurry and Restoration talents.","when":"Elemental ranks it behind Hit at 60; Enhancement values it after Hit and Expertise at 60. It is less available as a leveling gear choice.","sourceIds":["icy-elemental-stats","icy-enhancement-leveling","icy-enhancement-stats","icy-restoration-stats"]},
+          {"id":"intellect","name":"Intellect","summary":"Provides 15 Mana per point and a small spell critical chance increase. Forever Enhancement talents can also convert some Intellect into offensive scaling.","when":"Particularly useful while leveling Enhancement for Mana and talent scaling; Elemental uses it for Mana and spell crit, while healers value the larger pool.","sourceIds":["icy-elemental-stats","icy-enhancement-leveling","icy-enhancement-stats","icy-restoration-stats"]},
+          {"id":"spirit","name":"Spirit","summary":"Restores Mana after the five-second rule; Mindfulness allows some Spirit regeneration while casting.","when":"Useful for reducing downtime and sustaining healing, but less effective during uninterrupted casting without the cited talent interaction.","sourceIds":["icy-elemental-stats","icy-enhancement-leveling","icy-restoration-stats"]},
+          {"id":"mp5","name":"Mana per 5 (MP5)","summary":"Provides steady Mana regeneration that continues while casting and inside the five-second rule.","when":"Useful for sustained Elemental casting and dungeon healing; compare it with Intellect and Spirit based on encounter duration.","sourceIds":["icy-elemental-stats","icy-restoration-stats"]},
+          {"id":"healing-power","name":"Healing Power","summary":"Adds healing according to each healing spell's coefficient; faster casts generally receive less from a point of healing power.","when":"The top Restoration endgame stat in both cited guides; particularly useful when healing throughput is the constraint.","sourceIds":["icy-restoration-stats","method-restoration-stats"]},
+          {"id":"stamina","name":"Stamina","summary":"Increases maximum health and helps survive incoming damage.","when":"Consider it when solo pulls or dungeon damage threaten survival; no cited Shaman guide gives it a universal priority position.","sourceIds":["icy-enhancement-leveling","icy-restoration-stats"]}
+        ],
+        "priorities": {
+          "elemental": {
+            "leveling": {"label":"Elemental · Solo leveling priorities (1–59)","items":["Spell Damage","Critical Strike","Hit Chance","Intellect","MP5","Spirit"],"note":"The Elemental leveling guide places Spell Damage first and treats Hit as more valuable against higher-level targets. At levels 21–40 and 41–59 this is still a general leveling order, not a level-specific weight set.","sourceIds":["icy-elemental-leveling"]},
+            "level60": {"label":"Elemental · Level 60 spell DPS","items":["Spell Power","Hit Chance","Critical Strike","Intellect","MP5"],"note":"The endgame guide ranks Spell Power first, then Hit, then Critical Strike. Its gearing discussion is provisional while Forever itemization continues to be discovered.","thresholdNote":"Icy Veins lists 17% spell Hit against endgame bosses; no talent-adjusted gear target is displayed here.","sourceIds":["icy-elemental-stats"]}
+          },
+          "enhancement": {
+            "leveling": {"label":"Enhancement · Solo leveling priorities (1–59)","items":["Weapon DPS","Intellect","Strength","Spirit","Agility","Stamina"],"note":"This is the leveling guide's order: keep a slow two-handed weapon current, then value Intellect for Mana and talent scaling. Hit, Crit and Expertise can be strong but the guide says they are rarely available as leveling gear choices.","sourceIds":["icy-enhancement-leveling"]},
+            "level60": {"label":"Enhancement · Level 60 melee DPS","items":["Weapon DPS","Hit Chance","Expertise","Critical Strike","Strength","Intellect"],"note":"This is the current guide order after the November 12 hotfixes. The source explicitly says early endgame gear and portions of the guide remain speculative; priorities may change.","thresholdNote":"The guide discusses 8% Hit and a melee cap in its level-60 context; no threshold is treated as a general leveling target.","sourceIds":["icy-enhancement-stats"]}
+          },
+          "restoration": {
+            "leveling": {"label":"Restoration · Leveling and dungeon healing (1–59)","ranked":false,"items":["Healing Power","Intellect","Spirit","MP5","Critical Strike"],"note":"No separate, sourced level-by-level stat ranking is published. These are role-relevant options, not a verified leveling ranking: use healing throughput for dungeon healing, and retain damage gear for solo questing. Manage Mana by choosing an efficient heal and pausing when safe.","sourceIds":["icy-restoration-stats","icy-restoration-leveling"]},
+            "level60": {"label":"Restoration · Level 60 dungeon and raid healing","items":["Healing Power","Critical Strike","Intellect","MP5","Spirit"],"note":"Icy Veins and Method agree on this endgame order. Mana efficiency still depends on casting pattern: Spirit regeneration is reduced by the five-second rule, while MP5 continues during casting.","sourceIds":["icy-restoration-stats","method-restoration-stats"]}
+          }
+        },
+        "explanations": [
+          {"title":"Spell Hit and target level","text":"Hit reduces missed spell casts. The Elemental guide's 17% reference is for level-60 endgame bosses, not a universal cap for leveling enemies. Enhancement Hit applies across melee and spells, and the endgame guide treats its cap discussion in a boss context.","sourceIds":["icy-elemental-stats","icy-enhancement-stats"]},
+          {"title":"Mana and the five-second rule","text":"Intellect increases the Mana pool; Spirit regeneration is reduced for five seconds after spending Mana, while MP5 continues. Mindfulness permits part of Spirit regeneration during casting. For solo leveling and dungeon healing, avoid spending Mana on unnecessary casts and choose a heal appropriate to the damage.","sourceIds":["icy-elemental-stats","icy-enhancement-leveling","icy-restoration-stats","icy-restoration-leveling"]},
+          {"title":"Healing throughput and critical strikes","text":"Healing Power increases healing through spell coefficients. Restoration critical heals are stronger than ordinary heals and interact with Water Shield and Ancestral Healing; this supports its endgame ranking, but does not establish identical leveling gear weights.","sourceIds":["icy-restoration-stats","method-restoration-stats"]},
+          {"title":"Enhancement weapon choice","text":"The leveling guide recommends keeping weapon DPS current and favors a slow two-handed weapon for its weapon attacks and effects. Weapon speed's value is specific to Enhancement's mechanics; follow the character's actual weapon skill and compare complete weapon stats.","sourceIds":["icy-enhancement-leveling","icy-enhancement-stats"]}
+        ],
+        "upgradeAdvice":"Use the selected specialization and level band as a comparison guide, not numerical weights. Elemental leveling favors spell damage and mana pacing; Enhancement leveling values weapon DPS first and Intellect for sustain, while its endgame order changes; Restoration should use healing gear for group healing and keep survivability and Mana needs in view. Forever stat guides remain subject to balance and itemization updates.",
+        "upgradeSourceIds":["icy-elemental-stats","icy-enhancement-leveling","icy-enhancement-stats","icy-restoration-stats","method-restoration-stats"]
       }
     },
     {
